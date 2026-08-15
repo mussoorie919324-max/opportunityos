@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpportunityOS</title>
+  <style>
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial,sans-serif;
+      background:#0b1020;
+      color:white;
+    }
+    .container{
+      max-width:1100px;
+      margin:auto;
+      padding:25px;
+    }
+    nav{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:15px 0;
+    }
+    .logo{
+      font-size:25px;
+      font-weight:bold;
+    }
+    .hero{
+      text-align:center;
+      padding:70px 10px 45px;
+    }
+    .hero h1{
+      font-size:clamp(38px,7vw,70px);
+      margin:0 0 20px;
+    }
+    .hero p{
+      color:#b8c0d9;
+      font-size:18px;
+      max-width:700px;
+      margin:auto;
+      line-height:1.6;
+    }
+    .search{
+      margin:35px auto;
+      max-width:700px;
+      display:flex;
+      gap:10px;
+    }
+    input{
+      flex:1;
+      padding:17px;
+      border-radius:12px;
+      border:1px solid #303952;
+      background:#151c32;
+      color:white;
+      font-size:16px;
+    }
+    button{
+      padding:17px 25px;
+      border:0;
+      border-radius:12px;
+      background:#36d399;
+      color:#07130e;
+      font-weight:bold;
+      cursor:pointer;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:18px;
+      margin-top:30px;
+    }
+    .card{
+      background:#121a2e;
+      border:1px solid #28334f;
+      border-radius:16px;
+      padding:24px;
+    }
+    .card h3{margin-top:0}
+    .card p{
+      color:#aeb8d1;
+      line-height:1.5;
+    }
+    .tag{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:20px;
+      background:#1d2944;
+      color:#7ee7bd;
+      font-size:13px;
+    }
+    footer{
+      text-align:center;
+      color:#75809c;
+      padding:60px 0 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <nav>
+      <div class="logo">⚡ OpportunityOS</div>
+      <span class="tag">Global Opportunity Intelligence</span>
+    </nav>
+
+    <section class="hero">
+      <h1>Find Your Next Opportunity.</h1>
+
+      <p>
+        Discover business ideas, skills, tools and opportunities
+        based on real-world demand.
+      </p>
+
+      <div class="search">
+        <input id="searchInput"
+               type="text"
+               placeholder="What are you looking for?">
+        <button onclick="findOpportunity()">Search</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>Explore Opportunities</h2>
+
+      <div class="grid">
+
+        <div class="card">
+          <h3>💼 Business Opportunities</h3>
+          <p>
+            Find problems people and businesses need solved.
+          </p>
+          <span class="tag">Demand</span>
+        </div>
+
+        <div class="card">
+          <h3>🤖 AI Opportunities</h3>
+          <p>
+            Discover useful AI applications and automation ideas.
+          </p>
+          <span class="tag">AI</span>
+        </div>
+
+        <div class="card">
+          <h3>🌍 Global Trends</h3>
+          <p>
+            Track emerging areas where demand may be growing.
+          </p>
+          <span class="tag">Trends</span>
+        </div>
+
+        <div class="card">
+          <h3>🛠️ Useful Tools</h3>
+          <p>
+            Find tools that can help people work faster and better.
+          </p>
+          <span class="tag">Tools</span>
+        </div>
+
+      </div>
+    </section>
+
+    <footer>
+      OpportunityOS © 2026 — Built independently
+    </footer>
+
+  </div>
+
+  <script>
+    function findOpportunity(){
+      const value = document.getElementById("searchInput").value.trim();
+
+      if(!value){
+        alert("Please enter what you are looking for.");
+        return;
+      }
+
+      alert(
+        "Opportunity search started for: " + value +
+        "\\n\\nReal intelligence engine will be connected in the next stage."
+      );
+    }
+  </script>
+
+</body>
+  </html>
