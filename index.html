@@ -4,111 +4,103 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>OpportunityOS | Global Opportunity Intelligence</title>
+<title>OpportunityOS — Global Opportunity Intelligence</title>
 
 <style>
 *{
   box-sizing:border-box;
-}
-
-html{
-  scroll-behavior:smooth;
+  margin:0;
+  padding:0;
 }
 
 body{
-  margin:0;
-  font-family:Arial,Helvetica,sans-serif;
-  background:#080d1a;
-  color:#ffffff;
-}
-
-button,
-input,
-select{
-  font:inherit;
+  font-family:Arial, sans-serif;
+  background:#070b16;
+  color:#fff;
+  min-height:100vh;
 }
 
 .container{
-  width:min(1150px,92%);
+  width:92%;
+  max-width:1150px;
   margin:auto;
 }
 
-/* NAVIGATION */
+/* NAVBAR */
 
 nav{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:20px 0;
-  gap:20px;
+  padding:24px 0;
+  border-bottom:1px solid rgba(255,255,255,.08);
 }
 
 .logo{
-  font-size:25px;
+  font-size:24px;
   font-weight:800;
 }
 
 .logo span{
-  color:#36d399;
+  color:#42e8a0;
 }
 
 .nav-badge{
-  padding:8px 13px;
-  border-radius:30px;
-  background:#142039;
-  color:#8ce8c4;
   font-size:13px;
-  border:1px solid #263653;
+  color:#9ca8c7;
+  border:1px solid #27304a;
+  padding:8px 12px;
+  border-radius:30px;
 }
 
 /* HERO */
 
 .hero{
   text-align:center;
-  padding:70px 10px 45px;
+  padding:85px 10px 60px;
 }
 
-.hero .eyebrow{
+.hero-badge{
   display:inline-block;
-  padding:8px 13px;
+  padding:8px 14px;
   border-radius:30px;
-  background:#12251f;
-  color:#75e5b5;
-  border:1px solid #214d3c;
+  background:#101b30;
+  border:1px solid #293753;
+  color:#6ff0b0;
   font-size:13px;
-  margin-bottom:20px;
+  margin-bottom:22px;
 }
 
 .hero h1{
-  margin:0 auto 20px;
-  max-width:850px;
-  font-size:clamp(40px,7vw,72px);
+  font-size:clamp(42px,8vw,78px);
   line-height:1.05;
+  max-width:900px;
+  margin:auto;
 }
 
 .hero h1 span{
-  color:#36d399;
+  color:#42e8a0;
 }
 
 .hero p{
-  max-width:720px;
-  margin:auto;
-  color:#aeb8d0;
-  line-height:1.7;
+  max-width:700px;
+  margin:25px auto;
+  color:#aeb8d1;
   font-size:18px;
+  line-height:1.7;
 }
 
 /* SEARCH */
 
 .search-box{
-  max-width:850px;
-  margin:35px auto 15px;
-  padding:10px;
-  background:#111a2d;
-  border:1px solid #293753;
-  border-radius:17px;
+  max-width:720px;
+  margin:35px auto 0;
   display:flex;
   gap:10px;
+  padding:7px;
+  background:#11182a;
+  border:1px solid #2b3855;
+  border-radius:16px;
 }
 
 .search-box input{
@@ -116,269 +108,161 @@ nav{
   min-width:0;
   border:0;
   outline:0;
-  padding:16px;
-  border-radius:11px;
-  background:#182238;
-  color:#ffffff;
+  background:transparent;
+  color:#fff;
+  padding:15px;
+  font-size:16px;
 }
 
-.search-box input::placeholder{
-  color:#78849e;
-}
-
-.primary-btn{
+.search-box button{
   border:0;
-  border-radius:11px;
-  padding:0 25px;
-  background:#36d399;
-  color:#06120d;
+  background:#42e8a0;
+  color:#06120c;
   font-weight:800;
+  padding:0 25px;
+  border-radius:11px;
   cursor:pointer;
 }
 
-.primary-btn:hover{
-  opacity:.9;
-}
+/* QUICK CATEGORIES */
 
-.search-note{
-  color:#71809c;
-  font-size:13px;
-}
-
-/* TRUST */
-
-.trust{
+.quick{
   display:flex;
   justify-content:center;
-  gap:12px;
   flex-wrap:wrap;
-  margin:35px 0 60px;
+  gap:10px;
+  margin-top:22px;
 }
 
-.trust-item{
-  background:#10192b;
-  border:1px solid #26334d;
-  border-radius:12px;
-  padding:12px 15px;
-  color:#aeb8d0;
+.quick span{
+  padding:9px 13px;
+  background:#0e1526;
+  border:1px solid #222d47;
+  border-radius:25px;
+  color:#9eabc7;
   font-size:13px;
 }
 
 /* SECTION */
 
-.section{
-  padding:30px 0 65px;
+section{
+  padding:55px 0;
 }
 
 .section-title{
-  display:flex;
-  justify-content:space-between;
-  align-items:end;
-  gap:20px;
-  margin-bottom:20px;
+  text-align:center;
+  margin-bottom:30px;
 }
 
 .section-title h2{
-  margin:0;
-  font-size:28px;
+  font-size:32px;
+  margin-bottom:10px;
 }
 
 .section-title p{
-  margin:5px 0 0;
-  color:#7f8ba5;
+  color:#8995b2;
 }
 
-/* FILTERS */
-
-.filters{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:25px;
-}
-
-.filter-btn{
-  border:1px solid #2a3854;
-  background:#111a2d;
-  color:#aeb8d0;
-  border-radius:30px;
-  padding:10px 15px;
-  cursor:pointer;
-}
-
-.filter-btn.active{
-  background:#19372d;
-  border-color:#36d399;
-  color:#72e4b4;
-}
-
-/* OPPORTUNITY GRID */
+/* CARDS */
 
 .grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
   gap:18px;
 }
 
 .card{
-  background:#10182a;
-  border:1px solid #273550;
-  border-radius:17px;
-  padding:22px;
-  transition:.2s;
+  background:linear-gradient(145deg,#11192c,#0c1221);
+  border:1px solid #26334f;
+  border-radius:18px;
+  padding:25px;
+  transition:.25s;
 }
 
 .card:hover{
-  transform:translateY(-3px);
-  border-color:#3c4d6e;
+  transform:translateY(-5px);
+  border-color:#42e8a0;
 }
 
-.card-icon{
+.icon{
   font-size:30px;
-  margin-bottom:15px;
+  margin-bottom:18px;
 }
 
 .card h3{
-  margin:0 0 10px;
-  font-size:19px;
+  margin-bottom:10px;
+  font-size:20px;
 }
 
 .card p{
-  color:#9ca8c1;
+  color:#98a5c1;
   line-height:1.6;
   font-size:14px;
 }
 
-.tag{
-  display:inline-block;
-  padding:6px 10px;
-  border-radius:20px;
-  background:#182640;
-  color:#85e6bd;
-  font-size:12px;
-  margin-top:10px;
+/* TRUST */
+
+.trust{
+  background:#0d1424;
+  border:1px solid #25314b;
+  border-radius:22px;
+  padding:35px;
+  text-align:center;
 }
 
-.status{
-  display:inline-block;
-  padding:6px 10px;
-  border-radius:20px;
-  background:#24202a;
-  color:#d0b5d9;
-  font-size:12px;
-  margin-top:10px;
+.trust h2{
+  margin-bottom:12px;
 }
 
-/* DATA NOTICE */
-
-.data-notice{
-  margin-top:25px;
-  padding:20px;
-  border:1px solid #34425e;
-  background:#111a2d;
-  border-radius:15px;
-  color:#aeb8d0;
-  line-height:1.6;
-}
-
-.data-notice strong{
-  color:#ffffff;
-}
-
-/* FEATURES */
-
-.feature-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:18px;
-}
-
-.feature{
-  padding:23px;
-  background:#0f1728;
-  border:1px solid #25324b;
-  border-radius:16px;
-}
-
-.feature-icon{
-  font-size:27px;
-}
-
-.feature h3{
-  margin:13px 0 8px;
-}
-
-.feature p{
-  color:#929eb8;
-  line-height:1.6;
-  font-size:14px;
-}
-
-/* HOW */
-
-.steps{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:18px;
-}
-
-.step{
-  padding:22px;
-  border-radius:16px;
-  background:#111a2d;
-  border:1px solid #273550;
-}
-
-.step-number{
-  width:35px;
-  height:35px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-radius:50%;
-  background:#19372d;
-  color:#72e4b4;
-  font-weight:bold;
+.trust p{
+  color:#9ca8c2;
+  line-height:1.7;
+  max-width:700px;
+  margin:auto;
 }
 
 /* CTA */
 
 .cta{
-  margin:25px 0 70px;
-  padding:35px 25px;
   text-align:center;
-  background:#101b2e;
-  border:1px solid #2b3b58;
-  border-radius:20px;
+  padding:70px 20px;
 }
 
 .cta h2{
-  margin-top:0;
+  font-size:36px;
+  margin-bottom:15px;
 }
 
 .cta p{
-  color:#9ca8c1;
-  max-width:650px;
-  margin:10px auto 22px;
-  line-height:1.6;
+  color:#9ba7c0;
+  margin-bottom:25px;
+}
+
+.cta button{
+  border:0;
+  padding:15px 25px;
+  border-radius:12px;
+  background:#42e8a0;
+  font-weight:bold;
+  cursor:pointer;
 }
 
 /* FOOTER */
 
 footer{
-  border-top:1px solid #202c43;
-  padding:30px 0;
-  color:#69758e;
+  border-top:1px solid #1c263b;
   text-align:center;
+  padding:30px 0;
+  color:#66738f;
   font-size:13px;
 }
 
 /* MOBILE */
 
-@media(max-width:650px){
+@media(max-width:600px){
 
   nav{
-    align-items:flex-start;
+    padding:18px 0;
   }
 
   .nav-badge{
@@ -386,25 +270,28 @@ footer{
   }
 
   .hero{
-    padding-top:45px;
+    padding-top:60px;
   }
 
   .search-box{
     flex-direction:column;
   }
 
-  .primary-btn{
-    min-height:52px;
+  .search-box button{
+    padding:15px;
   }
 
-  .section-title{
-    display:block;
+  .hero h1{
+    font-size:45px;
   }
 
-  .section-title h2{
-    margin-bottom:8px;
+  .hero p{
+    font-size:16px;
   }
 
+  .trust{
+    padding:25px;
+  }
 }
 </style>
 </head>
@@ -413,23 +300,17 @@ footer{
 
 <div class="container">
 
-<!-- NAVIGATION -->
-
 <nav>
   <div class="logo">⚡ Opportunity<span>OS</span></div>
-
-  <div class="nav-badge">
-    🌍 Global Opportunity Intelligence
-  </div>
+  <div class="nav-badge">Global Opportunity Intelligence</div>
 </nav>
 
-
-<!-- HERO -->
+<main>
 
 <section class="hero">
 
-  <div class="eyebrow">
-    Built for real-world opportunities
+  <div class="hero-badge">
+    🌍 Discover What Could Be Your Next Opportunity
   </div>
 
   <h1>
@@ -438,443 +319,139 @@ footer{
   </h1>
 
   <p>
-    OpportunityOS is being built to help people discover
-    relevant skills, jobs, business opportunities, tools
-    and market demand from one place.
+    Explore business ideas, skills, jobs, AI opportunities,
+    useful tools and emerging trends — all in one intelligent platform.
   </p>
-
 
   <div class="search-box">
 
     <input
       id="searchInput"
       type="text"
-      placeholder="Search for a skill, job, business idea or opportunity..."
+      placeholder="What are you looking for?"
     >
 
-    <button
-      class="primary-btn"
-      onclick="searchOpportunity()"
-    >
+    <button onclick="searchOpportunity()">
       Search
     </button>
 
   </div>
 
-  <div class="search-note">
-    Search engine is currently in MVP development.
+  <div class="quick">
+    <span>💼 Business</span>
+    <span>🤖 AI</span>
+    <span>🎓 Students</span>
+    <span>🧑‍💻 Freelance</span>
+    <span>🌍 Global Trends</span>
   </div>
 
 </section>
 
 
-<!-- TRUST -->
-
-<div class="trust">
-
-  <div class="trust-item">
-    🛡️ No fake opportunities
-  </div>
-
-  <div class="trust-item">
-    🔗 Source-based information
-  </div>
-
-  <div class="trust-item">
-    🚫 No guaranteed income claims
-  </div>
-
-  <div class="trust-item">
-    🌍 Global-first
-  </div>
-
-</div>
-
-
-<!-- OPPORTUNITIES -->
-
-<section class="section">
+<section>
 
   <div class="section-title">
-
-    <div>
-      <h2>Opportunity Categories</h2>
-
-      <p>
-        Explore the areas the platform will cover.
-      </p>
-    </div>
-
+    <h2>Explore Opportunities</h2>
+    <p>One platform. Multiple paths.</p>
   </div>
 
+  <div class="grid">
 
-  <div class="filters">
-
-    <button
-      class="filter-btn active"
-      onclick="filterCards('all',this)"
-    >
-      All
-    </button>
-
-    <button
-      class="filter-btn"
-      onclick="filterCards('career',this)"
-    >
-      💼 Career
-    </button>
-
-    <button
-      class="filter-btn"
-      onclick="filterCards('business',this)"
-    >
-      🏢 Business
-    </button>
-
-    <button
-      class="filter-btn"
-      onclick="filterCards('ai',this)"
-    >
-      🤖 AI
-    </button>
-
-    <button
-      class="filter-btn"
-      onclick="filterCards('skills',this)"
-    >
-      🧠 Skills
-    </button>
-
-  </div>
-
-
-  <div class="grid" id="opportunityGrid">
-
-
-    <div class="card opportunity-card" data-category="career">
-
-      <div class="card-icon">💼</div>
-
-      <h3>Career Opportunities</h3>
-
+    <div class="card">
+      <div class="icon">💼</div>
+      <h3>Business</h3>
       <p>
-        Find relevant employment and remote-work opportunities
-        based on skills, location and goals.
+        Discover problems, market gaps and potential business opportunities.
       </p>
-
-      <span class="tag">Career</span>
-
-      <span class="status">
-        Verification engine coming soon
-      </span>
-
     </div>
 
-
-    <div class="card opportunity-card" data-category="business">
-
-      <div class="card-icon">🏢</div>
-
-      <h3>Business Opportunities</h3>
-
-      <p>
-        Discover real problems, market demand and possible
-        business opportunities.
-      </p>
-
-      <span class="tag">Business</span>
-
-      <span class="status">
-        Real data connection coming soon
-      </span>
-
-    </div>
-
-
-    <div class="card opportunity-card" data-category="ai">
-
-      <div class="card-icon">🤖</div>
-
+    <div class="card">
+      <div class="icon">🤖</div>
       <h3>AI Opportunities</h3>
-
       <p>
-        Explore useful AI applications, automation possibilities
-        and emerging demand.
+        Explore AI tools, automation ideas and emerging AI use cases.
       </p>
-
-      <span class="tag">AI</span>
-
-      <span class="status">
-        AI intelligence engine coming soon
-      </span>
-
     </div>
 
-
-    <div class="card opportunity-card" data-category="skills">
-
-      <div class="card-icon">🧠</div>
-
-      <h3>Skill Demand</h3>
-
+    <div class="card">
+      <div class="icon">🎓</div>
+      <h3>Students</h3>
       <p>
-        Understand which skills are becoming relevant and
-        what users may need to learn next.
+        Find skills, projects, learning paths and opportunities for students.
       </p>
-
-      <span class="tag">Skills</span>
-
-      <span class="status">
-        Demand radar coming soon
-      </span>
-
     </div>
 
+    <div class="card">
+      <div class="icon">🧑‍💻</div>
+      <h3>Freelance</h3>
+      <p>
+        Discover skills and service opportunities that businesses need.
+      </p>
+    </div>
 
-  </div>
+    <div class="card">
+      <div class="icon">🏪</div>
+      <h3>Offline Opportunities</h3>
+      <p>
+        Explore local and offline business ideas and demand-driven services.
+      </p>
+    </div>
 
-
-  <div class="data-notice">
-
-    <strong>🛡️ Transparency notice:</strong>
-
-    OpportunityOS does not currently claim that the cards above
-    are verified opportunities. They are platform categories only.
-    Real opportunities will be displayed only after a proper
-    source and verification system is connected.
+    <div class="card">
+      <div class="icon">🌍</div>
+      <h3>Global Trends</h3>
+      <p>
+        Track emerging areas where demand may be growing around the world.
+      </p>
+    </div>
 
   </div>
 
 </section>
 
 
-<!-- FEATURES -->
+<section>
 
-<section class="section">
+  <div class="trust">
 
-  <div class="section-title">
+    <h2>🛡️ Built Around Better Decisions</h2>
 
-    <div>
-      <h2>What OpportunityOS Will Do</h2>
-
-      <p>
-        One platform connecting people with useful opportunities.
-      </p>
-    </div>
-
-  </div>
-
-
-  <div class="feature-grid">
-
-
-    <div class="feature">
-
-      <div class="feature-icon">🎯</div>
-
-      <h3>Personal Matching</h3>
-
-      <p>
-        Match opportunities with a user's skills,
-        goals and preferences.
-      </p>
-
-    </div>
-
-
-    <div class="feature">
-
-      <div class="feature-icon">📈</div>
-
-      <h3>Demand Radar</h3>
-
-      <p>
-        Track changing demand for skills, industries
-        and business needs.
-      </p>
-
-    </div>
-
-
-    <div class="feature">
-
-      <div class="feature-icon">🛡️</div>
-
-      <h3>Trust & Verification</h3>
-
-      <p>
-        Show source, verification status and freshness
-        instead of presenting unverified claims as facts.
-      </p>
-
-    </div>
-
-
-    <div class="feature">
-
-      <div class="feature-icon">🌍</div>
-
-      <h3>Global Access</h3>
-
-      <p>
-        Designed for people, freelancers, businesses
-        and companies around the world.
-      </p>
-
-    </div>
-
-
-    <div class="feature">
-
-      <div class="feature-icon">🧩</div>
-
-      <h3>Skill Gap Analysis</h3>
-
-      <p>
-        Help users understand what skills may be useful
-        for their chosen direction.
-      </p>
-
-    </div>
-
-
-    <div class="feature">
-
-      <div class="feature-icon">🚨</div>
-
-      <h3>Scam Awareness</h3>
-
-      <p>
-        Suspicious information can be flagged instead
-        of being promoted as a verified opportunity.
-      </p>
-
-    </div>
-
+    <p>
+      OpportunityOS is designed to help people discover opportunities,
+      understand demand and make better-informed decisions.
+      Recommendations will become more intelligent as the platform grows.
+    </p>
 
   </div>
 
 </section>
 
-
-<!-- HOW IT WORKS -->
-
-<section class="section">
-
-  <div class="section-title">
-
-    <div>
-      <h2>How It Will Work</h2>
-
-      <p>
-        The long-term user journey.
-      </p>
-    </div>
-
-  </div>
-
-
-  <div class="steps">
-
-
-    <div class="step">
-
-      <div class="step-number">1</div>
-
-      <h3>Tell Us About You</h3>
-
-      <p>
-        Skills, goals, interests and preferences.
-      </p>
-
-    </div>
-
-
-    <div class="step">
-
-      <div class="step-number">2</div>
-
-      <h3>Analyze Demand</h3>
-
-      <p>
-        Compare the user's profile with relevant market signals.
-      </p>
-
-    </div>
-
-
-    <div class="step">
-
-      <div class="step-number">3</div>
-
-      <h3>Find Opportunities</h3>
-
-      <p>
-        Show relevant opportunities with sources and verification.
-      </p>
-
-    </div>
-
-
-    <div class="step">
-
-      <div class="step-number">4</div>
-
-      <h3>Take Action</h3>
-
-      <p>
-        Help the user move from information to a practical next step.
-      </p>
-
-    </div>
-
-
-  </div>
-
-</section>
-
-
-<!-- CTA -->
 
 <section class="cta">
 
-  <h2>OpportunityOS is just getting started.</h2>
+  <h2>Ready to discover your next opportunity?</h2>
 
   <p>
-    The current version is the foundation.
-    Authentication, real verified data, opportunity matching,
-    AI intelligence and monetization will be added in future stages.
+    Search an idea, skill, problem or goal and explore what comes next.
   </p>
 
-  <button
-    class="primary-btn"
-    onclick="showComingSoon()"
-  >
-    Join the Future
+  <button onclick="focusSearch()">
+    Start Exploring →
   </button>
 
 </section>
 
+</main>
 
-<!-- FOOTER -->
 
 <footer>
-
-  OpportunityOS © 2026
-
-  <br><br>
-
-  Built with a transparency-first approach.
-
+  OpportunityOS © 2026 — Global Opportunity Intelligence
 </footer>
-
 
 </div>
 
 
 <script>
-
-/* SEARCH */
 
 function searchOpportunity(){
 
@@ -886,73 +463,31 @@ function searchOpportunity(){
 
   if(!value){
 
-    alert(
-      "Please enter what you are looking for."
-    );
+    alert("Please enter what you are looking for.");
+
+    input.focus();
 
     return;
   }
 
   alert(
-    "Search received: " +
+    "OpportunityOS received your search:\n\n" +
     value +
-    "\n\nThe real verified opportunity search engine will be connected in the next development stage."
+    "\n\nThe intelligence engine will be connected in the next stage."
   );
-
 }
 
 
-/* CATEGORY FILTER */
+function focusSearch(){
 
-function filterCards(category,button){
+  document
+    .getElementById("searchInput")
+    .focus();
 
-  const cards =
-    document.querySelectorAll(
-      ".opportunity-card"
-    );
-
-  const buttons =
-    document.querySelectorAll(
-      ".filter-btn"
-    );
-
-  buttons.forEach(function(btn){
-
-    btn.classList.remove("active");
-
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
   });
-
-  button.classList.add("active");
-
-
-  cards.forEach(function(card){
-
-    if(
-      category === "all" ||
-      card.dataset.category === category
-    ){
-
-      card.style.display = "block";
-
-    }else{
-
-      card.style.display = "none";
-
-    }
-
-  });
-
-}
-
-
-/* CTA */
-
-function showComingSoon(){
-
-  alert(
-    "OpportunityOS membership and user accounts will be added in a future stage."
-  );
-
 }
 
 </script>
