@@ -732,15 +732,16 @@ footer{
 
 </div>
 
-
 <script>
 
-  function searchOpportunity(){
+function searchOpportunity(){
 
   const input = document.getElementById("searchInput");
+  const results = document.getElementById("results");
   const value = input.value.trim();
 
   if(!value){
+    results.style.display = "none";
     alert("Tell us what you're looking for.");
     input.focus();
     return;
@@ -748,41 +749,73 @@ footer{
 
   const result = opportunityEngine.analyze(value);
 
-  alert(
-    result.icon + " " + result.title +
-    "\n\n" +
-    "Search: " + result.query +
-    "\n\n" +
-    "Demand: " + result.demand +
-    "\n\n" +
-    "Next Step: " + result.nextStep
-  );
-  }
+  results.innerHTML = `
+    <div class="result-top">
 
-  const input=document.getElementById("searchInput");
-  const value=input.value.trim();
+      <div class="result-icon">
+        ${result.icon}
+      </div>
 
-  if(!value){
-    alert("Tell us what you're looking for.");
-    input.focus();
-    return;
-  }
+      <div>
+        <div class="result-title">
+          ${result.title}
+        </div>
 
-  alert(
-    "OpportunityOS received:\n\n" +
-    value +
-    "\n\nThe intelligent opportunity engine will be connected in the next build stage."
-  );
+        <div class="result-query">
+          Your search: ${result.query}
+        </div>
+      </div>
+
+    </div>
+
+    <div class="result-grid">
+
+      <div class="result-box">
+        <strong>📈 Demand</strong>
+        <span>${result.demand}</span>
+      </div>
+
+      <div class="result-box">
+        <strong>🎯 Personal Fit</strong>
+        <span>${result.fit}</span>
+      </div>
+
+      <div class="result-box">
+        <strong>🧠 Skills</strong>
+        <span>${result.skills.join(", ")}</span>
+      </div>
+
+      <div class="result-box">
+        <strong>🛡️ Risk</strong>
+        <span>${result.risk}</span>
+      </div>
+
+    </div>
+
+    <div class="next-step">
+      <strong>🚀 Next Best Move</strong>
+      <span>${result.nextStep}</span>
+    </div>
+  `;
+
+  results.style.display = "block";
+
+  results.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
 }
+
 
 function focusSearch(){
 
   document.getElementById("searchInput").focus();
 
   window.scrollTo({
-    top:0,
-    behavior:"smooth"
+    top: 0,
+    behavior: "smooth"
   });
+
 }
 
 </script>
