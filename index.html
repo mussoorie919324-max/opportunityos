@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>OpportunityOS — Discover What's Possible</title>
-
+<script src="opportunity-engine.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 
@@ -735,7 +735,29 @@ footer{
 
 <script>
 
-function searchOpportunity(){
+  function searchOpportunity(){
+
+  const input = document.getElementById("searchInput");
+  const value = input.value.trim();
+
+  if(!value){
+    alert("Tell us what you're looking for.");
+    input.focus();
+    return;
+  }
+
+  const result = opportunityEngine.analyze(value);
+
+  alert(
+    result.icon + " " + result.title +
+    "\n\n" +
+    "Search: " + result.query +
+    "\n\n" +
+    "Demand: " + result.demand +
+    "\n\n" +
+    "Next Step: " + result.nextStep
+  );
+  }
 
   const input=document.getElementById("searchInput");
   const value=input.value.trim();
