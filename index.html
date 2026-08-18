@@ -762,19 +762,6 @@ if(!value){
   input.focus();
   return;
 }
-
-supabaseClient
-  .from("opportunity_searches")
-  .insert({
-    search_text: value
-  })
-  .then(({ error }) => {
-    if (error) {
-      console.error("Search save failed:", error);
-    } else {
-      console.log("Search saved successfully");
-    }
-  });
     results.style.display = "none";
     alert("Tell us what you're looking for.");
     input.focus();
