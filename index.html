@@ -755,6 +755,14 @@ function searchOpportunity(){
   const input = document.getElementById("searchInput");
   const results = document.getElementById("results");
   const value = input.value.trim();
+
+if(!value){
+  results.style.display = "none";
+  alert("Tell us what you're looking for.");
+  input.focus();
+  return;
+}
+
 supabaseClient
   .from("opportunity_searches")
   .insert({
@@ -767,7 +775,6 @@ supabaseClient
       console.log("Search saved successfully");
     }
   });
-  if(!value){
     results.style.display = "none";
     alert("Tell us what you're looking for.");
     input.focus();
