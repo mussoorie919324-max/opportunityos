@@ -6,7 +6,18 @@
 
 <title>OpportunityOS — Discover What's Possible</title>
 <script src="opportunity-engine.js"></script>
-<style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://ktihyruzkcttwiwtvtyw.supabase.co";
+const SUPABASE_KEY = "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_hrFN44QIZ6-X5nheANBjxA_V_Dp2lTh";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+</script>
+  <style>
 *{box-sizing:border-box;margin:0;padding:0}
 
 html{scroll-behavior:smooth}
