@@ -755,7 +755,18 @@ function searchOpportunity(){
   const input = document.getElementById("searchInput");
   const results = document.getElementById("results");
   const value = input.value.trim();
-
+supabaseClient
+  .from("opportunity_searches")
+  .insert({
+    search_text: value
+  })
+  .then(({ error }) => {
+    if (error) {
+      console.error("Search save failed:", error);
+    } else {
+      console.log("Search saved successfully");
+    }
+  });
   if(!value){
     results.style.display = "none";
     alert("Tell us what you're looking for.");
