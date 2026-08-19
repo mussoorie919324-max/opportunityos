@@ -756,12 +756,7 @@ function searchOpportunity(){
   const results = document.getElementById("results");
   const value = input.value.trim();
 
-if(!value){
-  results.style.display = "none";
-  alert("Tell us what you're looking for.");
-  input.focus();
-  return;
-}
+  if(!value){
     results.style.display = "none";
     alert("Tell us what you're looking for.");
     input.focus();
@@ -826,8 +821,6 @@ if(!value){
     block: "center"
   });
 }
-
-
 function focusSearch(){
 
   document.getElementById("searchInput").focus();
