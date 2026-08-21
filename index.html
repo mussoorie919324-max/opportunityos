@@ -764,28 +764,7 @@ function searchOpportunity(){
   }
 alert("Search function is working: " + value);
   const result = opportunityEngine.analyze(value);
-  // Save search to Supabase
-  try {
-
-    const { data, error } = await supabaseClient
-      .from("opportunity_searches")
-      .insert([
-        {
-          search_text: value
-        }
-      ])
-      .select();
-
-    if (error) {
-      console.error("Supabase search save failed:", error);
-    } else {
-      console.log("Opportunity search saved:", data);
-    }
-
-  } catch (err) {
-    console.error("Supabase connection error:", err);
-  }
-  results.innerHTML = `
+  
     <div class="result-top">
 
       <div class="result-icon">
