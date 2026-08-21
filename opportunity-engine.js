@@ -365,4 +365,3 @@ const opportunityEngine = {
   }
 
 };
-console.log("Opportunity Engine v2 loaded:", typeof opportunityEngine);
