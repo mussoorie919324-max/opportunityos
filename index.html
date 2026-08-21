@@ -863,6 +863,9 @@ try {
 }
 <script>
 
+      
+ <script>
+
 function searchOpportunity(){
 
   const input = document.getElementById("searchInput");
@@ -876,8 +879,10 @@ function searchOpportunity(){
     return;
   }
 
+  // Opportunity Engine
   const result = opportunityEngine.analyze(value);
 
+  // Show result immediately
   results.innerHTML = `
     <div class="result-top">
 
@@ -899,7 +904,13 @@ function searchOpportunity(){
 
     <div class="opportunity-score">
       <strong>🔥 Opportunity Score</strong>
-      <span>${result.opportunityScore}/100</span>
+      <span>
+        ${
+          result.opportunityScore === null
+          ? "Needs Verification"
+          : result.opportunityScore + "/100"
+        }
+      </span>
     </div>
 
     <div class="result-grid">
@@ -953,52 +964,53 @@ function searchOpportunity(){
     behavior: "smooth",
     block: "center"
   });
-}
 
-function searchOpportunity(){
+  // Save search to Supabase AFTER showing result
+  if(typeof supabaseClient !== "undefined"){
 
-  const input = document.getElementById("searchInput");
-  const results = document.getElementById("results");
-  const value = input.value.trim();
+    supabaseClient
+      .from("opportunity_searches")
+      .insert([
+        {
+          search_text: value
+        }
+      ])
+      .then(({ data, error }) => {
 
-  if(!value){
-    alert("Please enter a search.");
-    return;
+        if(error){
+          console.error("Supabase save failed:", error);
+        }else{
+          console.log("Opportunity search saved:", data);
+        }
+
+      })
+      .catch((err) => {
+        console.error("Supabase connection error:", err);
+      });
+
   }
 
-  results.innerHTML = `
-    <div style="
-      margin-top:20px;
-      padding:25px;
-      border:1px solid #54f0ad;
-      border-radius:18px;
-      background:#0d1628;
-      color:white;
-    ">
-      <h2>🔎 Search Working</h2>
-      <p style="margin-top:10px;">
-        Your search: <strong>${value}</strong>
-      </p>
-    </div>
-  `;
-
-  results.style.display = "block";
 }
 
+
 function focusSearch(){
+
   document.getElementById("searchInput").focus();
 
   window.scrollTo({
-    top:0,
-    behavior:"smooth"
+    top: 0,
+    behavior: "smooth"
   });
+
 }
 
-document.getElementById("exploreButton").addEventListener("click", searchOpportunity);
+
+document.getElementById("exploreButton").addEventListener(
+  "click",
+  searchOpportunity
+);
 
 </script>
 
 </body>
-</html>
-</body>
-</html>
+</html> 
