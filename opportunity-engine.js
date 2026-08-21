@@ -1,11 +1,16 @@
-// OpportunityOS — Opportunity Engine v1
-// Core opportunity analysis prototype
+// OpportunityOS — Opportunity Engine v2
+// Opportunity Profile + Evidence/Verification Ready Architecture
+//
+// IMPORTANT:
+// - No claim is marked "verified" without evidence.
+// - v1-compatible fields are preserved for the existing frontend.
+// - Evidence/database integration will be added in the next stage.
 
 const opportunityEngine = {
 
   analyze(query) {
 
-    const text = query.toLowerCase().trim();
+    const text = String(query || "").toLowerCase().trim();
 
     if (!text) {
       return {
@@ -14,10 +19,13 @@ const opportunityEngine = {
       };
     }
 
+    // ============================================
+    // BASIC OPPORTUNITY DISCOVERY
+    // ============================================
+
     let category = "General Opportunity";
     let icon = "🌍";
 
-    // CATEGORY DETECTION
     if (
       text.includes("student") ||
       text.includes("college") ||
@@ -69,73 +77,21 @@ const opportunityEngine = {
     else if (
       text.includes("local") ||
       text.includes("offline") ||
-      text.includes("shop") ||
-      text.includes("service")
+      text.includes("shop")
     ) {
       category = "Local / Offline Opportunity";
       icon = "🏪";
     }
 
-    // DEFAULT INTELLIGENCE PROFILE
-    let demand = "Medium";
-    let earning = "Moderate";
-    let competition = "Medium";
-    let difficulty = "Medium";
-    let risk = "Medium";
-
-    // AI / AUTOMATION
-    if (
-      text.includes("ai") ||
-      text.includes("artificial intelligence") ||
-      text.includes("automation")
-    ) {
-      demand = "High";
-      earning = "High";
-      competition = "High";
-      difficulty = "Medium";
-      risk = "Medium";
-    }
-
-    // FREELANCING
-    if (
-      text.includes("freelance") ||
-      text.includes("client")
-    ) {
-      demand = "High";
-      earning = "Variable";
-      competition = "High";
-      difficulty = "Medium";
-      risk = "Medium";
-    }
-
-    // BUSINESS
-    if (
-      text.includes("business") ||
-      text.includes("startup")
-    ) {
-      demand = "Variable";
-      earning = "High";
-      competition = "High";
-      difficulty = "High";
-      risk = "High";
-    }
-
-    // STUDENT
-    if (
-      text.includes("student") ||
-      text.includes("internship")
-    ) {
-      demand = "High";
-      earning = "Low–Moderate";
-      competition = "Medium";
-      difficulty = "Low–Medium";
-      risk = "Low";
-    }
+    // ============================================
+    // SKILLS
+    // ============================================
 
     const skills = [];
 
     if (
       text.includes("ai") ||
+      text.includes("artificial intelligence") ||
       text.includes("automation")
     ) {
       skills.push(
@@ -159,7 +115,8 @@ const opportunityEngine = {
 
     if (
       text.includes("business") ||
-      text.includes("startup")
+      text.includes("startup") ||
+      text.includes("company")
     ) {
       skills.push(
         "Market research",
@@ -176,47 +133,232 @@ const opportunityEngine = {
       );
     }
 
-    // OPPORTUNITY SCORE
-    let score = 50;
+    // ============================================
+    // V2 PROFILE
+    // ============================================
+    //
+    // IMPORTANT:
+    // These values are intentionally not presented
+    // as verified market intelligence.
+    //
+    // Evidence layer will populate them later.
 
-    if (demand === "High") score += 15;
-    if (earning === "High") score += 15;
-    if (competition === "Low") score += 10;
-    if (difficulty === "Low") score += 5;
-    if (risk === "Low") score += 5;
+    const profile = {
 
-    if (score > 100) score = 100;
+      demand: {
+        value: null,
+        status: "needs_verification",
+        confidence: 0
+      },
+
+      earning: {
+        value: null,
+        status: "needs_verification",
+        confidence: 0
+      },
+
+      competition: {
+        value: null,
+        status: "needs_verification",
+        confidence: 0
+      },
+
+      difficulty: {
+        value: null,
+        status: "needs_verification",
+        confidence: 0
+      },
+
+      risk: {
+        value: null,
+        status: "needs_verification",
+        confidence: 0
+      },
+
+      trend: {
+        value: null,
+        status: "needs_verification",
+        confidence: 0
+      }
+
+    };
+
+    // ============================================
+    // CLAIMS
+    // ============================================
+
+    const claims = [];
+
+    // We create claim placeholders only.
+    // No claim is treated as verified yet.
+
+    claims.push(
+      {
+        claimType: "demand",
+        claimText: "Market demand requires evidence verification.",
+        confidence: 0,
+        verificationStatus: "unverified",
+        evidenceIds: []
+      },
+
+      {
+        claimType: "earning",
+        claimText: "Earning potential requires evidence verification.",
+        confidence: 0,
+        verificationStatus: "unverified",
+        evidenceIds: []
+      },
+
+      {
+        claimType: "competition",
+        claimText: "Competition level requires evidence verification.",
+        confidence: 0,
+        verificationStatus: "unverified",
+        evidenceIds: []
+      },
+
+      {
+        claimType: "difficulty",
+        claimText: "Difficulty level requires evidence verification.",
+        confidence: 0,
+        verificationStatus: "unverified",
+        evidenceIds: []
+      },
+
+      {
+        claimType: "risk",
+        claimText: "Risk level requires evidence verification.",
+        confidence: 0,
+        verificationStatus: "unverified",
+        evidenceIds: []
+      },
+
+      {
+        claimType: "trend",
+        claimText: "Market trend requires evidence verification.",
+        confidence: 0,
+        verificationStatus: "unverified",
+        evidenceIds: []
+      }
+    );
+
+    // ============================================
+    // VERIFICATION
+    // ============================================
+
+    const verification = {
+      status: "unverified",
+      confidence: 0
+    };
+
+    // ============================================
+    // DATA QUALITY
+    // ============================================
+
+    const dataQuality = "insufficient_evidence";
+
+    // ============================================
+    // BEST NEXT ACTION
+    // ============================================
+
+    const bestNextAction =
+      "Validate demand, earning potential, competition, required skills and risk using reliable evidence before investing money.";
+
+    // ============================================
+    // V1 COMPATIBILITY
+    // ============================================
+    //
+    // These fields are preserved so the current
+    // frontend does not immediately break.
+    //
+    // They are NOT presented as verified intelligence.
+
+    const compatibilityValue = "Needs Verification";
 
     return {
 
+      // ------------------------------------------
+      // Original query
+      // ------------------------------------------
+
       query: query,
+
+      // ------------------------------------------
+      // V2 Opportunity
+      // ------------------------------------------
+
+      opportunity: {
+        title: category,
+        category: category,
+        description:
+          "Opportunity profile generated by OpportunityOS. Market intelligence requires evidence verification.",
+        skills: skills,
+        icon: icon
+      },
+
+      // ------------------------------------------
+      // V2 Profile
+      // ------------------------------------------
+
+      profile: profile,
+
+      // ------------------------------------------
+      // Claims
+      // ------------------------------------------
+
+      claims: claims,
+
+      // ------------------------------------------
+      // Verification
+      // ------------------------------------------
+
+      verification: verification,
+
+      // ------------------------------------------
+      // Score
+      // ------------------------------------------
+
+      opportunityScore: null,
+
+      // ------------------------------------------
+      // Action
+      // ------------------------------------------
+
+      bestNextAction: bestNextAction,
+
+      // ------------------------------------------
+      // Data quality
+      // ------------------------------------------
+
+      dataQuality: dataQuality,
+
+      // ------------------------------------------
+      // V1 compatibility fields
+      // ------------------------------------------
 
       title: category,
 
       icon: icon,
 
-      opportunityScore: score,
+      demand: compatibilityValue,
 
-      demand: demand,
+      earning: compatibilityValue,
 
-      earning: earning,
+      competition: compatibilityValue,
 
-      competition: competition,
+      difficulty: compatibilityValue,
 
-      difficulty: difficulty,
+      risk:
+        "Needs verification — reliable evidence will be connected through the verification layer.",
 
       skills: skills,
 
       fit:
         "Personal fit will improve after OpportunityOS learns your goals, skills and preferences.",
 
-      risk:
-        risk + " — deeper verification will be added in the verification layer.",
+      nextStep: bestNextAction,
 
-      nextStep:
-        "Start by validating demand, required skills and the fastest practical path before investing money.",
-
-      status: "Opportunity Engine v1"
+      status: "Opportunity Engine v2 — Evidence Ready"
 
     };
 
