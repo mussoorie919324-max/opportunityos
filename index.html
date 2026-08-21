@@ -863,9 +863,6 @@ try {
 }
 <script>
 
-      
- <script>
-
 function searchOpportunity(){
 
   const input = document.getElementById("searchInput");
@@ -879,11 +876,18 @@ function searchOpportunity(){
     return;
   }
 
-  // Opportunity Engine
+  // ==========================================
+  // OPPORTUNITY ENGINE
+  // ==========================================
+
   const result = opportunityEngine.analyze(value);
 
-  // Show result immediately
+  // ==========================================
+  // SHOW RESULT
+  // ==========================================
+
   results.innerHTML = `
+
     <div class="result-top">
 
       <div class="result-icon">
@@ -891,6 +895,7 @@ function searchOpportunity(){
       </div>
 
       <div>
+
         <div class="result-title">
           ${result.title}
         </div>
@@ -898,20 +903,26 @@ function searchOpportunity(){
         <div class="result-query">
           Your search: ${result.query}
         </div>
+
       </div>
 
     </div>
 
+
     <div class="opportunity-score">
+
       <strong>🔥 Opportunity Score</strong>
+
       <span>
         ${
           result.opportunityScore === null
-          ? "Needs Verification"
-          : result.opportunityScore + "/100"
+            ? "Needs Verification"
+            : result.opportunityScore + "/100"
         }
       </span>
+
     </div>
+
 
     <div class="result-grid">
 
@@ -947,55 +958,107 @@ function searchOpportunity(){
 
     </div>
 
+
     <div class="fit-box">
+
       <strong>🎯 Personal Fit</strong>
-      <span>${result.fit}</span>
+
+      <span>
+        ${result.fit}
+      </span>
+
     </div>
 
+
     <div class="next-step">
+
       <strong>🚀 Next Best Move</strong>
-      <span>${result.nextStep}</span>
+
+      <span>
+        ${result.nextStep}
+      </span>
+
     </div>
+
   `;
 
   results.style.display = "block";
+
+
+  // Scroll to result
 
   results.scrollIntoView({
     behavior: "smooth",
     block: "center"
   });
 
-  // Save search to Supabase AFTER showing result
+
+  // ==========================================
+  // SAVE SEARCH TO SUPABASE
+  // ==========================================
+
   if(typeof supabaseClient !== "undefined"){
 
     supabaseClient
+
       .from("opportunity_searches")
+
       .insert([
         {
           search_text: value
         }
       ])
+
       .then(({ data, error }) => {
 
         if(error){
-          console.error("Supabase save failed:", error);
+
+          console.error(
+            "Supabase save failed:",
+            error
+          );
+
         }else{
-          console.log("Opportunity search saved:", data);
+
+          console.log(
+            "Opportunity search saved:",
+            data
+          );
+
         }
 
       })
+
       .catch((err) => {
-        console.error("Supabase connection error:", err);
+
+        console.error(
+          "Supabase connection error:",
+          err
+        );
+
       });
+
+  }else{
+
+    console.error(
+      "Supabase client is not available."
+    );
 
   }
 
 }
 
 
+// ==========================================
+// FOCUS SEARCH
+// ==========================================
+
 function focusSearch(){
 
-  document.getElementById("searchInput").focus();
+  const input =
+    document.getElementById("searchInput");
+
+  input.focus();
 
   window.scrollTo({
     top: 0,
@@ -1005,12 +1068,19 @@ function focusSearch(){
 }
 
 
-document.getElementById("exploreButton").addEventListener(
-  "click",
-  searchOpportunity
-);
+// ==========================================
+// EXPLORE BUTTON
+// ==========================================
+
+document
+  .getElementById("exploreButton")
+  .addEventListener(
+    "click",
+    searchOpportunity
+  );
 
 </script>
 
 </body>
-</html> 
+</html>      
+       
