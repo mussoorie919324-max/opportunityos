@@ -873,6 +873,35 @@ console.log(
   "All Claims Ready:",
   result.claims.length === 6
 ); 
+ // ==========================================
+// CREATE OPPORTUNITY
+// ==========================================
+
+const { data: searchData, error: searchError } =
+  await supabaseClient
+    .from("opportunity_searches")
+    .insert([
+      {
+        search_text: value
+      }
+    ])
+    .select("id")
+    .single();
+
+if(searchError){
+
+  console.error(
+    "Search creation failed:",
+    searchError
+  );
+
+  return;
+}
+
+console.log(
+  "Search created:",
+  searchData
+);
   // ==========================================
   // SHOW RESULT
   // ==========================================
