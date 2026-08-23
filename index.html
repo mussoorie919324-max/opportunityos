@@ -471,7 +471,97 @@ footer{
     display:none;
   }
 }
+/* VERIFICATION UI */
 
+.verification-box{
+  margin-top:20px;
+  padding:22px;
+  border-radius:20px;
+  border:1px solid #263653;
+  background:linear-gradient(145deg,#0d1729,#080e1c);
+}
+
+.verification-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:15px;
+}
+
+.verification-title{
+  font-size:18px;
+  font-weight:800;
+}
+
+.verification-badge{
+  padding:7px 12px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:800;
+  text-transform:uppercase;
+}
+
+.verification-badge.verified{
+  color:#07150f;
+  background:#54f0ad;
+}
+
+.verification-badge.supported{
+  color:#06131a;
+  background:#65cfff;
+}
+
+.verification-badge.needs-review{
+  color:#211500;
+  background:#ffc857;
+}
+
+.verification-badge.unverified{
+  color:#fff;
+  background:#56627a;
+}
+
+.verification-meta{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-bottom:16px;
+}
+
+.verification-stat{
+  padding:12px;
+  border-radius:12px;
+  background:#111b2e;
+  border:1px solid #202d49;
+}
+
+.verification-stat small{
+  display:block;
+  color:#71809d;
+  font-size:11px;
+  margin-bottom:5px;
+}
+
+.verification-stat strong{
+  font-size:16px;
+}
+
+.verification-explanation{
+  padding:15px;
+  border-radius:14px;
+  background:#0a1221;
+  border:1px solid #1d2a43;
+  color:#93a0ba;
+  font-size:13px;
+  line-height:1.7;
+}
+
+.verification-explanation strong{
+  display:block;
+  color:#fff;
+  margin-bottom:7px;
+  }
 </style>
 </head>
 
