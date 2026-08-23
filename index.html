@@ -858,21 +858,161 @@ async function searchOpportunity(){
   // ==========================================
 
   const result = opportunityEngine.analyze(value);
-console.log("Opportunity Engine Result:", result);
- console.log("Claims from Opportunity Engine:", result.claims);
-console.log("Claim Count:", result.claims.length);
- // ==========================================
-// TEST CLAIM DATA
-// ==========================================
 
-console.log(
-  "First Claim:",
-  result.claims[0]
-);
-console.log(
-  "All Claims Ready:",
-  result.claims.length === 6
-); 
+  console.log(
+    "Opportunity Engine Result:",
+    result
+  );
+
+  console.log(
+    "Claims from Opportunity Engine:",
+    result.claims
+  );
+
+  // ==========================================
+  // SAVE SEARCH
+  // ==========================================
+
+  const {
+    data: searchData,
+    error: searchError
+  } = await supabaseClient
+    .from("opportunity_searches")
+    .insert([
+      {
+        search_text: value
+      }
+    ])
+    .select("id")
+    .single();
+
+  if(searchError){
+
+    console.error(
+      "Search creation failed:",
+      searchError
+    );
+
+    alert("Unable to save this search.");
+    return;
+  }
+
+  console.log(
+    "Search created:",
+    searchData
+  );
+
+  // ==========================================
+  // CREATE OPPORTUNITY
+  // ==========================================
+
+  const {
+    data: opportunityData,
+    error: opportunityError
+  } = await supabaseClient
+    .from("opportunities")
+    .insert([
+      {
+        search_id: searchData.id,
+        title: result.opportunity.title,
+        category: result.opportunity.category,
+        description: result.opportunity.description,
+        skills: result.skills,
+        difficulty: result.difficulty,
+        opportunity_score: result.opportunityScore,
+        best_next_action: result.bestNextAction
+      }
+    ])
+    .select("id")
+    .single();
+
+  if(opportunityError){
+
+    console.error(
+      "Opportunity creation failed:",
+      opportunityError
+    );
+
+    alert(
+      "Opportunity could not be created. Check Supabase permissions."
+    );
+
+    return;
+  }
+
+  console.log(
+    "Opportunity created:",
+    opportunityData
+  );
+
+  const opportunityId =
+    opportunityData.id;
+
+  // ==========================================
+  // CREATE 4 DATABASE CLAIMS
+  // ==========================================
+  //
+  // Database currently uses:
+  // demand
+  // earning
+  // competition
+  // risk
+  //
+  // We intentionally do NOT create
+  // difficulty/trend yet.
+
+  const databaseClaimTypes = [
+    "demand",
+    "earning",
+    "competition",
+    "risk"
+  ];
+
+  const claimsToInsert =
+    result.claims
+      .filter(claim =>
+        databaseClaimTypes.includes(
+          claim.claimType
+        )
+      )
+      .map(claim => ({
+        opportunity_id: opportunityId,
+        claim_type: claim.claimType,
+        claim_text: claim.claimText,
+        confidence: 0,
+        verification_status: "unverified",
+        verification_confidence: 0
+      }));
+
+  const {
+    data: createdClaims,
+    error: claimsError
+  } = await supabaseClient
+    .from("opportunity_claims")
+    .insert(claimsToInsert)
+    .select(
+      "id, opportunity_id, claim_type, claim_text"
+    );
+
+  if(claimsError){
+
+    console.error(
+      "Claim creation failed:",
+      claimsError
+    );
+
+    alert(
+      "Opportunity was created, but claims could not be created."
+    );
+
+    return;
+  }
+
+  console.log(
+    "Claims created:",
+    createdClaims
+  );
+
   // ==========================================
   // SHOW RESULT
   // ==========================================
@@ -970,174 +1110,67 @@ console.log(
       </span>
 
     </div>
-<div id="verificationBox" class="verification-box">
 
-  <div class="verification-header">
 
-    <div class="verification-title">
-      🛡️ Claim Verification
+    <div id="verificationBox"
+         class="verification-box">
+
+      <div class="verification-header">
+
+        <div class="verification-title">
+          🛡️ Claim Verification
+        </div>
+
+        <div id="verificationBadge"
+             class="verification-badge unverified">
+
+          Loading
+
+        </div>
+
+      </div>
+
+      <div id="verificationContent">
+
+        Checking available evidence...
+
+      </div>
+
     </div>
 
-    <div id="verificationBadge"
-         class="verification-badge unverified">
-      Loading
-    </div>
-
-  </div>
-
-  <div id="verificationContent">
-
-    Checking available evidence...
-
-  </div>
-
-</div>
   `;
 
   results.style.display = "block";
-loadClaimVerification(1);
 
-  // Scroll to result
+  // ==========================================
+  // LOAD VERIFICATION
+  // ==========================================
+
+  if(
+    createdClaims &&
+    createdClaims.length > 0
+  ){
+
+    // For this step we verify the first
+    // database claim only.
+    //
+    // This replaces the old hard-coded
+    // loadClaimVerification(1).
+
+    await loadClaimVerification(
+      createdClaims[0].id
+    );
+
+  }
+
+  // ==========================================
+  // SCROLL TO RESULT
+  // ==========================================
 
   results.scrollIntoView({
     behavior: "smooth",
     block: "center"
   });
-
-
-  // ==========================================
-  // SAVE SEARCH TO SUPABASE
-  // ==========================================
-
-  if(typeof supabaseClient !== "undefined"){
-
-    supabaseClient
-
-  .from("opportunity_searches")
-
-  .insert([
-    {
-      search_text: value
-    }
-  ])
-  .select("id")
-  .single()
-
-  .then(async ({ data, error }) => {
-
-    if(error){
-
-      console.error(
-        "Supabase save failed:",
-        error
-      );
-
-      return;
-    }
-
-    console.log(
-      "Opportunity search saved:",
-      data
-    );
-
-    // ==========================================
-    // FIND OPPORTUNITY FOR THIS SEARCH
-    // ==========================================
-
-    const { data: opportunity, error: opportunityError } =
-      await supabaseClient
-        .from("opportunities")
-        .select("id")
-        .eq("search_id", data.id)
-        .order("id", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-    if(opportunityError){
-
-      console.error(
-        "Opportunity lookup failed:",
-        opportunityError
-      );
-
-      return;
-    }
-
-    if(!opportunity){
-
-      console.warn(
-        "No opportunity found for search:",
-        data.id
-      );
-
-      return;
-    }
-
-    console.log(
-      "Dynamic Opportunity ID:",
-      opportunity.id
-    );
-
-    // ==========================================
-    // LOAD CLAIMS FOR THIS OPPORTUNITY
-    // ==========================================
-
-    const { data: claims, error: claimsError } =
-      await supabaseClient
-        .from("opportunity_claims")
-        .select("id, claim_type, claim_text")
-        .eq("opportunity_id", opportunity.id)
-        .order("id", { ascending: true });
-
-    if(claimsError){
-
-      console.error(
-        "Claims lookup failed:",
-        claimsError
-      );
-
-      return;
-    }
-
-    console.log(
-      "Dynamic claims:",
-      claims
-    );
-
-    // ==========================================
-    // LOAD VERIFICATION FOR ALL CLAIMS
-    // ==========================================
-
-    if(claims && claims.length){
-
-      for(const claim of claims){
-
-        await loadClaimVerification(
-          claim.id
-        );
-
-      }
-
-    }
-
-  })
-
-      .catch((err) => {
-
-        console.error(
-          "Supabase connection error:",
-          err
-        );
-
-      });
-
-  }else{
-
-    console.error(
-      "Supabase client is not available."
-    );
-
-  }
 
 }
 
