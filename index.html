@@ -1046,7 +1046,124 @@ function searchOpportunity(){
 
 }
 
+async function loadClaimVerification(claimId){
 
+  const badge =
+    document.getElementById("verificationBadge");
+
+  const content =
+    document.getElementById("verificationContent");
+
+  if(!badge || !content){
+    return;
+  }
+
+  badge.textContent = "Checking...";
+  badge.className =
+    "verification-badge unverified";
+
+  content.innerHTML =
+    "Checking available evidence...";
+
+  try{
+
+    const { data, error } =
+      await supabaseClient.rpc(
+        "get_claim_verification_output",
+        {
+          p_claim_id: claimId
+        }
+      );
+
+    if(error){
+      throw error;
+    }
+
+    if(!data){
+
+      badge.textContent = "Unverified";
+
+      content.innerHTML =
+        "No verification data found.";
+
+      return;
+    }
+
+    const status =
+      String(data.status || "unverified")
+        .toLowerCase()
+        .replace(/_/g, "-");
+
+    badge.textContent =
+      status.replace(/-/g, " ");
+
+    badge.className =
+      "verification-badge " + status;
+
+    const confidence =
+      data.confidence !== null &&
+      data.confidence !== undefined
+        ? Math.round(
+            Number(data.confidence) * 100
+          ) + "%"
+        : "N/A";
+
+    content.innerHTML = `
+
+      <div class="verification-meta">
+
+        <div class="verification-stat">
+          <small>Confidence</small>
+          <strong>${confidence}</strong>
+        </div>
+
+        <div class="verification-stat">
+          <small>Evidence</small>
+          <strong>${data.evidence_count ?? 0}</strong>
+        </div>
+
+        <div class="verification-stat">
+          <small>Conflict</small>
+          <strong>
+            ${data.conflict_detected
+              ? "Detected"
+              : "None"}
+          </strong>
+        </div>
+
+      </div>
+
+      <div class="verification-explanation">
+
+        <strong>
+          💡 Why this result?
+        </strong>
+
+        ${
+          data.explanation ||
+          "No explanation available."
+        }
+
+      </div>
+
+    `;
+
+  }catch(error){
+
+    console.error(
+      "Claim verification failed:",
+      error
+    );
+
+    badge.textContent =
+      "Unavailable";
+
+    content.innerHTML =
+      "Verification service is unavailable.";
+
+  }
+
+  }
 // ==========================================
 // FOCUS SEARCH
 // ==========================================
