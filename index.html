@@ -1074,7 +1074,8 @@ async function loadClaimVerification(claimId){
           p_claim_id: claimId
         }
       );
-
+console.log("Verification RPC data:", data);
+console.log("Verification RPC error:", error);
     if(error){
       throw error;
     }
