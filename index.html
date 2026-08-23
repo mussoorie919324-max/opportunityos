@@ -1076,6 +1076,15 @@ async function loadClaimVerification(claimId){
       );
 console.log("Verification RPC data:", data);
 console.log("Verification RPC error:", error);
+  
+    content.innerHTML = `
+  <div class="verification-explanation">
+    <strong>Debug</strong>
+    Data received: ${JSON.stringify(data)}
+    <br><br>
+    Error: ${JSON.stringify(error)}
+  </div>
+`;
     if(error){
       throw error;
     }
