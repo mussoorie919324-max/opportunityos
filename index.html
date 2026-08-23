@@ -872,7 +872,10 @@ async function searchOpportunity(){
   // ==========================================
   // SAVE SEARCH
   // ==========================================
-
+console.log(
+  "Supabase session:",
+  await supabaseClient.auth.getSession()
+);
   const {
     data: searchData,
     error: searchError
