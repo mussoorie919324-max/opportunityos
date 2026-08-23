@@ -888,13 +888,17 @@ async function searchOpportunity(){
 
   if(searchError){
 
-    console.error(
-      "Search creation failed:",
-      searchError
-    );
+  console.error(
+    "Search creation failed:",
+    searchError
+  );
 
-    alert("Unable to save this search.");
-    return;
+  alert(
+    "Search save error: " +
+    (searchError.message || JSON.stringify(searchError))
+  );
+
+  return;
   }
 
   console.log(
