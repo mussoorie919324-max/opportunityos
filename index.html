@@ -999,33 +999,114 @@ loadClaimVerification(1);
 
     supabaseClient
 
-      .from("opportunity_searches")
+  .from("opportunity_searches")
 
-      .insert([
-        {
-          search_text: value
-        }
-      ])
+  .insert([
+    {
+      search_text: value
+    }
+  ])
+  .select("id")
+  .single()
 
-      .then(({ data, error }) => {
+  .then(async ({ data, error }) => {
 
-        if(error){
+    if(error){
 
-          console.error(
-            "Supabase save failed:",
-            error
-          );
+      console.error(
+        "Supabase save failed:",
+        error
+      );
 
-        }else{
+      return;
+    }
 
-          console.log(
-            "Opportunity search saved:",
-            data
-          );
+    console.log(
+      "Opportunity search saved:",
+      data
+    );
 
-        }
+    // ==========================================
+    // FIND OPPORTUNITY FOR THIS SEARCH
+    // ==========================================
 
-      })
+    const { data: opportunity, error: opportunityError } =
+      await supabaseClient
+        .from("opportunities")
+        .select("id")
+        .eq("search_id", data.id)
+        .order("id", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+    if(opportunityError){
+
+      console.error(
+        "Opportunity lookup failed:",
+        opportunityError
+      );
+
+      return;
+    }
+
+    if(!opportunity){
+
+      console.warn(
+        "No opportunity found for search:",
+        data.id
+      );
+
+      return;
+    }
+
+    console.log(
+      "Dynamic Opportunity ID:",
+      opportunity.id
+    );
+
+    // ==========================================
+    // LOAD CLAIMS FOR THIS OPPORTUNITY
+    // ==========================================
+
+    const { data: claims, error: claimsError } =
+      await supabaseClient
+        .from("opportunity_claims")
+        .select("id, claim_type, claim_text")
+        .eq("opportunity_id", opportunity.id)
+        .order("id", { ascending: true });
+
+    if(claimsError){
+
+      console.error(
+        "Claims lookup failed:",
+        claimsError
+      );
+
+      return;
+    }
+
+    console.log(
+      "Dynamic claims:",
+      claims
+    );
+
+    // ==========================================
+    // LOAD VERIFICATION FOR ALL CLAIMS
+    // ==========================================
+
+    if(claims && claims.length){
+
+      for(const claim of claims){
+
+        await loadClaimVerification(
+          claim.id
+        );
+
+      }
+
+    }
+
+  })
 
       .catch((err) => {
 
