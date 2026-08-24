@@ -366,3 +366,11 @@ const opportunityEngine = {
   }
 
 };
+console.log(
+  "OpportunityOS Engine Version: 3"
+);
+
+console.log(
+  "Demand Claim Test:",
+  opportunityEngine.analyze("AI online work").claims[0]
+);
