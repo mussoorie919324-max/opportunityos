@@ -193,13 +193,14 @@ const opportunityEngine = {
     // No claim is treated as verified yet.
 
     claims.push(
-      {
-        claimType: "demand",
-        claimText: "Market demand requires evidence verification.",
-        confidence: 0,
-        verificationStatus: "unverified",
-        evidenceIds: []
-      },
+  {
+    claimType: "demand",
+    claimText:
+      `Demand for ${query} requires current market evidence.`,
+    confidence: 0,
+    verificationStatus: "unverified",
+    evidenceIds: []
+  },
 
       {
         claimType: "earning",
