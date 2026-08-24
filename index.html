@@ -858,7 +858,9 @@ async function searchOpportunity(){
   // ==========================================
 
   const result = opportunityEngine.analyze(value);
+const demandClaimId = result.claims?.[0]?.id;
 
+console.log("Dynamic Demand Claim ID:", demandClaimId);
   console.log(
     "Opportunity Engine Result:",
     result
