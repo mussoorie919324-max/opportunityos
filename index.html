@@ -1214,7 +1214,8 @@ async function loadClaimVerification(claimId){
           p_claim_id: claimId
         }
       );
-    
+    console.log("Verification requested for claim:", claimId);
+console.log("Verification RPC result:", data);
     console.log("Verification RPC data:", data);
 console.log("Verification RPC error:", error);
   
