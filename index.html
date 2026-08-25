@@ -1215,19 +1215,21 @@ async function loadClaimVerification(claimId){
         }
       );
     console.log("Verification requested for claim:", claimId);
+content.innerHTML =
+  "Debug Claim ID: " + claimId;
+console.log("Verification RPC result:", data);
+console.log("Verification RPC data:", data);
+console.log("Verification RPC error:", error);
 
 content.innerHTML = `
   <div class="verification-explanation">
-    <strong>Debug Claim ID:</strong> ${claimId}
+    <strong>Debug</strong>
+    Data received: ${JSON.stringify(data)}
     <br><br>
-    <strong>RPC Data:</strong>
-    ${JSON.stringify(data)}
-    <br><br>
-    <strong>RPC Error:</strong>
-    ${JSON.stringify(error)}
+    Error: ${JSON.stringify(error)}
   </div>
 `;
-`;
+
     if(error){
       throw error;
     }
