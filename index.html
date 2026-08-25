@@ -1174,19 +1174,10 @@ console.log(
     );
 
   }
-
-  // ==========================================
-  // SCROLL TO RESULT
-  // ==========================================
-
-  results.scrollIntoView({
-    behavior: "smooth",
-    block: "center"
-  });
-
-}
-
 async function loadClaimVerification(claimId){
+
+  const box =
+    document.getElementById("verificationBox");
 
   const badge =
     document.getElementById("verificationBadge");
@@ -1194,7 +1185,10 @@ async function loadClaimVerification(claimId){
   const content =
     document.getElementById("verificationContent");
 
-  if(!badge || !content){
+  if(!box || !badge || !content){
+    console.error(
+      "Verification UI elements not found."
+    );
     return;
   }
 
@@ -1207,6 +1201,11 @@ async function loadClaimVerification(claimId){
 
   try{
 
+    console.log(
+      "Verification requested for claim:",
+      claimId
+    );
+
     const { data, error } =
       await supabaseClient.rpc(
         "get_claim_verification_output",
@@ -1214,29 +1213,25 @@ async function loadClaimVerification(claimId){
           p_claim_id: claimId
         }
       );
-    console.log("Verification requested for claim:", claimId);
-content.innerHTML =
-  "Debug Claim ID: " + claimId;
-console.log("Verification RPC result:", data);
-console.log("Verification RPC data:", data);
-console.log("Verification RPC error:", error);
 
-content.innerHTML = `
-  <div class="verification-explanation">
-    <strong>Debug</strong>
-    Data received: ${JSON.stringify(data)}
-    <br><br>
-    Error: ${JSON.stringify(error)}
-  </div>
-`;
+    console.log(
+      "Verification RPC result:",
+      data
+    );
 
     if(error){
+      console.error(
+        "Verification RPC error:",
+        error
+      );
+
       throw error;
     }
 
     if(!data){
 
-      badge.textContent = "Unverified";
+      badge.textContent =
+        "Unverified";
 
       content.innerHTML =
         "No verification data found.";
@@ -1245,15 +1240,18 @@ content.innerHTML = `
     }
 
     const status =
-      String(data.status || "unverified")
-        .toLowerCase()
-        .replace(/_/g, "-");
+      String(
+        data.status || "unverified"
+      )
+      .toLowerCase()
+      .replace(/_/g, "-");
 
     badge.textContent =
       status.replace(/-/g, " ");
 
     badge.className =
-      "verification-badge " + status;
+      "verification-badge " +
+      status;
 
     const confidence =
       data.confidence !== null &&
@@ -1268,25 +1266,49 @@ content.innerHTML = `
       <div class="verification-meta">
 
         <div class="verification-stat">
-          <small>Confidence</small>
-          <strong>${confidence}</strong>
-        </div>
 
-        <div class="verification-stat">
-          <small>Evidence</small>
-          <strong>${data.evidence_count ?? 0}</strong>
-        </div>
+          <small>
+            Confidence
+          </small>
 
-        <div class="verification-stat">
-          <small>Conflict</small>
           <strong>
-            ${data.conflict_detected
-              ? "Detected"
-              : "None"}
+            ${confidence}
           </strong>
+
+        </div>
+
+
+        <div class="verification-stat">
+
+          <small>
+            Evidence
+          </small>
+
+          <strong>
+            ${data.evidence_count ?? 0}
+          </strong>
+
+        </div>
+
+
+        <div class="verification-stat">
+
+          <small>
+            Conflict
+          </small>
+
+          <strong>
+            ${
+              data.conflict_detected
+                ? "Detected"
+                : "None"
+            }
+          </strong>
+
         </div>
 
       </div>
+
 
       <div class="verification-explanation">
 
@@ -1294,10 +1316,12 @@ content.innerHTML = `
           💡 Why this result?
         </strong>
 
-        ${
-          data.explanation ||
-          "No explanation available."
-        }
+        <p>
+          ${
+            data.explanation ||
+            "No explanation available."
+          }
+        </p>
 
       </div>
 
@@ -1313,12 +1337,27 @@ content.innerHTML = `
     badge.textContent =
       "Unavailable";
 
+    badge.className =
+      "verification-badge unverified";
+
     content.innerHTML =
       "Verification service is unavailable.";
 
   }
 
-  }
+}
+  // ==========================================
+  // SCROLL TO RESULT
+  // ==========================================
+
+  results.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+
+}
+
+
 // ==========================================
 // FOCUS SEARCH
 // ==========================================
