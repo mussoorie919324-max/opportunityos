@@ -1386,7 +1386,8 @@ async function loadClaimVerification(claimId){
 
   content.innerHTML =
     "Checking available evidence...";
-
+content.innerHTML =
+  "Checking claim ID: " + claimId;
   try{
 
     console.log(
