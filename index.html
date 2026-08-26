@@ -1361,7 +1361,204 @@ async function loadClaimVerification(claimId){
 
 }
 
+async function loadClaimVerification(claimId){
 
+  const box =
+    document.getElementById("verificationBox");
+
+  const badge =
+    document.getElementById("verificationBadge");
+
+  const content =
+    document.getElementById("verificationContent");
+
+  if(!box || !badge || !content){
+    console.error(
+      "Verification UI elements not found."
+    );
+    return;
+  }
+
+  badge.textContent = "Checking...";
+  badge.className =
+    "verification-badge unverified";
+
+  content.innerHTML =
+    "Checking available evidence...";
+
+  try{
+
+    console.log(
+      "Verification requested for claim:",
+      claimId
+    );
+
+    const { data, error } =
+      await supabaseClient.rpc(
+        "get_claim_verification_output",
+        {
+          p_claim_id: claimId
+        }
+      );
+
+    console.log(
+      "Verification RPC result:",
+      data
+    );
+
+    if(error){
+
+      console.error(
+        "Verification RPC error:",
+        error
+      );
+
+      throw error;
+    }
+
+    /*
+      Supabase RPC can return either
+      an object or an array.
+
+      Normalize both formats.
+    */
+
+    const verification =
+      Array.isArray(data)
+        ? data[0]
+        : data;
+
+    console.log(
+      "Normalized verification:",
+      verification
+    );
+
+    if(!verification){
+
+      badge.textContent =
+        "Unverified";
+
+      badge.className =
+        "verification-badge unverified";
+
+      content.innerHTML =
+        "No verification data found.";
+
+      return;
+    }
+
+    const status =
+      String(
+        verification.status ||
+        "unverified"
+      )
+      .toLowerCase()
+      .replace(/_/g, "-");
+
+    badge.textContent =
+      status.replace(/-/g, " ");
+
+    badge.className =
+      "verification-badge " +
+      status;
+
+    const confidence =
+      verification.confidence !== null &&
+      verification.confidence !== undefined
+        ? Math.round(
+            Number(
+              verification.confidence
+            ) * 100
+          ) + "%"
+        : "N/A";
+
+    content.innerHTML = `
+
+      <div class="verification-meta">
+
+        <div class="verification-stat">
+
+          <small>
+            Confidence
+          </small>
+
+          <strong>
+            ${confidence}
+          </strong>
+
+        </div>
+
+
+        <div class="verification-stat">
+
+          <small>
+            Evidence
+          </small>
+
+          <strong>
+            ${
+              verification.evidence_count ?? 0
+            }
+          </strong>
+
+        </div>
+
+
+        <div class="verification-stat">
+
+          <small>
+            Conflict
+          </small>
+
+          <strong>
+            ${
+              verification.conflict_detected
+                ? "Detected"
+                : "None"
+            }
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <div class="verification-explanation">
+
+        <strong>
+          💡 Why this result?
+        </strong>
+
+        <p>
+          ${
+            verification.explanation ||
+            "No explanation available."
+          }
+        </p>
+
+      </div>
+
+    `;
+
+  }catch(error){
+
+    console.error(
+      "Claim verification failed:",
+      error
+    );
+
+    badge.textContent =
+      "Unavailable";
+
+    badge.className =
+      "verification-badge unverified";
+
+    content.innerHTML =
+      "Verification service is unavailable.";
+
+  }
+
+  }
 // ==========================================
 // FOCUS SEARCH
 // ==========================================
