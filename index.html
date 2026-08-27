@@ -992,82 +992,84 @@ footer{
     opportunityData.id;
 
 
-  // ==========================================
-  // CREATE 4 DATABASE CLAIMS
-  // ==========================================
+ // ==========================================
+// CREATE ALL DATABASE CLAIMS
+// ==========================================
 
-  const databaseClaimTypes = [
-    "demand",
-    "earning",
-    "competition",
-    "risk"
-  ];
-
-
-  const claimsToInsert =
-    result.claims
-      .filter(
-        claim =>
-          databaseClaimTypes.includes(
-            claim.claimType
-          )
-      )
-      .map(
-        claim => ({
-          opportunity_id:
-            opportunityId,
-
-          claim_type:
-            claim.claimType,
-
-          claim_text:
-            claim.claimText,
-
-          confidence:
-            0,
-
-          verification_status:
-            "unverified",
-
-          verification_confidence:
-            0
-        })
-      );
+const databaseClaimTypes = [
+  "demand",
+  "earning",
+  "competition",
+  "difficulty",
+  "risk",
+  "trend"
+];
 
 
-  const {
-    data: createdClaims,
-    error: claimsError
-  } =
-    await supabaseClient
-      .from("opportunity_claims")
-      .insert(
-        claimsToInsert
-      )
-      .select(
-        "id, opportunity_id, claim_type, claim_text"
-      );
+const claimsToInsert =
+  result.claims
+    .filter(
+      claim =>
+        databaseClaimTypes.includes(
+          claim.claimType
+        )
+    )
+    .map(
+      claim => ({
+        opportunity_id:
+          opportunityId,
 
+        claim_type:
+          claim.claimType,
 
-  if(claimsError){
+        claim_text:
+          claim.claimText,
 
-    console.error(
-      "Claim creation failed:",
-      claimsError
+        confidence:
+          0,
+
+        verification_status:
+          "unverified",
+
+        verification_confidence:
+          0
+      })
     );
 
-    alert(
-      "Opportunity was created, but claims could not be created."
+
+const {
+  data: createdClaims,
+  error: claimsError
+} =
+  await supabaseClient
+    .from("opportunity_claims")
+    .insert(
+      claimsToInsert
+    )
+    .select(
+      "id, opportunity_id, claim_type, claim_text"
     );
 
-    return;
-  }
 
+if(claimsError){
 
-  console.log(
-    "Claims created:",
-    createdClaims
+  console.error(
+    "Claim creation failed:",
+    claimsError
   );
+
+  alert(
+    "Opportunity was created, but claims could not be created."
+  );
+
+  return;
+}
+
+
+console.log(
+  "Claims created:",
+  createdClaims
+); 
 
 
   // ==========================================
