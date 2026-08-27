@@ -1499,7 +1499,28 @@ document
     "click",
     searchOpportunity
   );                    
-  
+const originalLog = console.log;
+
+console.log = function(...args) {
+  originalLog.apply(console, args);
+
+  let box = document.getElementById("debugConsole");
+
+  if (!box) {
+    box = document.createElement("pre");
+    box.id = "debugConsole";
+    box.style.cssText =
+      "position:fixed;bottom:0;left:0;right:0;max-height:40%;overflow:auto;background:#000;color:#00ff88;padding:12px;font-size:12px;z-index:99999;white-space:pre-wrap;";
+    document.body.appendChild(box);
+  }
+
+  box.textContent +=
+    args.map(x =>
+      typeof x === "object"
+        ? JSON.stringify(x, null, 2)
+        : String(x)
+    ).join(" ") + "\n";
+};  
 </script>
 
 </body>
