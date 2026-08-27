@@ -1079,7 +1079,9 @@ footer{
       claim =>
         claim.claim_type === "demand"
     );
-
+if(firstClaim){
+  console.log("Demand claim ID:", firstClaim.id);
+  }
 
   console.log(
     "Demand database claim:",
