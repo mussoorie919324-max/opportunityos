@@ -1086,7 +1086,10 @@ if (demandClaim) {
     demandClaim.id
   );
 
-  const { data: evidenceData, error: evidenceError } =
+  const {
+    data: evidenceData,
+    error: evidenceError
+  } =
     await supabaseClient.rpc(
       "auto_attach_demand_evidence",
       {
@@ -1108,10 +1111,51 @@ if (demandClaim) {
       evidenceData
     );
 
-  }
+    // ==========================================
+    // UPDATE CLAIM VERIFICATION
+    // ==========================================
+
+    console.log(
+      "Updating claim verification:",
+      demandClaim.id
+    );
+
+    const {
+      data: verificationUpdate,
+      error: verificationError
+    } =
+      await supabaseClient.rpc(
+        "update_claim_verification",
+        {
+          p_claim_id: demandClaim.id
+        }
+      );
+
+    if (verificationError) {
+
+      console.error(
+        "Claim verification update failed:",
+        verificationError
+      );
+
+    } else {
+
+      console.log(
+        "Claim verification updated:",
+        verificationUpdate
+      );
+
+    }
 
   }
 
+} else {
+
+  console.error(
+    "Demand claim was not created."
+  );
+
+}
   // ==========================================
   // GET FIRST DATABASE CLAIM
   // ==========================================
