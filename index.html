@@ -1071,6 +1071,46 @@ console.log(
   createdClaims
 ); 
 
+// ==========================================
+// AUTO ATTACH DEMAND EVIDENCE
+// ==========================================
+
+const demandClaim = createdClaims?.find(
+  claim => claim.claim_type === "demand"
+);
+
+if (demandClaim) {
+
+  console.log(
+    "Auto-attaching demand evidence to claim:",
+    demandClaim.id
+  );
+
+  const { data: evidenceData, error: evidenceError } =
+    await supabaseClient.rpc(
+      "auto_attach_demand_evidence",
+      {
+        p_claim_id: demandClaim.id
+      }
+    );
+
+  if (evidenceError) {
+
+    console.error(
+      "Demand evidence attachment failed:",
+      evidenceError
+    );
+
+  } else {
+
+    console.log(
+      "Demand evidence attached:",
+      evidenceData
+    );
+
+  }
+
+  }
 
   // ==========================================
   // GET FIRST DATABASE CLAIM
