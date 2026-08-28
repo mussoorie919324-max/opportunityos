@@ -1412,7 +1412,9 @@ async function loadClaimVerification(claimId){
     document.getElementById("verificationContent");
 
   if(!badge || !content){
-    console.error("Verification UI elements not found.");
+    console.error(
+      "Verification UI elements not found."
+    );
     return;
   }
 
@@ -1423,139 +1425,235 @@ async function loadClaimVerification(claimId){
   content.innerHTML =
     "Checking available evidence...";
 
-  try{
 
-    const { data, error } =
-      await supabaseClient.rpc(
-        "get_claim_verification_output",
-        {
-          p_claim_id: claimId
-        }
+  // ==========================================
+  // RETRY VERIFICATION READ
+  // ==========================================
+
+  const maxAttempts = 5;
+
+  for(let attempt = 1; attempt <= maxAttempts; attempt++){
+
+    try{
+
+      console.log(
+        `Loading verification attempt ${attempt}/${maxAttempts}:`,
+        claimId
       );
 
-    console.log(
-      "Frontend verification claim:",
-      claimId
-    );
 
-    console.log(
-      "Frontend verification result:",
-      data
-    );
-
-    if(error){
-      throw error;
-    }
-
-    const verification =
-      Array.isArray(data)
-        ? data[0]
-        : data;
-
-    if(!verification){
-
-      badge.textContent = "Unverified";
-      badge.className =
-        "verification-badge unverified";
-
-      content.innerHTML =
-        "No verification data found.";
-
-      return;
-    }
-
-   const status =
-  String(
-    verification.verification_status ??
-    verification.status ??
-    "unverified"
-  )
-  .toLowerCase()
-  .replace(/_/g, "-");
-
-const confidenceValue =
-  verification.verification_confidence ??
-  verification.confidence;
-
-const confidence =
-  confidenceValue !== null &&
-  confidenceValue !== undefined
-    ? Math.round(
-        Number(confidenceValue) * 100
-      ) + "%"
-    : "N/A"; 
-
-    badge.textContent =
-      status.replace(/-/g, " ");
-
-    badge.className =
-      "verification-badge " + status;
-
-    content.innerHTML = `
-
-      <div class="verification-meta">
-
-        <div class="verification-stat">
-          <small>Confidence</small>
-          <strong>${confidence}</strong>
-        </div>
-
-        <div class="verification-stat">
-          <small>Evidence</small>
-          <strong>
-            ${verification.evidence_count ?? 0}
-          </strong>
-        </div>
-
-        <div class="verification-stat">
-          <small>Conflict</small>
-          <strong>
-            ${
-              verification.conflict_detected
-                ? "Detected"
-                : "None"
-            }
-          </strong>
-        </div>
-
-      </div>
-
-      <div class="verification-explanation">
-
-        <strong>
-          💡 Why this result?
-        </strong>
-
-        <p>
-          ${
-            verification.explanation ||
-            "No explanation available."
+      const {
+        data,
+        error
+      } =
+        await supabaseClient.rpc(
+          "get_claim_verification_output",
+          {
+            p_claim_id: claimId
           }
-        </p>
+        );
 
-      </div>
 
-    `;
+      console.log(
+        "Frontend verification raw result:",
+        data
+      );
 
-  }catch(error){
 
-    console.error(
-      "Claim verification failed:",
-      error
-    );
+      if(error){
+        throw error;
+      }
 
-    badge.textContent =
-      "Unavailable";
 
-    badge.className =
-      "verification-badge unverified";
+      const verification =
+        Array.isArray(data)
+          ? data[0]
+          : data;
 
-    content.innerHTML =
-      "Verification service is unavailable.";
+
+      console.log(
+        "Frontend verification parsed:",
+        verification
+      );
+
+
+      // ==========================================
+      // VALID VERIFICATION FOUND
+      // ==========================================
+
+      if(
+        verification &&
+        (
+          Number(verification.evidence_count) > 0 ||
+          verification.status !== "unverified"
+        )
+      ){
+
+        const status =
+          String(
+            verification.status || "unverified"
+          )
+          .toLowerCase()
+          .replace(/_/g, "-");
+
+
+        const confidence =
+          verification.confidence !== null &&
+          verification.confidence !== undefined
+            ? Math.round(
+                Number(
+                  verification.confidence
+                ) * 100
+              ) + "%"
+            : "N/A";
+
+
+        badge.textContent =
+          status.replace(/-/g, " ");
+
+
+        badge.className =
+          "verification-badge " + status;
+
+
+        content.innerHTML = `
+
+          <div class="verification-meta">
+
+            <div class="verification-stat">
+
+              <small>
+                Confidence
+              </small>
+
+              <strong>
+                ${confidence}
+              </strong>
+
+            </div>
+
+
+            <div class="verification-stat">
+
+              <small>
+                Evidence
+              </small>
+
+              <strong>
+                ${verification.evidence_count ?? 0}
+              </strong>
+
+            </div>
+
+
+            <div class="verification-stat">
+
+              <small>
+                Conflict
+              </small>
+
+              <strong>
+                ${
+                  verification.conflict_detected
+                    ? "Detected"
+                    : "None"
+                }
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <div class="verification-explanation">
+
+            <strong>
+              💡 Why this result?
+            </strong>
+
+            <p>
+              ${
+                verification.explanation ||
+                "No explanation available."
+              }
+            </p>
+
+          </div>
+
+        `;
+
+
+        console.log(
+          "Verification UI loaded successfully:",
+          verification
+        );
+
+
+        return;
+      }
+
+
+      // ==========================================
+      // NOT READY YET
+      // ==========================================
+
+      if(attempt < maxAttempts){
+
+        console.log(
+          "Verification not ready yet. Retrying..."
+        );
+
+
+        await new Promise(
+          resolve =>
+            setTimeout(resolve, 500)
+        );
+
+      }
+
+    }catch(error){
+
+      console.error(
+        `Claim verification attempt ${attempt} failed:`,
+        error
+      );
+
+
+      if(attempt < maxAttempts){
+
+        await new Promise(
+          resolve =>
+            setTimeout(resolve, 500)
+        );
+
+      }
+
+    }
 
   }
 
-  }
+
+  // ==========================================
+  // FINAL FAILURE
+  // ==========================================
+
+  badge.textContent =
+    "Unavailable";
+
+  badge.className =
+    "verification-badge unverified";
+
+
+  content.innerHTML =
+    "Verification data is currently unavailable.";
+
+
+  console.error(
+    "Verification failed after all attempts:",
+    claimId
+  );
+
+}
 // ==========================================
 // FOCUS SEARCH
 // ==========================================
