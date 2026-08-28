@@ -1420,20 +1420,26 @@ async function loadClaimVerification(claimId){
       return;
     }
 
-    const status =
-      String(
-        verification.status || "unverified"
-      )
-      .toLowerCase()
-      .replace(/_/g, "-");
+   const status =
+  String(
+    verification.verification_status ??
+    verification.status ??
+    "unverified"
+  )
+  .toLowerCase()
+  .replace(/_/g, "-");
 
-    const confidence =
-      verification.confidence !== null &&
-      verification.confidence !== undefined
-        ? Math.round(
-            Number(verification.confidence) * 100
-          ) + "%"
-        : "N/A";
+const confidenceValue =
+  verification.verification_confidence ??
+  verification.confidence;
+
+const confidence =
+  confidenceValue !== null &&
+  confidenceValue !== undefined
+    ? Math.round(
+        Number(confidenceValue) * 100
+      ) + "%"
+    : "N/A"; 
 
     badge.textContent =
       status.replace(/-/g, " ");
