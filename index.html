@@ -1619,7 +1619,8 @@ if (demandClaim) {
   );
 
   await loadClaimVerification(
-    demandClaim.id
+    demandClaim.id,
+    "demand"
   );
 
 } else {
@@ -1638,8 +1639,10 @@ if (earningClaim) {
     earningClaim.id
   );
 
-  // Earning verification will be loaded
-  // after demand verification UI is upgraded.
+  await loadClaimVerification(
+    earningClaim.id,
+    "earning"
+  );
 
 } else {
 
