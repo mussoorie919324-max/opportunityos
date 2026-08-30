@@ -992,8 +992,8 @@ footer{
     opportunityData.id;
 
 
- // ==========================================
-// CREATE ALL DATABASE CLAIMS
+// ==========================================
+// CREATE DATABASE CLAIMS — SAFE VERSION
 // ==========================================
 
 const databaseClaimTypes = [
@@ -1005,226 +1005,107 @@ const databaseClaimTypes = [
   "trend"
 ];
 
-
 const claimsToInsert =
   result.claims
-    .filter(
-      claim =>
-        databaseClaimTypes.includes(
-          claim.claimType
-        )
+    .filter(claim =>
+      databaseClaimTypes.includes(claim.claimType)
     )
-    .map(
-      claim => ({
-        opportunity_id:
-          opportunityId,
-
-        claim_type:
-          claim.claimType,
-
-        claim_text:
-          claim.claimText,
-
-        confidence:
-          0,
-
-        verification_status:
-          "unverified",
-
-        verification_confidence:
-          0
-      })
-    );
+    .map(claim => ({
+      opportunity_id: opportunityId,
+      claim_type: claim.claimType,
+      claim_text: claim.claimText,
+      confidence: 0,
+      verification_status: "unverified",
+      verification_confidence: 0
+    }));
 
 
-const {
-  data: createdClaims,
-  error: claimsError
-} =
-  await supabaseClient
+let createdClaims = [];
+
+
+// ==========================================
+// TRY TO CREATE CLAIMS
+// ==========================================
+
+if (claimsToInsert.length > 0) {
+
+  const {
+    data,
+    error
+  } = await supabaseClient
     .from("opportunity_claims")
-    .insert(
-      claimsToInsert
-    )
+    .insert(claimsToInsert)
     .select(
       "id, opportunity_id, claim_type, claim_text"
     );
 
 
-if(claimsError){
+  if (error) {
 
-  console.error(
-    "Claim creation failed:",
-    claimsError
-  );
+    console.error(
+      "Claim creation failed:",
+      error
+    );
 
-  alert(
-    "Opportunity was created, but claims could not be created."
-  );
+    console.log(
+      "Result will continue without verification."
+    );
+
+  } else {
+
+    createdClaims = data || [];
+
+    console.log(
+      "Claims created:",
+      createdClaims
+    );
+
+  }
 
 }
+
+
+// ==========================================
+// FIND CLAIMS
+// ==========================================
+
+const demandClaim =
+  createdClaims.find(
+    claim =>
+      claim.claim_type === "demand"
+  );
+
+const earningClaim =
+  createdClaims.find(
+    claim =>
+      claim.claim_type === "earning"
+  );
+
 
 console.log(
-  "Claims created:",
-  createdClaims
-); 
-
-// ==========================================
-// AUTO ATTACH + VERIFY DEMAND & EARNING
-// ==========================================
-
-const demandClaim = createdClaims?.find(
-  claim => claim.claim_type === "demand"
+  "Demand claim:",
+  demandClaim
 );
 
-const earningClaim = createdClaims?.find(
-  claim => claim.claim_type === "earning"
+console.log(
+  "Earning claim:",
+  earningClaim
 );
 
 
 // ==========================================
-// DEMAND VERIFICATION PIPELINE
+// IMPORTANT
 // ==========================================
-
-if (demandClaim) {
-
-  console.log(
-    "Auto-attaching demand evidence to claim:",
-    demandClaim.id
-  );
-
-  const {
-    data: demandEvidenceData,
-    error: demandEvidenceError
-  } = await supabaseClient.rpc(
-    "auto_attach_demand_evidence",
-    {
-      p_claim_id: demandClaim.id
-    }
-  );
-
-  if (demandEvidenceError) {
-
-    console.error(
-      "Demand evidence attachment failed:",
-      demandEvidenceError
-    );
-
-  } else {
-
-    console.log(
-      "Demand evidence attached:",
-      demandEvidenceData
-    );
-
-    const {
-      data: demandVerificationUpdate,
-      error: demandVerificationError
-    } = await supabaseClient.rpc(
-      "update_claim_verification",
-      {
-        p_claim_id: demandClaim.id
-      }
-    );
-
-    if (demandVerificationError) {
-
-      console.error(
-        "Demand verification update failed:",
-        demandVerificationError
-      );
-
-    } else {
-
-      console.log(
-        "Demand verification updated:",
-        demandVerificationUpdate
-      );
-
-    }
-
-  }
-
-} else {
-
-  console.error(
-    "Demand claim was not created."
-  );
-
-}
-
-
-// ==========================================
-// EARNING VERIFICATION PIPELINE
-// ==========================================
-
-if (earningClaim) {
-
-  console.log(
-    "Auto-attaching earning evidence to claim:",
-    earningClaim.id
-  );
-
-  const {
-    data: earningEvidenceData,
-    error: earningEvidenceError
-  } = await supabaseClient.rpc(
-    "auto_attach_earning_evidence",
-    {
-      p_claim_id: earningClaim.id
-    }
-  );
-
-  if (earningEvidenceError) {
-
-    console.error(
-      "Earning evidence attachment failed:",
-      earningEvidenceError
-    );
-
-  } else {
-
-    console.log(
-      "Earning evidence attached:",
-      earningEvidenceData
-    );
-
-    const {
-      data: earningVerificationUpdate,
-      error: earningVerificationError
-    } = await supabaseClient.rpc(
-      "update_claim_verification",
-      {
-        p_claim_id: earningClaim.id
-      }
-    );
-
-    if (earningVerificationError) {
-
-      console.error(
-        "Earning verification update failed:",
-        earningVerificationError
-      );
-
-    } else {
-
-      console.log(
-        "Earning verification updated:",
-        earningVerificationUpdate
-      );
-
-    }
-
-  }
-
-} else {
-
-  console.error(
-    "Earning claim was not created."
-  );
-
-  }
-      
+// Verification RPC temporarily disabled.
+// First we confirm that the Opportunity Result
+// renders correctly.
+//
+// After the result works, we will reconnect:
+// 1. Demand evidence
+// 2. Earning evidence
+// 3. Verification calculation
+// 4. Verification UI
+// ==========================================           
 
   // ==========================================
   // SHOW RESULT
