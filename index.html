@@ -881,7 +881,119 @@ footer{
     "Claims from Opportunity Engine:",
     result.claims
   );
+// ==========================================
+// SHOW RESULT IMMEDIATELY
+// DATABASE MUST NOT BLOCK RESULT
+// ==========================================
 
+results.innerHTML = `
+
+  <div class="result-top">
+
+    <div class="result-icon">
+      ${result.icon}
+    </div>
+
+    <div>
+
+      <div class="result-title">
+        ${result.title}
+      </div>
+
+      <div class="result-query">
+        Your search: ${result.query}
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="opportunity-score">
+
+    <strong>
+      🔥 Opportunity Score
+    </strong>
+
+    <span>
+      ${
+        result.opportunityScore === null
+          ? "Needs Verification"
+          : result.opportunityScore + "/100"
+      }
+    </span>
+
+  </div>
+
+
+  <div class="result-grid">
+
+    <div class="result-box">
+      <strong>📈 Demand</strong>
+      <span>${result.demand}</span>
+    </div>
+
+    <div class="result-box">
+      <strong>💰 Earning Potential</strong>
+      <span>${result.earning}</span>
+    </div>
+
+    <div class="result-box">
+      <strong>🥊 Competition</strong>
+      <span>${result.competition}</span>
+    </div>
+
+    <div class="result-box">
+      <strong>🎯 Difficulty</strong>
+      <span>${result.difficulty}</span>
+    </div>
+
+    <div class="result-box">
+      <strong>🧠 Skills</strong>
+      <span>${result.skills.join(", ")}</span>
+    </div>
+
+    <div class="result-box">
+      <strong>🛡️ Risk</strong>
+      <span>${result.risk}</span>
+    </div>
+
+  </div>
+
+
+  <div class="fit-box">
+
+    <strong>🎯 Personal Fit</strong>
+
+    <span>
+      ${result.fit}
+    </span>
+
+  </div>
+
+
+  <div class="next-step">
+
+    <strong>🚀 Next Best Move</strong>
+
+    <span>
+      ${result.nextStep}
+    </span>
+
+  </div>
+
+`;
+
+results.style.display = "block";
+
+console.log(
+  "✅ RESULT RENDERED BEFORE DATABASE"
+);
+
+results.scrollIntoView({
+  behavior: "smooth",
+  block: "center"
+});
 
   // ==========================================
   // SAVE SEARCH
