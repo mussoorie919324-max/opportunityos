@@ -1072,12 +1072,21 @@ console.log(
 ); 
 
 // ==========================================
-// AUTO ATTACH DEMAND EVIDENCE
+// AUTO ATTACH + VERIFY DEMAND & EARNING
 // ==========================================
 
 const demandClaim = createdClaims?.find(
   claim => claim.claim_type === "demand"
 );
+
+const earningClaim = createdClaims?.find(
+  claim => claim.claim_type === "earning"
+);
+
+
+// ==========================================
+// DEMAND VERIFICATION PIPELINE
+// ==========================================
 
 if (demandClaim) {
 
@@ -1087,62 +1096,51 @@ if (demandClaim) {
   );
 
   const {
-    data: evidenceData,
-    error: evidenceError
-  } =
-    await supabaseClient.rpc(
-      "auto_attach_demand_evidence",
-      {
-        p_claim_id: demandClaim.id
-      }
-    );
+    data: demandEvidenceData,
+    error: demandEvidenceError
+  } = await supabaseClient.rpc(
+    "auto_attach_demand_evidence",
+    {
+      p_claim_id: demandClaim.id
+    }
+  );
 
-  if (evidenceError) {
+  if (demandEvidenceError) {
 
     console.error(
       "Demand evidence attachment failed:",
-      evidenceError
+      demandEvidenceError
     );
 
   } else {
 
     console.log(
       "Demand evidence attached:",
-      evidenceData
-    );
-
-    // ==========================================
-    // UPDATE CLAIM VERIFICATION
-    // ==========================================
-
-    console.log(
-      "Updating claim verification:",
-      demandClaim.id
+      demandEvidenceData
     );
 
     const {
-      data: verificationUpdate,
-      error: verificationError
-    } =
-      await supabaseClient.rpc(
-        "update_claim_verification",
-        {
-          p_claim_id: demandClaim.id
-        }
-      );
+      data: demandVerificationUpdate,
+      error: demandVerificationError
+    } = await supabaseClient.rpc(
+      "update_claim_verification",
+      {
+        p_claim_id: demandClaim.id
+      }
+    );
 
-    if (verificationError) {
+    if (demandVerificationError) {
 
       console.error(
-        "Claim verification update failed:",
-        verificationError
+        "Demand verification update failed:",
+        demandVerificationError
       );
 
     } else {
 
       console.log(
-        "Claim verification updated:",
-        verificationUpdate
+        "Demand verification updated:",
+        demandVerificationUpdate
       );
 
     }
@@ -1156,6 +1154,79 @@ if (demandClaim) {
   );
 
 }
+
+
+// ==========================================
+// EARNING VERIFICATION PIPELINE
+// ==========================================
+
+if (earningClaim) {
+
+  console.log(
+    "Auto-attaching earning evidence to claim:",
+    earningClaim.id
+  );
+
+  const {
+    data: earningEvidenceData,
+    error: earningEvidenceError
+  } = await supabaseClient.rpc(
+    "auto_attach_earning_evidence",
+    {
+      p_claim_id: earningClaim.id
+    }
+  );
+
+  if (earningEvidenceError) {
+
+    console.error(
+      "Earning evidence attachment failed:",
+      earningEvidenceError
+    );
+
+  } else {
+
+    console.log(
+      "Earning evidence attached:",
+      earningEvidenceData
+    );
+
+    const {
+      data: earningVerificationUpdate,
+      error: earningVerificationError
+    } = await supabaseClient.rpc(
+      "update_claim_verification",
+      {
+        p_claim_id: earningClaim.id
+      }
+    );
+
+    if (earningVerificationError) {
+
+      console.error(
+        "Earning verification update failed:",
+        earningVerificationError
+      );
+
+    } else {
+
+      console.log(
+        "Earning verification updated:",
+        earningVerificationUpdate
+      );
+
+    }
+
+  }
+
+} else {
+
+  console.error(
+    "Earning claim was not created."
+  );
+
+  }
+      
   // ==========================================
   // GET FIRST DATABASE CLAIM
   // ==========================================
