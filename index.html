@@ -1660,29 +1660,59 @@ if (earningClaim) {
 
 }
 
-// ==========================================
+ // ==========================================
 // LOAD CLAIM VERIFICATION
 // ==========================================
 
-async function loadClaimVerification(claimId) {
+async function loadClaimVerification(
+  claimId,
+  claimType
+) {
+
+  // ==========================================
+  // SELECT CORRECT UI
+  // ==========================================
+
+  const prefix =
+    claimType === "earning"
+      ? "earning"
+      : "demand";
+
 
   const badge =
-    document.getElementById("verificationBadge");
+    document.getElementById(
+      "verificationBadge"
+    );
+
 
   const statusEl =
-    document.getElementById("verificationStatus");
+    document.getElementById(
+      `${prefix}VerificationStatus`
+    );
+
 
   const confidenceEl =
-    document.getElementById("verificationConfidence");
+    document.getElementById(
+      `${prefix}VerificationConfidence`
+    );
+
 
   const evidenceEl =
-    document.getElementById("verificationEvidence");
+    document.getElementById(
+      `${prefix}VerificationEvidence`
+    );
+
 
   const conflictEl =
-    document.getElementById("verificationConflict");
+    document.getElementById(
+      `${prefix}VerificationConflict`
+    );
+
 
   const explanationEl =
-    document.getElementById("verificationExplanation");
+    document.getElementById(
+      `${prefix}VerificationExplanation`
+    );
 
 
   // ==========================================
@@ -1690,7 +1720,6 @@ async function loadClaimVerification(claimId) {
   // ==========================================
 
   if (
-    !badge ||
     !statusEl ||
     !confidenceEl ||
     !evidenceEl ||
@@ -1699,7 +1728,7 @@ async function loadClaimVerification(claimId) {
   ) {
 
     console.error(
-      "❌ Verification UI elements not found."
+      `❌ ${claimType} verification UI elements not found.`
     );
 
     return;
@@ -1709,11 +1738,6 @@ async function loadClaimVerification(claimId) {
   // ==========================================
   // INITIAL STATE
   // ==========================================
-
-  badge.textContent = "Checking";
-
-  badge.className =
-    "verification-badge unverified";
 
   statusEl.textContent =
     "Checking...";
@@ -1728,7 +1752,7 @@ async function loadClaimVerification(claimId) {
     "—";
 
   explanationEl.innerHTML =
-    "Checking available evidence...";
+    `Checking ${claimType} evidence...`;
 
 
   // ==========================================
@@ -1749,7 +1773,7 @@ async function loadClaimVerification(claimId) {
     try {
 
       console.log(
-        `Loading verification attempt ${attempt}/${maxAttempts}:`,
+        `Loading ${claimType} verification attempt ${attempt}/${maxAttempts}:`,
         claimId
       );
 
@@ -1776,7 +1800,7 @@ async function loadClaimVerification(claimId) {
 
 
       console.log(
-        "Frontend verification raw result:",
+        `${claimType} verification raw result:`,
         data
       );
 
@@ -1788,7 +1812,7 @@ async function loadClaimVerification(claimId) {
 
 
       console.log(
-        "Frontend verification parsed:",
+        `${claimType} verification parsed:`,
         verification
       );
 
@@ -1852,19 +1876,23 @@ async function loadClaimVerification(claimId) {
 
 
         // --------------------------------------
-        // BADGE
+        // GLOBAL BADGE
         // --------------------------------------
 
-        badge.textContent =
-          status.replace(
-            /-/g,
-            " "
-          );
+        if (badge) {
+
+          badge.textContent =
+            status.replace(
+              /-/g,
+              " "
+            );
 
 
-        badge.className =
-          "verification-badge " +
-          status;
+          badge.className =
+            "verification-badge " +
+            status;
+
+        }
 
 
         // --------------------------------------
@@ -1925,7 +1953,7 @@ async function loadClaimVerification(claimId) {
 
 
         console.log(
-          "✅ Verification UI loaded successfully:",
+          `✅ ${claimType} verification UI loaded successfully:`,
           verification
         );
 
@@ -1939,7 +1967,7 @@ async function loadClaimVerification(claimId) {
       // ========================================
 
       console.log(
-        `⏳ Verification not ready yet for claim ${claimId}. Evidence count: ${evidenceCount}. Status: ${status}`
+        `⏳ ${claimType} verification not ready yet for claim ${claimId}. Evidence count: ${evidenceCount}. Status: ${status}`
       );
 
 
@@ -1957,12 +1985,11 @@ async function loadClaimVerification(claimId) {
 
       }
 
-
     }
     catch (error) {
 
       console.error(
-        `❌ Claim verification attempt ${attempt} failed:`,
+        `❌ ${claimType} verification attempt ${attempt} failed:`,
         error
       );
 
@@ -1990,13 +2017,6 @@ async function loadClaimVerification(claimId) {
   // FINAL STATE
   // ==========================================
 
-  badge.textContent =
-    "Needs Verification";
-
-  badge.className =
-    "verification-badge unverified";
-
-
   statusEl.textContent =
     "Unverified";
 
@@ -2020,23 +2040,21 @@ async function loadClaimVerification(claimId) {
     </strong>
 
     <p>
-      Reliable evidence is not available yet.
-      Please try the search again after the
-      verification pipeline completes.
+      Reliable ${claimType} evidence is not
+      available yet.
     </p>
 
   `;
 
 
   console.warn(
-    "⚠️ Verification was not ready after all attempts:",
+    `⚠️ ${claimType} verification was not ready after all attempts:`,
     claimId
   );
 
   }
       
   
-
 // ==========================================
 // FOCUS SEARCH
 // ==========================================
