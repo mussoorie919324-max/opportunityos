@@ -1524,43 +1524,93 @@ if(firstClaim){
 
 }
 
-  // ==========================================
+// ==========================================
 // LOAD CLAIM VERIFICATION
 // ==========================================
 
-async function loadClaimVerification(claimId){
+async function loadClaimVerification(claimId) {
 
   const badge =
     document.getElementById("verificationBadge");
 
-  const content =
-    document.getElementById("verificationContent");
+  const statusEl =
+    document.getElementById("verificationStatus");
 
-  if(!badge || !content){
+  const confidenceEl =
+    document.getElementById("verificationConfidence");
+
+  const evidenceEl =
+    document.getElementById("verificationEvidence");
+
+  const conflictEl =
+    document.getElementById("verificationConflict");
+
+  const explanationEl =
+    document.getElementById("verificationExplanation");
+
+
+  // ==========================================
+  // CHECK UI
+  // ==========================================
+
+  if (
+    !badge ||
+    !statusEl ||
+    !confidenceEl ||
+    !evidenceEl ||
+    !conflictEl ||
+    !explanationEl
+  ) {
+
     console.error(
-      "Verification UI elements not found."
+      "❌ Verification UI elements not found."
     );
+
     return;
   }
 
-  badge.textContent = "Checking...";
+
+  // ==========================================
+  // INITIAL STATE
+  // ==========================================
+
+  badge.textContent = "Checking";
+
   badge.className =
     "verification-badge unverified";
 
-  content.innerHTML =
+  statusEl.textContent =
+    "Checking...";
+
+  confidenceEl.textContent =
+    "—";
+
+  evidenceEl.textContent =
+    "—";
+
+  conflictEl.textContent =
+    "—";
+
+  explanationEl.innerHTML =
     "Checking available evidence...";
 
 
   // ==========================================
-  // WAIT FOR DATABASE VERIFICATION
+  // DATABASE VERIFICATION
   // ==========================================
 
   const maxAttempts = 10;
+
   const retryDelay = 700;
 
-  for(let attempt = 1; attempt <= maxAttempts; attempt++){
 
-    try{
+  for (
+    let attempt = 1;
+    attempt <= maxAttempts;
+    attempt++
+  ) {
+
+    try {
 
       console.log(
         `Loading verification attempt ${attempt}/${maxAttempts}:`,
@@ -1568,9 +1618,9 @@ async function loadClaimVerification(claimId){
       );
 
 
-      // ------------------------------------------
-      // 1. READ VERIFICATION
-      // ------------------------------------------
+      // ========================================
+      // GET CLAIM VERIFICATION
+      // ========================================
 
       const {
         data,
@@ -1584,7 +1634,7 @@ async function loadClaimVerification(claimId){
       );
 
 
-      if(error){
+      if (error) {
         throw error;
       }
 
@@ -1607,22 +1657,14 @@ async function loadClaimVerification(claimId){
       );
 
 
-      // ------------------------------------------
-      // 2. CHECK IF REAL VERIFICATION EXISTS
-      // ------------------------------------------
+      // ========================================
+      // NORMALIZE DATA
+      // ========================================
 
       const evidenceCount =
         Number(
           verification?.evidence_count || 0
         );
-
-
-      const status =
-        String(
-          verification?.status || "unverified"
-        )
-        .toLowerCase()
-        .replace(/_/g, "-");
 
 
       const confidence =
@@ -1634,22 +1676,38 @@ async function loadClaimVerification(claimId){
           : 0;
 
 
-      const verificationReady =
-        evidenceCount > 0 ||
-        (
-          status !== "unverified" &&
-          confidence > 0
+      const status =
+        String(
+          verification?.status ||
+          "unverified"
+        )
+        .toLowerCase()
+        .replace(/_/g, "-");
+
+
+      const conflictDetected =
+        Boolean(
+          verification?.conflict_detected
         );
 
 
-      // ------------------------------------------
-      // 3. VERIFICATION READY
-      // ------------------------------------------
+      // ========================================
+      // CHECK VERIFICATION READY
+      // ========================================
 
-      if(
+      const verificationReady =
+        evidenceCount > 0 &&
+        status !== "unverified";
+
+
+      // ========================================
+      // VERIFICATION READY
+      // ========================================
+
+      if (
         verification &&
         verificationReady
-      ){
+      ) {
 
         const confidencePercent =
           Math.round(
@@ -1657,77 +1715,75 @@ async function loadClaimVerification(claimId){
           ) + "%";
 
 
+        // --------------------------------------
+        // BADGE
+        // --------------------------------------
+
         badge.textContent =
-          status.replace(/-/g, " ");
+          status.replace(
+            /-/g,
+            " "
+          );
 
 
         badge.className =
-          "verification-badge " + status;
+          "verification-badge " +
+          status;
 
 
-        content.innerHTML = `
+        // --------------------------------------
+        // STATUS
+        // --------------------------------------
 
-          <div class="verification-meta">
-
-            <div class="verification-stat">
-
-              <small>
-                Confidence
-              </small>
-
-              <strong>
-                ${confidencePercent}
-              </strong>
-
-            </div>
+        statusEl.textContent =
+          status.replace(
+            /-/g,
+            " "
+          );
 
 
-            <div class="verification-stat">
+        // --------------------------------------
+        // CONFIDENCE
+        // --------------------------------------
 
-              <small>
-                Evidence
-              </small>
-
-              <strong>
-                ${evidenceCount}
-              </strong>
-
-            </div>
+        confidenceEl.textContent =
+          confidencePercent;
 
 
-            <div class="verification-stat">
+        // --------------------------------------
+        // EVIDENCE
+        // --------------------------------------
 
-              <small>
-                Conflict
-              </small>
-
-              <strong>
-                ${
-                  verification.conflict_detected
-                    ? "Detected"
-                    : "None"
-                }
-              </strong>
-
-            </div>
-
-          </div>
+        evidenceEl.textContent =
+          evidenceCount;
 
 
-          <div class="verification-explanation">
+        // --------------------------------------
+        // CONFLICT
+        // --------------------------------------
 
-            <strong>
-              💡 Why this result?
-            </strong>
+        conflictEl.textContent =
+          conflictDetected
+            ? "Detected"
+            : "None";
 
-            <p>
-              ${
-                verification.explanation ||
-                "Evidence was found and the claim was evaluated by the verification engine."
-              }
-            </p>
 
-          </div>
+        // --------------------------------------
+        // EXPLANATION
+        // --------------------------------------
+
+        explanationEl.innerHTML = `
+
+          <strong>
+            💡 Why this result?
+          </strong>
+
+          <p>
+            ${
+              verification.explanation ||
+              "Evidence was found and evaluated by the verification engine."
+            }
+          </p>
 
         `;
 
@@ -1742,16 +1798,18 @@ async function loadClaimVerification(claimId){
       }
 
 
-      // ------------------------------------------
-      // 4. NOT READY — RETRY
-      // ------------------------------------------
+      // ========================================
+      // NOT READY — RETRY
+      // ========================================
 
       console.log(
         `⏳ Verification not ready yet for claim ${claimId}. Evidence count: ${evidenceCount}. Status: ${status}`
       );
 
 
-      if(attempt < maxAttempts){
+      if (
+        attempt < maxAttempts
+      ) {
 
         await new Promise(
           resolve =>
@@ -1764,7 +1822,8 @@ async function loadClaimVerification(claimId){
       }
 
 
-    }catch(error){
+    }
+    catch (error) {
 
       console.error(
         `❌ Claim verification attempt ${attempt} failed:`,
@@ -1772,7 +1831,9 @@ async function loadClaimVerification(claimId){
       );
 
 
-      if(attempt < maxAttempts){
+      if (
+        attempt < maxAttempts
+      ) {
 
         await new Promise(
           resolve =>
@@ -1800,20 +1861,33 @@ async function loadClaimVerification(claimId){
     "verification-badge unverified";
 
 
-  content.innerHTML = `
+  statusEl.textContent =
+    "Unverified";
 
-    <div class="verification-explanation">
 
-      <strong>
-        🛡️ Verification pending
-      </strong>
+  confidenceEl.textContent =
+    "0%";
 
-      <p>
-        Evidence is being processed. Please try the search again
-        if verification does not appear shortly.
-      </p>
 
-    </div>
+  evidenceEl.textContent =
+    "0";
+
+
+  conflictEl.textContent =
+    "None";
+
+
+  explanationEl.innerHTML = `
+
+    <strong>
+      🛡️ Verification pending
+    </strong>
+
+    <p>
+      Reliable evidence is not available yet.
+      Please try the search again after the
+      verification pipeline completes.
+    </p>
 
   `;
 
@@ -1824,6 +1898,8 @@ async function loadClaimVerification(claimId){
   );
 
   }
+      
+  
 
 // ==========================================
 // FOCUS SEARCH
