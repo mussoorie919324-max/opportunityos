@@ -1518,28 +1518,46 @@ if (earningClaim) {
     "block";
 
   // ==========================================
-  // LOAD DEMAND CLAIM VERIFICATION
-  // ==========================================
+// LOAD DEMAND + EARNING CLAIM VERIFICATION
+// ==========================================
 
-  if(firstClaim){
+if (demandClaim) {
 
-    console.log(
-      "Loading verification for database claim:",
-      firstClaim.id
-    );
+  console.log(
+    "Loading demand verification:",
+    demandClaim.id
+  );
 
-    await loadClaimVerification(
-      firstClaim.id
-    );
+  await loadClaimVerification(
+    demandClaim.id
+  );
 
-  }else{
+} else {
 
-    console.error(
-      "Demand claim was not created."
-    );
+  console.error(
+    "Demand claim was not created."
+  );
+
+}
+
+
+if (earningClaim) {
+
+  console.log(
+    "Loading earning verification:",
+    earningClaim.id
+  );
+
+  // Earning verification will be loaded
+  // after demand verification UI is upgraded.
+
+} else {
+
+  console.error(
+    "Earning claim was not created."
+  );
 
   }
-
 
   // ==========================================
   // SCROLL TO RESULT
