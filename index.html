@@ -1425,8 +1425,11 @@ if (earningClaim) {
 
     </div>
 
+<!-- ==========================================
+     VERIFICATION UI
+     ========================================== -->
 
-    <div
+<div
   id="verificationBox"
   class="verification-box"
 >
@@ -1447,76 +1450,163 @@ if (earningClaim) {
   </div>
 
 
-  <div class="verification-stats">
+  <!-- ==========================================
+       DEMAND VERIFICATION
+       ========================================== -->
 
-    <div class="verification-stat">
+  <div class="verification-section">
 
-      <span class="verification-label">
-        Status
-      </span>
+    <div class="verification-section-title">
+      📈 Demand Verification
+    </div>
 
-      <strong id="verificationStatus">
-        Checking...
-      </strong>
+    <div class="verification-stats">
+
+      <div class="verification-stat">
+
+        <span class="verification-label">
+          Status
+        </span>
+
+        <strong id="demandVerificationStatus">
+          Checking...
+        </strong>
+
+      </div>
+
+
+      <div class="verification-stat">
+
+        <span class="verification-label">
+          Confidence
+        </span>
+
+        <strong id="demandVerificationConfidence">
+          —
+        </strong>
+
+      </div>
+
+
+      <div class="verification-stat">
+
+        <span class="verification-label">
+          Evidence
+        </span>
+
+        <strong id="demandVerificationEvidence">
+          —
+        </strong>
+
+      </div>
+
+
+      <div class="verification-stat">
+
+        <span class="verification-label">
+          Conflict
+        </span>
+
+        <strong id="demandVerificationConflict">
+          —
+        </strong>
+
+      </div>
 
     </div>
 
 
-    <div class="verification-stat">
-
-      <span class="verification-label">
-        Confidence
-      </span>
-
-      <strong id="verificationConfidence">
-        —
-      </strong>
-
-    </div>
-
-
-    <div class="verification-stat">
-
-      <span class="verification-label">
-        Evidence
-      </span>
-
-      <strong id="verificationEvidence">
-        —
-      </strong>
-
-    </div>
-
-
-    <div class="verification-stat">
-
-      <span class="verification-label">
-        Conflict
-      </span>
-
-      <strong id="verificationConflict">
-        —
-      </strong>
-
+    <div
+      id="demandVerificationExplanation"
+      class="verification-explanation"
+    >
+      Checking demand evidence...
     </div>
 
   </div>
 
 
-  <div
-    id="verificationExplanation"
-    class="verification-explanation"
-  >
+  <!-- ==========================================
+       EARNING VERIFICATION
+       ========================================== -->
 
-    Checking available evidence...
+  <div class="verification-section">
+
+    <div class="verification-section-title">
+      💰 Earning Verification
+    </div>
+
+    <div class="verification-stats">
+
+      <div class="verification-stat">
+
+        <span class="verification-label">
+          Status
+        </span>
+
+        <strong id="earningVerificationStatus">
+          Checking...
+        </strong>
+
+      </div>
+
+
+      <div class="verification-stat">
+
+        <span class="verification-label">
+          Confidence
+        </span>
+
+        <strong id="earningVerificationConfidence">
+          —
+        </strong>
+
+      </div>
+
+
+      <div class="verification-stat">
+
+        <span class="verification-label">
+          Evidence
+        </span>
+
+        <strong id="earningVerificationEvidence">
+          —
+        </strong>
+
+      </div>
+
+
+      <div class="verification-stat">
+
+        <span class="verification-label">
+          Conflict
+        </span>
+
+        <strong id="earningVerificationConflict">
+          —
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="earningVerificationExplanation"
+      class="verification-explanation"
+    >
+      Checking earning evidence...
+    </div>
 
   </div>
 
 </div>
 
-  results.style.display =
-    "block";
 
+results.style.display =
+  "block";
+    
   // ==========================================
 // LOAD DEMAND + EARNING CLAIM VERIFICATION
 // ==========================================
