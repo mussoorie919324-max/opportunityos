@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>OpportunityOS — Discover What's Possible</title>
-<script src="opportunity-engine.js?v=3"></script>
+<script src="opportunity-engine.js?v=4"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -840,762 +840,277 @@ footer{
 
 <script>
 
-  async function searchOpportunity(){
+// ==========================================
+// OPPORTUNITYOS — SEARCH SYSTEM
+// ==========================================
 
-  const input =
-    document.getElementById("searchInput");
+async function searchOpportunity() {
 
-  const results =
-    document.getElementById("results");
+  const input = document.getElementById("searchInput");
+  const results = document.getElementById("results");
 
-  const value =
-    input.value.trim();
+  const value = input.value.trim();
 
-  if(!value){
-
-    results.style.display = "none";
-
-    alert(
-      "Tell us what you're looking for."
-    );
-
+  if (!value) {
+    alert("Tell us what you're looking for.");
     input.focus();
-
     return;
   }
 
-
   // ==========================================
-  // OPPORTUNITY ENGINE
-  // ==========================================
-
-  const result =
-    opportunityEngine.analyze(value);
-
-  console.log(
-    "Opportunity Engine Result:",
-    result
-  );
-
-  console.log(
-    "Claims from Opportunity Engine:",
-    result.claims
-  );
-// ==========================================
-// SHOW RESULT IMMEDIATELY
-// DATABASE MUST NOT BLOCK RESULT
-// ==========================================
-
-results.innerHTML = `
-
-  <div class="result-top">
-
-    <div class="result-icon">
-      ${result.icon}
-    </div>
-
-    <div>
-
-      <div class="result-title">
-        ${result.title}
-      </div>
-
-      <div class="result-query">
-        Your search: ${result.query}
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <div class="opportunity-score">
-
-    <strong>
-      🔥 Opportunity Score
-    </strong>
-
-    <span>
-      ${
-        result.opportunityScore === null
-          ? "Needs Verification"
-          : result.opportunityScore + "/100"
-      }
-    </span>
-
-  </div>
-
-
-  <div class="result-grid">
-
-    <div class="result-box">
-      <strong>📈 Demand</strong>
-      <span>${result.demand}</span>
-    </div>
-
-    <div class="result-box">
-      <strong>💰 Earning Potential</strong>
-      <span>${result.earning}</span>
-    </div>
-
-    <div class="result-box">
-      <strong>🥊 Competition</strong>
-      <span>${result.competition}</span>
-    </div>
-
-    <div class="result-box">
-      <strong>🎯 Difficulty</strong>
-      <span>${result.difficulty}</span>
-    </div>
-
-    <div class="result-box">
-      <strong>🧠 Skills</strong>
-      <span>${result.skills.join(", ")}</span>
-    </div>
-
-    <div class="result-box">
-      <strong>🛡️ Risk</strong>
-      <span>${result.risk}</span>
-    </div>
-
-  </div>
-
-
-  <div class="fit-box">
-
-    <strong>🎯 Personal Fit</strong>
-
-    <span>
-      ${result.fit}
-    </span>
-
-  </div>
-
-
-  <div class="next-step">
-
-    <strong>🚀 Next Best Move</strong>
-
-    <span>
-      ${result.nextStep}
-    </span>
-
-  </div>
-
-`;
-
-results.style.display = "block";
-
-console.log(
-  "✅ RESULT RENDERED BEFORE DATABASE"
-);
-
-results.scrollIntoView({
-  behavior: "smooth",
-  block: "center"
-});
-
-  // ==========================================
-  // SAVE SEARCH
+  // STEP 1 — RUN OPPORTUNITY ENGINE
   // ==========================================
 
-  const {
-    data: searchData,
-    error: searchError
-  } =
-    await supabaseClient
-      .from("opportunity_searches")
-      .insert([
-        {
-          search_text: value
-        }
-      ])
-      .select("id")
-      .single();
+  let result;
 
+  try {
 
-  if(searchError){
+    result = opportunityEngine.analyze(value);
+
+    console.log("Opportunity Engine Result:", result);
+    console.log("Claims:", result.claims);
+
+  } catch (error) {
 
     console.error(
-      "Search creation failed:",
-      searchError
-    );
-
-    alert(
-      "Search save error: " +
-      (
-        searchError.message ||
-        JSON.stringify(searchError)
-      )
-    );
-
-    return;
-  }
-
-
-  console.log(
-    "Search created:",
-    searchData
-  );
-
-
-  // ==========================================
-  // CREATE OPPORTUNITY
-  // ==========================================
-
-  const {
-    data: opportunityData,
-    error: opportunityError
-  } =
-    await supabaseClient
-      .from("opportunities")
-      .insert([
-        {
-          search_id: searchData.id,
-
-          title:
-            result.opportunity.title,
-
-          category:
-            result.opportunity.category,
-
-          description:
-            result.opportunity.description,
-
-          skills:
-            result.skills,
-
-          difficulty:
-            result.difficulty,
-
-          opportunity_score:
-            result.opportunityScore,
-
-          best_next_action:
-            result.bestNextAction
-        }
-      ])
-      .select("id")
-      .single();
-
-
-  if(opportunityError){
-
-    console.error(
-      "Opportunity creation failed:",
-      opportunityError
-    );
-
-    alert(
-      "Opportunity could not be created. Check Supabase permissions."
-    );
-
-    return;
-  }
-
-
-  console.log(
-    "Opportunity created:",
-    opportunityData
-  );
-
-
-  const opportunityId =
-    opportunityData.id;
-
-
-// ==========================================
-// CREATE DATABASE CLAIMS — SAFE VERSION
-// ==========================================
-
-const databaseClaimTypes = [
-  "demand",
-  "earning",
-  "competition",
-  "difficulty",
-  "risk",
-  "trend"
-];
-
-const claimsToInsert =
-  result.claims
-    .filter(claim =>
-      databaseClaimTypes.includes(claim.claimType)
-    )
-    .map(claim => ({
-      opportunity_id: opportunityId,
-      claim_type: claim.claimType,
-      claim_text: claim.claimText,
-      confidence: 0,
-      verification_status: "unverified",
-      verification_confidence: 0
-    }));
-
-
-let createdClaims = [];
-
-
-// ==========================================
-// TRY TO CREATE CLAIMS
-// ==========================================
-
-if (claimsToInsert.length > 0) {
-
-  const {
-    data,
-    error
-  } = await supabaseClient
-    .from("opportunity_claims")
-    .insert(claimsToInsert)
-    .select(
-      "id, opportunity_id, claim_type, claim_text"
-    );
-
-
-  if (error) {
-
-    console.error(
-      "Claim creation failed:",
+      "Opportunity Engine failed:",
       error
     );
 
-    console.log(
-      "Result will continue without verification."
-    );
+    results.innerHTML = `
+      <div style="
+        padding:25px;
+        border:1px solid #7a3030;
+        border-radius:18px;
+        background:#160b0b;
+        color:#ff8f8f;
+      ">
+        <strong>⚠️ Opportunity Engine Error</strong>
+        <p style="margin-top:10px;">
+          ${error.message}
+        </p>
+      </div>
+    `;
 
-  } else {
+    results.style.display = "block";
 
-    createdClaims = data || [];
-
-    console.log(
-      "Claims created:",
-      createdClaims
-    );
-
+    return;
   }
 
-}
-
-
-// ==========================================
-// FIND CLAIMS
-// ==========================================
-
-const demandClaim =
-  createdClaims.find(
-    claim =>
-      claim.claim_type === "demand"
-  );
-
-const earningClaim =
-  createdClaims.find(
-    claim =>
-      claim.claim_type === "earning"
-  );
-
-
-console.log(
-  "Demand claim:",
-  demandClaim
-);
-
-console.log(
-  "Earning claim:",
-  earningClaim
-);
-
-
-// ==========================================
-// IMPORTANT
-// ==========================================
-// Verification RPC temporarily disabled.
-// First we confirm that the Opportunity Result
-// renders correctly.
-//
-// After the result works, we will reconnect:
-// 1. Demand evidence
-// 2. Earning evidence
-// 3. Verification calculation
-// 4. Verification UI
-// ==========================================           
 
   // ==========================================
-  // SHOW RESULT
+  // STEP 2 — SHOW RESULT IMMEDIATELY
   // ==========================================
 
   results.innerHTML = `
 
-    <div class="result-top">
+    <div style="
+      margin-top:25px;
+      padding:28px;
+      border:1px solid #263653;
+      border-radius:24px;
+      background:linear-gradient(145deg,#111a2d,#080e1c);
+      text-align:left;
+    ">
 
-      <div class="result-icon">
-        ${result.icon}
-      </div>
+      <!-- RESULT HEADER -->
 
-      <div>
+      <div style="
+        display:flex;
+        align-items:center;
+        gap:15px;
+        margin-bottom:22px;
+      ">
 
-        <div class="result-title">
-          ${result.title}
+        <div style="
+          font-size:42px;
+        ">
+          ${result.icon}
         </div>
 
-        <div class="result-query">
-          Your search: ${result.query}
+        <div>
+
+          <div style="
+            font-size:25px;
+            font-weight:800;
+          ">
+            ${result.title}
+          </div>
+
+          <div style="
+            color:#8290ad;
+            margin-top:5px;
+            font-size:13px;
+          ">
+            Your search: ${result.query}
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- OPPORTUNITY SCORE -->
+
+      <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        padding:16px;
+        margin-bottom:18px;
+        border-radius:15px;
+        background:#0c1527;
+        border:1px solid #23314c;
+      ">
+
+        <strong>
+          🔥 Opportunity Score
+        </strong>
+
+        <span style="
+          color:#54f0ad;
+          font-weight:800;
+        ">
+          ${
+            result.opportunityScore === null
+              ? "Needs Verification"
+              : result.opportunityScore + "/100"
+          }
+        </span>
+
+      </div>
+
+
+      <!-- PROFILE -->
+
+      <div style="
+        display:grid;
+        grid-template-columns:repeat(2,1fr);
+        gap:12px;
+      ">
+
+        <div class="result-box">
+          <strong>📈 Demand</strong>
+          <span>${result.demand}</span>
+        </div>
+
+        <div class="result-box">
+          <strong>💰 Earning Potential</strong>
+          <span>${result.earning}</span>
+        </div>
+
+        <div class="result-box">
+          <strong>🥊 Competition</strong>
+          <span>${result.competition}</span>
+        </div>
+
+        <div class="result-box">
+          <strong>🎯 Difficulty</strong>
+          <span>${result.difficulty}</span>
+        </div>
+
+        <div class="result-box">
+          <strong>🧠 Skills</strong>
+          <span>${result.skills.join(", ")}</span>
+        </div>
+
+        <div class="result-box">
+          <strong>🛡️ Risk</strong>
+          <span>${result.risk}</span>
+        </div>
+
+      </div>
+
+
+      <!-- PERSONAL FIT -->
+
+      <div style="
+        margin-top:15px;
+        padding:18px;
+        border-radius:15px;
+        background:#0b1424;
+        border:1px solid #202e49;
+      ">
+
+        <strong>
+          🎯 Personal Fit
+        </strong>
+
+        <div style="
+          margin-top:8px;
+          color:#8997b3;
+          line-height:1.6;
+        ">
+          ${result.fit}
+        </div>
+
+      </div>
+
+
+      <!-- NEXT STEP -->
+
+      <div style="
+        margin-top:15px;
+        padding:18px;
+        border-radius:15px;
+        background:#0b1424;
+        border:1px solid #202e49;
+      ">
+
+        <strong>
+          🚀 Next Best Move
+        </strong>
+
+        <div style="
+          margin-top:8px;
+          color:#8997b3;
+          line-height:1.6;
+        ">
+          ${result.nextStep}
+        </div>
+
+      </div>
+
+
+      <!-- VERIFICATION -->
+
+      <div style="
+        margin-top:15px;
+        padding:18px;
+        border-radius:15px;
+        background:#0b1424;
+        border:1px solid #202e49;
+      ">
+
+        <strong>
+          🛡️ Verification Status
+        </strong>
+
+        <div style="
+          margin-top:8px;
+          color:#54f0ad;
+        ">
+          ${result.verification.status}
+        </div>
+
+        <div style="
+          margin-top:5px;
+          color:#8997b3;
+          font-size:13px;
+        ">
+          Confidence:
+          ${Math.round((result.verification.confidence || 0) * 100)}%
         </div>
 
       </div>
 
     </div>
+  `;
 
+  results.style.display = "block";
 
-    <div class="opportunity-score">
+  console.log("✅ RESULT RENDERED");
 
-      <strong>
-        🔥 Opportunity Score
-      </strong>
-
-      <span>
-        ${
-          result.opportunityScore === null
-            ? "Needs Verification"
-            : result.opportunityScore + "/100"
-        }
-      </span>
-
-    </div>
-
-
-    <div class="result-grid">
-
-      <div class="result-box">
-
-        <strong>
-          📈 Demand
-        </strong>
-
-        <span>
-          ${result.demand}
-        </span>
-
-      </div>
-
-
-      <div class="result-box">
-
-        <strong>
-          💰 Earning Potential
-        </strong>
-
-        <span>
-          ${result.earning}
-        </span>
-
-      </div>
-
-
-      <div class="result-box">
-
-        <strong>
-          🥊 Competition
-        </strong>
-
-        <span>
-          ${result.competition}
-        </span>
-
-      </div>
-
-
-      <div class="result-box">
-
-        <strong>
-          🎯 Difficulty
-        </strong>
-
-        <span>
-          ${result.difficulty}
-        </span>
-
-      </div>
-
-
-      <div class="result-box">
-
-        <strong>
-          🧠 Skills
-        </strong>
-
-        <span>
-          ${result.skills.join(", ")}
-        </span>
-
-      </div>
-
-
-      <div class="result-box">
-
-        <strong>
-          🛡️ Risk
-        </strong>
-
-        <span>
-          ${result.risk}
-        </span>
-
-      </div>
-
-    </div>
-
-
-    <div class="fit-box">
-
-      <strong>
-        🎯 Personal Fit
-      </strong>
-
-      <span>
-        ${result.fit}
-      </span>
-
-    </div>
-
-
-    <div class="next-step">
-
-      <strong>
-        🚀 Next Best Move
-      </strong>
-
-      <span>
-        ${result.nextStep}
-      </span>
-
-    </div>
-
-<!-- ==========================================
-     VERIFICATION UI
-     ========================================== -->
-
-<div
-  id="verificationBox"
-  class="verification-box"
->
-
-  <div class="verification-header">
-
-    <div class="verification-title">
-      🛡️ Claim Verification
-    </div>
-
-    <div
-      id="verificationBadge"
-      class="verification-badge unverified"
-    >
-      Checking
-    </div>
-
-  </div>
-
-
-  <!-- ==========================================
-       DEMAND VERIFICATION
-       ========================================== -->
-
-  <div class="verification-section">
-
-    <div class="verification-section-title">
-      📈 Demand Verification
-    </div>
-
-    <div class="verification-stats">
-
-      <div class="verification-stat">
-
-        <span class="verification-label">
-          Status
-        </span>
-
-        <strong id="demandVerificationStatus">
-          Checking...
-        </strong>
-
-      </div>
-
-
-      <div class="verification-stat">
-
-        <span class="verification-label">
-          Confidence
-        </span>
-
-        <strong id="demandVerificationConfidence">
-          —
-        </strong>
-
-      </div>
-
-
-      <div class="verification-stat">
-
-        <span class="verification-label">
-          Evidence
-        </span>
-
-        <strong id="demandVerificationEvidence">
-          —
-        </strong>
-
-      </div>
-
-
-      <div class="verification-stat">
-
-        <span class="verification-label">
-          Conflict
-        </span>
-
-        <strong id="demandVerificationConflict">
-          —
-        </strong>
-
-      </div>
-
-    </div>
-
-
-    <div
-      id="demandVerificationExplanation"
-      class="verification-explanation"
-    >
-      Checking demand evidence...
-    </div>
-
-  </div>
-
-
-  <!-- ==========================================
-       EARNING VERIFICATION
-       ========================================== -->
-
-  <div class="verification-section">
-
-    <div class="verification-section-title">
-      💰 Earning Verification
-    </div>
-
-    <div class="verification-stats">
-
-      <div class="verification-stat">
-
-        <span class="verification-label">
-          Status
-        </span>
-
-        <strong id="earningVerificationStatus">
-          Checking...
-        </strong>
-
-      </div>
-
-
-      <div class="verification-stat">
-
-        <span class="verification-label">
-          Confidence
-        </span>
-
-        <strong id="earningVerificationConfidence">
-          —
-        </strong>
-
-      </div>
-
-
-      <div class="verification-stat">
-
-        <span class="verification-label">
-          Evidence
-        </span>
-
-        <strong id="earningVerificationEvidence">
-          —
-        </strong>
-
-      </div>
-
-
-      <div class="verification-stat">
-
-        <span class="verification-label">
-          Conflict
-        </span>
-
-        <strong id="earningVerificationConflict">
-          —
-        </strong>
-
-      </div>
-
-    </div>
-
-
-    <div
-      id="earningVerificationExplanation"
-      class="verification-explanation"
-    >
-      Checking earning evidence...
-    </div>
-
-  </div>
-
-</div>
-
-
-results.style.display =
-  "block";
-    
-  // ==========================================
-// LOAD DEMAND + EARNING CLAIM VERIFICATION
-// ==========================================
-
-if (demandClaim) {
-
-  console.log(
-    "Loading demand verification:",
-    demandClaim.id
-  );
-
-  await loadClaimVerification(
-    demandClaim.id,
-    "demand"
-  );
-
-} else {
-
-  console.error(
-    "Demand claim was not created."
-  );
-
-}
-
-
-if (earningClaim) {
-
-  console.log(
-    "Loading earning verification:",
-    earningClaim.id
-  );
-
-  await loadClaimVerification(
-    earningClaim.id,
-    "earning"
-  );
-
-} else {
-
-  console.error(
-    "Earning claim was not created."
-  );
-
-  }
 
   // ==========================================
   // SCROLL TO RESULT
@@ -1606,424 +1121,254 @@ if (earningClaim) {
     block: "center"
   });
 
-}
-
- // ==========================================
-// LOAD CLAIM VERIFICATION
-// ==========================================
-
-async function loadClaimVerification(
-  claimId,
-  claimType
-) {
 
   // ==========================================
-  // SELECT CORRECT UI
+  // STEP 3 — DATABASE WORK
+  // RESULT ALREADY VISIBLE
   // ==========================================
 
-  const prefix =
-    claimType === "earning"
-      ? "earning"
-      : "demand";
+  try {
 
+    // ------------------------------------------
+    // SAVE SEARCH
+    // ------------------------------------------
 
-  const badge =
-    document.getElementById(
-      "verificationBadge"
-    );
-
-
-  const statusEl =
-    document.getElementById(
-      `${prefix}VerificationStatus`
-    );
-
-
-  const confidenceEl =
-    document.getElementById(
-      `${prefix}VerificationConfidence`
-    );
-
-
-  const evidenceEl =
-    document.getElementById(
-      `${prefix}VerificationEvidence`
-    );
-
-
-  const conflictEl =
-    document.getElementById(
-      `${prefix}VerificationConflict`
-    );
-
-
-  const explanationEl =
-    document.getElementById(
-      `${prefix}VerificationExplanation`
-    );
-
-
-  // ==========================================
-  // CHECK UI
-  // ==========================================
-
-  if (
-    !statusEl ||
-    !confidenceEl ||
-    !evidenceEl ||
-    !conflictEl ||
-    !explanationEl
-  ) {
-
-    console.error(
-      `❌ ${claimType} verification UI elements not found.`
-    );
-
-    return;
-  }
-
-
-  // ==========================================
-  // INITIAL STATE
-  // ==========================================
-
-  statusEl.textContent =
-    "Checking...";
-
-  confidenceEl.textContent =
-    "—";
-
-  evidenceEl.textContent =
-    "—";
-
-  conflictEl.textContent =
-    "—";
-
-  explanationEl.innerHTML =
-    `Checking ${claimType} evidence...`;
-
-
-  // ==========================================
-  // DATABASE VERIFICATION
-  // ==========================================
-
-  const maxAttempts = 10;
-
-  const retryDelay = 700;
-
-
-  for (
-    let attempt = 1;
-    attempt <= maxAttempts;
-    attempt++
-  ) {
-
-    try {
-
-      console.log(
-        `Loading ${claimType} verification attempt ${attempt}/${maxAttempts}:`,
-        claimId
-      );
-
-
-      // ========================================
-      // GET CLAIM VERIFICATION
-      // ========================================
-
-      const {
-        data,
-        error
-      } =
-      await supabaseClient.rpc(
-        "get_claim_verification_output",
+    const {
+      data: searchData,
+      error: searchError
+    } = await supabaseClient
+      .from("opportunity_searches")
+      .insert([
         {
-          p_claim_id: claimId
+          search_text: value
         }
-      );
+      ])
+      .select("id")
+      .single();
 
 
-      if (error) {
-        throw error;
-      }
-
-
-      console.log(
-        `${claimType} verification raw result:`,
-        data
-      );
-
-
-      const verification =
-        Array.isArray(data)
-          ? data[0]
-          : data;
-
-
-      console.log(
-        `${claimType} verification parsed:`,
-        verification
-      );
-
-
-      // ========================================
-      // NORMALIZE DATA
-      // ========================================
-
-      const evidenceCount =
-        Number(
-          verification?.evidence_count || 0
-        );
-
-
-      const confidence =
-        verification?.confidence !== null &&
-        verification?.confidence !== undefined
-          ? Number(
-              verification.confidence
-            )
-          : 0;
-
-
-      const status =
-        String(
-          verification?.status ||
-          "unverified"
-        )
-        .toLowerCase()
-        .replace(/_/g, "-");
-
-
-      const conflictDetected =
-        Boolean(
-          verification?.conflict_detected
-        );
-
-
-      // ========================================
-      // CHECK VERIFICATION READY
-      // ========================================
-
-      const verificationReady =
-        evidenceCount > 0 &&
-        status !== "unverified";
-
-
-      // ========================================
-      // VERIFICATION READY
-      // ========================================
-
-      if (
-        verification &&
-        verificationReady
-      ) {
-
-        const confidencePercent =
-          Math.round(
-            confidence * 100
-          ) + "%";
-
-
-        // --------------------------------------
-        // GLOBAL BADGE
-        // --------------------------------------
-
-        if (badge) {
-
-          badge.textContent =
-            status.replace(
-              /-/g,
-              " "
-            );
-
-
-          badge.className =
-            "verification-badge " +
-            status;
-
-        }
-
-
-        // --------------------------------------
-        // STATUS
-        // --------------------------------------
-
-        statusEl.textContent =
-          status.replace(
-            /-/g,
-            " "
-          );
-
-
-        // --------------------------------------
-        // CONFIDENCE
-        // --------------------------------------
-
-        confidenceEl.textContent =
-          confidencePercent;
-
-
-        // --------------------------------------
-        // EVIDENCE
-        // --------------------------------------
-
-        evidenceEl.textContent =
-          evidenceCount;
-
-
-        // --------------------------------------
-        // CONFLICT
-        // --------------------------------------
-
-        conflictEl.textContent =
-          conflictDetected
-            ? "Detected"
-            : "None";
-
-
-        // --------------------------------------
-        // EXPLANATION
-        // --------------------------------------
-
-        explanationEl.innerHTML = `
-
-          <strong>
-            💡 Why this result?
-          </strong>
-
-          <p>
-            ${
-              verification.explanation ||
-              "Evidence was found and evaluated by the verification engine."
-            }
-          </p>
-
-        `;
-
-
-        console.log(
-          `✅ ${claimType} verification UI loaded successfully:`,
-          verification
-        );
-
-
-        return;
-      }
-
-
-      // ========================================
-      // NOT READY — RETRY
-      // ========================================
-
-      console.log(
-        `⏳ ${claimType} verification not ready yet for claim ${claimId}. Evidence count: ${evidenceCount}. Status: ${status}`
-      );
-
-
-      if (
-        attempt < maxAttempts
-      ) {
-
-        await new Promise(
-          resolve =>
-            setTimeout(
-              resolve,
-              retryDelay
-            )
-        );
-
-      }
-
-    }
-    catch (error) {
+    if (searchError) {
 
       console.error(
-        `❌ ${claimType} verification attempt ${attempt} failed:`,
-        error
+        "Search save failed:",
+        searchError
       );
 
-
-      if (
-        attempt < maxAttempts
-      ) {
-
-        await new Promise(
-          resolve =>
-            setTimeout(
-              resolve,
-              retryDelay
-            )
-        );
-
-      }
-
+      return;
     }
 
-  }
 
-
-  // ==========================================
-  // FINAL STATE
-  // ==========================================
-
-  statusEl.textContent =
-    "Unverified";
-
-
-  confidenceEl.textContent =
-    "0%";
-
-
-  evidenceEl.textContent =
-    "0";
-
-
-  conflictEl.textContent =
-    "None";
-
-
-  explanationEl.innerHTML = `
-
-    <strong>
-      🛡️ Verification pending
-    </strong>
-
-    <p>
-      Reliable ${claimType} evidence is not
-      available yet.
-    </p>
-
-  `;
-
-
-  console.warn(
-    `⚠️ ${claimType} verification was not ready after all attempts:`,
-    claimId
-  );
-
-  }
-      
-  
-// ==========================================
-// FOCUS SEARCH
-// ==========================================
-
-function focusSearch(){
-
-  const input =
-    document.getElementById(
-      "searchInput"
+    console.log(
+      "✅ Search saved:",
+      searchData
     );
 
 
-  input.focus();
+    // ------------------------------------------
+    // CREATE OPPORTUNITY
+    // ------------------------------------------
+
+    const {
+      data: opportunityData,
+      error: opportunityError
+    } = await supabaseClient
+      .from("opportunities")
+      .insert([
+        {
+          search_id: searchData.id,
+          title: result.opportunity.title,
+          category: result.opportunity.category,
+          description: result.opportunity.description,
+          skills: result.skills,
+          difficulty: result.difficulty,
+          opportunity_score: result.opportunityScore,
+          best_next_action: result.bestNextAction
+        }
+      ])
+      .select("id")
+      .single();
 
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
+    if (opportunityError) {
+
+      console.error(
+        "Opportunity creation failed:",
+        opportunityError
+      );
+
+      return;
+    }
+
+
+    console.log(
+      "✅ Opportunity created:",
+      opportunityData
+    );
+
+
+    const opportunityId =
+      opportunityData.id;
+
+
+    // ------------------------------------------
+    // CREATE CLAIMS
+    // ------------------------------------------
+
+    const databaseClaimTypes = [
+      "demand",
+      "earning",
+      "competition",
+      "difficulty",
+      "risk",
+      "trend"
+    ];
+
+
+    const claimsToInsert =
+      result.claims
+        .filter(claim =>
+          databaseClaimTypes.includes(
+            claim.claimType
+          )
+        )
+        .map(claim => ({
+          opportunity_id: opportunityId,
+          claim_type: claim.claimType,
+          claim_text: claim.claimText,
+          confidence: 0,
+          verification_status: "unverified",
+          verification_confidence: 0
+        }));
+
+
+    if (claimsToInsert.length === 0) {
+
+      console.log(
+        "No claims available."
+      );
+
+      return;
+    }
+
+
+    const {
+      data: createdClaims,
+      error: claimsError
+    } = await supabaseClient
+      .from("opportunity_claims")
+      .insert(claimsToInsert)
+      .select(
+        "id, opportunity_id, claim_type, claim_text"
+      );
+
+
+    if (claimsError) {
+
+      console.error(
+        "Claim creation failed:",
+        claimsError
+      );
+
+      return;
+    }
+
+
+    console.log(
+      "✅ Claims created:",
+      createdClaims
+    );
+
+
+    // ------------------------------------------
+    // FIND DEMAND + EARNING
+    // ------------------------------------------
+
+    const demandClaim =
+      createdClaims.find(
+        claim =>
+          claim.claim_type === "demand"
+      );
+
+
+    const earningClaim =
+      createdClaims.find(
+        claim =>
+          claim.claim_type === "earning"
+      );
+
+
+    console.log(
+      "Demand claim:",
+      demandClaim
+    );
+
+    console.log(
+      "Earning claim:",
+      earningClaim
+    );
+
+
+    // ------------------------------------------
+    // VERIFICATION WILL BE CONNECTED NEXT
+    // ------------------------------------------
+
+    console.log(
+      "✅ Database pipeline completed."
+    );
+
+
+  } catch (databaseError) {
+
+    console.error(
+      "Database pipeline error:",
+      databaseError
+    );
+
+    // IMPORTANT:
+    // NEVER remove the already displayed result.
+
+  }
 
 }
+
+
+// ==========================================
+// RESULT BOX STYLE
+// ==========================================
+
+const resultStyle = document.createElement("style");
+
+resultStyle.textContent = `
+
+.result-box{
+  padding:18px;
+  border-radius:15px;
+  background:#0b1424;
+  border:1px solid #202e49;
+}
+
+.result-box strong{
+  display:block;
+  margin-bottom:8px;
+}
+
+.result-box span{
+  color:#8997b3;
+  line-height:1.5;
+  font-size:14px;
+}
+
+@media(max-width:600px){
+
+  #results > div > div:nth-child(3){
+    grid-template-columns:1fr !important;
+  }
+
+}
+
+`;
+
+document.head.appendChild(resultStyle);
 
 
 // ==========================================
@@ -2031,39 +1376,36 @@ function focusSearch(){
 // ==========================================
 
 document
-  .getElementById(
-    "exploreButton"
-  )
+  .getElementById("exploreButton")
   .addEventListener(
     "click",
     searchOpportunity
-  );                    
+  );
 
-  alert("OpportunityOS JavaScript is working");
 
-  const originalLog = console.log;
+// ==========================================
+// ENTER KEY
+// ==========================================
 
-console.log = function(...args) {
-  originalLog.apply(console, args);
+document
+  .getElementById("searchInput")
+  .addEventListener(
+    "keydown",
+    function(event){
 
-  let box = document.getElementById("debugConsole");
+      if(event.key === "Enter"){
+        searchOpportunity();
+      }
 
-  if (!box) {
-    box = document.createElement("pre");
-    box.id = "debugConsole";
-    box.style.cssText =
-      "position:fixed;bottom:0;left:0;right:0;max-height:40%;overflow:auto;background:#000;color:#00ff88;padding:12px;font-size:12px;z-index:99999;white-space:pre-wrap;";
-    document.body.appendChild(box);
-  }
+    }
+  );
 
-  box.textContent +=
-    args.map(x =>
-      typeof x === "object"
-        ? JSON.stringify(x, null, 2)
-        : String(x)
-    ).join(" ") + "\n";
-};  
-</script>
+
+console.log(
+  "✅ OpportunityOS JavaScript loaded successfully"
+);
+
+</script>                
 
 </body>
 </html>      
