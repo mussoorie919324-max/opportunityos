@@ -1227,52 +1227,6 @@ if (earningClaim) {
 
   }
       
-  // ==========================================
-// GET DATABASE CLAIMS
-// ==========================================
-
-const demandClaim =
-  createdClaims?.find(
-    claim =>
-      claim.claim_type === "demand"
-  );
-
-const earningClaim =
-  createdClaims?.find(
-    claim =>
-      claim.claim_type === "earning"
-  );
-
-
-console.log(
-  "Demand database claim:",
-  demandClaim
-);
-
-console.log(
-  "Earning database claim:",
-  earningClaim
-);
-
-
-if (demandClaim) {
-
-  console.log(
-    "Demand claim ID:",
-    demandClaim.id
-  );
-
-}
-
-
-if (earningClaim) {
-
-  console.log(
-    "Earning claim ID:",
-    earningClaim.id
-  );
-
-}
 
   // ==========================================
   // SHOW RESULT
