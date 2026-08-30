@@ -1399,40 +1399,95 @@ if(firstClaim){
 
 
     <div
-      id="verificationBox"
-      class="verification-box"
+  id="verificationBox"
+  class="verification-box"
+>
+
+  <div class="verification-header">
+
+    <div class="verification-title">
+      🛡️ Claim Verification
+    </div>
+
+    <div
+      id="verificationBadge"
+      class="verification-badge unverified"
     >
+      Checking
+    </div>
 
-      <div class="verification-header">
-
-        <div class="verification-title">
-          🛡️ Claim Verification
-        </div>
-
-        <div
-          id="verificationBadge"
-          class="verification-badge unverified"
-        >
-          Checking
-        </div>
-
-      </div>
+  </div>
 
 
-      <div id="verificationContent">
+  <div class="verification-stats">
 
-        Checking available evidence...
+    <div class="verification-stat">
 
-      </div>
+      <span class="verification-label">
+        Status
+      </span>
+
+      <strong id="verificationStatus">
+        Checking...
+      </strong>
 
     </div>
 
-  `;
 
+    <div class="verification-stat">
+
+      <span class="verification-label">
+        Confidence
+      </span>
+
+      <strong id="verificationConfidence">
+        —
+      </strong>
+
+    </div>
+
+
+    <div class="verification-stat">
+
+      <span class="verification-label">
+        Evidence
+      </span>
+
+      <strong id="verificationEvidence">
+        —
+      </strong>
+
+    </div>
+
+
+    <div class="verification-stat">
+
+      <span class="verification-label">
+        Conflict
+      </span>
+
+      <strong id="verificationConflict">
+        —
+      </strong>
+
+    </div>
+
+  </div>
+
+
+  <div
+    id="verificationExplanation"
+    class="verification-explanation"
+  >
+
+    Checking available evidence...
+
+  </div>
+
+</div>
 
   results.style.display =
     "block";
-
 
   // ==========================================
   // LOAD DEMAND CLAIM VERIFICATION
