@@ -1338,7 +1338,38 @@ else{
     "✅ Verification Results:",
     verificationData
   );
+console.log("========== VERIFICATION DEBUG ==========");
 
+console.log(
+  "Total verification rows:",
+  verificationData?.length
+);
+
+verificationData.forEach((item, index) => {
+
+  console.log(
+    "Row:",
+    index + 1
+  );
+
+  console.log(
+    "Claim Type:",
+    item.claim_type
+  );
+
+  console.log(
+    "Status:",
+    item.verification_status
+  );
+
+  console.log(
+    "Confidence:",
+    item.verification_confidence
+  );
+
+});
+
+console.log("========== END DEBUG ==========");
 }
 
 
