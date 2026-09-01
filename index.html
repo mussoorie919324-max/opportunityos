@@ -1308,9 +1308,43 @@ async function searchOpportunity() {
     );
 
 
-    // ------------------------------------------
-    // VERIFICATION WILL BE CONNECTED NEXT
-    // ------------------------------------------
+  // ==========================================
+// LOAD VERIFICATION RESULTS
+// ==========================================
+
+const { data: verificationData, error: verificationError } =
+await supabaseClient
+  .from("opportunity_claims")
+  .select(
+    "claim_type, verification_status, verification_confidence"
+  )
+  .eq(
+    "opportunity_id",
+    opportunityId
+  );
+
+
+if(verificationError){
+
+  console.error(
+    "Verification load failed:",
+    verificationError
+  );
+
+}
+else{
+
+  console.log(
+    "✅ Verification Results:",
+    verificationData
+  );
+
+}
+
+
+// ------------------------------------------
+// VERIFICATION CONNECTED
+// ------------------------------------------
 
 console.log(
   "✅ Database pipeline completed."
