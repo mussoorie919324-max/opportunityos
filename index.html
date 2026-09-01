@@ -1213,7 +1213,30 @@ async function searchOpportunity() {
     // ------------------------------------------
     // CREATE CLAIMS
     // ------------------------------------------
+console.log(
+  "CREATED CLAIMS TEST:",
+  createdClaims
+);
 
+const demandClaim =
+  createdClaims.find(
+    claim => claim.claim_type === "demand"
+  );
+
+const earningClaim =
+  createdClaims.find(
+    claim => claim.claim_type === "earning"
+  );
+
+console.log(
+  "DEMAND CLAIM TEST:",
+  demandClaim
+);
+
+console.log(
+  "EARNING CLAIM TEST:",
+  earningClaim
+);
     const databaseClaimTypes = [
       "demand",
       "earning",
