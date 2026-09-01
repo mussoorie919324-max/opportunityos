@@ -1378,17 +1378,13 @@ if (earningClaim) {
     earningClaim.id
   );
 
-
   const {
     data,
     error
-  }
-  =
-  await supabaseClient.rpc(
+  } = await supabaseClient.rpc(
     "auto_attach_earning_evidence",
     {
-      p_claim_id:
-        earningClaim.id
+      p_claim_id: earningClaim.id
     }
   );
 
@@ -1409,10 +1405,12 @@ if (earningClaim) {
 
   }
 
-  }
-    console.log(
-      "✅ Database pipeline completed."
-    );
+}
+
+
+console.log(
+  "✅ Database pipeline completed."
+);
 
 
   } catch (databaseError) {
