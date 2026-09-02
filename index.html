@@ -1324,30 +1324,13 @@ await supabaseClient
   );
 
 
-if(verificationError){
-
-  console.error(
-    "Verification load failed:",
-    verificationError
-  );
-
-}
-else{
-
-  console.log(
-    "✅ Verification Results:",
-    verificationData
-  );
- 
-}
 // ------------------------------------------
-// VERIFICATION CONNECTED
+// VERIFICATION WILL BE CONNECTED NEXT
 // ------------------------------------------
 
 console.log(
   "✅ Database pipeline completed."
 );
-
 
   } catch (databaseError) {
 
