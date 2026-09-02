@@ -1,31 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>OpportunityOS — Discover What's Possible</title>
-<script src="opportunity-engine.js?v=4"></script>
+
+<!-- OPPORTUNITY ENGINE -->
+<script src="opportunity-engine.js?v=5"></script>
+
+<!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-const SUPABASE_URL = "https://ktihyruzkcttwiwtvtyw.supabase.co";
-const SUPABASE_KEY = "sb_publishable_hrFN44QIZ6-X5nheANBjxA_V_Dp2lTh";
 
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
+const SUPABASE_URL =
+  "https://ktihyruzkcttwiwtvtyw.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_hrFN44QIZ6-X5nheANBjxA_V_Dp2lTh";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+console.log(
+  "✅ OpportunityOS Supabase connection loaded"
 );
-</script>
-<script>
-console.log("OpportunityOS Supabase connection loaded");
-console.log("Supabase URL:", SUPABASE_URL);
-console.log("Supabase client:", supabaseClient);
-</script>
-  <style>
-*{box-sizing:border-box;margin:0;padding:0}
 
-html{scroll-behavior:smooth}
+</script>
+
+
+<style>
+
+/* ==========================================
+   GLOBAL
+========================================== */
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html{
+  scroll-behavior:smooth;
+}
 
 body{
   font-family:Arial,Helvetica,sans-serif;
@@ -34,14 +57,16 @@ body{
   overflow-x:hidden;
 }
 
-/* BACKGROUND */
-
 body:before{
   content:"";
   position:fixed;
   width:600px;
   height:600px;
-  background:radial-gradient(circle,rgba(0,255,170,.12),transparent 65%);
+  background:radial-gradient(
+    circle,
+    rgba(0,255,170,.12),
+    transparent 65%
+  );
   top:-250px;
   left:-200px;
   pointer-events:none;
@@ -52,7 +77,11 @@ body:after{
   position:fixed;
   width:600px;
   height:600px;
-  background:radial-gradient(circle,rgba(92,77,255,.13),transparent 65%);
+  background:radial-gradient(
+    circle,
+    rgba(92,77,255,.13),
+    transparent 65%
+  );
   right:-250px;
   top:250px;
   pointer-events:none;
@@ -64,7 +93,10 @@ body:after{
   margin:auto;
 }
 
-/* NAV */
+
+/* ==========================================
+   NAV
+========================================== */
 
 nav{
   height:78px;
@@ -93,7 +125,10 @@ nav{
   background:#0c1223;
 }
 
-/* HERO */
+
+/* ==========================================
+   HERO
+========================================== */
 
 .hero{
   text-align:center;
@@ -123,7 +158,11 @@ nav{
 }
 
 .hero h1 span{
-  background:linear-gradient(90deg,#55f2ae,#78a8ff);
+  background:linear-gradient(
+    90deg,
+    #55f2ae,
+    #78a8ff
+  );
   -webkit-background-clip:text;
   color:transparent;
 }
@@ -136,7 +175,10 @@ nav{
   line-height:1.7;
 }
 
-/* SEARCH */
+
+/* ==========================================
+   SEARCH
+========================================== */
 
 .search{
   max-width:760px;
@@ -165,9 +207,18 @@ nav{
   border-radius:13px;
   padding:0 28px;
   font-weight:800;
-  background:linear-gradient(135deg,#54f0ad,#39d99b);
+  background:linear-gradient(
+    135deg,
+    #54f0ad,
+    #39d99b
+  );
   color:#04130d;
   cursor:pointer;
+}
+
+.search button:disabled{
+  opacity:.6;
+  cursor:not-allowed;
 }
 
 .suggestions{
@@ -185,36 +236,110 @@ nav{
   border-radius:20px;
 }
 
-/* STATS */
 
-.stats{
+/* ==========================================
+   RESULTS
+========================================== */
+
+#results{
+  display:none;
+  max-width:900px;
+  margin:30px auto;
+  text-align:left;
+}
+
+.result-card{
+  padding:28px;
+  border:1px solid #263653;
+  border-radius:24px;
+  background:
+    linear-gradient(
+      145deg,
+      #111a2d,
+      #080e1c
+    );
+}
+
+.result-header{
+  display:flex;
+  align-items:center;
+  gap:15px;
+  margin-bottom:22px;
+}
+
+.result-icon{
+  font-size:42px;
+}
+
+.result-title{
+  font-size:25px;
+  font-weight:800;
+}
+
+.result-query{
+  color:#8290ad;
+  margin-top:5px;
+  font-size:13px;
+}
+
+
+/* ==========================================
+   SCORE
+========================================== */
+
+.score-card{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px;
+  margin-bottom:18px;
+  border-radius:15px;
+  background:#0c1527;
+  border:1px solid #23314c;
+}
+
+.score-card strong{
+  font-size:15px;
+}
+
+.score-value{
+  color:#54f0ad;
+  font-weight:800;
+}
+
+
+/* ==========================================
+   PROFILE GRID
+========================================== */
+
+.profile-grid{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:1px;
-  max-width:800px;
-  margin:20px auto 0;
-  background:#222d47;
-  border:1px solid #222d47;
-  border-radius:18px;
-  overflow:hidden;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
 }
 
-.stat{
-  background:#0b1120;
-  padding:20px;
+.result-box{
+  padding:18px;
+  border-radius:15px;
+  background:#0b1424;
+  border:1px solid #202e49;
 }
 
-.stat strong{
+.result-box strong{
   display:block;
-  font-size:22px;
-  margin-bottom:5px;
+  margin-bottom:8px;
 }
 
-.stat small{
-  color:#75829e;
+.result-box span{
+  color:#8997b3;
+  line-height:1.5;
+  font-size:14px;
 }
 
-/* SECTIONS */
+
+/* ==========================================
+   NORMAL SECTIONS
+========================================== */
 
 section{
   padding:75px 0;
@@ -235,7 +360,10 @@ section{
   color:#7f8ca8;
 }
 
-/* OPPORTUNITY CARDS */
+
+/* ==========================================
+   CARDS
+========================================== */
 
 .grid{
   display:grid;
@@ -249,26 +377,19 @@ section{
   min-height:210px;
   border:1px solid #202d49;
   border-radius:22px;
-  background:linear-gradient(145deg,rgba(20,29,50,.95),rgba(8,13,26,.95));
+  background:
+    linear-gradient(
+      145deg,
+      rgba(20,29,50,.95),
+      rgba(8,13,26,.95)
+    );
   transition:.25s;
   overflow:hidden;
-}
-
-.card:before{
-  content:"";
-  position:absolute;
-  width:100px;
-  height:100px;
-  background:rgba(70,240,170,.07);
-  border-radius:50%;
-  right:-40px;
-  top:-40px;
 }
 
 .card:hover{
   transform:translateY(-7px);
   border-color:#4be6a8;
-  box-shadow:0 15px 45px rgba(0,0,0,.25);
 }
 
 .icon{
@@ -294,7 +415,10 @@ section{
   color:#51e9a8;
 }
 
-/* INTELLIGENCE */
+
+/* ==========================================
+   INTELLIGENCE
+========================================== */
 
 .intelligence{
   display:grid;
@@ -306,7 +430,12 @@ section{
   padding:30px;
   border-radius:24px;
   border:1px solid #24304b;
-  background:linear-gradient(145deg,#111a2d,#090e1c);
+  background:
+    linear-gradient(
+      145deg,
+      #111a2d,
+      #090e1c
+    );
 }
 
 .panel h3{
@@ -330,7 +459,12 @@ section{
 .score div{
   width:87%;
   height:100%;
-  background:linear-gradient(90deg,#42e5a2,#75aaff);
+  background:
+    linear-gradient(
+      90deg,
+      #42e5a2,
+      #75aaff
+    );
   border-radius:20px;
 }
 
@@ -342,7 +476,10 @@ section{
   font-size:13px;
 }
 
-/* WHY */
+
+/* ==========================================
+   WHY
+========================================== */
 
 .why{
   display:grid;
@@ -369,13 +506,21 @@ section{
   font-size:14px;
 }
 
-/* TRUST */
+
+/* ==========================================
+   TRUST
+========================================== */
 
 .trust{
   text-align:center;
   padding:55px 25px;
   border-radius:25px;
-  background:linear-gradient(135deg,#0d1928,#10182a);
+  background:
+    linear-gradient(
+      135deg,
+      #0d1928,
+      #10182a
+    );
   border:1px solid #273653;
 }
 
@@ -395,7 +540,10 @@ section{
   line-height:1.7;
 }
 
-/* CTA */
+
+/* ==========================================
+   CTA
+========================================== */
 
 .cta{
   text-align:center;
@@ -423,7 +571,10 @@ section{
   cursor:pointer;
 }
 
-/* FOOTER */
+
+/* ==========================================
+   FOOTER
+========================================== */
 
 footer{
   border-top:1px solid #1b263d;
@@ -433,17 +584,16 @@ footer{
   font-size:13px;
 }
 
-/* MOBILE */
+
+/* ==========================================
+   MOBILE
+========================================== */
 
 @media(max-width:800px){
 
   .grid,
   .why,
   .intelligence{
-    grid-template-columns:1fr;
-  }
-
-  .stats{
     grid-template-columns:1fr;
   }
 
@@ -470,111 +620,55 @@ footer{
   .nav-btn{
     display:none;
   }
-}
-/* VERIFICATION UI */
 
-.verification-box{
-  margin-top:20px;
-  padding:22px;
-  border-radius:20px;
-  border:1px solid #263653;
-  background:linear-gradient(145deg,#0d1729,#080e1c);
 }
 
-.verification-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-  margin-bottom:15px;
-}
+@media(max-width:600px){
 
-.verification-title{
-  font-size:18px;
-  font-weight:800;
-}
-
-.verification-badge{
-  padding:7px 12px;
-  border-radius:20px;
-  font-size:12px;
-  font-weight:800;
-  text-transform:uppercase;
-}
-
-.verification-badge.verified{
-  color:#07150f;
-  background:#54f0ad;
-}
-
-.verification-badge.supported{
-  color:#06131a;
-  background:#65cfff;
-}
-
-.verification-badge.needs-review{
-  color:#211500;
-  background:#ffc857;
-}
-
-.verification-badge.unverified{
-  color:#fff;
-  background:#56627a;
-}
-
-.verification-stats{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-  margin-bottom:16px;
-}
-
-.verification-stat{
-  padding:12px;
-  border-radius:12px;
-  background:#111b2e;
-  border:1px solid #202d49;
-}
-
-.verification-stat small{
-  display:block;
-  color:#71809d;
-  font-size:11px;
-  margin-bottom:5px;
-}
-
-.verification-stat strong{
-  font-size:16px;
-}
-
-.verification-explanation{
-  padding:15px;
-  border-radius:14px;
-  background:#0a1221;
-  border:1px solid #1d2a43;
-  color:#93a0ba;
-  font-size:13px;
-  line-height:1.7;
-}
-
-.verification-explanation strong{
-  display:block;
-  color:#fff;
-  margin-bottom:7px;
+  .profile-grid{
+    grid-template-columns:1fr;
   }
+
+  .result-card{
+    padding:20px;
+  }
+
+  .result-title{
+    font-size:22px;
+  }
+
+}
+
 </style>
+
 </head>
+
 
 <body>
 
 <div class="container">
 
+
+<!-- ==========================================
+     NAV
+========================================== -->
+
 <nav>
-  <div class="logo">⚡ Opportunity<b>OS</b></div>
-  <div class="nav-btn">🌍 Global Intelligence</div>
+
+  <div class="logo">
+    ⚡ Opportunity<b>OS</b>
+  </div>
+
+  <div class="nav-btn">
+    🌍 Global Intelligence
+  </div>
+
 </nav>
 
-<!-- HERO -->
+
+<!-- ==========================================
+     HERO
+========================================== -->
 
 <section class="hero">
 
@@ -589,9 +683,13 @@ footer{
   </h1>
 
   <p>
-    Discover opportunities, understand demand, check risks,
-    find your best path and decide what to do next.
+    Discover opportunities, understand demand,
+    check risks, find your best path and decide
+    what to do next.
   </p>
+
+
+  <!-- SEARCH -->
 
   <div class="search">
 
@@ -601,35 +699,113 @@ footer{
       placeholder="Try: online work, business idea, AI skill..."
     >
 
-    <button id="exploreButton" type="button">
-  Explore →
+    <button
+      id="exploreButton"
+      type="button"
+    >
+      Explore →
     </button>
 
   </div>
-<div id="results" class="results"></div>
+
+
+  <!-- RESULTS -->
+
+  <div id="results"></div>
+
+
+  <!-- SUGGESTIONS -->
+
   <div class="suggestions">
+
     <span>AI opportunities</span>
     <span>Student careers</span>
     <span>Remote work</span>
     <span>Business ideas</span>
     <span>Local opportunities</span>
+
   </div>
 
-  <div class="stats">
 
-    <div class="stat">
-      <strong>🌍 Global</strong>
-      <small>Built for opportunities worldwide</small>
+  <!-- STATS -->
+
+  <div
+    style="
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:1px;
+      max-width:800px;
+      margin:20px auto 0;
+      background:#222d47;
+      border:1px solid #222d47;
+      border-radius:18px;
+      overflow:hidden;
+    "
+  >
+
+    <div
+      style="
+        background:#0b1120;
+        padding:20px;
+      "
+    >
+      <strong>
+        🌍 Global
+      </strong>
+
+      <small
+        style="
+          display:block;
+          color:#75829e;
+          margin-top:5px;
+        "
+      >
+        Built for opportunities worldwide
+      </small>
     </div>
 
-    <div class="stat">
-      <strong>🧠 AI-Powered</strong>
-      <small>Designed to understand your goal</small>
+
+    <div
+      style="
+        background:#0b1120;
+        padding:20px;
+      "
+    >
+      <strong>
+        🧠 AI-Powered
+      </strong>
+
+      <small
+        style="
+          display:block;
+          color:#75829e;
+          margin-top:5px;
+        "
+      >
+        Designed to understand your goal
+      </small>
     </div>
 
-    <div class="stat">
-      <strong>🛡️ Trust First</strong>
-      <small>Risk signals before you decide</small>
+
+    <div
+      style="
+        background:#0b1120;
+        padding:20px;
+      "
+    >
+      <strong>
+        🛡️ Trust First
+      </strong>
+
+      <small
+        style="
+          display:block;
+          color:#75829e;
+          margin-top:5px;
+        "
+      >
+        Risk signals before you decide
+      </small>
     </div>
 
   </div>
@@ -637,69 +813,157 @@ footer{
 </section>
 
 
-<!-- OPPORTUNITIES -->
+
+<!-- ==========================================
+     OPPORTUNITIES
+========================================== -->
 
 <section>
 
   <div class="heading">
-    <h2>Explore Your Possibilities</h2>
-    <p>Different goals. One intelligent platform.</p>
+
+    <h2>
+      Explore Your Possibilities
+    </h2>
+
+    <p>
+      Different goals. One intelligent platform.
+    </p>
+
   </div>
+
 
   <div class="grid">
 
     <div class="card">
-      <div class="icon">🎓</div>
-      <h3>For Students</h3>
+
+      <div class="icon">
+        🎓
+      </div>
+
+      <h3>
+        For Students
+      </h3>
+
       <p>
-        Discover skills, projects, internships and career directions.
+        Discover skills, projects,
+        internships and career directions.
       </p>
-      <div class="arrow">→</div>
+
+      <div class="arrow">
+        →
+      </div>
+
     </div>
 
-    <div class="card">
-      <div class="icon">💼</div>
-      <h3>Find Work</h3>
-      <p>
-        Explore jobs, remote work and paths that match your skills.
-      </p>
-      <div class="arrow">→</div>
-    </div>
 
     <div class="card">
-      <div class="icon">🧑‍💻</div>
-      <h3>Freelance</h3>
+
+      <div class="icon">
+        💼
+      </div>
+
+      <h3>
+        Find Work
+      </h3>
+
       <p>
-        Turn useful skills into services people and businesses need.
+        Explore jobs, remote work and
+        paths that match your skills.
       </p>
-      <div class="arrow">→</div>
+
+      <div class="arrow">
+        →
+      </div>
+
     </div>
 
-    <div class="card">
-      <div class="icon">🏪</div>
-      <h3>Local & Offline</h3>
-      <p>
-        Discover demand-driven services and opportunities around you.
-      </p>
-      <div class="arrow">→</div>
-    </div>
 
     <div class="card">
-      <div class="icon">🚀</div>
-      <h3>Start a Business</h3>
+
+      <div class="icon">
+        🧑‍💻
+      </div>
+
+      <h3>
+        Freelance
+      </h3>
+
       <p>
-        Find problems, market gaps and potential business opportunities.
+        Turn useful skills into services
+        people and businesses need.
       </p>
-      <div class="arrow">→</div>
+
+      <div class="arrow">
+        →
+      </div>
+
     </div>
 
+
     <div class="card">
-      <div class="icon">🤖</div>
-      <h3>AI & Future Skills</h3>
+
+      <div class="icon">
+        🏪
+      </div>
+
+      <h3>
+        Local & Offline
+      </h3>
+
       <p>
-        Discover emerging skills and how technology may change demand.
+        Discover demand-driven services
+        and opportunities around you.
       </p>
-      <div class="arrow">→</div>
+
+      <div class="arrow">
+        →
+      </div>
+
+    </div>
+
+
+    <div class="card">
+
+      <div class="icon">
+        🚀
+      </div>
+
+      <h3>
+        Start a Business
+      </h3>
+
+      <p>
+        Find problems, market gaps and
+        potential business opportunities.
+      </p>
+
+      <div class="arrow">
+        →
+      </div>
+
+    </div>
+
+
+    <div class="card">
+
+      <div class="icon">
+        🤖
+      </div>
+
+      <h3>
+        AI & Future Skills
+      </h3>
+
+      <p>
+        Discover emerging skills and
+        how technology may change demand.
+      </p>
+
+      <div class="arrow">
+        →
+      </div>
+
     </div>
 
   </div>
@@ -707,24 +971,40 @@ footer{
 </section>
 
 
-<!-- INTELLIGENCE -->
+
+<!-- ==========================================
+     INTELLIGENCE
+========================================== -->
 
 <section>
 
   <div class="heading">
-    <h2>Not Just Search. Understand.</h2>
-    <p>OpportunityOS is designed to help you make better decisions.</p>
+
+    <h2>
+      Not Just Search. Understand.
+    </h2>
+
+    <p>
+      OpportunityOS is designed to help
+      you make better decisions.
+    </p>
+
   </div>
+
 
   <div class="intelligence">
 
     <div class="panel">
 
-      <h3>🎯 Personal Opportunity Fit</h3>
+      <h3>
+        🎯 Personal Opportunity Fit
+      </h3>
 
       <p>
-        Your skills, interests, goals and situation can be compared
-        against an opportunity to understand how well it fits you.
+        Your skills, interests, goals and
+        situation can be compared against
+        an opportunity to understand how
+        well it fits you.
       </p>
 
       <div class="score">
@@ -732,28 +1012,49 @@ footer{
       </div>
 
       <div class="score-text">
-        <span>Example fit</span>
-        <strong>87%</strong>
+
+        <span>
+          Example fit
+        </span>
+
+        <strong>
+          87%
+        </strong>
+
       </div>
 
     </div>
 
+
     <div class="panel">
 
-      <h3>🛡️ Trust & Risk Signals</h3>
+      <h3>
+        🛡️ Trust & Risk Signals
+      </h3>
 
       <p>
-        Before acting on an opportunity, identify warning signals,
-        missing information and things that should be verified.
+        Before acting on an opportunity,
+        identify warning signals, missing
+        information and things that should
+        be verified.
       </p>
 
       <div class="score">
+
         <div style="width:72%"></div>
+
       </div>
 
       <div class="score-text">
-        <span>Example confidence</span>
-        <strong>72%</strong>
+
+        <span>
+          Example confidence
+        </span>
+
+        <strong>
+          72%
+        </strong>
+
       </div>
 
     </div>
@@ -763,30 +1064,68 @@ footer{
 </section>
 
 
-<!-- WHY -->
+
+<!-- ==========================================
+     WHY
+========================================== -->
 
 <section>
 
   <div class="heading">
-    <h2>Why OpportunityOS?</h2>
-    <p>Because finding an opportunity is only the first step.</p>
+
+    <h2>
+      Why OpportunityOS?
+    </h2>
+
+    <p>
+      Because finding an opportunity
+      is only the first step.
+    </p>
+
   </div>
+
 
   <div class="why">
 
     <div class="why-card">
-      <b>🔎 Discover</b>
-      <span>Find opportunities based on what you're actually trying to achieve.</span>
+
+      <b>
+        🔎 Discover
+      </b>
+
+      <span>
+        Find opportunities based on what
+        you're actually trying to achieve.
+      </span>
+
     </div>
 
-    <div class="why-card">
-      <b>🧠 Understand</b>
-      <span>See demand, skills, risks and the reasons behind an opportunity.</span>
-    </div>
 
     <div class="why-card">
-      <b>🚀 Act</b>
-      <span>Get a clearer next step instead of endless searching.</span>
+
+      <b>
+        🧠 Understand
+      </b>
+
+      <span>
+        See demand, skills, risks and the
+        reasons behind an opportunity.
+      </span>
+
+    </div>
+
+
+    <div class="why-card">
+
+      <b>
+        🚀 Act
+      </b>
+
+      <span>
+        Get a clearer next step instead
+        of endless searching.
+      </span>
+
     </div>
 
   </div>
@@ -794,20 +1133,30 @@ footer{
 </section>
 
 
-<!-- TRUST -->
+
+<!-- ==========================================
+     TRUST
+========================================== -->
 
 <section>
 
   <div class="trust">
 
-    <div class="trust-icon">🛡️</div>
+    <div class="trust-icon">
+      🛡️
+    </div>
 
-    <h2>Opportunity discovery with trust in mind.</h2>
+    <h2>
+      Opportunity discovery with trust in mind.
+    </h2>
 
     <p>
-      We want OpportunityOS to help people discover possibilities
-      without blindly trusting every job, offer, website or business claim.
-      Verification and risk signals will be an important part of the platform.
+      We want OpportunityOS to help people
+      discover possibilities without blindly
+      trusting every job, offer, website or
+      business claim. Verification and risk
+      signals will be an important part
+      of the platform.
     </p>
 
   </div>
@@ -815,11 +1164,16 @@ footer{
 </section>
 
 
-<!-- CTA -->
+
+<!-- ==========================================
+     CTA
+========================================== -->
 
 <section class="cta">
 
-  <h2>What could you do next?</h2>
+  <h2>
+    What could you do next?
+  </h2>
 
   <p>
     Tell OpportunityOS what you're looking for.
@@ -832,45 +1186,90 @@ footer{
 </section>
 
 
+
 <footer>
+
   OpportunityOS © 2026 · Global Opportunity Intelligence
+
 </footer>
+
 
 </div>
 
+
+
 <script>
 
-// ==========================================
-// OPPORTUNITYOS — SEARCH SYSTEM
-// ==========================================
+/* ==========================================
+   OPPORTUNITYOS SEARCH SYSTEM
+========================================== */
 
-async function searchOpportunity() {
+async function searchOpportunity(){
 
-  const input = document.getElementById("searchInput");
-  const results = document.getElementById("results");
+  const input =
+    document.getElementById("searchInput");
 
-  const value = input.value.trim();
+  const results =
+    document.getElementById("results");
 
-  if (!value) {
-    alert("Tell us what you're looking for.");
+  const button =
+    document.getElementById("exploreButton");
+
+  const value =
+    input.value.trim();
+
+
+  /* ==========================================
+     VALIDATE INPUT
+  ========================================== */
+
+  if(!value){
+
+    alert(
+      "Tell us what you're looking for."
+    );
+
     input.focus();
+
     return;
+
   }
 
-  // ==========================================
-  // STEP 1 — RUN OPPORTUNITY ENGINE
-  // ==========================================
+
+  /* ==========================================
+     DISABLE BUTTON
+  ========================================== */
+
+  button.disabled = true;
+
+  button.textContent =
+    "Analyzing...";
+
+
+  /* ==========================================
+     STEP 1
+     RUN OPPORTUNITY ENGINE
+  ========================================== */
 
   let result;
 
-  try {
+  try{
 
-    result = opportunityEngine.analyze(value);
+    result =
+      opportunityEngine.analyze(value);
 
-    console.log("Opportunity Engine Result:", result);
-    console.log("Claims:", result.claims);
+    console.log(
+      "🤖 Opportunity Engine Result:",
+      result
+    );
 
-  } catch (error) {
+    console.log(
+      "📋 Claims:",
+      result.claims
+    );
+
+  }
+  catch(error){
 
     console.error(
       "Opportunity Engine failed:",
@@ -878,283 +1277,90 @@ async function searchOpportunity() {
     );
 
     results.innerHTML = `
-      <div style="
-        padding:25px;
-        border:1px solid #7a3030;
-        border-radius:18px;
-        background:#160b0b;
-        color:#ff8f8f;
-      ">
-        <strong>⚠️ Opportunity Engine Error</strong>
+
+      <div
+        style="
+          padding:25px;
+          border:1px solid #7a3030;
+          border-radius:18px;
+          background:#160b0b;
+          color:#ff8f8f;
+        "
+      >
+
+        <strong>
+          ⚠️ Opportunity Engine Error
+        </strong>
+
         <p style="margin-top:10px;">
           ${error.message}
         </p>
+
       </div>
+
     `;
 
-    results.style.display = "block";
+    results.style.display =
+      "block";
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      "Explore →";
 
     return;
+
   }
 
 
-  // ==========================================
-  // STEP 2 — SHOW RESULT IMMEDIATELY
-  // ==========================================
 
-  results.innerHTML = `
+  /* ==========================================
+     STEP 2
+     SHOW RESULT IMMEDIATELY
+  ========================================== */
 
-    <div style="
-      margin-top:25px;
-      padding:28px;
-      border:1px solid #263653;
-      border-radius:24px;
-      background:linear-gradient(145deg,#111a2d,#080e1c);
-      text-align:left;
-    ">
-
-      <!-- RESULT HEADER -->
-
-      <div style="
-        display:flex;
-        align-items:center;
-        gap:15px;
-        margin-bottom:22px;
-      ">
-
-        <div style="
-          font-size:42px;
-        ">
-          ${result.icon}
-        </div>
-
-        <div>
-
-          <div style="
-            font-size:25px;
-            font-weight:800;
-          ">
-            ${result.title}
-          </div>
-
-          <div style="
-            color:#8290ad;
-            margin-top:5px;
-            font-size:13px;
-          ">
-            Your search: ${result.query}
-          </div>
-
-        </div>
-
-      </div>
+  renderOpportunityResult(
+    result
+  );
 
 
-      <!-- OPPORTUNITY SCORE -->
 
-      <div style="
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        padding:16px;
-        margin-bottom:18px;
-        border-radius:15px;
-        background:#0c1527;
-        border:1px solid #23314c;
-      ">
+  /* ==========================================
+     STEP 3
+     DATABASE PIPELINE
+  ========================================== */
 
-        <strong>
-          🔥 Opportunity Score
-        </strong>
+  try{
 
-        <span style="
-          color:#54f0ad;
-          font-weight:800;
-        ">
-          ${
-            result.opportunityScore === null
-              ? "Needs Verification"
-              : result.opportunityScore + "/100"
-          }
-        </span>
-
-      </div>
-
-
-      <!-- PROFILE -->
-
-      <div style="
-        display:grid;
-        grid-template-columns:repeat(2,1fr);
-        gap:12px;
-      ">
-
-        <div class="result-box">
-          <strong>📈 Demand</strong>
-          <span>${result.demand}</span>
-        </div>
-
-        <div class="result-box">
-          <strong>💰 Earning Potential</strong>
-          <span>${result.earning}</span>
-        </div>
-
-        <div class="result-box">
-          <strong>🥊 Competition</strong>
-          <span>${result.competition}</span>
-        </div>
-
-        <div class="result-box">
-          <strong>🎯 Difficulty</strong>
-          <span>${result.difficulty}</span>
-        </div>
-
-        <div class="result-box">
-          <strong>🧠 Skills</strong>
-          <span>${result.skills.join(", ")}</span>
-        </div>
-
-        <div class="result-box">
-          <strong>🛡️ Risk</strong>
-          <span>${result.risk}</span>
-        </div>
-
-      </div>
-
-
-      <!-- PERSONAL FIT -->
-
-      <div style="
-        margin-top:15px;
-        padding:18px;
-        border-radius:15px;
-        background:#0b1424;
-        border:1px solid #202e49;
-      ">
-
-        <strong>
-          🎯 Personal Fit
-        </strong>
-
-        <div style="
-          margin-top:8px;
-          color:#8997b3;
-          line-height:1.6;
-        ">
-          ${result.fit}
-        </div>
-
-      </div>
-
-
-      <!-- NEXT STEP -->
-
-      <div style="
-        margin-top:15px;
-        padding:18px;
-        border-radius:15px;
-        background:#0b1424;
-        border:1px solid #202e49;
-      ">
-
-        <strong>
-          🚀 Next Best Move
-        </strong>
-
-        <div style="
-          margin-top:8px;
-          color:#8997b3;
-          line-height:1.6;
-        ">
-          ${result.nextStep}
-        </div>
-
-      </div>
-
-
-      <!-- VERIFICATION -->
-
-      <div style="
-        margin-top:15px;
-        padding:18px;
-        border-radius:15px;
-        background:#0b1424;
-        border:1px solid #202e49;
-      ">
-
-        <strong>
-          🛡️ Verification Status
-        </strong>
-
-        <div style="
-          margin-top:8px;
-          color:#54f0ad;
-        ">
-          ${result.verification.status}
-        </div>
-
-        <div style="
-          margin-top:5px;
-          color:#8997b3;
-          font-size:13px;
-        ">
-          Confidence:
-          ${Math.round((result.verification.confidence || 0) * 100)}%
-        </div>
-
-      </div>
-
-    </div>
-  `;
-
-  results.style.display = "block";
-
-  console.log("✅ RESULT RENDERED");
-
-
-  // ==========================================
-  // SCROLL TO RESULT
-  // ==========================================
-
-  results.scrollIntoView({
-    behavior: "smooth",
-    block: "center"
-  });
-
-
-  // ==========================================
-  // STEP 3 — DATABASE WORK
-  // RESULT ALREADY VISIBLE
-  // ==========================================
-
-  try {
-
-    // ------------------------------------------
-    // SAVE SEARCH
-    // ------------------------------------------
+    /* ========================================
+       SAVE SEARCH
+    ======================================== */
 
     const {
       data: searchData,
       error: searchError
-    } = await supabaseClient
-      .from("opportunity_searches")
-      .insert([
-        {
-          search_text: value
-        }
-      ])
-      .select("id")
-      .single();
+    } =
+      await supabaseClient
+        .from("opportunity_searches")
+        .insert([
+          {
+            search_text:value
+          }
+        ])
+        .select("id")
+        .single();
 
 
-    if (searchError) {
+    if(searchError){
 
       console.error(
-        "Search save failed:",
+        "❌ Search save failed:",
         searchError
       );
 
       return;
+
     }
 
 
@@ -1164,261 +1370,18 @@ async function searchOpportunity() {
     );
 
 
-    // ------------------------------------------
-    // CREATE OPPORTUNITY
-    // ------------------------------------------
+
+    /* ========================================
+       CREATE OPPORTUNITY
+    ======================================== */
 
     const {
       data: opportunityData,
       error: opportunityError
-    } = await supabaseClient
-      .from("opportunities")
-      .insert([
-        {
-          search_id: searchData.id,
-          title: result.opportunity.title,
-          category: result.opportunity.category,
-          description: result.opportunity.description,
-          skills: result.skills,
-          difficulty: result.difficulty,
-          opportunity_score: result.opportunityScore,
-          best_next_action: result.bestNextAction
-        }
-      ])
-      .select("id")
-      .single();
-
-
-    if (opportunityError) {
-
-      console.error(
-        "Opportunity creation failed:",
-        opportunityError
-      );
-
-      return;
-    }
-
-
-    console.log(
-      "✅ Opportunity created:",
-      opportunityData
-    );
-
-
-    const opportunityId =
-      opportunityData.id;
-
-
-    // ------------------------------------------
-    // CREATE CLAIMS
-    // ------------------------------------------
-
-    const databaseClaimTypes = [
-      "demand",
-      "earning",
-      "competition",
-      "difficulty",
-      "risk",
-      "trend"
-    ];
-
-
-    const claimsToInsert =
-      result.claims
-        .filter(claim =>
-          databaseClaimTypes.includes(
-            claim.claimType
-          )
-        )
-        .map(claim => ({
-          opportunity_id: opportunityId,
-          claim_type: claim.claimType,
-          claim_text: claim.claimText,
-          confidence: 0,
-          verification_status: "unverified",
-          verification_confidence: 0
-        }));
-
-
-    if (claimsToInsert.length === 0) {
-
-      console.log(
-        "No claims available."
-      );
-
-      return;
-    }
-
-
-    const {
-      data: createdClaims,
-      error: claimsError
-    } = await supabaseClient
-      .from("opportunity_claims")
-      .insert(claimsToInsert)
-      .select(
-        "id, opportunity_id, claim_type, claim_text"
-      );
-
-
-    if (claimsError) {
-
-      console.error(
-        "Claim creation failed:",
-        claimsError
-      );
-
-      return;
-    }
-
-
-    console.log(
-      "✅ Claims created:",
-      createdClaims
-    );
-
-
-    // ------------------------------------------
-    // FIND DEMAND + EARNING
-    // ------------------------------------------
-
-    const demandClaim =
-      createdClaims.find(
-        claim =>
-          claim.claim_type === "demand"
-      );
-
-
-    const earningClaim =
-      createdClaims.find(
-        claim =>
-          claim.claim_type === "earning"
-      );
-
-
-    console.log(
-      "Demand claim:",
-      demandClaim
-    );
-
-    console.log(
-      "Earning claim:",
-      earningClaim
-    );
-
-
-  // ==========================================
-// LOAD VERIFICATION RESULTS
-// ==========================================
-
-const { data: verificationData, error: verificationError } =
-await supabaseClient
-  .from("opportunity_claims")
-  .select(
-    "claim_type, verification_status, verification_confidence"
-  )
-  .eq(
-    "opportunity_id",
-    opportunityId
-  );
-
-
-// ------------------------------------------
-// VERIFICATION WILL BE CONNECTED NEXT
-// ------------------------------------------
-
-console.log(
-  "✅ Database pipeline completed."
-);
-
-  } catch (databaseError) {
-
-    console.error(
-      "Database pipeline error:",
-      databaseError
-    );
-
-    // IMPORTANT:
-    // NEVER remove the already displayed result.
-
-  }
-
-// ==========================================
-// RESULT BOX STYLE
-// ==========================================
-
-const resultStyle = document.createElement("style");
-
-resultStyle.textContent = `
-
-.result-box{
-  padding:18px;
-  border-radius:15px;
-  background:#0b1424;
-  border:1px solid #202e49;
-}
-
-.result-box strong{
-  display:block;
-  margin-bottom:8px;
-}
-
-.result-box span{
-  color:#8997b3;
-  line-height:1.5;
-  font-size:14px;
-}
-
-@media(max-width:600px){
-
-  #results > div > div:nth-child(3){
-    grid-template-columns:1fr !important;
-  }
-
-}
-
-`;
-
-document.head.appendChild(resultStyle);
-
-
-// ==========================================
-// EXPLORE BUTTON
-// ==========================================
-
-document
-  .getElementById("exploreButton")
-  .addEventListener(
-    "click",
-    searchOpportunity
-  );
-
-
-// ==========================================
-// ENTER KEY
-// ==========================================
-
-document
-  .getElementById("searchInput")
-  .addEventListener(
-    "keydown",
-    function(event){
-
-      if(event.key === "Enter"){
-        searchOpportunity();
-      }
-
-    }
-  );
-
-
-console.log(
-  "✅ OpportunityOS JavaScript loaded successfully"
-);
-
-</script>                
-
-</body>
-</html>      
-       
+    } =
+      await supabaseClient
+        .from("opportunities")
+        .insert([
+          {
+            search_id:
+              
