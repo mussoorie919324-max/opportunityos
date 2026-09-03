@@ -1206,6 +1206,28 @@ footer{
 
 async function searchOpportunity(){
 
+  const debugBox = document.getElementById("results");
+
+debugBox.innerHTML = `
+  <div style="
+    margin-top:20px;
+    padding:20px;
+    border:1px solid #ffc857;
+    border-radius:18px;
+    background:#171306;
+    color:#fff;
+    text-align:left;
+  ">
+    🔍 <strong>OpportunityOS Debug</strong>
+    <p style="margin-top:10px;color:#ffc857;">
+      Search function started...
+    </p>
+  </div>
+`;
+
+debugBox.style.display = "block";
+
+console.log("DEBUG 1: searchOpportunity started");
   const input =
     document.getElementById("searchInput");
 
