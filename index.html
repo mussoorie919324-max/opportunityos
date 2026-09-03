@@ -1370,7 +1370,8 @@ results.innerHTML = `
         </div>
 
         <div class="result-query">
-          Search: ${value}
+  Search: ${value}
+</div>
         </div>
       </div>
     </div>
@@ -1457,62 +1458,15 @@ results.scrollIntoView({
 });
 
 console.log("✅ DEBUG 3: Result rendered");
-  /* ==========================================
+ 
+    /* ==========================================
      STEP 3
-     DATABASE PIPELINE
+     SEARCH FINISHED
   ========================================== */
 
-  try{
+  console.log("✅ OpportunityOS search completed");
 
-    /* ========================================
-       SAVE SEARCH
-    ======================================== */
+  button.disabled = false;
+  button.textContent = "Explore →";
 
-    const {
-      data: searchData,
-      error: searchError
-    } =
-      await supabaseClient
-        .from("opportunity_searches")
-        .insert([
-          {
-            search_text:value
-          }
-        ])
-        .select("id")
-        .single();
-
-
-    if(searchError){
-
-      console.error(
-        "❌ Search save failed:",
-        searchError
-      );
-
-      return;
-
-    }
-
-
-    console.log(
-      "✅ Search saved:",
-      searchData
-    );
-
-
-
-    /* ========================================
-       CREATE OPPORTUNITY
-    ======================================== */
-
-    const {
-      data: opportunityData,
-      error: opportunityError
-    } =
-      await supabaseClient
-        .from("opportunities")
-        .insert([
-          {
-            search_id:
-              
+  }
