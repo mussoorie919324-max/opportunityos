@@ -1311,7 +1311,11 @@ debugBox.innerHTML += `
     );
 
     results.innerHTML = `
-console.log("DEBUG 3: About to render result");
+  <div>
+    ⚠️ Opportunity Engine Error
+    <p>${error.message}</p>
+  </div>
+`;
       <div
         style="
           padding:25px;
