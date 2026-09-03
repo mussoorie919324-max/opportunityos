@@ -1279,7 +1279,19 @@ console.log("DEBUG 1: searchOpportunity started");
 
     result =
       opportunityEngine.analyze(value);
+console.log("DEBUG 2: Engine result received:", result);
 
+debugBox.innerHTML += `
+  <div style="
+    margin-top:10px;
+    padding:15px;
+    border:1px solid #54f0ad;
+    border-radius:15px;
+    color:#54f0ad;
+  ">
+    ✅ Engine result received
+  </div>
+`;
     console.log(
       "🤖 Opportunity Engine Result:",
       result
