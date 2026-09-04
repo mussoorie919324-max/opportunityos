@@ -663,10 +663,10 @@ footer {
   id="exploreButton"
   class="search-button"
   type="button"
-onclick="searchOpportunity();"
+  onclick="(function(){var r=document.getElementById('results');var i=document.getElementById('searchInput');var v=i.value.trim();r.style.display='block';try{if(!v){r.innerHTML='<div class=\'result-card\'><h2>Please enter something</h2></div>';return;}var x=opportunityEngine.analyze(v);r.innerHTML='<div class=\'result-card\'><div class=\'result-label\'>OPPORTUNITYOS TEST</div><h2>'+String(x.opportunity.title)+'</h2><p>Search: '+String(v)+'</p><p>Engine analysis completed successfully ✓</p></div>';}catch(e){r.innerHTML='<div class=\'result-card\'><div class=\'result-label\'>ENGINE ERROR</div><h2>Something went wrong</h2><p>'+String(e.message)+'</p></div>';}})();"
 >
-   Find My Opportunity →
-      </button>
+  Find My Opportunity →
+ </button>
 
     </div>
 
