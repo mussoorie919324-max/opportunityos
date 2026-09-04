@@ -1675,6 +1675,388 @@ document
   });
 
 </script>
+<!-- ==========================================
+     OPPORTUNITYOS DEBUGGER v1
+     ========================================== -->
 
+<script>
+
+(function () {
+
+  function debugResult(name, status, detail) {
+
+    return {
+      name: name,
+      status: status,
+      detail: detail || ""
+    };
+
+  }
+
+
+  window.runOpportunityOSDebugger = function () {
+
+    const tests = [];
+
+    /* ==========================================
+       1. PAGE ELEMENTS
+       ========================================== */
+
+    const input =
+      document.getElementById("searchInput");
+
+    const button =
+      document.getElementById("exploreButton");
+
+    const results =
+      document.getElementById("results");
+
+
+    tests.push(
+      input
+        ? debugResult(
+            "Search Input",
+            "PASS",
+            "#searchInput found"
+          )
+        : debugResult(
+            "Search Input",
+            "FAIL",
+            "#searchInput not found"
+          )
+    );
+
+
+    tests.push(
+      button
+        ? debugResult(
+            "Search Button",
+            "PASS",
+            "#exploreButton found"
+          )
+        : debugResult(
+            "Search Button",
+            "FAIL",
+            "#exploreButton not found"
+          )
+    );
+
+
+    tests.push(
+      results
+        ? debugResult(
+            "Results Container",
+            "PASS",
+            "#results found"
+          )
+        : debugResult(
+            "Results Container",
+            "FAIL",
+            "#results not found"
+          )
+    );
+
+
+    /* ==========================================
+       2. SEARCH FUNCTION
+       ========================================== */
+
+    tests.push(
+      typeof window.searchOpportunity === "function"
+        ? debugResult(
+            "Search Function",
+            "PASS",
+            "searchOpportunity() exists"
+          )
+        : debugResult(
+            "Search Function",
+            "FAIL",
+            "searchOpportunity() not found"
+          )
+    );
+
+
+    /* ==========================================
+       3. OPPORTUNITY ENGINE
+       ========================================== */
+
+    tests.push(
+      typeof window.opportunityEngine !== "undefined"
+        ? debugResult(
+            "Opportunity Engine",
+            "PASS",
+            "opportunityEngine loaded"
+          )
+        : debugResult(
+            "Opportunity Engine",
+            "FAIL",
+            "opportunityEngine not loaded"
+          )
+    );
+
+
+    if (
+      typeof window.opportunityEngine !== "undefined"
+    ) {
+
+      tests.push(
+        typeof window.opportunityEngine.analyze ===
+        "function"
+
+          ? debugResult(
+              "Engine Analyze",
+              "PASS",
+              "analyze() exists"
+            )
+
+          : debugResult(
+              "Engine Analyze",
+              "FAIL",
+              "analyze() function missing"
+            )
+      );
+
+
+      /* ==========================================
+         4. ENGINE EXECUTION TEST
+         ========================================== */
+
+      if (
+        typeof window.opportunityEngine.analyze ===
+        "function"
+      ) {
+
+        try {
+
+          const testResult =
+            window.opportunityEngine.analyze(
+              "AI online work"
+            );
+
+
+          if (
+            testResult &&
+            typeof testResult === "object"
+          ) {
+
+            tests.push(
+              debugResult(
+                "Engine Execution",
+                "PASS",
+                "analyze('AI online work') executed"
+              )
+            );
+
+          } else {
+
+            tests.push(
+              debugResult(
+                "Engine Execution",
+                "FAIL",
+                "Engine returned invalid result"
+              )
+            );
+
+          }
+
+
+          /* ==========================================
+             5. RESULT STRUCTURE
+             ========================================== */
+
+          tests.push(
+            testResult.opportunity
+              ? debugResult(
+                  "Opportunity Object",
+                  "PASS",
+                  "opportunity object exists"
+                )
+              : debugResult(
+                  "Opportunity Object",
+                  "FAIL",
+                  "opportunity object missing"
+                )
+          );
+
+
+          tests.push(
+            Array.isArray(testResult.claims)
+              ? debugResult(
+                  "Claims Array",
+                  "PASS",
+                  testResult.claims.length +
+                  " claim(s) generated"
+                )
+              : debugResult(
+                  "Claims Array",
+                  "FAIL",
+                  "claims array missing"
+                )
+          );
+
+
+          tests.push(
+            testResult.verification
+              ? debugResult(
+                  "Verification Object",
+                  "PASS",
+                  "verification object exists"
+                )
+              : debugResult(
+                  "Verification Object",
+                  "FAIL",
+                  "verification object missing"
+                )
+          );
+
+
+        } catch (error) {
+
+          tests.push(
+            debugResult(
+              "Engine Execution",
+              "FAIL",
+              error.message
+            )
+          );
+
+        }
+
+      }
+
+    }
+
+
+    /* ==========================================
+       6. RENDER TEST
+       ========================================== */
+
+    if (results) {
+
+      try {
+
+        results.style.display = "block";
+
+        results.innerHTML = `
+          <div class="result-card">
+
+            <div class="result-label">
+              🩺 OPPORTUNITYOS DEBUGGER
+            </div>
+
+            <h2>
+              System Health Report
+            </h2>
+
+            <div style="
+              margin-top:20px;
+              display:flex;
+              flex-direction:column;
+              gap:10px;
+            ">
+
+              ${tests.map(function (test) {
+
+                const isPass =
+                  test.status === "PASS";
+
+                const isFail =
+                  test.status === "FAIL";
+
+                const symbol =
+                  isPass
+                    ? "✓"
+                    : isFail
+                      ? "✗"
+                      : "⚠";
+
+                return `
+                  <div style="
+                    padding:14px;
+                    border-radius:12px;
+                    border:1px solid rgba(255,255,255,.08);
+                    background:rgba(255,255,255,.03);
+                  ">
+
+                    <strong>
+                      ${symbol}
+                      ${test.name}
+                    </strong>
+
+                    <div style="
+                      margin-top:5px;
+                      opacity:.75;
+                      font-size:14px;
+                    ">
+                      ${test.detail}
+                    </div>
+
+                  </div>
+                `;
+
+              }).join("")}
+
+            </div>
+
+            <div style="
+              margin-top:22px;
+              padding:16px;
+              border-radius:14px;
+              background:rgba(99,102,241,.07);
+            ">
+
+              <strong>
+                Debugger completed
+              </strong>
+
+              <p style="margin-bottom:0;">
+                PASS:
+                ${
+                  tests.filter(
+                    t => t.status === "PASS"
+                  ).length
+                }
+                &nbsp; | &nbsp;
+                FAIL:
+                ${
+                  tests.filter(
+                    t => t.status === "FAIL"
+                  ).length
+                }
+              </p>
+
+            </div>
+
+          </div>
+        `;
+
+
+        results.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+
+
+      } catch (error) {
+
+        alert(
+          "Debugger renderer error: " +
+          error.message
+        );
+
+      }
+
+    }
+
+  };
+
+
+  console.log(
+    "OpportunityOS Debugger v1 Loaded ✓"
+  );
+
+})();
+
+  </script>
 </body>
 </html>
