@@ -991,7 +991,9 @@ footer {
 
 
 <script>
-
+const input = document.getElementById("searchInput");
+const results = document.getElementById("results");
+const button = document.getElementById("exploreButton");
 /* ==========================================
    OPPORTUNITYOS SEARCH + SUPABASE PIPELINE
    Engine → Search → Opportunity → Claims
@@ -1633,12 +1635,6 @@ function focusSearch() {
 }
 
 
-button.addEventListener(
-  "click",
-  searchOpportunity
-);
-
-
 input.addEventListener(
   "keydown",
   function(event) {
@@ -1675,11 +1671,22 @@ document
   });
 
 </script>
+
+
+<!-- =========================
+     OPPORTUNITYOS DEBUGGER
+========================= -->
+
+<script>
+
 alert("DEBUGGER SCRIPT LOADED");
 
 window.runOpportunityOSDebugger = function () {
+
   alert("DEBUGGER V2 WORKING");
+
 };
+
 </script>
 
 </body>
