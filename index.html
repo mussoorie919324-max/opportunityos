@@ -1,1695 +1,2878 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<script src="opportunity-engine.js?v=3"></script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>OpportunityOS — Global Opportunity Intelligence</title>
-
-<meta
-  name="description"
-  content="Discover opportunities, understand what's real, and find your best next move."
->
-
-<style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-:root {
-  --bg: #050816;
-  --bg-soft: #0a1024;
-  --card: rgba(15, 23, 48, 0.72);
-  --border: rgba(255,255,255,0.09);
-  --text: #f8fafc;
-  --muted: #94a3b8;
-  --blue: #6366f1;
-  --cyan: #22d3ee;
-  --green: #34d399;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  font-family: Inter, Arial, sans-serif;
-  background:
-    radial-gradient(circle at 50% 0%, rgba(79,70,229,.20), transparent 35%),
-    radial-gradient(circle at 85% 35%, rgba(34,211,238,.08), transparent 25%),
-    var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-/* =========================
-   BACKGROUND
-========================= */
-
-.background-grid {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  opacity: .35;
-  background-image:
-    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
-  background-size: 55px 55px;
-  mask-image: linear-gradient(to bottom, black, transparent 80%);
-}
-
-/* =========================
-   NAVBAR
-========================= */
-
-.navbar {
-  width: min(1180px, 92%);
-  margin: 0 auto;
-  padding: 24px 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  z-index: 10;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 20px;
-  font-weight: 800;
-  letter-spacing: -.5px;
-}
-
-.logo-mark {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
-  background: linear-gradient(135deg, #6366f1, #22d3ee);
-  box-shadow: 0 0 30px rgba(99,102,241,.35);
-}
-
-.nav-pill {
-  padding: 9px 15px;
-  border: 1px solid var(--border);
-  background: rgba(255,255,255,.035);
-  border-radius: 999px;
-  color: #cbd5e1;
-  font-size: 13px;
-}
-
-/* =========================
-   HERO
-========================= */
-
-.hero {
-  width: min(1000px, 92%);
-  margin: 0 auto;
-  padding: 95px 0 70px;
-  text-align: center;
-  position: relative;
-  z-index: 2;
-}
-
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
-  border: 1px solid rgba(99,102,241,.25);
-  background: rgba(99,102,241,.08);
-  border-radius: 999px;
-  color: #c7d2fe;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  margin-bottom: 25px;
-}
-
-.eyebrow-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #34d399;
-  box-shadow: 0 0 12px #34d399;
-}
-
-.hero h1 {
-  font-size: clamp(46px, 8vw, 86px);
-  line-height: .98;
-  letter-spacing: -4px;
-  font-weight: 850;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.hero h1 span {
-  background: linear-gradient(90deg, #fff, #a5b4fc, #67e8f9);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.hero-subtitle {
-  max-width: 700px;
-  margin: 28px auto 0;
-  color: var(--muted);
-  font-size: 18px;
-  line-height: 1.7;
-}
-
-/* =========================
-   SEARCH
-========================= */
-
-.search-area {
-  width: min(780px, 100%);
-  margin: 42px auto 0;
-}
-
-.search-box {
-  display: flex;
-  align-items: center;
-  padding: 7px;
-  background: rgba(10,16,36,.88);
-  border: 1px solid rgba(129,140,248,.28);
-  border-radius: 18px;
-  box-shadow:
-    0 20px 70px rgba(0,0,0,.35),
-    0 0 50px rgba(99,102,241,.08);
-  backdrop-filter: blur(18px);
-}
-
-.search-icon {
-  padding-left: 18px;
-  font-size: 20px;
-}
-
-.search-box input {
-  flex: 1;
-  min-width: 0;
-  padding: 18px 14px;
-  background: transparent;
-  border: 0;
-  outline: 0;
-  color: white;
-  font-size: 16px;
-}
-
-.search-box input::placeholder {
-  color: #64748b;
-}
-
-.search-button {
-  border: 0;
-  border-radius: 13px;
-  padding: 15px 21px;
-  background: linear-gradient(135deg, #6366f1, #4f46e5);
-  color: white;
-  font-weight: 800;
-  cursor: pointer;
-  transition: .25s;
-  white-space: nowrap;
-}
-
-.search-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(79,70,229,.35);
-}
-
-.suggestions {
-  margin-top: 17px;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.suggestion {
-  border: 1px solid var(--border);
-  background: rgba(255,255,255,.025);
-  color: #94a3b8;
-  padding: 8px 12px;
-  border-radius: 999px;
-  font-size: 12px;
-  cursor: pointer;
-}
-
-.suggestion:hover {
-  color: white;
-  border-color: rgba(99,102,241,.4);
-}
-
-/* =========================
-   RESULT
-========================= */
-
-#results {
-  width: min(780px, 92%);
-  margin: 35px auto 0;
-  display: none;
-}
-
-.result-card {
-  padding: 25px;
-  border-radius: 20px;
-  border: 1px solid rgba(99,102,241,.22);
-  background: linear-gradient(
-    145deg,
-    rgba(20,28,58,.9),
-    rgba(9,14,30,.9)
-  );
-  text-align: left;
-  box-shadow: 0 25px 80px rgba(0,0,0,.35);
-}
-
-.result-label {
-  color: #818cf8;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.result-card h2 {
-  margin-top: 9px;
-  font-size: 25px;
-}
-
-.result-card p {
-  margin-top: 10px;
-  color: var(--muted);
-  line-height: 1.65;
-}
-
-.result-status {
-  display: inline-flex;
-  margin-top: 18px;
-  padding: 7px 11px;
-  border-radius: 999px;
-  background: rgba(52,211,153,.08);
-  border: 1px solid rgba(52,211,153,.18);
-  color: #6ee7b7;
-  font-size: 12px;
-}
-
-/* =========================
-   TRUST BAR
-========================= */
-
-.trust {
-  width: min(950px, 92%);
-  margin: 55px auto 0;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 25px;
-  color: #64748b;
-  font-size: 12px;
-}
-
-.trust span {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-}
-
-/* =========================
-   INTELLIGENCE SECTION
-========================= */
-
-.section {
-  width: min(1100px, 92%);
-  margin: 120px auto 0;
-}
-
-.section-heading {
-  text-align: center;
-  max-width: 720px;
-  margin: 0 auto 45px;
-}
-
-.section-heading .mini {
-  color: #818cf8;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-}
-
-.section-heading h2 {
-  margin-top: 12px;
-  font-size: clamp(30px, 5vw, 50px);
-  letter-spacing: -2px;
-}
-
-.section-heading p {
-  margin-top: 15px;
-  color: var(--muted);
-  line-height: 1.7;
-}
-
-/* =========================
-   FLOW
-========================= */
-
-.flow {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 12px;
-}
-
-.flow-card {
-  min-height: 150px;
-  padding: 20px;
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  background: var(--card);
-  position: relative;
-  overflow: hidden;
-}
-
-.flow-number {
-  font-size: 11px;
-  color: #818cf8;
-  font-weight: 800;
-}
-
-.flow-card h3 {
-  margin-top: 28px;
-  font-size: 17px;
-}
-
-.flow-card p {
-  margin-top: 8px;
-  color: #718096;
-  font-size: 12px;
-  line-height: 1.5;
-}
-
-/* =========================
-   FEATURE CARDS
-========================= */
-
-.features {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-}
-
-.feature {
-  padding: 28px;
-  border: 1px solid var(--border);
-  border-radius: 22px;
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255,255,255,.045),
-      rgba(255,255,255,.015)
-    );
-  transition: .3s;
-}
-
-.feature:hover {
-  transform: translateY(-5px);
-  border-color: rgba(129,140,248,.28);
-}
-
-.feature-icon {
-  width: 42px;
-  height: 42px;
-  display: grid;
-  place-items: center;
-  border-radius: 12px;
-  background: rgba(99,102,241,.10);
-  margin-bottom: 20px;
-}
-
-.feature h3 {
-  font-size: 19px;
-}
-
-.feature p {
-  margin-top: 10px;
-  color: var(--muted);
-  line-height: 1.65;
-  font-size: 14px;
-}
-
-/* =========================
-   TRUST SECTION
-========================= */
-
-.trust-section {
-  margin-top: 120px;
-  padding: 70px 30px;
-  border-radius: 30px;
-  border: 1px solid rgba(52,211,153,.12);
-  background:
-    radial-gradient(circle at 50% 0%, rgba(52,211,153,.07), transparent 45%),
-    rgba(8,15,30,.8);
-  text-align: center;
-}
-
-.trust-section h2 {
-  font-size: clamp(30px, 5vw, 48px);
-  letter-spacing: -2px;
-}
-
-.trust-section p {
-  max-width: 650px;
-  margin: 17px auto 0;
-  color: var(--muted);
-  line-height: 1.7;
-}
-
-.trust-points {
-  margin-top: 35px;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.trust-point {
-  padding: 11px 15px;
-  border-radius: 999px;
-  border: 1px solid rgba(52,211,153,.13);
-  background: rgba(52,211,153,.04);
-  color: #a7f3d0;
-  font-size: 12px;
-}
-
-/* =========================
-   FINAL CTA
-========================= */
-
-.cta {
-  text-align: center;
-  padding: 130px 20px 100px;
-}
-
-.cta h2 {
-  font-size: clamp(35px, 6vw, 62px);
-  letter-spacing: -2.5px;
-} 
-
-.cta p {
-  color: var(--muted);
-  margin: 18px auto 30px;
-}
-
-.cta-button {
-  display: inline-block;
-  padding: 15px 23px;
-  border-radius: 13px;
-  background: white;
-  color: #050816;
-  font-weight: 800;
-  text-decoration: none;
-}
-
-/* =========================
-   FOOTER
-========================= */
-
-footer {
-  width: min(1100px, 92%);
-  margin: 0 auto;
-  padding: 25px 0 40px;
-  border-top: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  color: #475569;
-  font-size: 12px;
-}
-
-/* =========================
-   MOBILE
-========================= */
-
-@media (max-width: 800px) {
-
-  .hero {
-    padding-top: 65px;
-  }
-
-  .hero h1 {
-    letter-spacing: -2.5px;
-  }
-
-  .hero-subtitle {
-    font-size: 15px;
-  }
-
-  .search-box {
-    padding: 6px;
-  }
-
-  .search-icon {
-    display: none;
-  }
-
-  .search-box input {
-    padding: 15px 10px;
-    font-size: 14px;
-  }
-
-  .search-button {
-    padding: 13px 14px;
-    font-size: 12px;
-  }
-
-  .flow {
-    grid-template-columns: 1fr;
-  }
-
-  .flow-card {
-    min-height: auto;
-  }
-
-  .flow-card h3 {
-    margin-top: 15px;
-  }
-
-  .features {
-    grid-template-columns: 1fr;
-  }
-
-  .section {
-    margin-top: 85px;
-  }
-
-  .trust-section {
-    margin-top: 85px;
-    padding: 50px 20px;
-  }
-
-  footer {
-    flex-direction: column;
-    gap: 10px;
-  }
-}
-</style>
+
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    OpportunityOS — Global Opportunity Intelligence
+  </title>
+
+  <meta
+    name="description"
+    content="Discover opportunities, understand what's real, and find your best next move."
+  >
+
+  <!-- ==========================================
+       SUPABASE
+       ========================================== -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+  <!-- ==========================================
+       OPPORTUNITY ENGINE
+       ========================================== -->
+
+  <script src="opportunity-engine.js?v=3"></script>
+
+
+  <!-- ==========================================
+       STYLES
+       ========================================== -->
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+
+    :root {
+
+      --bg: #050816;
+      --bg-soft: #0a1024;
+
+      --card: rgba(15, 23, 48, 0.72);
+
+      --border:
+        rgba(255,255,255,0.09);
+
+      --text: #f8fafc;
+
+      --muted: #94a3b8;
+
+      --blue: #6366f1;
+
+      --cyan: #22d3ee;
+
+      --green: #34d399;
+
+      --red: #fb7185;
+
+    }
+
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+
+    body {
+
+      font-family:
+        Inter,
+        Arial,
+        sans-serif;
+
+      background:
+
+        radial-gradient(
+          circle at 50% 0%,
+          rgba(79,70,229,.20),
+          transparent 35%
+        ),
+
+        radial-gradient(
+          circle at 85% 35%,
+          rgba(34,211,238,.08),
+          transparent 25%
+        ),
+
+        var(--bg);
+
+      color: var(--text);
+
+      min-height: 100vh;
+
+      overflow-x: hidden;
+
+    }
+
+
+    /* ==========================================
+       BACKGROUND
+       ========================================== */
+
+    .background-grid {
+
+      position: fixed;
+
+      inset: 0;
+
+      pointer-events: none;
+
+      opacity: .35;
+
+      background-image:
+
+        linear-gradient(
+          rgba(255,255,255,.025)
+          1px,
+          transparent 1px
+        ),
+
+        linear-gradient(
+          90deg,
+          rgba(255,255,255,.025)
+          1px,
+          transparent 1px
+        );
+
+      background-size: 55px 55px;
+
+      mask-image:
+        linear-gradient(
+          to bottom,
+          black,
+          transparent 80%
+        );
+
+    }
+
+
+    /* ==========================================
+       NAVBAR
+       ========================================== */
+
+    .navbar {
+
+      width: min(1180px,92%);
+
+      margin: 0 auto;
+
+      padding: 24px 0;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      position: relative;
+
+      z-index: 10;
+
+    }
+
+
+    .logo {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 10px;
+
+      font-size: 20px;
+
+      font-weight: 800;
+
+      letter-spacing: -.5px;
+
+    }
+
+
+    .logo-mark {
+
+      width: 34px;
+
+      height: 34px;
+
+      border-radius: 10px;
+
+      display: grid;
+
+      place-items: center;
+
+      background:
+        linear-gradient(
+          135deg,
+          #6366f1,
+          #22d3ee
+        );
+
+      box-shadow:
+        0 0 30px
+        rgba(99,102,241,.35);
+
+    }
+
+
+    .nav-pill {
+
+      padding: 9px 15px;
+
+      border:
+        1px solid var(--border);
+
+      background:
+        rgba(255,255,255,.035);
+
+      border-radius: 999px;
+
+      color: #cbd5e1;
+
+      font-size: 13px;
+
+    }
+
+
+    /* ==========================================
+       HERO
+       ========================================== */
+
+    .hero {
+
+      width: min(1000px,92%);
+
+      margin: 0 auto;
+
+      padding: 95px 0 70px;
+
+      text-align: center;
+
+      position: relative;
+
+      z-index: 2;
+
+    }
+
+
+    .eyebrow {
+
+      display: inline-flex;
+
+      align-items: center;
+
+      gap: 8px;
+
+      padding: 8px 14px;
+
+      border:
+        1px solid
+        rgba(99,102,241,.25);
+
+      background:
+        rgba(99,102,241,.08);
+
+      border-radius: 999px;
+
+      color: #c7d2fe;
+
+      font-size: 12px;
+
+      font-weight: 700;
+
+      letter-spacing: 1px;
+
+      text-transform: uppercase;
+
+      margin-bottom: 25px;
+
+    }
+
+
+    .eyebrow-dot {
+
+      width: 7px;
+
+      height: 7px;
+
+      border-radius: 50%;
+
+      background: #34d399;
+
+      box-shadow:
+        0 0 12px #34d399;
+
+    }
+
+
+    .hero h1 {
+
+      font-size:
+        clamp(46px,8vw,86px);
+
+      line-height: .98;
+
+      letter-spacing: -4px;
+
+      font-weight: 850;
+
+      max-width: 900px;
+
+      margin: 0 auto;
+
+    }
+
+
+    .hero h1 span {
+
+      background:
+        linear-gradient(
+          90deg,
+          #fff,
+          #a5b4fc,
+          #67e8f9
+        );
+
+      -webkit-background-clip: text;
+
+      background-clip: text;
+
+      color: transparent;
+
+    }
+
+
+    .hero-subtitle {
+
+      max-width: 700px;
+
+      margin: 28px auto 0;
+
+      color: var(--muted);
+
+      font-size: 18px;
+
+      line-height: 1.7;
+
+    }
+
+
+    /* ==========================================
+       SEARCH
+       ========================================== */
+
+    .search-area {
+
+      width: min(780px,100%);
+
+      margin: 42px auto 0;
+
+    }
+
+
+    .search-box {
+
+      display: flex;
+
+      align-items: center;
+
+      padding: 7px;
+
+      background:
+        rgba(10,16,36,.88);
+
+      border:
+        1px solid
+        rgba(129,140,248,.28);
+
+      border-radius: 18px;
+
+      box-shadow:
+
+        0 20px 70px
+        rgba(0,0,0,.35),
+
+        0 0 50px
+        rgba(99,102,241,.08);
+
+      backdrop-filter: blur(18px);
+
+    }
+
+
+    .search-icon {
+
+      padding-left: 18px;
+
+      font-size: 20px;
+
+    }
+
+
+    .search-box input {
+
+      flex: 1;
+
+      min-width: 0;
+
+      padding: 18px 14px;
+
+      background: transparent;
+
+      border: 0;
+
+      outline: 0;
+
+      color: white;
+
+      font-size: 16px;
+
+    }
+
+
+    .search-box input::placeholder {
+
+      color: #64748b;
+
+    }
+
+
+    .search-button {
+
+      border: 0;
+
+      border-radius: 13px;
+
+      padding: 15px 21px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #6366f1,
+          #4f46e5
+        );
+
+      color: white;
+
+      font-weight: 800;
+
+      cursor: pointer;
+
+      transition: .25s;
+
+      white-space: nowrap;
+
+    }
+
+
+    .search-button:hover {
+
+      transform: translateY(-2px);
+
+      box-shadow:
+        0 10px 30px
+        rgba(79,70,229,.35);
+
+    }
+
+
+    .search-button:disabled {
+
+      opacity: .6;
+
+      cursor: wait;
+
+      transform: none;
+
+    }
+
+
+    .suggestions {
+
+      margin-top: 17px;
+
+      display: flex;
+
+      justify-content: center;
+
+      flex-wrap: wrap;
+
+      gap: 8px;
+
+    }
+
+
+    .suggestion {
+
+      border:
+        1px solid var(--border);
+
+      background:
+        rgba(255,255,255,.025);
+
+      color: #94a3b8;
+
+      padding: 8px 12px;
+
+      border-radius: 999px;
+
+      font-size: 12px;
+
+      cursor: pointer;
+
+    }
+
+
+    .suggestion:hover {
+
+      color: white;
+
+      border-color:
+        rgba(99,102,241,.4);
+
+    }
+
+
+    /* ==========================================
+       RESULTS
+       ========================================== */
+
+    #results {
+
+      width: min(780px,92%);
+
+      margin: 35px auto 0;
+
+      display: none;
+
+    }
+
+
+    .result-card {
+
+      padding: 25px;
+
+      border-radius: 20px;
+
+      border:
+        1px solid
+        rgba(99,102,241,.22);
+
+      background:
+
+        linear-gradient(
+          145deg,
+          rgba(20,28,58,.9),
+          rgba(9,14,30,.9)
+        );
+
+      text-align: left;
+
+      box-shadow:
+        0 25px 80px
+        rgba(0,0,0,.35);
+
+    }
+
+
+    .result-label {
+
+      color: #818cf8;
+
+      font-size: 11px;
+
+      font-weight: 800;
+
+      letter-spacing: 1px;
+
+      text-transform: uppercase;
+
+    }
+
+
+    .result-card h2 {
+
+      margin-top: 9px;
+
+      font-size: 25px;
+
+    }
+
+
+    .result-card p {
+
+      margin-top: 10px;
+
+      color: var(--muted);
+
+      line-height: 1.65;
+
+    }
+
+
+    .result-status {
+
+      display: inline-flex;
+
+      margin-top: 18px;
+
+      padding: 7px 11px;
+
+      border-radius: 999px;
+
+      background:
+        rgba(52,211,153,.08);
+
+      border:
+        1px solid
+        rgba(52,211,153,.18);
+
+      color: #6ee7b7;
+
+      font-size: 12px;
+
+    }
+
+
+    .error-status {
+
+      background:
+        rgba(251,113,133,.08);
+
+      border-color:
+        rgba(251,113,133,.20);
+
+      color: #fda4af;
+
+    }
+
+
+    /* ==========================================
+       FLOW
+       ========================================== */
+
+    .section {
+
+      width: min(1100px,92%);
+
+      margin: 120px auto 0;
+
+    }
+
+
+    .section-heading {
+
+      text-align: center;
+
+      max-width: 720px;
+
+      margin: 0 auto 45px;
+
+    }
+
+
+    .section-heading .mini {
+
+      color: #818cf8;
+
+      font-size: 11px;
+
+      font-weight: 800;
+
+      letter-spacing: 1.5px;
+
+      text-transform: uppercase;
+
+    }
+
+
+    .section-heading h2 {
+
+      margin-top: 12px;
+
+      font-size:
+        clamp(30px,5vw,50px);
+
+      letter-spacing: -2px;
+
+    }
+
+
+    .section-heading p {
+
+      margin-top: 15px;
+
+      color: var(--muted);
+
+      line-height: 1.7;
+
+    }
+
+
+    .flow {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(5,1fr);
+
+      gap: 12px;
+
+    }
+
+
+    .flow-card {
+
+      min-height: 150px;
+
+      padding: 20px;
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 18px;
+
+      background: var(--card);
+
+      position: relative;
+
+      overflow: hidden;
+
+    }
+
+
+    .flow-number {
+
+      font-size: 11px;
+
+      color: #818cf8;
+
+      font-weight: 800;
+
+    }
+
+
+    .flow-card h3 {
+
+      margin-top: 28px;
+
+      font-size: 17px;
+
+    }
+
+
+    .flow-card p {
+
+      margin-top: 8px;
+
+      color: #718096;
+
+      font-size: 12px;
+
+      line-height: 1.5;
+
+    }
+
+
+    /* ==========================================
+       FEATURES
+       ========================================== */
+
+    .features {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(3,1fr);
+
+      gap: 16px;
+
+    }
+
+
+    .feature {
+
+      padding: 28px;
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 22px;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255,255,255,.045),
+          rgba(255,255,255,.015)
+        );
+
+      transition: .3s;
+
+    }
+
+
+    .feature:hover {
+
+      transform: translateY(-5px);
+
+      border-color:
+        rgba(129,140,248,.28);
+
+    }
+
+
+    .feature-icon {
+
+      width: 42px;
+
+      height: 42px;
+
+      display: grid;
+
+      place-items: center;
+
+      border-radius: 12px;
+
+      background:
+        rgba(99,102,241,.10);
+
+      margin-bottom: 20px;
+
+    }
+
+
+    .feature h3 {
+
+      font-size: 19px;
+
+    }
+
+
+    .feature p {
+
+      margin-top: 10px;
+
+      color: var(--muted);
+
+      line-height: 1.65;
+
+      font-size: 14px;
+
+    }
+
+
+    /* ==========================================
+       TRUST
+       ========================================== */
+
+    .trust-section {
+
+      margin-top: 120px;
+
+      padding: 70px 30px;
+
+      border-radius: 30px;
+
+      border:
+        1px solid
+        rgba(52,211,153,.12);
+
+      background:
+
+        radial-gradient(
+          circle at 50% 0%,
+          rgba(52,211,153,.07),
+          transparent 45%
+        ),
+
+        rgba(8,15,30,.8);
+
+      text-align: center;
+
+    }
+
+
+    .trust-section h2 {
+
+      font-size:
+        clamp(30px,5vw,48px);
+
+      letter-spacing: -2px;
+
+    }
+
+
+    .trust-section p {
+
+      max-width: 650px;
+
+      margin: 17px auto 0;
+
+      color: var(--muted);
+
+      line-height: 1.7;
+
+    }
+
+
+    .trust-points {
+
+      margin-top: 35px;
+
+      display: flex;
+
+      justify-content: center;
+
+      flex-wrap: wrap;
+
+      gap: 12px;
+
+    }
+
+
+    .trust-point {
+
+      padding: 11px 15px;
+
+      border-radius: 999px;
+
+      border:
+        1px solid
+        rgba(52,211,153,.13);
+
+      background:
+        rgba(52,211,153,.04);
+
+      color: #a7f3d0;
+
+      font-size: 12px;
+
+    }
+
+
+    /* ==========================================
+       CTA
+       ========================================== */
+
+    .cta {
+
+      text-align: center;
+
+      padding: 130px 20px 100px;
+
+    }
+
+
+    .cta h2 {
+
+      font-size:
+        clamp(35px,6vw,62px);
+
+      letter-spacing: -2.5px;
+
+    }
+
+
+    .cta p {
+
+      color: var(--muted);
+
+      margin: 18px auto 30px;
+
+    }
+
+
+    .cta-button {
+
+      display: inline-block;
+
+      padding: 15px 23px;
+
+      border-radius: 13px;
+
+      background: white;
+
+      color: #050816;
+
+      font-weight: 800;
+
+      text-decoration: none;
+
+    }
+
+
+    /* ==========================================
+       FOOTER
+       ========================================== */
+
+    footer {
+
+      width: min(1100px,92%);
+
+      margin: 0 auto;
+
+      padding: 25px 0 40px;
+
+      border-top:
+        1px solid var(--border);
+
+      display: flex;
+
+      justify-content: space-between;
+
+      color: #475569;
+
+      font-size: 12px;
+
+    }
+
+
+    /* ==========================================
+       MOBILE
+       ========================================== */
+
+    @media (max-width:800px) {
+
+      .navbar {
+
+        padding: 18px 0;
+
+      }
+
+
+      .nav-pill {
+
+        display: none;
+
+      }
+
+
+      .hero {
+
+        padding-top: 65px;
+
+      }
+
+
+      .hero h1 {
+
+        letter-spacing: -2.5px;
+
+      }
+
+
+      .hero-subtitle {
+
+        font-size: 15px;
+
+      }
+
+
+      .search-box {
+
+        padding: 6px;
+
+      }
+
+
+      .search-icon {
+
+        display: none;
+
+      }
+
+
+      .search-box input {
+
+        padding: 15px 10px;
+
+        font-size: 14px;
+
+      }
+
+
+      .search-button {
+
+        padding: 13px 14px;
+
+        font-size: 12px;
+
+      }
+
+
+      .flow {
+
+        grid-template-columns: 1fr;
+
+      }
+
+
+      .flow-card {
+
+        min-height: auto;
+
+      }
+
+
+      .flow-card h3 {
+
+        margin-top: 15px;
+
+      }
+
+
+      .features {
+
+        grid-template-columns: 1fr;
+
+      }
+
+
+      .section {
+
+        margin-top: 85px;
+
+      }
+
+
+      .trust-section {
+
+        margin-top: 85px;
+
+        padding: 50px 20px;
+
+      }
+
+
+      footer {
+
+        flex-direction: column;
+
+        gap: 10px;
+
+      }
+
+
+      #results {
+
+        width: 92%;
+
+      }
+
+
+      .result-card {
+
+        padding: 20px;
+
+      }
+
+    }
+
+  </style>
+
 </head>
+
 
 <body>
 
-<div class="background-grid"></div>
 
-<!-- =========================
-     NAVBAR
-========================= -->
-
-<nav class="navbar">
-
-  <div class="logo">
-    <div class="logo-mark">⚡</div>
-    OpportunityOS
-  </div>
-
-  <div class="nav-pill">
-    Global Opportunity Intelligence
-  </div>
-
-</nav>
+  <div class="background-grid"></div>
 
 
-<!-- =========================
-     HERO
-========================= -->
+  <!-- ==========================================
+       NAVBAR
+       ========================================== -->
 
-<section class="hero">
+  <nav class="navbar">
 
-  <div class="eyebrow">
-    <span class="eyebrow-dot"></span>
-    Intelligence for your next move
-  </div>
+    <div class="logo">
 
-  <h1>
-    <span>What should you</span><br>
-    do next?
-  </h1>
+      <div class="logo-mark">
+        ⚡
+      </div>
 
-  <p class="hero-subtitle">
-    Tell OpportunityOS what you're trying to achieve.
-    Discover relevant opportunities, understand the market,
-    verify what matters, and find a better next move.
-  </p>
-
-
-  <div class="search-area">
-
-    <div class="search-box">
-
-      <div class="search-icon">⌕</div>
-
-      <input
-        id="searchInput"
-        type="text"
-        placeholder="Tell us what you're trying to achieve..."
-        autocomplete="off"
-      >
-
- <button
-  id="exploreButton"
-  class="search-button"
-  type="button"
- onclick=""searchOpportunity()"
->
-  Find My Opportunity →
- </button>
+      OpportunityOS
 
     </div>
 
 
-    <div class="suggestions">
-
-      <button class="suggestion">
-        I want to earn online
-      </button>
-
-      <button class="suggestion">
-        I'm a student
-      </button>
-
-      <button class="suggestion">
-        I want to build a business
-      </button>
-
-      <button class="suggestion">
-        Which skill should I learn?
-      </button>
-
-      <button class="suggestion">
-        I want a better career
-      </button>
-
+    <div class="nav-pill">
+      Global Opportunity Intelligence
     </div>
 
-  </div>
+  </nav>
 
 
-  <div id="results"></div>
+  <!-- ==========================================
+       HERO
+       ========================================== -->
+
+  <section class="hero">
 
 
-  <div class="trust">
+    <div class="eyebrow">
 
-    <span>✓ Evidence-aware</span>
-    <span>✓ Market intelligence</span>
-    <span>✓ Explainable recommendations</span>
-    <span>✓ Built for real decisions</span>
+      <span class="eyebrow-dot"></span>
 
-  </div>
-
-</section>
-
-
-<!-- =========================
-     HOW IT WORKS
-========================= -->
-
-<section class="section">
-
-  <div class="section-heading">
-
-    <div class="mini">
-      How OpportunityOS thinks
-    </div>
-
-    <h2>
-      From your goal to your next move.
-    </h2>
-
-    <p>
-      OpportunityOS connects your situation with the changing
-      opportunity landscape and turns information into actionable intelligence.
-    </p>
-
-  </div>
-
-
-  <div class="flow">
-
-    <div class="flow-card">
-      <div class="flow-number">01</div>
-      <h3>Understand You</h3>
-      <p>Your goals, skills, experience, constraints and preferences.</p>
-    </div>
-
-    <div class="flow-card">
-      <div class="flow-number">02</div>
-      <h3>Discover</h3>
-      <p>Find opportunities relevant to your situation and objective.</p>
-    </div>
-
-    <div class="flow-card">
-      <div class="flow-number">03</div>
-      <h3>Verify</h3>
-      <p>Check evidence, sources, freshness, reliability and conflicts.</p>
-    </div>
-
-    <div class="flow-card">
-      <div class="flow-number">04</div>
-      <h3>Compare</h3>
-      <p>Understand demand, earning potential, difficulty, risk and fit.</p>
-    </div>
-
-    <div class="flow-card">
-      <div class="flow-number">05</div>
-      <h3>Act</h3>
-      <p>Get a clear next action instead of endless information.</p>
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =========================
-     INTELLIGENCE
-========================= -->
-
-<section class="section">
-
-  <div class="section-heading">
-
-    <div class="mini">
-      Opportunity Intelligence
-    </div>
-
-    <h2>
-      More than search.
-    </h2>
-
-    <p>
-      OpportunityOS is designed to help you understand
-      whether an opportunity actually makes sense for you.
-    </p>
-
-  </div>
-
-
-  <div class="features">
-
-    <div class="feature">
-
-      <div class="feature-icon">◈</div>
-
-      <h3>Opportunity Intelligence</h3>
-
-      <p>
-        Analyze demand, earning potential, competition,
-        difficulty, skills, trends and risk.
-      </p>
+      Intelligence for your next move
 
     </div>
 
 
-    <div class="feature">
+    <h1>
 
-      <div class="feature-icon">✓</div>
+      <span>What should you</span>
+      <br>
 
-      <h3>Evidence & Verification</h3>
+      do next?
 
-      <p>
-        Important claims can be connected to evidence,
-        source reliability and freshness instead of being
-        presented as unsupported facts.
-      </p>
-
-    </div>
+    </h1>
 
 
-    <div class="feature">
+    <p class="hero-subtitle">
 
-      <div class="feature-icon">◎</div>
+      Tell OpportunityOS what you're trying to achieve.
+      Discover relevant opportunities, understand the market,
+      verify what matters, and find a better next move.
 
-      <h3>Personal Fit</h3>
-
-      <p>
-        The same opportunity isn't equally valuable
-        for everyone. OpportunityOS is designed around
-        your situation and goals.
-      </p>
-
-    </div>
-
-
-    <div class="feature">
-
-      <div class="feature-icon">↗</div>
-
-      <h3>Best Next Move</h3>
-
-      <p>
-        Turn research into a practical next step,
-        so users know what to test, learn or do next.
-      </p>
-
-    </div>
-
-
-    <div class="feature">
-
-      <div class="feature-icon">◌</div>
-
-      <h3>Future Radar</h3>
-
-      <p>
-        Track changing skills, markets and emerging
-        opportunities before they become obvious.
-      </p>
-
-    </div>
-
-
-    <div class="feature">
-
-      <div class="feature-icon">∞</div>
-
-      <h3>Continuous Intelligence</h3>
-
-      <p>
-        The long-term vision is a system that learns
-        from outcomes and keeps updating your opportunity landscape.
-      </p>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =========================
-     TRUST
-========================= -->
-
-<section class="section">
-
-  <div class="trust-section">
-
-    <div class="mini">
-      TRUST FIRST
-    </div>
-
-    <h2>
-      AI can generate an answer.<br>
-      <span>OpportunityOS should show why.</span>
-    </h2>
-
-    <p>
-      OpportunityOS is designed around evidence rather than
-      blindly presenting AI-generated claims as facts.
-      When evidence is weak, the system should say so.
     </p>
 
 
-    <div class="trust-points">
+    <!-- ==========================================
+         SEARCH
+         ========================================== -->
 
-      <div class="trust-point">
-        Evidence
+    <div class="search-area">
+
+
+      <div class="search-box">
+
+
+        <div class="search-icon">
+          ⌕
+        </div>
+
+
+        <input
+          id="searchInput"
+          type="text"
+          placeholder="Tell us what you're trying to achieve..."
+          autocomplete="off"
+        >
+
+
+        <button
+          id="exploreButton"
+          class="search-button"
+          type="button"
+        >
+
+          Find My Opportunity →
+
+        </button>
+
+
       </div>
 
-      <div class="trust-point">
-        Source Reliability
+
+      <div class="suggestions">
+
+
+        <button
+          class="suggestion"
+          type="button"
+        >
+          I want to earn online
+        </button>
+
+
+        <button
+          class="suggestion"
+          type="button"
+        >
+          I'm a student
+        </button>
+
+
+        <button
+          class="suggestion"
+          type="button"
+        >
+          I want to build a business
+        </button>
+
+
+        <button
+          class="suggestion"
+          type="button"
+        >
+          Which skill should I learn?
+        </button>
+
+
+        <button
+          class="suggestion"
+          type="button"
+        >
+          I want a better career
+        </button>
+
+
       </div>
 
-      <div class="trust-point">
-        Freshness
-      </div>
-
-      <div class="trust-point">
-        Supporting Evidence
-      </div>
-
-      <div class="trust-point">
-        Contradicting Evidence
-      </div>
-
-      <div class="trust-point">
-        Confidence
-      </div>
 
     </div>
 
-  </div>
 
-</section>
+    <!-- ==========================================
+         RESULTS
+         ========================================== -->
 
-
-<!-- =========================
-     FINAL CTA
-========================= -->
-
-<section class="cta">
-
-  <h2>
-    Your next opportunity<br>
-    may be closer than you think.
-  </h2>
-
-  <p>
-    Start with one question. Let OpportunityOS investigate.
-  </p>
-
-  <a
-    href="#"
-    class="cta-button"
-    onclick="focusSearch(); return false;"
-  >
-    Start Exploring →
-  </a>
-
-</section>
+    <div id="results"></div>
 
 
-<!-- =========================
-     FOOTER
-========================= -->
+    <!-- ==========================================
+         TRUST BAR
+         ========================================== -->
 
-<footer>
+    <div class="trust">
 
-  <div>
-    ⚡ OpportunityOS
-  </div>
+      <span>
+        ✓ Evidence-aware
+      </span>
 
-  <div>
-    Global Opportunity Intelligence · 2026
-  </div>
+      <span>
+        ✓ Market intelligence
+      </span>
 
-</footer>
+      <span>
+        ✓ Explainable recommendations
+      </span>
+
+      <span>
+        ✓ Built for real decisions
+      </span>
+
+    </div>
 
 
-<script>
-const input = document.getElementById("searchInput");
-const results = document.getElementById("results");
-const button = document.getElementById("exploreButton");
-/* ==========================================
-   OPPORTUNITYOS SEARCH + SUPABASE PIPELINE
-   Engine → Search → Opportunity → Claims
-   ========================================== */
+  </section>
 
-async function searchOpportunity() {
 
-  alert("SEARCH FUNCTION WORKING");
+  <!-- ==========================================
+       HOW IT WORKS
+       ========================================== -->
 
-  const value = input.value.trim();
+  <section class="section">
 
-  if (!value) {
-    input.focus();
-    return;
-  }
 
-  results.style.display = "block";
+    <div class="section-heading">
 
-  results.innerHTML = `
-    <div class="result-card">
-
-      <div class="result-label">
-        OPPORTUNITYOS
+      <div class="mini">
+        How OpportunityOS thinks
       </div>
+
 
       <h2>
-        Analyzing your opportunity...
+        From your goal to your next move.
       </h2>
 
+
       <p>
-        Understanding your request and preparing
-        your opportunity profile.
+
+        OpportunityOS connects your situation
+        with the changing opportunity landscape
+        and turns information into actionable intelligence.
+
       </p>
 
     </div>
-  `;
 
 
-  try {
+    <div class="flow">
+
+
+      <div class="flow-card">
+
+        <div class="flow-number">
+          01
+        </div>
+
+        <h3>
+          Understand You
+        </h3>
+
+        <p>
+          Your goals, skills, experience,
+          constraints and preferences.
+        </p>
+
+      </div>
+
+
+      <div class="flow-card">
+
+        <div class="flow-number">
+          02
+        </div>
+
+        <h3>
+          Discover
+        </h3>
+
+        <p>
+          Find opportunities relevant
+          to your situation and objective.
+        </p>
+
+      </div>
+
+
+      <div class="flow-card">
+
+        <div class="flow-number">
+          03
+        </div>
+
+        <h3>
+          Verify
+        </h3>
+
+        <p>
+          Check evidence, sources,
+          freshness, reliability and conflicts.
+        </p>
+
+      </div>
+
+
+      <div class="flow-card">
+
+        <div class="flow-number">
+          04
+        </div>
+
+        <h3>
+          Compare
+        </h3>
+
+        <p>
+          Understand demand, earning potential,
+          difficulty, risk and fit.
+        </p>
+
+      </div>
+
+
+      <div class="flow-card">
+
+        <div class="flow-number">
+          05
+        </div>
+
+        <h3>
+          Act
+        </h3>
+
+        <p>
+          Get a clear next action instead
+          of endless information.
+        </p>
+
+      </div>
+
+
+    </div>
+
+
+  </section>
+
+
+  <!-- ==========================================
+       INTELLIGENCE
+       ========================================== -->
+
+  <section class="section">
+
+
+    <div class="section-heading">
+
+      <div class="mini">
+        Opportunity Intelligence
+      </div>
+
+
+      <h2>
+        More than search.
+      </h2>
+
+
+      <p>
+
+        OpportunityOS is designed to help you
+        understand whether an opportunity
+        actually makes sense for you.
+
+      </p>
+
+    </div>
+
+
+    <div class="features">
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          ◈
+        </div>
+
+        <h3>
+          Opportunity Intelligence
+        </h3>
+
+        <p>
+          Analyze demand, earning potential,
+          competition, difficulty, skills,
+          trends and risk.
+        </p>
+
+      </div>
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          ✓
+        </div>
+
+        <h3>
+          Evidence & Verification
+        </h3>
+
+        <p>
+          Important claims can be connected
+          to evidence, source reliability
+          and freshness.
+        </p>
+
+      </div>
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          ◎
+        </div>
+
+        <h3>
+          Personal Fit
+        </h3>
+
+        <p>
+          The same opportunity isn't equally
+          valuable for everyone.
+        </p>
+
+      </div>
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          ↗
+        </div>
+
+        <h3>
+          Best Next Move
+        </h3>
+
+        <p>
+          Turn research into a practical
+          next step instead of endless information.
+        </p>
+
+      </div>
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          ◌
+        </div>
+
+        <h3>
+          Future Radar
+        </h3>
+
+        <p>
+          Track changing skills, markets
+          and emerging opportunities.
+        </p>
+
+      </div>
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          ∞
+        </div>
+
+        <h3>
+          Continuous Intelligence
+        </h3>
+
+        <p>
+          Learn from outcomes and continuously
+          update the opportunity landscape.
+        </p>
+
+      </div>
+
+
+    </div>
+
+
+  </section>
+
+
+  <!-- ==========================================
+       TRUST SECTION
+       ========================================== -->
+
+  <section class="section">
+
+
+    <div class="trust-section">
+
+
+      <div class="section-heading">
+
+        <div class="mini">
+          TRUST FIRST
+        </div>
+
+
+        <h2>
+
+          AI can generate an answer.
+          <br>
+
+          <span>
+            OpportunityOS should show why.
+          </span>
+
+        </h2>
+
+
+        <p>
+
+          OpportunityOS is designed around
+          evidence rather than blindly presenting
+          AI-generated claims as facts.
+
+        </p>
+
+      </div>
+
+
+      <div class="trust-points">
+
+
+        <div class="trust-point">
+          Evidence
+        </div>
+
+
+        <div class="trust-point">
+          Source Reliability
+        </div>
+
+
+        <div class="trust-point">
+          Freshness
+        </div>
+
+
+        <div class="trust-point">
+          Supporting Evidence
+        </div>
+
+
+        <div class="trust-point">
+          Contradicting Evidence
+        </div>
+
+
+        <div class="trust-point">
+          Confidence
+        </div>
+
+
+      </div>
+
+
+    </div>
+
+
+  </section>
+
+
+  <!-- ==========================================
+       FINAL CTA
+       ========================================== -->
+
+  <section class="cta">
+
+
+    <h2>
+
+      Your next opportunity
+      <br>
+
+      may be closer than you think.
+
+    </h2>
+
+
+    <p>
+
+      Start with one question.
+      Let OpportunityOS investigate.
+
+    </p>
+
+
+    <a
+      href="#"
+      class="cta-button"
+      id="startExploringButton"
+    >
+
+      Start Exploring →
+
+    </a>
+
+
+  </section>
+
+
+  <!-- ==========================================
+       FOOTER
+       ========================================== -->
+
+  <footer>
+
+
+    <div>
+      ⚡ OpportunityOS
+    </div>
+
+
+    <div>
+      Global Opportunity Intelligence · 2026
+    </div>
+
+
+  </footer>
+
+
+  <!-- ==========================================
+       MAIN JAVASCRIPT
+       ========================================== -->
+
+  <script>
+
 
     /* ==========================================
-       1. CHECK ENGINE
+       SUPABASE CONFIG
        ========================================== */
 
-    if (
-      typeof opportunityEngine === "undefined" ||
-      typeof opportunityEngine.analyze !== "function"
-    ) {
-
-      throw new Error(
-        "Opportunity Engine is not loaded."
-      );
-
-    }
+    const SUPABASE_URL =
+      "https://ktihyruzkcttwiwtvtyw.supabase.co";
 
 
-    /* ==========================================
-       2. ANALYZE QUERY
-       ========================================== */
-
-    const result =
-      opportunityEngine.analyze(value);
-
-    console.log(
-      "Opportunity Engine Result:",
-      result
-    );
+    const SUPABASE_ANON_KEY =
+      "YOUR_SUPABASE_ANON_KEY";
 
 
-    const opportunity =
-      result.opportunity || {};
-
-    const claims =
-      result.claims || [];
-
-    const verification =
-      result.verification || {};
+    let supabaseClient = null;
 
 
-    /* ==========================================
-       3. SAVE SEARCH
-       ========================================== */
-
-    const {
-      data: searchData,
-      error: searchError
-    } =
-      await supabaseClient
-        .from("opportunity_searches")
-        .insert([
-          {
-            query: value
-          }
-        ])
-        .select()
-        .single();
+    /*
+      IMPORTANT:
+      If your existing project already has
+      the real anon key in your old index.html,
+      replace YOUR_SUPABASE_ANON_KEY with it.
+    */
 
 
-    if (searchError) {
+    try {
+
+      if (
+        typeof supabase !== "undefined" &&
+        SUPABASE_ANON_KEY !==
+        "YOUR_SUPABASE_ANON_KEY"
+      ) {
+
+        supabaseClient =
+          supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY
+          );
+
+      }
+
+    } catch (error) {
 
       console.error(
-        "Search Save Error:",
-        searchError
-      );
-
-      throw new Error(
-        "Search could not be saved: " +
-        searchError.message
+        "Supabase initialization error:",
+        error
       );
 
     }
 
 
-    const searchId =
-      searchData.id;
+    /* ==========================================
+       DOM ELEMENTS
+       ========================================== */
+
+    const input =
+      document.getElementById(
+        "searchInput"
+      );
 
 
-    console.log(
-      "Search saved:",
-      searchId
-    );
+    const results =
+      document.getElementById(
+        "results"
+      );
+
+
+    const button =
+      document.getElementById(
+        "exploreButton"
+      );
+
+
+    const startExploringButton =
+      document.getElementById(
+        "startExploringButton"
+      );
 
 
     /* ==========================================
-       4. SAVE OPPORTUNITY
+       SEARCH FUNCTION
        ========================================== */
 
-    const {
-      data: opportunityData,
-      error: opportunityError
-    } =
-      await supabaseClient
-        .from("opportunities")
-        .insert([
-          {
-            search_id: searchId,
-
-            title:
-              opportunity.title ||
-              result.title ||
-              "Opportunity",
-
-            category:
-              opportunity.category ||
-              "General Opportunity",
-
-            description:
-              opportunity.description ||
-              "Opportunity profile generated by OpportunityOS."
-          }
-        ])
-        .select()
-        .single();
+    async function searchOpportunity() {
 
 
-    if (opportunityError) {
-
-      console.error(
-        "Opportunity Save Error:",
-        opportunityError
-      );
-
-      throw new Error(
-        "Opportunity could not be saved: " +
-        opportunityError.message
-      );
-
-    }
+      const value =
+        input.value.trim();
 
 
-    const opportunityId =
-      opportunityData.id;
+      if (!value) {
+
+        input.focus();
+
+        return;
+
+      }
 
 
-    console.log(
-      "Opportunity saved:",
-      opportunityId
-    );
+      /* ==========================================
+         DISABLE BUTTON
+         ========================================== */
+
+      button.disabled = true;
 
 
-    /* ==========================================
-       5. SAVE CLAIMS
-       ========================================== */
+      button.textContent =
+        "Analyzing...";
 
-    if (claims.length > 0) {
 
-      const claimsToInsert =
-        claims.map(function(claim) {
+      /* ==========================================
+         SHOW LOADING
+         ========================================== */
 
-          return {
+      results.style.display =
+        "block";
 
-            opportunity_id:
-              opportunityId,
 
-            claim_type:
-              claim.claimType,
+      results.innerHTML = `
 
-            claim_text:
-              claim.claimText,
+        <div class="result-card">
 
-            verification_status:
-              claim.verificationStatus ||
-              "unverified",
+          <div class="result-label">
+            OPPORTUNITYOS
+          </div>
 
-            verification_confidence:
-              Number(
-                claim.confidence || 0
+          <h2>
+            Analyzing your opportunity...
+          </h2>
+
+          <p>
+            Understanding your request,
+            scanning the opportunity profile,
+            and preparing intelligence.
+          </p>
+
+        </div>
+
+      `;
+
+
+      try {
+
+
+        /* ==========================================
+           CHECK ENGINE
+           ========================================== */
+
+        if (
+          typeof opportunityEngine ===
+          "undefined"
+        ) {
+
+          throw new Error(
+            "Opportunity Engine is not loaded. Check opportunity-engine.js."
+          );
+
+        }
+
+
+        if (
+          typeof opportunityEngine.analyze !==
+          "function"
+        ) {
+
+          throw new Error(
+            "Opportunity Engine loaded, but analyze() was not found."
+          );
+
+        }
+
+
+        /* ==========================================
+           RUN ENGINE
+           ========================================== */
+
+        const result =
+          await opportunityEngine.analyze(
+            value
+          );
+
+
+        console.log(
+          "Opportunity Engine Result:",
+          result
+        );
+
+
+        const opportunity =
+          result.opportunity || {};
+
+
+        const claims =
+          Array.isArray(result.claims)
+            ? result.claims
+            : [];
+
+
+        const verification =
+          result.verification || {};
+
+
+        /* ==========================================
+           DATABASE STATUS
+           ========================================== */
+
+        let databaseStatus =
+          "Engine result generated";
+
+
+        let searchId =
+          null;
+
+
+        let opportunityId =
+          null;
+
+
+        /* ==========================================
+           SAVE TO SUPABASE
+           ========================================== */
+
+        if (supabaseClient) {
+
+
+          /* SAVE SEARCH */
+
+          const {
+            data: searchData,
+            error: searchError
+          } =
+
+            await supabaseClient
+
+              .from(
+                "opportunity_searches"
               )
 
-          };
+              .insert([
+                {
+                  query: value
+                }
+              ])
+
+              .select()
+
+              .single();
+
+
+          if (searchError) {
+
+            console.error(
+              "Search Save Error:",
+              searchError
+            );
+
+          } else {
+
+            searchId =
+              searchData.id;
+
+          }
+
+
+          /* SAVE OPPORTUNITY */
+
+          if (searchId) {
+
+
+            const {
+              data:
+                opportunityData,
+              error:
+                opportunityError
+            } =
+
+              await supabaseClient
+
+                .from(
+                  "opportunities"
+                )
+
+                .insert([
+                  {
+
+                    search_id:
+                      searchId,
+
+                    title:
+                      opportunity.title ||
+                      result.title ||
+                      "Opportunity",
+
+                    category:
+                      opportunity.category ||
+                      "General Opportunity",
+
+                    description:
+                      opportunity.description ||
+                      "Opportunity profile generated by OpportunityOS."
+
+                  }
+                ])
+
+                .select()
+
+                .single();
+
+
+            if (opportunityError) {
+
+              console.error(
+                "Opportunity Save Error:",
+                opportunityError
+              );
+
+            } else {
+
+              opportunityId =
+                opportunityData.id;
+
+            }
+
+          }
+
+
+          /* SAVE CLAIMS */
+
+          if (
+            opportunityId &&
+            claims.length > 0
+          ) {
+
+
+            const claimsToInsert =
+              claims.map(
+                function(claim) {
+
+                  return {
+
+                    opportunity_id:
+                      opportunityId,
+
+                    claim_type:
+                      claim.claimType ||
+                      "general",
+
+                    claim_text:
+                      claim.claimText ||
+                      "",
+
+                    verification_status:
+                      claim.verificationStatus ||
+                      "unverified",
+
+                    verification_confidence:
+                      Number(
+                        claim.confidence || 0
+                      )
+
+                  };
+
+                }
+              );
+
+
+            const {
+              error:
+                claimsError
+            } =
+
+              await supabaseClient
+
+                .from(
+                  "opportunity_claims"
+                )
+
+                .insert(
+                  claimsToInsert
+                );
+
+
+            if (claimsError) {
+
+              console.error(
+                "Claims Save Error:",
+                claimsError
+              );
+
+            }
+
+          }
+
+
+          if (
+            searchId &&
+            opportunityId
+          ) {
+
+            databaseStatus =
+              "Search + Opportunity saved";
+
+          } else if (searchId) {
+
+            databaseStatus =
+              "Search saved";
+
+          }
+
+        } else {
+
+          databaseStatus =
+            "Engine result generated · Database not configured";
+
+        }
+
+
+        /* ==========================================
+           SKILLS
+           ========================================== */
+
+        const skills =
+          Array.isArray(
+            opportunity.skills
+          )
+
+            ? opportunity.skills
+
+            : [];
+
+
+        const skillHTML =
+          skills.length > 0
+
+            ? skills
+                .map(
+                  function(skill) {
+
+                    return `
+
+                      <span class="trust-point">
+
+                        ${escapeHTML(
+                          String(skill)
+                        )}
+
+                      </span>
+
+                    `;
+
+                  }
+                )
+                .join("")
+
+            : `
+
+                <span class="trust-point">
+
+                  No skills identified yet
+
+                </span>
+
+              `;
+
+
+        /* ==========================================
+           VERIFICATION CONFIDENCE
+           ========================================== */
+
+        const confidence =
+          Number(
+            verification.confidence || 0
+          );
+
+
+        const confidencePercent =
+          Math.round(
+            confidence * 100
+          );
+
+
+        /* ==========================================
+           RESULT VALUES
+           ========================================== */
+
+        const demand =
+          result.demand ||
+          profileValue(
+            result.profile,
+            "demand"
+          );
+
+
+        const earning =
+          result.earning ||
+          profileValue(
+            result.profile,
+            "earning"
+          );
+
+
+        const competition =
+          result.competition ||
+          profileValue(
+            result.profile,
+            "competition"
+          );
+
+
+        const difficulty =
+          result.difficulty ||
+          profileValue(
+            result.profile,
+            "difficulty"
+          );
+
+
+        const risk =
+          result.risk ||
+          profileValue(
+            result.profile,
+            "risk"
+          );
+
+
+        const trend =
+          profileValue(
+            result.profile,
+            "trend"
+          );
+
+
+        /* ==========================================
+           SHOW FINAL RESULT
+           ========================================== */
+
+        results.innerHTML = `
+
+          <div class="result-card">
+
+
+            <div class="result-label">
+
+              🌍 OpportunityOS Intelligence
+
+            </div>
+
+
+            <h2>
+
+              ${escapeHTML(
+                opportunity.title ||
+                result.title ||
+                "Opportunity"
+              )}
+
+            </h2>
+
+
+            <p>
+
+              <strong>
+                Your search:
+              </strong>
+
+              ${escapeHTML(
+                result.query ||
+                value
+              )}
+
+            </p>
+
+
+            <p>
+
+              ${escapeHTML(
+                opportunity.description ||
+                "Opportunity profile generated by OpportunityOS."
+              )}
+
+            </p>
+
+
+            <!-- PROFILE -->
+
+            <div
+              style="
+                display:grid;
+                grid-template-columns:
+                  repeat(2,minmax(0,1fr));
+                gap:10px;
+                margin-top:22px;
+              "
+            >
+
+
+              <div class="flow-card">
+
+                <div class="flow-number">
+                  DEMAND
+                </div>
+
+                <h3>
+                  ${escapeHTML(
+                    String(demand)
+                  )}
+                </h3>
+
+              </div>
+
+
+              <div class="flow-card">
+
+                <div class="flow-number">
+                  EARNING
+                </div>
+
+                <h3>
+                  ${escapeHTML(
+                    String(earning)
+                  )}
+                </h3>
+
+              </div>
+
+
+              <div class="flow-card">
+
+                <div class="flow-number">
+                  COMPETITION
+                </div>
+
+                <h3>
+                  ${escapeHTML(
+                    String(competition)
+                  )}
+                </h3>
+
+              </div>
+
+
+              <div class="flow-card">
+
+                <div class="flow-number">
+                  DIFFICULTY
+                </div>
+
+                <h3>
+                  ${escapeHTML(
+                    String(difficulty)
+                  )}
+                </h3>
+
+              </div>
+
+
+              <div class="flow-card">
+
+                <div class="flow-number">
+                  RISK
+                </div>
+
+                <h3>
+                  ${escapeHTML(
+                    String(risk)
+                  )}
+                </h3>
+
+              </div>
+
+
+              <div class="flow-card">
+
+                <div class="flow-number">
+                  TREND
+                </div>
+
+                <h3>
+                  ${escapeHTML(
+                    String(trend)
+                  )}
+                </h3>
+
+              </div>
+
+
+            </div>
+
+
+            <!-- VERIFICATION -->
+
+            <div
+              style="
+                margin-top:22px;
+                padding:18px;
+                border-radius:16px;
+                border:
+                  1px solid
+                  rgba(52,211,153,.15);
+                background:
+                  rgba(52,211,153,.035);
+              "
+            >
+
+
+              <div class="result-label">
+
+                TRUST & VERIFICATION
+
+              </div>
+
+
+              <p>
+
+                Status:
+
+                <strong>
+
+                  ${escapeHTML(
+                    String(
+                      verification.status ||
+                      "unverified"
+                    )
+                  )}
+
+                </strong>
+
+
+                · Confidence:
+
+
+                <strong>
+
+                  ${confidencePercent}%
+
+                </strong>
+
+
+              </p>
+
+
+              <p>
+
+                Unsupported market claims
+                are not presented as verified facts.
+
+              </p>
+
+
+            </div>
+
+
+            <!-- SKILLS -->
+
+            <div
+              style="
+                margin-top:22px;
+              "
+            >
+
+
+              <div class="result-label">
+
+                RELEVANT SKILLS
+
+              </div>
+
+
+              <div
+                style="
+                  display:flex;
+                  flex-wrap:wrap;
+                  gap:8px;
+                  margin-top:12px;
+                "
+              >
+
+                ${skillHTML}
+
+              </div>
+
+
+            </div>
+
+
+            <!-- BEST NEXT ACTION -->
+
+            <div
+              style="
+                margin-top:22px;
+                padding:18px;
+                border-radius:16px;
+                background:
+                  rgba(99,102,241,.07);
+                border:
+                  1px solid
+                  rgba(99,102,241,.15);
+              "
+            >
+
+
+              <div class="result-label">
+
+                BEST NEXT ACTION
+
+              </div>
+
+
+              <p>
+
+                ${escapeHTML(
+                  result.bestNextAction ||
+                  result.nextStep ||
+                  "More evidence is required."
+                )}
+
+              </p>
+
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <div class="result-status">
+
+              ✓ Opportunity Engine connected
+
+              · ${claims.length}
+              claims detected
+
+              · ${escapeHTML(
+                databaseStatus
+              )}
+
+            </div>
+
+
+          </div>
+
+        `;
+
+
+        /* ==========================================
+           SCROLL
+           ========================================== */
+
+        results.scrollIntoView({
+
+          behavior: "smooth",
+
+          block: "center"
 
         });
 
 
-      const {
-        error: claimsError
-      } =
-        await supabaseClient
-          .from("opportunity_claims")
-          .insert(
-            claimsToInsert
-          );
+      }
 
 
-      if (claimsError) {
+      catch (error) {
+
 
         console.error(
-          "Claims Save Error:",
-          claimsError
+          "OpportunityOS Pipeline Error:",
+          error
         );
 
-        throw new Error(
-          "Claims could not be saved: " +
-          claimsError.message
+
+        results.style.display =
+          "block";
+
+
+        results.innerHTML = `
+
+          <div class="result-card">
+
+
+            <div class="result-label">
+
+              SYSTEM ERROR
+
+            </div>
+
+
+            <h2>
+
+              Something went wrong
+
+            </h2>
+
+
+            <p>
+
+              ${escapeHTML(
+                error.message ||
+                "Unknown error"
+              )}
+
+            </p>
+
+
+            <div
+              class="result-status error-status"
+            >
+
+              OpportunityOS could not
+              complete this request.
+
+            </div>
+
+
+          </div>
+
+        `;
+
+      }
+
+
+      finally {
+
+
+        button.disabled =
+          false;
+
+
+        button.textContent =
+          "Find My Opportunity →";
+
+      }
+
+    }
+
+
+    /* ==========================================
+       PROFILE HELPER
+       ========================================== */
+
+    function profileValue(
+      profile,
+      key
+    ) {
+
+
+      if (
+
+        profile &&
+
+        profile[key] &&
+
+        profile[key].value !== null &&
+
+        profile[key].value !== undefined
+
+      ) {
+
+        return String(
+          profile[key].value
         );
 
       }
 
 
-      console.log(
-        "Claims saved:",
-        claims.length
+      return "Needs Verification";
+
+    }
+
+
+    /* ==========================================
+       HTML ESCAPE
+       ========================================== */
+
+    function escapeHTML(text) {
+
+      return String(
+        text ?? ""
+      )
+
+        .replace(
+          /&/g,
+          "&amp;"
+        )
+
+        .replace(
+          /</g,
+          "&lt;"
+        )
+
+        .replace(
+          />/g,
+          "&gt;"
+        )
+
+        .replace(
+          /"/g,
+          "&quot;"
+        )
+
+        .replace(
+          /'/g,
+          "&#039;"
+        );
+
+    }
+
+
+    /* ==========================================
+       BUTTON CLICK
+       ========================================== */
+
+    button.addEventListener(
+      "click",
+      searchOpportunity
+    );
+
+
+    /* ==========================================
+       ENTER KEY
+       ========================================== */
+
+    input.addEventListener(
+      "keydown",
+      function(event) {
+
+        if (
+          event.key === "Enter"
+        ) {
+
+          searchOpportunity();
+
+        }
+
+      }
+    );
+
+
+    /* ==========================================
+       QUICK SUGGESTIONS
+       ========================================== */
+
+    document
+      .querySelectorAll(
+        ".suggestion"
+      )
+      .forEach(
+        function(item) {
+
+          item.addEventListener(
+            "click",
+            function() {
+
+              input.value =
+                item.textContent.trim();
+
+              input.focus();
+
+            }
+          );
+
+        }
       );
 
-    }
-
 
     /* ==========================================
-       6. PREPARE SKILLS
+       START EXPLORING
        ========================================== */
 
-    const skills =
-      Array.isArray(opportunity.skills)
-        ? opportunity.skills
-        : [];
-
-
-    const skillHTML =
-      skills.length
-
-        ? skills.map(function(skill) {
-
-            return `
-              <span class="trust-point">
-                ${escapeHTML(
-                  String(skill)
-                )}
-              </span>
-            `;
-
-          }).join("")
-
-        : `
-            <span class="trust-point">
-              No skills identified yet
-            </span>
-          `;
-
-
-    /* ==========================================
-       7. SHOW RESULT
-       ========================================== */
-
-    results.innerHTML = `
-
-      <div class="result-card">
-
-        <div class="result-label">
-          ${escapeHTML(
-            opportunity.icon || "🌍"
-          )}
-          OpportunityOS Intelligence
-        </div>
-
-
-        <h2>
-          ${escapeHTML(
-            opportunity.title ||
-            result.title ||
-            "Opportunity"
-          )}
-        </h2>
-
-
-        <p>
-          <strong>Your search:</strong>
-          ${escapeHTML(
-            result.query || value
-          )}
-        </p>
-
-
-        <p>
-          ${escapeHTML(
-            opportunity.description ||
-            "Opportunity profile generated by OpportunityOS."
-          )}
-        </p>
-
-
-        <!-- OPPORTUNITY PROFILE -->
-
-        <div style="
-          display:grid;
-          grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-          gap:10px;
-          margin-top:22px;
-        ">
-
-
-          <div class="flow-card">
-
-            <div class="flow-number">
-              DEMAND
-            </div>
-
-            <h3>
-              ${escapeHTML(
-                result.demand ||
-                "Needs Verification"
-              )}
-            </h3>
-
-          </div>
-
-
-          <div class="flow-card">
-
-            <div class="flow-number">
-              EARNING
-            </div>
-
-            <h3>
-              ${escapeHTML(
-                result.earning ||
-                "Needs Verification"
-              )}
-            </h3>
-
-          </div>
-
-
-          <div class="flow-card">
-
-            <div class="flow-number">
-              COMPETITION
-            </div>
-
-            <h3>
-              ${escapeHTML(
-                result.competition ||
-                "Needs Verification"
-              )}
-            </h3>
-
-          </div>
-
-
-          <div class="flow-card">
-
-            <div class="flow-number">
-              DIFFICULTY
-            </div>
-
-            <h3>
-              ${escapeHTML(
-                result.difficulty ||
-                "Needs Verification"
-              )}
-            </h3>
-
-          </div>
-
-
-          <div class="flow-card">
-
-            <div class="flow-number">
-              RISK
-            </div>
-
-            <h3>
-              ${escapeHTML(
-                result.risk ||
-                "Needs Verification"
-              )}
-            </h3>
-
-          </div>
-
-
-          <div class="flow-card">
-
-            <div class="flow-number">
-              TREND
-            </div>
-
-            <h3>
-              ${escapeHTML(
-                profileValue(
-                  result.profile,
-                  "trend"
-                )
-              )}
-            </h3>
-
-          </div>
-
-
-        </div>
-
-
-        <!-- TRUST -->
-
-        <div style="
-          margin-top:22px;
-          padding:18px;
-          border-radius:16px;
-          border:1px solid rgba(52,211,153,.15);
-          background:rgba(52,211,153,.035);
-        ">
-
-          <div class="result-label">
-            TRUST & VERIFICATION
-          </div>
-
-
-          <p style="margin-top:8px;">
-
-            Status:
-
-            <strong>
-              ${escapeHTML(
-                verification.status ||
-                "unverified"
-              )}
-            </strong>
-
-            · Confidence:
-
-            <strong>
-              ${
-                Number(
-                  verification.confidence || 0
-                ) * 100
-              }%
-            </strong>
-
-          </p>
-
-
-          <p>
-            Unsupported market claims are not
-            presented as verified facts.
-          </p>
-
-        </div>
-
-
-        <!-- SKILLS -->
-
-        <div style="
-          margin-top:22px;
-        ">
-
-          <div class="result-label">
-            RELEVANT SKILLS
-          </div>
-
-
-          <div style="
-            display:flex;
-            flex-wrap:wrap;
-            gap:8px;
-            margin-top:12px;
-          ">
-
-            ${skillHTML}
-
-          </div>
-
-        </div>
-
-
-        <!-- BEST NEXT ACTION -->
-
-        <div style="
-          margin-top:22px;
-          padding:18px;
-          border-radius:16px;
-          background:rgba(99,102,241,.07);
-          border:1px solid rgba(99,102,241,.15);
-        ">
-
-          <div class="result-label">
-            BEST NEXT ACTION
-          </div>
-
-
-          <p>
-            ${escapeHTML(
-              result.bestNextAction ||
-              result.nextStep ||
-              "More evidence is required."
-            )}
-          </p>
-
-        </div>
-
-
-        <!-- DATABASE STATUS -->
-
-        <div class="result-status">
-
-          ✓ Opportunity Engine connected
-
-          · Search saved
-
-          · Opportunity saved
-
-          · ${claims.length} claims saved
-
-        </div>
-
-
-      </div>
-
-    `;
-
-
-    results.scrollIntoView({
-      behavior: "smooth",
-      block: "center"
-    });
-
-
-  } catch (error) {
-
-    console.error(
-      "OpportunityOS Pipeline Error:",
-      error
-    );
-
-
-    results.innerHTML = `
-
-      <div class="result-card">
-
-        <div class="result-label">
-          SYSTEM ERROR
-        </div>
-
-
-        <h2>
-          Something went wrong
-        </h2>
-
-
-        <p>
-          ${escapeHTML(
-            error.message ||
-            "Unknown error"
-          )}
-        </p>
-
-
-      </div>
-
-    `;
-
-  }
-
-}
-
-
-/* ==========================================
-   PROFILE VALUE HELPER
-   ========================================== */
-
-function profileValue(profile, key) {
-
-  if (
-    profile &&
-    profile[key] &&
-    profile[key].value !== null &&
-    profile[key].value !== undefined
-  ) {
-
-    return String(
-      profile[key].value
-    );
-
-  }
-
-  return "Needs Verification";
-
-  }
-
-
-function escapeHTML(text) {
-
-  return text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-
-}
-
-
-function focusSearch() {
-
-  input.focus();
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-
-}
-
-
-input.addEventListener(
-  "keydown",
-  function(event) {
-
-    if (event.key === "Enter") {
-
-      searchOpportunity();
-
-    }
-
-  }
-);
-
-
-/* ==========================================
-   QUICK SUGGESTIONS
-   ========================================== */
-
-document
-  .querySelectorAll(".suggestion")
-  .forEach(function(item) {
-
-    item.addEventListener(
+    startExploringButton.addEventListener(
       "click",
-      function() {
+      function(event) {
 
-        input.value = item.textContent.trim();
+        event.preventDefault();
 
         input.focus();
 
+        window.scrollTo({
+
+          top: 0,
+
+          behavior: "smooth"
+
+        });
+
       }
     );
 
-  });
 
-</script>
+  </script>
 
-
-<!-- =========================
-     OPPORTUNITYOS DEBUGGER
-========================= -->
-
-<script>
-
-alert("DEBUGGER SCRIPT LOADED");
-
-window.runOpportunityOSDebugger = function () {
-
-  alert("DEBUGGER V2 WORKING");
-
-};
-
-</script>
 
 </body>
+
 </html>
