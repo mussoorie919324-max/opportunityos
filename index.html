@@ -2948,9 +2948,113 @@
     );
 
 
-  </script>
+      </script>
 
+    <script>
+/* ==========================================
+   PERMANENT DEVELOPMENT DEBUGGER
+   STEP 3
+   ========================================== */
 
+window.OODebug = {
+
+  panel: null,
+  logs: null,
+
+  init: function () {
+
+    this.panel = document.getElementById("debuggerPanel");
+    this.logs = document.getElementById("debugLogs");
+
+    if (!this.panel || !this.logs) {
+      return;
+    }
+
+    this.panel.style.display = "block";
+
+    this.log(
+      "Debugger",
+      "INIT",
+      "OpportunityOS Development Debugger started",
+      "success"
+    );
+  },
+
+  log: function (functionName, step, message, type = "info") {
+
+    if (!this.logs) return;
+
+    const time = new Date().toLocaleTimeString();
+
+    const row = document.createElement("div");
+
+    row.className = "debug-log debug-" + type;
+
+    row.innerHTML =
+      "[" + time + "] " +
+      "<b>" + functionName + "</b> → " +
+      step + " → " +
+      message;
+
+    this.logs.appendChild(row);
+
+    this.logs.parentElement.scrollTop =
+      this.logs.parentElement.scrollHeight;
+  },
+
+  error: function (functionName, step, error) {
+
+    const message =
+      error && error.message
+        ? error.message
+        : String(error);
+
+    this.log(
+      functionName,
+      step,
+      "ERROR: " + message,
+      "error"
+    );
+  }
+
+};
+
+window.addEventListener("error", function (event) {
+
+  if (window.OODebug) {
+
+    OODebug.error(
+      "GLOBAL",
+      "JavaScript Error",
+      event.error || event.message
+    );
+
+  }
+
+});
+
+window.addEventListener("unhandledrejection", function (event) {
+
+  if (window.OODebug) {
+
+    OODebug.error(
+      "GLOBAL",
+      "Promise Error",
+      event.reason
+    );
+
+  }
+
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+
+  if (window.OODebug) {
+    OODebug.init();
+  }
+
+});
+</script>
 </body>
 
 </html>
