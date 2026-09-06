@@ -2056,7 +2056,14 @@ if (window.OODebug) {
           await opportunityEngine.analyze(
             value
           );
-
+if (window.OODebug) {
+  OODebug.log(
+    "searchOpportunity",
+    "ENGINE_RESULT",
+    "Opportunity Engine result generated successfully",
+    "success"
+  );
+    }
 
         console.log(
           "Opportunity Engine Result:",
