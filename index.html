@@ -3014,13 +3014,20 @@ if (window.OODebug) {
           ) {
 
             if (window.OODebug) {
-              OODebug.log(
-                "Supabase",
-                "CLAIMS_INSERT",
-                "Saving claims to opportunity_claims...",
-                "info"
-              );
-            }
+
+  OODebug.startOperation(
+    "Supabase",
+    "CLAIMS_INSERT"
+  );
+
+  OODebug.log(
+    "Supabase",
+    "CLAIMS_INSERT",
+    "Saving claims to opportunity_claims...",
+    "info"
+  );
+
+    }
 
             const claimsToInsert =
               claims.map(
@@ -3080,13 +3087,19 @@ if (window.OODebug) {
             } else {
 
               if (window.OODebug) {
-                OODebug.log(
-                  "Supabase",
-                  "CLAIMS_INSERT",
-                  "Claims saved successfully",
-                  "success"
-                );
-              }
+
+  OODebug.log(
+    "Supabase",
+    "CLAIMS_INSERT",
+    "Claims saved successfully",
+    "success"
+  );
+
+  OODebug.endOperation(
+    "Claims saved successfully"
+  );
+
+    }
 
             }
 
