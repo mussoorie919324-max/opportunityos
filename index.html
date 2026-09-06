@@ -2510,6 +2510,72 @@ window.addEventListener(
 
   }
 );
+/* ==========================================
+   STRUCTURED OPERATION TRACKING
+   STEP 2D
+   ========================================== */
+
+OODebug.operation = function (
+  part,
+  operation,
+  message = "",
+  type = "info"
+) {
+
+  this.log(
+    part,
+    operation,
+    message,
+    type
+  );
+
+};
+
+
+/* ==========================================
+   TRACK ACTIVE OPERATION
+   ========================================== */
+
+OODebug.currentOperation = null;
+
+OODebug.startOperation = function (
+  part,
+  operation
+) {
+
+  this.currentOperation = {
+    part: part,
+    operation: operation
+  };
+
+  this.log(
+    part,
+    operation,
+    "▶ Operation started",
+    "info"
+  );
+
+};
+
+
+OODebug.endOperation = function (
+  message = "Operation completed successfully"
+) {
+
+  if (!this.currentOperation) {
+    return;
+  }
+
+  this.log(
+    this.currentOperation.part,
+    this.currentOperation.operation,
+    "✓ " + message,
+    "success"
+  );
+
+  this.currentOperation = null;
+
+};
 </script>
 
   <!-- ==========================================
