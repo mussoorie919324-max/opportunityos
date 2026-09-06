@@ -1947,7 +1947,14 @@
 
     async function searchOpportunity() {
 
-
+if (window.OODebug) {
+  OODebug.log(
+    "searchOpportunity",
+    "START",
+    "Search function started",
+    "info"
+  );
+}
       const value =
         input.value.trim();
 
