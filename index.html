@@ -2034,7 +2034,37 @@ window.OODebug = {
   step,
   error
 ) {
+startTimer: function(name) {
 
+  if (!this.timers) {
+    this.timers = {};
+  }
+
+  this.timers[name] = performance.now();
+
+},
+
+endTimer: function(name, functionName, step) {
+
+  if (
+    !this.timers ||
+    !this.timers[name]
+  ) return;
+
+  const time =
+    (
+      performance.now() -
+      this.timers[name]
+    ).toFixed(0);
+
+  this.log(
+    functionName,
+    step,
+    "⏱ " + time + " ms",
+    "info"
+  );
+
+},
   const message =
     error && error.message
       ? error.message
@@ -2091,7 +2121,6 @@ window.OODebug = {
 
           const text =
             row.querySelector("span");
-
           return text
             ? text.textContent
             : row.textContent;
