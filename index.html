@@ -2232,12 +2232,25 @@ if (window.OODebug) {
                 "Opportunity Save Error:",
                 opportunityError
               );
-
+if (window.OODebug) {
+  OODebug.error(
+    "Supabase",
+    "OPPORTUNITY_INSERT",
+    opportunityError
+  );
+    }
             } else {
 
               opportunityId =
                 opportunityData.id;
-
+if (window.OODebug) {
+  OODebug.log(
+    "Supabase",
+    "OPPORTUNITY_INSERT",
+    "Opportunity saved successfully. ID: " + opportunityId,
+    "success"
+  );
+    }
             }
 
           }
