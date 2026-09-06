@@ -2838,12 +2838,19 @@ if (window.OODebug) {
     }
           /* SAVE SEARCH */
 if (window.OODebug) {
+
+  OODebug.startOperation(
+    "Supabase",
+    "SEARCH_INSERT"
+  );
+
   OODebug.log(
     "Supabase",
     "SEARCH_INSERT",
     "Saving search to opportunity_searches...",
     "info"
   );
+
     }
           const {
             data: searchData,
@@ -2887,14 +2894,21 @@ if (window.OODebug) {
 
           }
 if (window.OODebug) {
+
   OODebug.log(
     "Supabase",
     "SEARCH_INSERT",
-    "Search saved successfully. ID: " + searchId,
+    "Search saved successfully. ID: " +
+      searchData.id,
     "success"
   );
-    }
 
+  OODebug.endOperation(
+    "Search saved successfully. ID: " +
+      searchData.id
+  );
+
+    }
           /* SAVE OPPORTUNITY */
 
           if (searchId) {
