@@ -2317,7 +2317,14 @@ if (window.OODebug) {
                 .insert(
                   claimsToInsert
                 );
-
+if (window.OODebug) {
+  OODebug.log(
+    "Supabase",
+    "CLAIMS_INSERT",
+    "Supabase claims insert request completed",
+    "success"
+  );
+    }
 
             if (claimsError) {
 
