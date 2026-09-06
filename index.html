@@ -2262,7 +2262,14 @@ if (window.OODebug) {
             opportunityId &&
             claims.length > 0
           ) {
-
+if (window.OODebug) {
+  OODebug.log(
+    "Supabase",
+    "CLAIMS_INSERT",
+    "Saving claims to opportunity_claims...",
+    "info"
+  );
+    }
 
             const claimsToInsert =
               claims.map(
