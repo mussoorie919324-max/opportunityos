@@ -2273,7 +2273,134 @@ document.addEventListener(
 
   }
 );
+/* ==========================================
+   ERROR DIAGNOSIS LAYER
+   STEP 2A
+   ========================================== */
 
+OODebug.diagnoseError = function (
+  functionName,
+  step,
+  error
+) {
+
+  const message =
+    error && error.message
+      ? error.message
+      : String(error || "Unknown error");
+
+
+  let diagnosis =
+    "Unknown JavaScript problem";
+
+
+  let action =
+    "Check the operation shown above.";
+
+
+  const lower =
+    message.toLowerCase();
+
+
+  /* BRACE / SYNTAX */
+
+  if (
+    lower.includes("unexpected end") ||
+    lower.includes("expected") ||
+    lower.includes("unexpected token")
+  ) {
+
+    diagnosis =
+      "Possible JavaScript syntax error. A closing }, ), or ] may be missing or misplaced.";
+
+    action =
+      "Check the recently edited JavaScript block and its closing braces/brackets.";
+
+  }
+
+
+  /* FUNCTION */
+
+  else if (
+    lower.includes("is not defined")
+  ) {
+
+    diagnosis =
+      "A required function, variable, or object was not found.";
+
+    action =
+      "Check whether the required script loaded and whether the name is spelled correctly.";
+
+  }
+
+
+  /* FUNCTION TYPE */
+
+  else if (
+    lower.includes("is not a function")
+  ) {
+
+    diagnosis =
+      "The code tried to call something as a function, but it is not a function.";
+
+    action =
+      "Check the function name and the object that should contain it.";
+
+  }
+
+
+  /* NULL / UNDEFINED */
+
+  else if (
+    lower.includes("cannot read properties") ||
+    lower.includes("undefined")
+  ) {
+
+    diagnosis =
+      "The code tried to use a missing or undefined value.";
+
+    action =
+      "Check the value immediately before the failing operation.";
+
+  }
+
+
+  /* SUPABASE */
+
+  else if (
+    lower.includes("supabase") ||
+    lower.includes("postgres") ||
+    lower.includes("row-level security") ||
+    lower.includes("rls")
+  ) {
+
+    diagnosis =
+      "Possible Supabase/database configuration, permission, or query problem.";
+
+    action =
+      "Check the Supabase table, column names, permissions, and query.";
+
+  }
+
+
+  /* SHOW DIAGNOSIS */
+
+  this.log(
+    functionName,
+    "DIAGNOSIS",
+    "🔎 " + diagnosis,
+    "error"
+  );
+
+
+  this.log(
+    functionName,
+    "ACTION",
+    "💡 " + action,
+    "info"
+  );
+
+};
   </script>
 
   <!-- ==========================================
