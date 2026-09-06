@@ -1867,7 +1867,14 @@
     /* ==========================================
        SUPABASE CONFIG
        ========================================== */
-
+if (window.OODebug) {
+  OODebug.log(
+    "MAIN_SCRIPT",
+    "LOAD",
+    "Main JavaScript started loading",
+    "success"
+  );
+}
     const SUPABASE_URL =
       "https://ktihyruzkcttwiwtvtyw.supabase.co";
 
