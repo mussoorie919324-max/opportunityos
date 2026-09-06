@@ -1168,7 +1168,73 @@
       }
 
     }
+/* ==========================================
+   PERMANENT DEVELOPMENT DEBUGGER
+   ========================================== */
 
+#debuggerPanel {
+
+  position: fixed;
+
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+
+  max-height: 38vh;
+
+  overflow-y: auto;
+
+  background: rgba(3,7,18,.96);
+
+  border: 1px solid rgba(99,102,241,.35);
+
+  border-radius: 14px;
+
+  padding: 12px;
+
+  z-index: 99999;
+
+  display: none;
+
+  font-family: monospace;
+
+  font-size: 11px;
+
+  line-height: 1.5;
+
+  box-shadow: 0 15px 50px rgba(0,0,0,.55);
+
+}
+
+.debugger-title {
+
+  color: #a5b4fc;
+
+  font-weight: 800;
+
+  margin-bottom: 8px;
+
+}
+
+.debug-log {
+
+  padding: 5px 0;
+
+  border-bottom: 1px solid rgba(255,255,255,.05);
+
+}
+
+.debug-success {
+  color: #6ee7b7;
+}
+
+.debug-error {
+  color: #fda4af;
+}
+
+.debug-info {
+  color: #cbd5e1;
+    }
   </style>
 
 </head>
