@@ -2042,7 +2042,7 @@ window.OODebug = {
 
 
   /* ==========================================
-     SHOW ORIGINAL ERROR
+     ORIGINAL ERROR
      ========================================== */
 
   this.log(
@@ -2054,7 +2054,23 @@ window.OODebug = {
 
 
   /* ==========================================
-     AUTOMATIC ERROR DIAGNOSIS
+     ACTIVE OPERATION
+     ========================================== */
+
+  if (this.currentOperation) {
+
+    this.log(
+      this.currentOperation.part,
+      this.currentOperation.operation,
+      "❌ ACTIVE OPERATION FAILED",
+      "error"
+    );
+
+  }
+
+
+  /* ==========================================
+     AUTOMATIC DIAGNOSIS
      ========================================== */
 
   if (
@@ -2070,7 +2086,6 @@ window.OODebug = {
   }
 
 },
-
   /* ==========================================
      GET ALL LOGS
      ========================================== */
