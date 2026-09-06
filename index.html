@@ -2067,7 +2067,33 @@ window.OODebug = {
     );
 
   }
+/* ==========================================
+   ERROR CONTEXT
+   STEP 6
+   ========================================== */
 
+if (this.currentOperation) {
+
+  this.log(
+    "Debugger",
+    "ERROR_CONTEXT",
+    "📌 Part: " +
+      this.currentOperation.part +
+      " | Operation: " +
+      this.currentOperation.operation,
+    "error"
+  );
+
+} else {
+
+  this.log(
+    "Debugger",
+    "ERROR_CONTEXT",
+    "📌 No active operation was available when the error occurred.",
+    "info"
+  );
+
+  }
 
   /* ==========================================
      AUTOMATIC DIAGNOSIS
