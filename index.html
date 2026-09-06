@@ -2116,7 +2116,14 @@ if (window.OODebug) {
   );
     }
           /* SAVE SEARCH */
-
+if (window.OODebug) {
+  OODebug.log(
+    "Supabase",
+    "SEARCH_INSERT",
+    "Saving search to opportunity_searches...",
+    "info"
+  );
+    }
           const {
             data: searchData,
             error: searchError
