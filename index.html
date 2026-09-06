@@ -2152,14 +2152,27 @@ if (window.OODebug) {
               "Search Save Error:",
               searchError
             );
-
+if (window.OODebug) {
+  OODebug.error(
+    "Supabase",
+    "SEARCH_INSERT",
+    searchError
+  );
+    }
           } else {
 
             searchId =
               searchData.id;
 
           }
-
+if (window.OODebug) {
+  OODebug.log(
+    "Supabase",
+    "SEARCH_INSERT",
+    "Search saved successfully. ID: " + searchId,
+    "success"
+  );
+    }
 
           /* SAVE OPPORTUNITY */
 
