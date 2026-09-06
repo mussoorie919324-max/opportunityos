@@ -2325,7 +2325,13 @@ if (window.OODebug) {
                 "Claims Save Error:",
                 claimsError
               );
-
+if (window.OODebug) {
+  OODebug.error(
+    "Supabase",
+    "CLAIMS_INSERT",
+    claimsError
+  );
+    }
             }
 
           }
@@ -2347,7 +2353,14 @@ if (window.OODebug) {
           }
 
         } else {
-
+if (window.OODebug) {
+  OODebug.log(
+    "Supabase",
+    "CLAIMS_INSERT",
+    "Claims saved successfully",
+    "success"
+  );
+    }
           databaseStatus =
             "Engine result generated · Database not configured";
 
