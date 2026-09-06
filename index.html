@@ -2698,6 +2698,7 @@ OODebug.endOperation = function (
     async function searchOpportunity() {
 
 if (window.OODebug) {
+OODebug.startTimer("fullSearch");  
   OODebug.log(
     "searchOpportunity",
     "START",
@@ -3641,7 +3642,11 @@ if (window.OODebug) {
 
         button.disabled =
           false;
-
+OODebug.endTimer(
+  "fullSearch",
+  "searchOpportunity",
+  "TOTAL_TIME"
+);
 
         button.textContent =
           "Find My Opportunity →";
