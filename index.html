@@ -2617,49 +2617,7 @@ OODebug.endOperation = function (
 
 };
 </script>
-<script>
-/* ==========================================
-   TEMPORARY DEBUGGER TEST
-   STEP 7 — CONTROLLED ERROR TEST
-   ========================================== */
 
-function testOpportunityOSDebugger() {
-
-  OODebug.startOperation(
-    "TEST",
-    "CONTROLLED_ERROR"
-  );
-
-  OODebug.log(
-    "TEST",
-    "CONTROLLED_ERROR",
-    "Intentionally creating a test error. No database operation.",
-    "info"
-  );
-
-  try {
-
-    throw new Error(
-      "TEST ERROR — OpportunityOS debugger diagnostic test"
-    );
-
-  } catch (error) {
-
-    OODebug.error(
-      "TEST",
-      "CONTROLLED_ERROR",
-      error
-    );
-
-  }
-
-}
-</script>
-<script>
-setTimeout(function () {
-  testOpportunityOSDebugger();
-}, 500);
-</script>
   <!-- ==========================================
        MAIN JAVASCRIPT
        ========================================== -->
