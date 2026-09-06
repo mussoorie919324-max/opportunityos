@@ -1860,6 +1860,7 @@
 /* ==========================================
    PERMANENT DEVELOPMENT DEBUGGER
    STEP 3
+   + COPY SYSTEM
    ========================================== */
 
 window.OODebug = {
@@ -1869,8 +1870,11 @@ window.OODebug = {
 
   init: function () {
 
-    this.panel = document.getElementById("debuggerPanel");
-    this.logs = document.getElementById("debugLogs");
+    this.panel =
+      document.getElementById("debuggerPanel");
+
+    this.logs =
+      document.getElementById("debugLogs");
 
     if (!this.panel || !this.logs) {
       return;
@@ -1878,37 +1882,158 @@ window.OODebug = {
 
     this.panel.style.display = "block";
 
+    /* COPY ALL BUTTON */
+
+    const copyAllButton =
+      document.createElement("button");
+
+    copyAllButton.type = "button";
+
+    copyAllButton.textContent =
+      "📋 Copy All";
+
+    copyAllButton.style.cssText = `
+      margin-bottom: 8px;
+      padding: 7px 11px;
+      border: 1px solid rgba(99,102,241,.35);
+      border-radius: 8px;
+      background: rgba(99,102,241,.12);
+      color: #c7d2fe;
+      font-family: monospace;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+    `;
+
+    copyAllButton.addEventListener(
+      "click",
+      function () {
+
+        const text =
+          OODebug.getAllLogs();
+
+        OODebug.copyText(
+          text,
+          copyAllButton,
+          "📋 Copy All"
+        );
+
+      }
+    );
+
+    this.panel.insertBefore(
+      copyAllButton,
+      this.logs
+    );
+
+
     this.log(
       "Debugger",
       "INIT",
       "OpportunityOS Development Debugger started",
       "success"
     );
+
   },
 
-  log: function (functionName, step, message, type = "info") {
+
+  /* ==========================================
+     ADD LOG
+     ========================================== */
+
+  log: function (
+    functionName,
+    step,
+    message,
+    type = "info"
+  ) {
 
     if (!this.logs) return;
 
-    const time = new Date().toLocaleTimeString();
+    const time =
+      new Date().toLocaleTimeString();
 
-    const row = document.createElement("div");
+    const row =
+      document.createElement("div");
 
-    row.className = "debug-log debug-" + type;
+    row.className =
+      "debug-log debug-" + type;
 
-    row.innerHTML =
+    const logText =
       "[" + time + "] " +
-      "<b>" + functionName + "</b> → " +
+      functionName + " → " +
       step + " → " +
       message;
 
+
+    /* LOG TEXT */
+
+    const text =
+      document.createElement("span");
+
+    text.textContent =
+      logText;
+
+
+    /* COPY BUTTON */
+
+    const copyButton =
+      document.createElement("button");
+
+    copyButton.type = "button";
+
+    copyButton.textContent =
+      "📋 Copy";
+
+    copyButton.style.cssText = `
+      margin-left: 8px;
+      padding: 3px 7px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 6px;
+      background: rgba(255,255,255,.05);
+      color: #cbd5e1;
+      font-family: monospace;
+      font-size: 10px;
+      cursor: pointer;
+    `;
+
+
+    copyButton.addEventListener(
+      "click",
+      function () {
+
+        OODebug.copyText(
+          logText,
+          copyButton,
+          "📋 Copy"
+        );
+
+      }
+    );
+
+
+    row.appendChild(text);
+
+    row.appendChild(copyButton);
+
     this.logs.appendChild(row);
+
 
     this.logs.parentElement.scrollTop =
       this.logs.parentElement.scrollHeight;
+
   },
 
-  error: function (functionName, step, error) {
+
+  /* ==========================================
+     ERROR LOGGER
+     ========================================== */
+
+  error: function (
+    functionName,
+    step,
+    error
+  ) {
 
     const message =
       error && error.message
@@ -1921,46 +2046,235 @@ window.OODebug = {
       "ERROR: " + message,
       "error"
     );
+
+  },
+
+
+  /* ==========================================
+     GET ALL LOGS
+     ========================================== */
+
+  getAllLogs: function () {
+
+    if (!this.logs) {
+      return "";
+    }
+
+    return Array.from(
+      this.logs.querySelectorAll(
+        ".debug-log"
+      )
+    )
+      .map(
+        function(row) {
+
+          const text =
+            row.querySelector("span");
+
+          return text
+            ? text.textContent
+            : row.textContent;
+
+        }
+      )
+      .join("\n");
+
+  },
+
+
+  /* ==========================================
+     COPY TEXT
+     ========================================== */
+
+  copyText: function (
+    text,
+    button,
+    originalText
+  ) {
+
+    if (!text) return;
+
+
+    /* MODERN CLIPBOARD */
+
+    if (
+      navigator.clipboard &&
+      navigator.clipboard.writeText
+    ) {
+
+      navigator.clipboard
+        .writeText(text)
+        .then(
+          function() {
+
+            button.textContent =
+              "✓ Copied";
+
+            setTimeout(
+              function() {
+
+                button.textContent =
+                  originalText;
+
+              },
+              1500
+            );
+
+          }
+        )
+        .catch(
+          function() {
+
+            OODebug.fallbackCopy(
+              text,
+              button,
+              originalText
+            );
+
+          }
+        );
+
+      return;
+
+    }
+
+
+    /* FALLBACK */
+
+    this.fallbackCopy(
+      text,
+      button,
+      originalText
+    );
+
+  },
+
+
+  /* ==========================================
+     COPY FALLBACK
+     ========================================== */
+
+  fallbackCopy: function (
+    text,
+    button,
+    originalText
+  ) {
+
+    const textarea =
+      document.createElement("textarea");
+
+    textarea.value = text;
+
+    textarea.style.position =
+      "fixed";
+
+    textarea.style.opacity =
+      "0";
+
+    document.body.appendChild(
+      textarea
+    );
+
+    textarea.focus();
+
+    textarea.select();
+
+    try {
+
+      document.execCommand("copy");
+
+      button.textContent =
+        "✓ Copied";
+
+      setTimeout(
+        function() {
+
+          button.textContent =
+            originalText;
+
+        },
+        1500
+      );
+
+    } catch (error) {
+
+      button.textContent =
+        "❌ Copy Failed";
+
+    }
+
+    document.body.removeChild(
+      textarea
+    );
+
   }
 
 };
 
-window.addEventListener("error", function (event) {
 
-  if (window.OODebug) {
+/* ==========================================
+   GLOBAL JAVASCRIPT ERROR
+   ========================================== */
 
-    OODebug.error(
-      "GLOBAL",
-      "JavaScript Error",
-      event.error || event.message
-    );
+window.addEventListener(
+  "error",
+  function(event) {
 
-  }
+    if (window.OODebug) {
 
-});
+      OODebug.error(
+        "GLOBAL",
+        "JavaScript Error",
+        event.error ||
+        event.message
+      );
 
-window.addEventListener("unhandledrejection", function (event) {
-
-  if (window.OODebug) {
-
-    OODebug.error(
-      "GLOBAL",
-      "Promise Error",
-      event.reason
-    );
+    }
 
   }
+);
 
-});
 
-document.addEventListener("DOMContentLoaded", function () {
+/* ==========================================
+   UNHANDLED PROMISE ERROR
+   ========================================== */
 
-  if (window.OODebug) {
-    OODebug.init();
+window.addEventListener(
+  "unhandledrejection",
+  function(event) {
+
+    if (window.OODebug) {
+
+      OODebug.error(
+        "GLOBAL",
+        "Promise Error",
+        event.reason
+      );
+
+    }
+
   }
+);
 
-});
-</script>
+
+/* ==========================================
+   START DEBUGGER
+   ========================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+
+    if (window.OODebug) {
+
+      OODebug.init();
+
+    }
+
+  }
+);
+
+  </script>
 
   <!-- ==========================================
        MAIN JAVASCRIPT
