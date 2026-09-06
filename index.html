@@ -2030,25 +2030,46 @@ window.OODebug = {
      ========================================== */
 
   error: function (
+  functionName,
+  step,
+  error
+) {
+
+  const message =
+    error && error.message
+      ? error.message
+      : String(error || "Unknown error");
+
+
+  /* ==========================================
+     SHOW ORIGINAL ERROR
+     ========================================== */
+
+  this.log(
     functionName,
     step,
-    error
+    "ERROR: " + message,
+    "error"
+  );
+
+
+  /* ==========================================
+     AUTOMATIC ERROR DIAGNOSIS
+     ========================================== */
+
+  if (
+    typeof this.diagnoseError === "function"
   ) {
 
-    const message =
-      error && error.message
-        ? error.message
-        : String(error);
-
-    this.log(
+    this.diagnoseError(
       functionName,
       step,
-      "ERROR: " + message,
-      "error"
+      error
     );
 
-  },
+  }
 
+},
 
   /* ==========================================
      GET ALL LOGS
