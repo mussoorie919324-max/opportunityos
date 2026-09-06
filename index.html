@@ -2177,7 +2177,14 @@ if (window.OODebug) {
           /* SAVE OPPORTUNITY */
 
           if (searchId) {
-
+if (window.OODebug) {
+  OODebug.log(
+    "Supabase",
+    "OPPORTUNITY_INSERT",
+    "Saving opportunity to opportunities...",
+    "info"
+  );
+    }
 
             const {
               data:
