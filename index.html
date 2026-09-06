@@ -2422,7 +2422,95 @@ OODebug.diagnoseError = function (
   );
 
 };
-  </script>
+/* ==========================================
+   SYNTAX ERROR WATCHDOG
+   STEP 2C
+   ========================================== */
+
+window.addEventListener(
+  "error",
+  function (event) {
+
+    /* Ignore normal runtime errors here.
+       They are already handled by OODebug.error(). */
+
+    if (
+      event &&
+      event.error
+    ) {
+      return;
+    }
+
+
+    /* ==========================================
+       POSSIBLE PARSE / SYNTAX ERROR
+       ========================================== */
+
+    const message =
+      event && event.message
+        ? event.message
+        : "Unknown script error";
+
+
+    const source =
+      event && event.filename
+        ? event.filename
+        : "Unknown source";
+
+
+    const line =
+      event && event.lineno
+        ? event.lineno
+        : "Unknown";
+
+
+    const column =
+      event && event.colno
+        ? event.colno
+        : "Unknown";
+
+
+    if (window.OODebug) {
+
+      OODebug.log(
+        "GLOBAL",
+        "SYNTAX/PARSE_ERROR",
+        "❌ " + message,
+        "error"
+      );
+
+
+      OODebug.log(
+        "GLOBAL",
+        "SOURCE",
+        "📄 " + source,
+        "error"
+      );
+
+
+      OODebug.log(
+        "GLOBAL",
+        "LOCATION",
+        "📍 Line: " +
+        line +
+        " | Column: " +
+        column,
+        "error"
+      );
+
+
+      OODebug.log(
+        "GLOBAL",
+        "ACTION",
+        "💡 Check the JavaScript around the reported line for missing/misplaced }, ), or ].",
+        "info"
+      );
+
+    }
+
+  }
+);
+</script>
 
   <!-- ==========================================
        MAIN JAVASCRIPT
