@@ -2655,7 +2655,11 @@ function testOpportunityOSDebugger() {
 
 }
 </script>
-
+<script>
+setTimeout(function () {
+  testOpportunityOSDebugger();
+}, 500);
+</script>
   <!-- ==========================================
        MAIN JAVASCRIPT
        ========================================== -->
