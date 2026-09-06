@@ -2256,20 +2256,21 @@ if (window.OODebug) {
           }
 
 
-          /* SAVE CLAIMS */
+                    /* SAVE CLAIMS */
 
           if (
             opportunityId &&
             claims.length > 0
           ) {
-if (window.OODebug) {
-  OODebug.log(
-    "Supabase",
-    "CLAIMS_INSERT",
-    "Saving claims to opportunity_claims...",
-    "info"
-  );
-    }
+
+            if (window.OODebug) {
+              OODebug.log(
+                "Supabase",
+                "CLAIMS_INSERT",
+                "Saving claims to opportunity_claims...",
+                "info"
+              );
+            }
 
             const claimsToInsert =
               claims.map(
@@ -2304,27 +2305,12 @@ if (window.OODebug) {
 
 
             const {
-              error:
-                claimsError
+              error: claimsError
             } =
-
               await supabaseClient
+                .from("opportunity_claims")
+                .insert(claimsToInsert);
 
-                .from(
-                  "opportunity_claims"
-                )
-
-                .insert(
-                  claimsToInsert
-                );
-if (window.OODebug) {
-  OODebug.log(
-    "Supabase",
-    "CLAIMS_INSERT",
-    "Supabase claims insert request completed",
-    "success"
-  );
-    }
 
             if (claimsError) {
 
@@ -2332,57 +2318,29 @@ if (window.OODebug) {
                 "Claims Save Error:",
                 claimsError
               );
-if (window.OODebug) {
-  OODebug.error(
-    "Supabase",
-    "CLAIMS_INSERT",
-    claimsError
-  );
-    }else {
 
-  if (window.OODebug) {
-    OODebug.log(
-      "Supabase",
-      "CLAIMS_INSERT",
-      "Claims saved successfully",
-      "success"
-    );
-  }
+              if (window.OODebug) {
+                OODebug.error(
+                  "Supabase",
+                  "CLAIMS_INSERT",
+                  claimsError
+                );
+              }
 
-    }
+            } else {
+
+              if (window.OODebug) {
+                OODebug.log(
+                  "Supabase",
+                  "CLAIMS_INSERT",
+                  "Claims saved successfully",
+                  "success"
+                );
+              }
+
             }
 
-          }
-
-
-          if (
-            searchId &&
-            opportunityId
-          ) {
-
-            databaseStatus =
-              "Search + Opportunity saved";
-
-          } else if (searchId) {
-
-            databaseStatus =
-              "Search saved";
-
-          }
-
-        } else {
-if (window.OODebug) {
-  OODebug.log(
-    "Supabase",
-    "CLAIMS_INSERT",
-    "Claims saved successfully",
-    "success"
-  );
     }
-          databaseStatus =
-            "Engine result generated · Database not configured";
-
-        }
 
 
         /* ==========================================
