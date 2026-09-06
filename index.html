@@ -2913,12 +2913,19 @@ if (window.OODebug) {
 
           if (searchId) {
 if (window.OODebug) {
+
+  OODebug.startOperation(
+    "Supabase",
+    "OPPORTUNITY_INSERT"
+  );
+
   OODebug.log(
     "Supabase",
     "OPPORTUNITY_INSERT",
     "Saving opportunity to opportunities...",
     "info"
   );
+
     }
 
             const {
@@ -2979,12 +2986,20 @@ if (window.OODebug) {
               opportunityId =
                 opportunityData.id;
 if (window.OODebug) {
+
   OODebug.log(
     "Supabase",
     "OPPORTUNITY_INSERT",
-    "Opportunity saved successfully. ID: " + opportunityId,
+    "Opportunity saved successfully. ID: " +
+      opportunityData.id,
     "success"
   );
+
+  OODebug.endOperation(
+    "Opportunity saved successfully. ID: " +
+      opportunityData.id
+  );
+
     }
             }
 
