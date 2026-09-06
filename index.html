@@ -2107,7 +2107,14 @@ if (window.OODebug) {
 
         if (supabaseClient) {
 
-
+if (window.OODebug) {
+  OODebug.log(
+    "Supabase",
+    "CLIENT",
+    "Supabase client is available",
+    "success"
+  );
+    }
           /* SAVE SEARCH */
 
           const {
