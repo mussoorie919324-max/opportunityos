@@ -1957,7 +1957,14 @@ if (window.OODebug) {
 }
       const value =
         input.value.trim();
-
+if (window.OODebug) {
+  OODebug.log(
+    "searchOpportunity",
+    "INPUT",
+    "Query received: " + value,
+    "info"
+  );
+    }
 
       if (!value) {
 
