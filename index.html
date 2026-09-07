@@ -3319,7 +3319,102 @@ if (!claimsError && opportunityId) {
 
             : [];
 
+/* ==========================================
+   CLAIM VERIFICATION UI
+   ========================================== */
 
+const claimVerificationHTML =
+  Array.isArray(verification.claims) &&
+  verification.claims.length > 0
+
+    ? verification.claims
+        .map(
+          function(claim) {
+
+            const claimConfidence =
+              Math.round(
+                Number(
+                  claim.verification_confidence || 0
+                ) * 100
+              );
+
+            const claimStatus =
+              claim.verification_status ||
+              "unverified";
+
+            return `
+
+              <div
+                style="
+                  margin-top:10px;
+                  padding:12px;
+                  border-radius:12px;
+                  background:rgba(255,255,255,.025);
+                  border:1px solid rgba(255,255,255,.08);
+                "
+              >
+
+                <div
+                  style="
+                    display:flex;
+                    justify-content:space-between;
+                    gap:10px;
+                    flex-wrap:wrap;
+                  "
+                >
+
+                  <strong>
+                    ${escapeHTML(
+                      String(
+                        claim.claim_type ||
+                        "general"
+                      ).toUpperCase()
+                    )}
+                  </strong>
+
+                  <span>
+                    ${escapeHTML(
+                      String(claimStatus)
+                    )}
+                    · ${claimConfidence}%
+                  </span>
+
+                </div>
+
+                <p
+                  style="
+                    margin:7px 0 0;
+                    color:#cbd5e1;
+                  "
+                >
+                  ${escapeHTML(
+                    String(
+                      claim.claim_text ||
+                      ""
+                    )
+                  )}
+                </p>
+
+              </div>
+
+            `;
+
+          }
+        )
+        .join("")
+
+    : `
+
+        <div
+          style="
+            margin-top:10px;
+            color:#94a3b8;
+          "
+        >
+          No verification claims available yet.
+        </div>
+
+      `;
         const skillHTML =
           skills.length > 0
 
@@ -3599,7 +3694,11 @@ if (!claimsError && opportunityId) {
                 TRUST & VERIFICATION
 
               </div>
+<div style="margin-top:14px;">
 
+  ${claimVerificationHTML}
+
+</div>
 
               <p>
 
