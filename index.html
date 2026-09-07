@@ -3102,11 +3102,76 @@ if (window.OODebug) {
 
 
             const {
-              error: claimsError
-            } =
-              await supabaseClient
-                .from("opportunity_claims")
-                .insert(claimsToInsert);
+  error: claimsError
+} =
+  await supabaseClient
+    .from("opportunity_claims")
+    .insert(claimsToInsert);
+
+if (!claimsError && opportunityId) {
+
+  if (window.OODebug) {
+    OODebug.log(
+      "Supabase",
+      "VERIFICATION_FETCH",
+      "Fetching existing verification results...",
+      "info"
+    );
+  }
+
+  const {
+    data: verifiedClaims,
+    error: verificationFetchError
+  } =
+    await supabaseClient
+      .from("opportunity_claims")
+      .select(
+        "id, claim_type, claim_text, verification_status, verification_confidence"
+      )
+      .eq(
+        "opportunity_id",
+        opportunityId
+      )
+      .order(
+        "id",
+        { ascending: true }
+      );
+
+  if (verificationFetchError) {
+
+    console.error(
+      "Verification Fetch Error:",
+      verificationFetchError
+    );
+
+    if (window.OODebug) {
+      OODebug.error(
+        "Supabase",
+        "VERIFICATION_FETCH",
+        verificationFetchError
+      );
+    }
+
+  } else {
+
+    if (window.OODebug) {
+      OODebug.log(
+        "Supabase",
+        "VERIFICATION_FETCH",
+        "Verification results fetched successfully. Claims: " +
+          verifiedClaims.length,
+        "success"
+      );
+    }
+
+    console.log(
+      "Existing Verification Results:",
+      verifiedClaims
+    );
+
+  }
+
+    }
 
 
             if (claimsError) {
