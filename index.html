@@ -3154,24 +3154,119 @@ if (!claimsError && opportunityId) {
 
   } else {
 
-    if (window.OODebug) {
-      OODebug.log(
-        "Supabase",
-        "VERIFICATION_FETCH",
-        "Verification results fetched successfully. Claims: " +
-          verifiedClaims.length,
-        "success"
-      );
-    }
-
-    console.log(
-      "Existing Verification Results:",
-      verifiedClaims
+  if (window.OODebug) {
+    OODebug.log(
+      "Supabase",
+      "VERIFICATION_FETCH",
+      "Verification results fetched successfully. Claims: " +
+        verifiedClaims.length,
+      "success"
     );
+  }
+
+  console.log(
+    "Existing Verification Results:",
+    verifiedClaims
+  );
+
+
+  /* ==========================================
+     CONNECT VERIFICATION TO RESULT OBJECT
+     ========================================== */
+
+  verification.claims =
+    verifiedClaims;
+
+
+  const supportedClaims =
+    verifiedClaims.filter(
+      function(claim) {
+        return (
+          claim.verification_status ===
+          "supported"
+        );
+      }
+    );
+
+
+  const reviewClaims =
+    verifiedClaims.filter(
+      function(claim) {
+        return (
+          claim.verification_status ===
+          "needs_review"
+        );
+      }
+    );
+
+
+  const totalConfidence =
+    verifiedClaims.reduce(
+      function(total, claim) {
+
+        return (
+          total +
+          Number(
+            claim.verification_confidence || 0
+          )
+        );
+
+      },
+      0
+    );
+
+
+  const averageConfidence =
+    verifiedClaims.length > 0
+      ? totalConfidence /
+        verifiedClaims.length
+      : 0;
+
+
+  verification.confidence =
+    averageConfidence;
+
+
+  if (reviewClaims.length > 0) {
+
+    verification.status =
+      "needs_review";
 
   }
 
-    }
+  else if (supportedClaims.length > 0) {
+
+    verification.status =
+      "supported";
+
+  }
+
+  else {
+
+    verification.status =
+      "unverified";
+
+  }
+
+
+  if (window.OODebug) {
+    OODebug.log(
+      "Supabase",
+      "VERIFICATION_CONNECT",
+      "Verification connected to result. Supported: " +
+        supportedClaims.length +
+        " | Review: " +
+        reviewClaims.length +
+        " | Confidence: " +
+        Math.round(
+          averageConfidence * 100
+        ) +
+        "%",
+      "success"
+    );
+  }
+
+  }
 
 
             if (claimsError) {
