@@ -3226,7 +3226,80 @@ if (!claimsError && opportunityId) {
   verification.confidence =
     averageConfidence;
 
+/* ==========================================
+   STEP 8E
+   CONNECT VERIFIED CLAIMS TO OPPORTUNITY PROFILE
+   ========================================== */
 
+verifiedClaims.forEach(
+  function(claim) {
+
+    const claimType =
+      claim.claim_type;
+
+    if (
+      !profile ||
+      !profile[claimType]
+    ) {
+      return;
+    }
+
+    const claimStatus =
+      claim.verification_status ||
+      "unverified";
+
+    const claimConfidence =
+      Number(
+        claim.verification_confidence || 0
+      );
+
+    let displayValue =
+      "Needs Verification";
+
+    if (
+      claimStatus === "supported"
+    ) {
+
+      displayValue =
+        "Supported";
+
+    }
+
+    else if (
+      claimStatus === "needs_review"
+    ) {
+
+      displayValue =
+        "Needs Review";
+
+    }
+
+    profile[claimType] = {
+
+      value:
+        displayValue,
+
+      status:
+        claimStatus,
+
+      confidence:
+        claimConfidence
+
+    };
+
+  }
+);
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Verification",
+    "PROFILE_CONNECT",
+    "Verified claim results connected to opportunity profile.",
+    "success"
+  );
+
+    }
   if (reviewClaims.length > 0) {
 
     verification.status =
