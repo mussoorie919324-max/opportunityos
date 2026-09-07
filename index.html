@@ -3231,73 +3231,79 @@ if (!claimsError && opportunityId) {
    CONNECT VERIFIED CLAIMS TO OPPORTUNITY PROFILE
    ========================================== */
 
-verifiedClaims.forEach(
-  function(claim) {
+if (
+  result.profile &&
+  Array.isArray(verification.claims)
+) {
 
-    const claimType =
-      claim.claim_type;
+  verification.claims.forEach(
+    function(claim) {
 
-    if (
-      !profile ||
-      !profile[claimType]
-    ) {
-      return;
+      const claimType =
+        claim.claim_type;
+
+      if (
+        !result.profile[claimType]
+      ) {
+        return;
+      }
+
+      const claimStatus =
+        claim.verification_status ||
+        "unverified";
+
+      const claimConfidence =
+        Number(
+          claim.verification_confidence || 0
+        );
+
+      let displayValue =
+        "Needs Verification";
+
+      if (
+        claimStatus === "supported"
+      ) {
+
+        displayValue =
+          "Supported";
+
+      }
+
+      else if (
+        claimStatus === "needs_review"
+      ) {
+
+        displayValue =
+          "Needs Review";
+
+      }
+
+      result.profile[claimType] = {
+
+        value:
+          displayValue,
+
+        status:
+          claimStatus,
+
+        confidence:
+          claimConfidence
+
+      };
+
     }
+  );
 
-    const claimStatus =
-      claim.verification_status ||
-      "unverified";
+  if (window.OODebug) {
 
-    const claimConfidence =
-      Number(
-        claim.verification_confidence || 0
-      );
-
-    let displayValue =
-      "Needs Verification";
-
-    if (
-      claimStatus === "supported"
-    ) {
-
-      displayValue =
-        "Supported";
-
-    }
-
-    else if (
-      claimStatus === "needs_review"
-    ) {
-
-      displayValue =
-        "Needs Review";
-
-    }
-
-    profile[claimType] = {
-
-      value:
-        displayValue,
-
-      status:
-        claimStatus,
-
-      confidence:
-        claimConfidence
-
-    };
+    OODebug.log(
+      "Verification",
+      "PROFILE_CONNECT",
+      "Verified claim results connected to result.profile.",
+      "success"
+    );
 
   }
-);
-
-if (window.OODebug) {
-
-  OODebug.log(
-    "Verification",
-    "PROFILE_CONNECT",
-    "Verified claim results connected to opportunity profile.",
-    "success"
-  );
 
     }
   if (reviewClaims.length > 0) {
