@@ -3894,6 +3894,62 @@ const opportunityDecisionHTML = `
 
   </div>
 `;
+ /* ==========================================
+   STEP 8J
+   DECISION → BEST NEXT ACTION
+   ========================================== */
+
+let decisionNextAction =
+  "Collect reliable evidence before taking action.";
+
+if (
+  opportunityDecisionType === "consider"
+) {
+
+  decisionNextAction =
+    "Run a small real-world experiment before making a larger investment.";
+
+}
+else if (
+  opportunityDecisionType === "review"
+) {
+
+  decisionNextAction =
+    "Review conflicting or incomplete evidence before making a decision.";
+
+}
+else if (
+  opportunityDecisionType === "validate"
+) {
+
+  decisionNextAction =
+    "Validate the unsupported claims: earning potential, competition, difficulty, risk and trend.";
+
+}
+else {
+
+  decisionNextAction =
+    "Collect reliable evidence for the opportunity before taking action.";
+
+}
+
+
+/* ==========================================
+   DEBUGGER
+   ========================================== */
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Decision",
+    "NEXT_ACTION_CHECK",
+    "Next action generated: " +
+      decisionNextAction,
+    "success"
+  );
+
+    }  
+     
         /* ==========================================
            RESULT VALUES
            ========================================== */
