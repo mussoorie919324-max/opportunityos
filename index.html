@@ -4051,7 +4051,93 @@ if (window.OODebug) {
   );
 
     }  
-     
+    /* ==========================================
+   STEP 8L
+   ACTION TYPE CLASSIFICATION
+   ========================================== */
+
+let decisionActionType =
+  "blocked";
+
+let decisionActionTypeMessage =
+  "No action type is permitted until sufficient evidence is available.";
+
+
+/* ==========================================
+   ACTION TYPE LOGIC
+   ========================================== */
+
+if (
+  opportunityDecisionType === "consider" &&
+  decisionActionAllowed === true
+) {
+
+  decisionActionType =
+    "controlled_experiment";
+
+  decisionActionTypeMessage =
+    "A controlled experiment may be performed. Avoid major irreversible investment.";
+
+}
+
+else if (
+  opportunityDecisionType === "validate"
+) {
+
+  decisionActionType =
+    "validation";
+
+  decisionActionTypeMessage =
+    "Validation is the permitted action. Gather evidence before making a major decision.";
+
+}
+
+else if (
+  opportunityDecisionType === "review"
+) {
+
+  decisionActionType =
+    "evidence_review";
+
+  decisionActionTypeMessage =
+    "Review and resolve evidence issues before proceeding.";
+
+}
+
+else {
+
+  decisionActionType =
+    "blocked";
+
+  decisionActionTypeMessage =
+    "No opportunity action is permitted until sufficient reliable evidence is available.";
+
+}
+
+
+/* ==========================================
+   DEBUGGER
+   ========================================== */
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Decision",
+    "ACTION_TYPE_CHECK",
+    "Action Type: " +
+      decisionActionType,
+    "success"
+  );
+
+  OODebug.log(
+    "Decision",
+    "ACTION_TYPE_REASON",
+    decisionActionTypeMessage,
+    "info"
+  );
+
+    } 
+      
         /* ==========================================
            RESULT VALUES
            ========================================== */
