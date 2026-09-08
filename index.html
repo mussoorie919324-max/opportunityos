@@ -4308,7 +4308,118 @@ if (window.OODebug) {
   );
 
     }     
-     
+ /* ==========================================
+   STEP 8O
+   AUTHORITATIVE ACTION CONTRACT
+   ========================================== */
+
+const opportunityActionContract = {
+
+  version:
+    "8O",
+
+  decision: {
+
+    type:
+      opportunityDecisionType,
+
+    safetyLevel:
+      decisionSafetyLevel,
+
+    safetyMessage:
+      decisionSafetyMessage
+
+  },
+
+  action: {
+
+    type:
+      decisionActionType,
+
+    allowed:
+      decisionActionAllowed,
+
+    message:
+      decisionActionTypeMessage
+
+  },
+
+  permissions: {
+
+    validation:
+      decisionActionPolicy.permissions.validation,
+
+    experiment:
+      decisionActionPolicy.permissions.experiment,
+
+    execution:
+      decisionActionPolicy.permissions.execution,
+
+    monitoring:
+      decisionActionPolicy.permissions.monitoring
+
+  },
+
+  policyStatus:
+    decisionPolicyStatus,
+
+  authoritative:
+    true
+
+};
+
+
+/* ==========================================
+   CONTRACT SAFETY CHECK
+   ========================================== */
+
+let actionContractStatus =
+  "invalid";
+
+if (
+  opportunityActionContract.authoritative === true &&
+  opportunityActionContract.action.type ===
+    decisionActionPolicy.actionType &&
+  opportunityActionContract.policyStatus ===
+    decisionPolicyStatus
+) {
+
+  actionContractStatus =
+    "valid";
+
+}
+
+
+/* ==========================================
+   DEBUGGER
+   ========================================== */
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Decision",
+    "CONTRACT_CHECK",
+    "Action Contract: " +
+      actionContractStatus +
+      " | Version: " +
+      opportunityActionContract.version,
+    "success"
+  );
+
+  OODebug.log(
+    "Decision",
+    "CONTRACT_AUTHORITY",
+    "Authoritative: " +
+      opportunityActionContract.authoritative +
+      " | Action Type: " +
+      opportunityActionContract.action.type +
+      " | Policy: " +
+      opportunityActionContract.policyStatus,
+    "info"
+  );
+
+    }    
+       
         /* ==========================================
            RESULT VALUES
            ========================================== */
