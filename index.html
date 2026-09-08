@@ -3549,50 +3549,51 @@ const claimVerificationHTML =
            ========================================== */
 
         const demand =
-          result.demand ||
-          profileValue(
-            result.profile,
-            "demand"
-          );
+  profileValue(
+    result.profile,
+    "demand"
+  ) ||
+  result.demand ||
+  "Needs Verification";
 
+const earning =
+  profileValue(
+    result.profile,
+    "earning"
+  ) ||
+  result.earning ||
+  "Needs Verification";
 
-        const earning =
-          result.earning ||
-          profileValue(
-            result.profile,
-            "earning"
-          );
+const competition =
+  profileValue(
+    result.profile,
+    "competition"
+  ) ||
+  result.competition ||
+  "Needs Verification";
 
+const difficulty =
+  profileValue(
+    result.profile,
+    "difficulty"
+  ) ||
+  result.difficulty ||
+  "Needs Verification";
 
-        const competition =
-          result.competition ||
-          profileValue(
-            result.profile,
-            "competition"
-          );
+const risk =
+  profileValue(
+    result.profile,
+    "risk"
+  ) ||
+  result.risk ||
+  "Needs Verification";
 
-
-        const difficulty =
-          result.difficulty ||
-          profileValue(
-            result.profile,
-            "difficulty"
-          );
-
-
-        const risk =
-          result.risk ||
-          profileValue(
-            result.profile,
-            "risk"
-          );
-
-
-        const trend =
-          profileValue(
-            result.profile,
-            "trend"
-          );
+const trend =
+  profileValue(
+    result.profile,
+    "trend"
+  ) ||
+  "Needs Verification";
 
 
         /* ==========================================
