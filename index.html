@@ -3542,7 +3542,70 @@ const claimVerificationHTML =
           Math.round(
             confidence * 100
           );
+/* ==========================================
+   STEP 8F
+   VERIFICATION-AWARE OPPORTUNITY SCORE
+   ========================================== */
 
+let verificationAwareScore = null;
+
+const scoreClaims =
+  Array.isArray(verification.claims)
+    ? verification.claims
+    : [];
+
+const scoreableClaims =
+  scoreClaims.filter(
+    function(claim) {
+
+      return (
+        claim.verification_status ===
+        "supported"
+      );
+
+    }
+  );
+
+if (
+  scoreClaims.length > 0 &&
+  scoreableClaims.length === scoreClaims.length
+) {
+
+  const scoreConfidence =
+    scoreClaims.reduce(
+      function(total, claim) {
+
+        return (
+          total +
+          Number(
+            claim.verification_confidence || 0
+          )
+        );
+
+      },
+      0
+    ) / scoreClaims.length;
+
+  verificationAwareScore =
+    Math.round(
+      scoreConfidence * 100
+    );
+
+}
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Verification",
+    "SCORE_CHECK",
+    verificationAwareScore === null
+      ? "Opportunity score withheld because all claims are not yet supported."
+      : "Verification-aware opportunity score calculated: " +
+        verificationAwareScore,
+    "info"
+  );
+
+    }
 
         /* ==========================================
            RESULT VALUES
