@@ -3622,12 +3622,43 @@ let opportunityDecisionType =
 
 
 /* ==========================================
+   LOCAL DECISION CLAIM DATA
+   ========================================== */
+
+const decisionClaims =
+  Array.isArray(verification.claims)
+    ? verification.claims
+    : [];
+
+const decisionSupportedClaims =
+  decisionClaims.filter(
+    function(claim) {
+      return (
+        claim.verification_status ===
+        "supported"
+      );
+    }
+  );
+
+const decisionReviewClaims =
+  decisionClaims.filter(
+    function(claim) {
+      return (
+        claim.verification_status ===
+        "needs_review"
+      );
+    }
+  );
+
+
+/* ==========================================
    DECISION LOGIC
    ========================================== */
 
 if (
-  scoreClaims.length > 0 &&
-  scoreableClaims.length === scoreClaims.length &&
+  decisionClaims.length > 0 &&
+  decisionSupportedClaims.length ===
+    decisionClaims.length &&
   verificationAwareScore !== null
 ) {
 
@@ -3643,7 +3674,7 @@ if (
 }
 
 else if (
-  reviewClaims.length > 0
+  decisionReviewClaims.length > 0
 ) {
 
   opportunityDecision =
@@ -3658,7 +3689,7 @@ else if (
 }
 
 else if (
-  scoreableClaims.length > 0
+  decisionSupportedClaims.length > 0
 ) {
 
   opportunityDecision =
@@ -3709,7 +3740,7 @@ if (window.OODebug) {
     "info"
   );
 
-  }
+    }
         /* ==========================================
            RESULT VALUES
            ========================================== */
