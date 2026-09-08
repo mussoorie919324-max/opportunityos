@@ -3810,6 +3810,60 @@ if (window.OODebug) {
   );
 
     }        
+ /* ==========================================
+   STEP 8H UI
+   VERIFICATION COVERAGE DISPLAY
+   ========================================== */
+
+const verificationCoverageHTML = `
+  <div class="verification-coverage-card">
+
+    <div class="verification-coverage-title">
+      🔎 Verification Coverage
+    </div>
+
+    <div class="verification-coverage-percent">
+      ${verificationCoverage}%
+    </div>
+
+    <div class="verification-coverage-bar">
+      <div
+        class="verification-coverage-fill"
+        style="width: ${verificationCoverage}%;">
+      </div>
+    </div>
+
+    <div class="verification-coverage-stats">
+
+      <div>
+        <strong>${coverageSupported}</strong>
+        <span>Supported</span>
+      </div>
+
+      <div>
+        <strong>${coverageReview}</strong>
+        <span>Review</span>
+      </div>
+
+      <div>
+        <strong>${coverageUnverified}</strong>
+        <span>Unverified</span>
+      </div>
+
+      <div>
+        <strong>${coverageTotal}</strong>
+        <span>Total Claims</span>
+      </div>
+
+    </div>
+
+    <div class="verification-coverage-note">
+      Coverage shows how much of this opportunity profile
+      is currently supported by verified evidence.
+    </div>
+
+  </div>
+`;
         /* ==========================================
            RESULT VALUES
            ========================================== */
