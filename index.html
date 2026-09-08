@@ -3949,6 +3949,108 @@ if (window.OODebug) {
   );
 
     }  
+   /* ==========================================
+   STEP 8K
+   DECISION SAFETY GUARD
+   ========================================== */
+
+let decisionSafetyLevel =
+  "blocked";
+
+let decisionSafetyMessage =
+  "Action is blocked until sufficient evidence is available.";
+
+let decisionActionAllowed =
+  false;
+
+
+/* ==========================================
+   SAFETY LOGIC
+   ========================================== */
+
+if (
+  opportunityDecisionType === "consider"
+) {
+
+  decisionSafetyLevel =
+    "cautious";
+
+  decisionSafetyMessage =
+    "Action may proceed as a controlled experiment. Avoid major investment until further validation.";
+
+  decisionActionAllowed =
+    true;
+
+}
+
+else if (
+  opportunityDecisionType === "validate"
+) {
+
+  decisionSafetyLevel =
+    "validation_required";
+
+  decisionSafetyMessage =
+    "Only validation actions are allowed. Do not make major investment decisions yet.";
+
+  decisionActionAllowed =
+    false;
+
+}
+
+else if (
+  opportunityDecisionType === "review"
+) {
+
+  decisionSafetyLevel =
+    "review_required";
+
+  decisionSafetyMessage =
+    "Resolve evidence issues before taking opportunity action.";
+
+  decisionActionAllowed =
+    false;
+
+}
+
+else {
+
+  decisionSafetyLevel =
+    "blocked";
+
+  decisionSafetyMessage =
+    "Action is blocked until sufficient reliable evidence is available.";
+
+  decisionActionAllowed =
+    false;
+
+}
+
+
+/* ==========================================
+   DEBUGGER
+   ========================================== */
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Decision",
+    "SAFETY_CHECK",
+    "Safety: " +
+      decisionSafetyLevel +
+      " | Action allowed: " +
+      decisionActionAllowed,
+    "success"
+  );
+
+  OODebug.log(
+    "Decision",
+    "SAFETY_REASON",
+    decisionSafetyMessage,
+    "info"
+  );
+
+    }  
      
         /* ==========================================
            RESULT VALUES
