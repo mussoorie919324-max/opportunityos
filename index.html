@@ -3606,7 +3606,110 @@ if (window.OODebug) {
   );
 
     }
+/* ==========================================
+   STEP 8G
+   VERIFICATION-AWARE DECISION LAYER
+   ========================================== */
 
+let opportunityDecision =
+  "DO NOT DECIDE YET";
+
+let opportunityDecisionReason =
+  "Reliable verification is not sufficient yet.";
+
+let opportunityDecisionType =
+  "pending";
+
+
+/* ==========================================
+   DECISION LOGIC
+   ========================================== */
+
+if (
+  scoreClaims.length > 0 &&
+  scoreableClaims.length === scoreClaims.length &&
+  verificationAwareScore !== null
+) {
+
+  opportunityDecision =
+    "CONSIDER";
+
+  opportunityDecisionReason =
+    "All detected claims are currently supported by the verification layer.";
+
+  opportunityDecisionType =
+    "consider";
+
+}
+
+else if (
+  reviewClaims.length > 0
+) {
+
+  opportunityDecision =
+    "REVIEW REQUIRED";
+
+  opportunityDecisionReason =
+    "Some evidence requires additional review before making a decision.";
+
+  opportunityDecisionType =
+    "review";
+
+}
+
+else if (
+  scoreableClaims.length > 0
+) {
+
+  opportunityDecision =
+    "VALIDATE FIRST";
+
+  opportunityDecisionReason =
+    "Some claims have supporting evidence, but the full opportunity profile is not yet verified.";
+
+  opportunityDecisionType =
+    "validate";
+
+}
+
+else {
+
+  opportunityDecision =
+    "DO NOT DECIDE YET";
+
+  opportunityDecisionReason =
+    "There is not enough verified evidence to make a reliable opportunity decision.";
+
+  opportunityDecisionType =
+    "pending";
+
+}
+
+
+/* ==========================================
+   DEBUGGER
+   ========================================== */
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Decision",
+    "DECISION_CHECK",
+    "Decision: " +
+      opportunityDecision +
+      " | Type: " +
+      opportunityDecisionType,
+    "success"
+  );
+
+  OODebug.log(
+    "Decision",
+    "DECISION_REASON",
+    opportunityDecisionReason,
+    "info"
+  );
+
+  }
         /* ==========================================
            RESULT VALUES
            ========================================== */
