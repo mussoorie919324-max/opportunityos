@@ -4137,7 +4137,86 @@ if (window.OODebug) {
   );
 
     } 
-      
+   /* ==========================================
+   STEP 8M
+   ACTION PERMISSION RULES
+   ========================================== */
+
+let validationActionAllowed = false;
+let experimentActionAllowed = false;
+let executionActionAllowed = false;
+let monitoringActionAllowed = false;
+
+
+/* ==========================================
+   PERMISSION LOGIC
+   ========================================== */
+
+if (
+  decisionActionType === "validation"
+) {
+
+  validationActionAllowed = true;
+  experimentActionAllowed = false;
+  executionActionAllowed = false;
+  monitoringActionAllowed = true;
+
+}
+
+else if (
+  decisionActionType === "controlled_experiment"
+) {
+
+  validationActionAllowed = true;
+  experimentActionAllowed = true;
+  executionActionAllowed = false;
+  monitoringActionAllowed = true;
+
+}
+
+else if (
+  decisionActionType === "evidence_review"
+) {
+
+  validationActionAllowed = true;
+  experimentActionAllowed = false;
+  executionActionAllowed = false;
+  monitoringActionAllowed = true;
+
+}
+
+else {
+
+  validationActionAllowed = false;
+  experimentActionAllowed = false;
+  executionActionAllowed = false;
+  monitoringActionAllowed = false;
+
+}
+
+
+/* ==========================================
+   DEBUGGER
+   ========================================== */
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Decision",
+    "PERMISSION_CHECK",
+    "Validation: " +
+      validationActionAllowed +
+      " | Experiment: " +
+      experimentActionAllowed +
+      " | Execution: " +
+      executionActionAllowed +
+      " | Monitoring: " +
+      monitoringActionAllowed,
+    "success"
+  );
+
+    }   
+     
         /* ==========================================
            RESULT VALUES
            ========================================== */
