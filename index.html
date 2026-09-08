@@ -4216,6 +4216,98 @@ if (window.OODebug) {
   );
 
     }   
+/* ==========================================
+   STEP 8N
+   UNIFIED ACTION POLICY
+   ========================================== */
+
+const decisionActionPolicy = {
+
+  actionType:
+    decisionActionType,
+
+  safetyLevel:
+    decisionSafetyLevel,
+
+  actionAllowed:
+    decisionActionAllowed,
+
+  permissions: {
+
+    validation:
+      validationActionAllowed,
+
+    experiment:
+      experimentActionAllowed,
+
+    execution:
+      executionActionAllowed,
+
+    monitoring:
+      monitoringActionAllowed
+
+  },
+
+  message:
+    decisionActionTypeMessage,
+
+  safetyMessage:
+    decisionSafetyMessage
+
+};
+
+
+/* ==========================================
+   POLICY STATUS
+   ========================================== */
+
+let decisionPolicyStatus =
+  "blocked";
+
+if (
+  decisionActionPolicy.permissions.validation ||
+  decisionActionPolicy.permissions.experiment ||
+  decisionActionPolicy.permissions.execution ||
+  decisionActionPolicy.permissions.monitoring
+) {
+
+  decisionPolicyStatus =
+    "action_available";
+
+}
+
+
+/* ==========================================
+   DEBUGGER
+   ========================================== */
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Decision",
+    "POLICY_CHECK",
+    "Policy: " +
+      decisionPolicyStatus +
+      " | Action Type: " +
+      decisionActionPolicy.actionType,
+    "success"
+  );
+
+  OODebug.log(
+    "Decision",
+    "POLICY_PERMISSIONS",
+    "Validation: " +
+      decisionActionPolicy.permissions.validation +
+      " | Experiment: " +
+      decisionActionPolicy.permissions.experiment +
+      " | Execution: " +
+      decisionActionPolicy.permissions.execution +
+      " | Monitoring: " +
+      decisionActionPolicy.permissions.monitoring,
+    "info"
+  );
+
+    }     
      
         /* ==========================================
            RESULT VALUES
