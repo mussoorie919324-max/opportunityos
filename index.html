@@ -4285,11 +4285,12 @@ ${verificationCoverageHTML}
 
               <p>
 
-                ${escapeHTML(
-                  result.bestNextAction ||
-                  result.nextStep ||
-                  "More evidence is required."
-                )}
+  ${escapeHTML(
+  decisionNextAction ||
+  result.bestNextAction ||
+  result.nextStep ||
+  "More evidence is required."
+)}
 
               </p>
 
