@@ -3741,6 +3741,75 @@ if (window.OODebug) {
   );
 
     }
+
+/* ==========================================
+   STEP 8H
+   VERIFICATION COVERAGE LAYER
+   ========================================== */
+
+const coverageClaims =
+  Array.isArray(verification.claims)
+    ? verification.claims
+    : [];
+
+const coverageTotal =
+  coverageClaims.length;
+
+const coverageSupported =
+  coverageClaims.filter(
+    function(claim) {
+      return claim.verification_status === "supported";
+    }
+  ).length;
+
+const coverageReview =
+  coverageClaims.filter(
+    function(claim) {
+      return claim.verification_status === "needs_review";
+    }
+  ).length;
+
+const coverageUnverified =
+  coverageClaims.filter(
+    function(claim) {
+      return (
+        claim.verification_status !== "supported" &&
+        claim.verification_status !== "needs_review"
+      );
+    }
+  ).length;
+
+const verificationCoverage =
+  coverageTotal > 0
+    ? Math.round(
+        (coverageSupported / coverageTotal) * 100
+      )
+    : 0;
+
+
+/* ==========================================
+   DEBUGGER
+   ========================================== */
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Verification",
+    "COVERAGE_CHECK",
+    "Coverage: " +
+      verificationCoverage +
+      "% | Supported: " +
+      coverageSupported +
+      "/" +
+      coverageTotal +
+      " | Review: " +
+      coverageReview +
+      " | Unverified: " +
+      coverageUnverified,
+    "success"
+  );
+
+    }        
         /* ==========================================
            RESULT VALUES
            ========================================== */
