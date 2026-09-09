@@ -5606,7 +5606,232 @@ if (window.OODebug) {
   );
 
   }
-      
+   // ==========================================================
+// STEP 8W — EVIDENCE SOURCE SELECTION
+// ==========================================================
+
+let evidenceSourceSelection = [];
+
+let evidenceSourceSelectionStatus =
+  "blocked";
+
+let evidenceSourceSelectionReason =
+  "Evidence source selection cannot be resolved.";
+
+
+/* ==========================================
+   STEP 8W — SOURCE SELECTION
+   ========================================== */
+
+if (
+  Array.isArray(evidenceSourceRequirements) &&
+  evidenceSourceRequirements.length > 0
+) {
+
+  const sourceClassMap = {
+
+    earning: {
+      claimType: "earning",
+
+      acceptableSourceClasses: [
+        "official_labor_market_data",
+        "official_platform_earnings_data",
+        "reputable_market_research",
+        "credible_independent_research"
+      ]
+    },
+
+    competition: {
+      claimType: "competition",
+
+      acceptableSourceClasses: [
+        "official_market_data",
+        "reputable_market_research",
+        "platform_supply_data",
+        "credible_independent_research"
+      ]
+    },
+
+    difficulty: {
+      claimType: "difficulty",
+
+      acceptableSourceClasses: [
+        "official_occupation_data",
+        "official_skill_requirements",
+        "reputable_education_or_training_data",
+        "credible_independent_research"
+      ]
+    },
+
+    risk: {
+      claimType: "risk",
+
+      acceptableSourceClasses: [
+        "official_regulatory_data",
+        "official_platform_policy",
+        "reputable_market_research",
+        "credible_independent_risk_research"
+      ]
+    },
+
+    trend: {
+      claimType: "trend",
+
+      acceptableSourceClasses: [
+        "official_time_series_data",
+        "official_demand_data",
+        "reputable_market_trend_research",
+        "credible_independent_trend_data"
+      ]
+    }
+
+  };
+
+
+  evidenceSourceSelection =
+    evidenceSourceRequirements
+      .map(requirement => {
+
+        const sourceDefinition =
+          sourceClassMap[
+            requirement.claimType
+          ];
+
+        if (!sourceDefinition) {
+          return null;
+        }
+
+        return {
+          claimType:
+            requirement.claimType,
+
+          evidenceCategory:
+            requirement.evidenceCategory,
+
+          sourceRequirement:
+            requirement.sourceRequirement,
+
+          acceptableSourceClasses:
+            sourceDefinition.acceptableSourceClasses
+        };
+
+      })
+      .filter(Boolean);
+
+
+  const unresolvedClaims =
+    evidenceSourceRequirements
+      .map(item => item.claimType)
+      .filter(
+        claimType =>
+          !sourceClassMap[claimType]
+      );
+
+
+  if (
+    unresolvedClaims.length === 0 &&
+    evidenceSourceSelection.length ===
+      evidenceSourceRequirements.length
+  ) {
+
+    evidenceSourceSelectionStatus =
+      "ready";
+
+    evidenceSourceSelectionReason =
+      "Acceptable source classes resolved for all evidence requirements.";
+
+  } else {
+
+    evidenceSourceSelectionStatus =
+      "partial";
+
+    evidenceSourceSelectionReason =
+      "Source classes unresolved for: " +
+      unresolvedClaims.join(", ");
+
+  }
+
+}
+
+
+/* ==========================================
+   STEP 8W — DEBUGGER
+   ========================================== */
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_SELECTION_ENTRY",
+    "STEP 8W started → Selecting acceptable evidence source classes.",
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_SELECTION_CHECK",
+    "Selection: " +
+      evidenceSourceSelectionStatus +
+      " | Claims: " +
+      evidenceSourceSelection.length,
+    evidenceSourceSelectionStatus === "ready"
+      ? "success"
+      : "warning"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_SELECTION_TARGETS",
+    "Claims: " +
+      (
+        evidenceSourceSelection.length > 0
+          ? evidenceSourceSelection
+              .map(item => item.claimType)
+              .join(", ")
+          : "NONE"
+      ),
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_CLASSES",
+    evidenceSourceSelection.length > 0
+      ? evidenceSourceSelection
+          .map(
+            item =>
+              item.claimType +
+              " → " +
+              item.acceptableSourceClasses.join(
+                ", "
+              )
+          )
+          .join(" | ")
+      : "Source classes: NONE",
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_SELECTION_SAFETY",
+    "External source access: NOT STARTED | Evidence retrieval: NOT STARTED | Claim support: NOT CHANGED",
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_SELECTION_REASON",
+    evidenceSourceSelectionReason,
+    "info"
+  );
+
+    }   
+    
         /* ==========================================
            RESULT VALUES
            ========================================== */
