@@ -4703,7 +4703,26 @@ if (window.OODebug) {
   );
 
     }
-let actionPayload = null;
+/* ==========================================
+   STEP 8R — PAYLOAD CONTEXT CHECK
+   ========================================== */
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Decision",
+    "ACTION_PAYLOAD_CONTEXT",
+    "Intent: " +
+      actionIntentType +
+      " | Status: " +
+      actionIntentStatus +
+      " | Opportunity ID: " +
+      opportunityId,
+    "info"
+  );
+
+    }
+        let actionPayload = null;
 
 let actionPayloadStatus =
   "blocked";
