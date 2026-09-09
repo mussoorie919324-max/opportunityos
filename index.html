@@ -5024,7 +5024,22 @@ if (
   actionIntentStatus === "authorized" &&
   actionIntentType === "validate_claims"
 ) {
+/* ==========================================
+   STEP 8R — PAYLOAD BUILD TRY
+   ========================================== */
 
+try {
+
+  if (window.OODebug) {
+
+    OODebug.log(
+      "Decision",
+      "PAYLOAD_BUILD_START",
+      "Starting action payload object creation.",
+      "info"
+    );
+
+    }
   actionPayload = {
 
     intent:
