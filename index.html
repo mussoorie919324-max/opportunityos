@@ -4736,13 +4736,36 @@ let actionPayloadReason =
    ========================================== */
 
 let unsupportedClaimTypes = [];
+/* ==========================================
+   STEP 8R — CLAIM EXTRACTION CHECK
+   ========================================== */
 
+if (window.OODebug) {
+
+  OODebug.log(
+    "Decision",
+    "CLAIM_EXTRACTION_ENTRY",
+    "Checking result.profile.claims before extraction.",
+    "info"
+  );
+
+  }
 if (
   result &&
   result.profile &&
   result.profile.claims
 ) {
+if (window.OODebug) {
 
+  OODebug.log(
+    "Decision",
+    "CLAIM_EXTRACTION_SOURCE",
+    "Claims source available | Count: " +
+      result.profile.claims.length,
+    "info"
+  );
+
+    }
   unsupportedClaimTypes =
     result.profile.claims
       .filter(
