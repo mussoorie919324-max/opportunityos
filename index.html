@@ -4944,39 +4944,62 @@ try {
   }
 
     }
-        if (
+        /* ==========================================
+   STEP 8R — CLAIM EXTRACTION FIX
+   ========================================== */
+
+const claimFields8R_Fix = [
+  "demand",
+  "earning",
+  "competition",
+  "difficulty",
+  "risk",
+  "trend"
+];
+
+if (
   result &&
-  result.profile &&
-  result.profile.claims
+  result.profile
 ) {
+
+  unsupportedClaimTypes =
+    claimFields8R_Fix
+      .filter(
+        claimField8R_Fix => {
+
+          const claimData8R_Fix =
+            result.profile[claimField8R_Fix];
+
+          return (
+            claimData8R_Fix &&
+            claimData8R_Fix.status !== "supported"
+          );
+
+        }
+      );
+
+}
+
+
+/* ==========================================
+   STEP 8R — CLAIM EXTRACTION RESULT
+   ========================================== */
+
 if (window.OODebug) {
 
   OODebug.log(
     "Decision",
-    "CLAIM_EXTRACTION_SOURCE",
-    "Claims source available | Count: " +
-      result.profile.claims.length,
-    "info"
+    "CLAIM_EXTRACTION_RESULT",
+    "Unsupported claims: " +
+      (
+        unsupportedClaimTypes.length
+          ? unsupportedClaimTypes.join(", ")
+          : "NONE"
+      ),
+    "success"
   );
 
     }
-  unsupportedClaimTypes =
-    result.profile.claims
-      .filter(
-        claim =>
-          claim &&
-          claim.verificationStatus !== "supported"
-      )
-      .map(
-        claim =>
-          claim.claimType ||
-          claim.type ||
-          claim.name
-      )
-      .filter(Boolean);
-
-}
-
 
 /* ==========================================
    ACTION PAYLOAD LOGIC
