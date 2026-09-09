@@ -5157,7 +5157,78 @@ if (window.OODebug) {
   );
 
   }
-      
+/* ==========================================
+   STEP 8S
+   ACTION PAYLOAD HANDOFF BOUNDARY
+   ========================================== */
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Decision",
+    "ACTION_HANDOFF_ENTRY",
+    "STEP 8S reached. Preparing authorized action payload handoff.",
+    "info"
+  );
+
+}
+
+let actionHandoffStatus =
+  "blocked";
+
+let actionHandoffReason =
+  "Action payload handoff is not authorized.";
+
+
+/* ==========================================
+   STEP 8S — HANDOFF SAFETY CHECK
+   ========================================== */
+
+if (
+  actionPayload &&
+  actionPayload.status === "ready" &&
+  actionPayload.intent === "validate_claims" &&
+  actionPayload.executionAllowed === false
+) {
+
+  actionHandoffStatus =
+    "ready";
+
+  actionHandoffReason =
+    "Validation payload is ready for handoff. No execution is authorized.";
+
+}
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Decision",
+    "ACTION_HANDOFF_CHECK",
+    "Handoff: " +
+      actionHandoffStatus +
+      " | Intent: " +
+      (
+        actionPayload
+          ? actionPayload.intent
+          : "none"
+      ) +
+      " | Execution Allowed: " +
+      (
+        actionPayload
+          ? actionPayload.executionAllowed
+          : false
+      ),
+    "success"
+  );
+
+  OODebug.log(
+    "Decision",
+    "ACTION_HANDOFF_REASON",
+    actionHandoffReason,
+    "info"
+  );
+
+    }      
         /* ==========================================
            RESULT VALUES
            ========================================== */
