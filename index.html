@@ -5229,6 +5229,112 @@ if (window.OODebug) {
   );
 
     }      
+  /* ==========================================
+   STEP 8T
+   VALIDATION REQUEST PREPARATION
+   ========================================== */
+
+let validationRequest =
+  null;
+
+let validationRequestStatus =
+  "blocked";
+
+let validationRequestReason =
+  "Validation request cannot be prepared.";
+
+
+/* ==========================================
+   STEP 8T — REQUEST PREPARATION
+   ========================================== */
+
+if (
+  actionHandoffStatus === "ready" &&
+  actionPayload &&
+  actionPayload.intent === "validate_claims" &&
+  actionPayload.executionAllowed === false
+) {
+
+  validationRequest = {
+
+    requestType:
+      "claim_validation",
+
+    intent:
+      actionPayload.intent,
+
+    opportunityId:
+      actionPayload.opportunityId,
+
+    query:
+      actionPayload.query,
+
+    targetClaims:
+      Array.isArray(
+        actionPayload.targetClaims
+      )
+        ? actionPayload.targetClaims
+        : [],
+
+    executionAllowed:
+      false
+
+  };
+
+  validationRequestStatus =
+    "ready";
+
+  validationRequestReason =
+    "Validation request prepared from the authorized action payload. No validation execution has occurred.";
+
+}
+
+
+/* ==========================================
+   STEP 8T — DEBUGGER
+   ========================================== */
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Decision",
+    "VALIDATION_REQUEST_CHECK",
+    "Request: " +
+      validationRequestStatus +
+      " | Type: " +
+      (
+        validationRequest
+          ? validationRequest.requestType
+          : "none"
+      ) +
+      " | Targets: " +
+      (
+        validationRequest &&
+        Array.isArray(
+          validationRequest.targetClaims
+        )
+          ? validationRequest.targetClaims.length
+          : 0
+      ),
+    "success"
+  );
+
+  OODebug.log(
+    "Decision",
+    "VALIDATION_REQUEST_SAFETY",
+    "Execution Allowed: false | Validation execution: NOT STARTED",
+    "info"
+  );
+
+  OODebug.log(
+    "Decision",
+    "VALIDATION_REQUEST_REASON",
+    validationRequestReason,
+    "info"
+  );
+
+    }
+   
         /* ==========================================
            RESULT VALUES
            ========================================== */
