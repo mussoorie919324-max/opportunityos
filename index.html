@@ -5831,7 +5831,156 @@ if (window.OODebug) {
   );
 
     }   
-    
+    // ==========================================================
+// STEP 8X — EVIDENCE SOURCE QUALITY GATE
+// ==========================================================
+
+let evidenceSourceQualityRequirements = [];
+
+let evidenceSourceQualityStatus =
+  "blocked";
+
+let evidenceSourceQualityReason =
+  "Evidence source quality requirements cannot be resolved.";
+
+
+/* ==========================================
+   STEP 8X — QUALITY REQUIREMENT RESOLUTION
+   ========================================== */
+
+if (
+  Array.isArray(evidenceSourceSelection) &&
+  evidenceSourceSelection.length > 0
+) {
+
+  evidenceSourceQualityRequirements =
+    evidenceSourceSelection.map(item => ({
+
+      claimType:
+        item.claimType,
+
+      requiredQualityChecks: [
+
+        "source_authority",
+
+        "source_reliability",
+
+        "evidence_freshness",
+
+        "claim_relevance",
+
+        "source_independence",
+
+        "conflict_detection"
+
+      ],
+
+      minimumReliability:
+        "acceptable",
+
+      freshnessRequired:
+        true,
+
+      relevanceRequired:
+        true,
+
+      conflictCheckRequired:
+        true
+
+    }));
+
+
+  if (
+    evidenceSourceQualityRequirements.length ===
+    evidenceSourceSelection.length
+  ) {
+
+    evidenceSourceQualityStatus =
+      "ready";
+
+    evidenceSourceQualityReason =
+      "Quality requirements resolved for all selected evidence source classes.";
+
+  }
+
+}
+
+
+/* ==========================================
+   STEP 8X — DEBUGGER
+   ========================================== */
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_QUALITY_ENTRY",
+    "STEP 8X started → Resolving evidence source quality requirements.",
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_QUALITY_CHECK",
+    "Quality Gate: " +
+      evidenceSourceQualityStatus +
+      " | Claims: " +
+      evidenceSourceQualityRequirements.length,
+    evidenceSourceQualityStatus === "ready"
+      ? "success"
+      : "warning"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_QUALITY_TARGETS",
+    "Claims: " +
+      (
+        evidenceSourceQualityRequirements.length > 0
+          ? evidenceSourceQualityRequirements
+              .map(item => item.claimType)
+              .join(", ")
+          : "NONE"
+      ),
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_QUALITY_CHECKS",
+    evidenceSourceQualityRequirements.length > 0
+      ? evidenceSourceQualityRequirements
+          .map(
+            item =>
+              item.claimType +
+              " → " +
+              item.requiredQualityChecks.join(", ")
+          )
+          .join(" | ")
+      : "Quality checks: NONE",
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_QUALITY_SAFETY",
+    "Source access: NOT STARTED | Evidence retrieval: NOT STARTED | Evidence insertion: NOT STARTED | Claim support: NOT CHANGED",
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_QUALITY_REASON",
+    evidenceSourceQualityReason,
+    "info"
+  );
+
+    }
         /* ==========================================
            RESULT VALUES
            ========================================== */
