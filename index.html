@@ -4778,8 +4778,72 @@ try {
   }
 
     }
-let unsupportedClaimTypes = [];
 /* ==========================================
+   STEP 8R — PROFILE CLAIM FIELD DIAGNOSTIC
+   ========================================== */
+
+try {
+
+  if (
+    window.OODebug &&
+    result &&
+    result.profile
+  ) {
+
+    const profileClaimFields8R = [
+      "demand",
+      "earning",
+      "competition",
+      "difficulty",
+      "risk",
+      "trend"
+    ];
+
+    profileClaimFields8R.forEach(
+      claimField8R => {
+
+        const claimValue8R =
+          result.profile[claimField8R];
+
+        OODebug.log(
+          "Decision",
+          "PROFILE_CLAIM_FIELD",
+          claimField8R +
+            " → Type: " +
+            typeof claimValue8R +
+            " | Value: " +
+            (
+              claimValue8R &&
+              typeof claimValue8R === "object"
+                ? JSON.stringify(claimValue8R)
+                : String(claimValue8R)
+            ),
+          "info"
+        );
+
+      }
+    );
+
+  }
+
+} catch (profileClaimDiagnosticError8R) {
+
+  if (window.OODebug) {
+
+    OODebug.log(
+      "Decision",
+      "PROFILE_CLAIM_FIELD_ERROR",
+      "Profile claim diagnostic error: " +
+        profileClaimDiagnosticError8R.message,
+      "error"
+    );
+
+  }
+
+    }
+        let unsupportedClaimTypes = [];
+
+        /* ==========================================
    STEP 8R — CLAIM EXTRACTION CHECK
    ========================================== */
 
