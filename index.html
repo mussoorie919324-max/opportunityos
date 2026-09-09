@@ -4684,7 +4684,134 @@ if (window.OODebug) {
   );
 
     }  
-       
+      
+  /* ==========================================
+   STEP 8R
+   ACTION PAYLOAD BUILDER
+   ========================================== */
+
+let actionPayload = null;
+
+let actionPayloadStatus =
+  "blocked";
+
+let actionPayloadReason =
+  "No authorized action payload is available.";
+
+
+/* ==========================================
+   CLAIM EXTRACTION
+   ========================================== */
+
+let unsupportedClaimTypes = [];
+
+if (
+  result &&
+  result.profile &&
+  result.profile.claims
+) {
+
+  unsupportedClaimTypes =
+    result.profile.claims
+      .filter(
+        claim =>
+          claim &&
+          claim.verificationStatus !== "supported"
+      )
+      .map(
+        claim =>
+          claim.claimType ||
+          claim.type ||
+          claim.name
+      )
+      .filter(Boolean);
+
+}
+
+
+/* ==========================================
+   ACTION PAYLOAD LOGIC
+   ========================================== */
+
+if (
+  actionIntentStatus === "authorized" &&
+  actionIntentType === "validate_claims"
+) {
+
+  actionPayload = {
+
+    intent:
+      actionIntentType,
+
+    status:
+      "ready",
+
+    opportunityId:
+      opportunityId,
+
+    query:
+      query,
+
+    targetClaims:
+      unsupportedClaimTypes,
+
+    actionScope:
+      "claim_validation",
+
+    executionAllowed:
+      false
+
+  };
+
+  actionPayloadStatus =
+    "ready";
+
+  actionPayloadReason =
+    "Validation payload prepared for unsupported opportunity claims. No execution is authorized yet.";
+
+}
+
+else {
+
+  actionPayload =
+    null;
+
+  actionPayloadStatus =
+    "blocked";
+
+  actionPayloadReason =
+    "Action payload cannot be created because the action intent is not authorized.";
+
+}
+
+
+/* ==========================================
+   DEBUGGER
+   ========================================== */
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Decision",
+    "ACTION_PAYLOAD_CHECK",
+    "Payload: " +
+      actionPayloadStatus +
+      " | Intent: " +
+      actionIntentType +
+      " | Targets: " +
+      unsupportedClaimTypes.length,
+    "success"
+  );
+
+  OODebug.log(
+    "Decision",
+    "ACTION_PAYLOAD_SCOPE",
+    "Scope: claim_validation | Execution Allowed: false",
+    "info"
+  );
+
+  }
+      
         /* ==========================================
            RESULT VALUES
            ========================================== */
