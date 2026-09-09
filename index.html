@@ -4544,7 +4544,147 @@ if (window.OODebug) {
   );
 
   }    
-    
+  /* ==========================================
+   STEP 8Q
+   ACTION INTENT / ACTION REQUEST
+   ========================================== */
+
+let actionIntentType =
+  "none";
+
+let actionIntentStatus =
+  "blocked";
+
+let actionIntentReason =
+  "No action intent is available.";
+
+
+/* ==========================================
+   ACTION INTENT LOGIC
+   ========================================== */
+
+if (
+  actionGateAllowed === true
+) {
+
+  if (
+    actionGateStatus ===
+      "validation_allowed"
+  ) {
+
+    actionIntentType =
+      "validate_claims";
+
+    actionIntentStatus =
+      "authorized";
+
+    actionIntentReason =
+      "The system requests validation of unsupported opportunity claims.";
+
+  }
+
+  else if (
+    actionGateStatus ===
+      "experiment_allowed"
+  ) {
+
+    actionIntentType =
+      "run_controlled_experiment";
+
+    actionIntentStatus =
+      "authorized";
+
+    actionIntentReason =
+      "The system requests a controlled experiment before major execution.";
+
+  }
+
+  else if (
+    actionGateStatus ===
+      "execution_allowed"
+  ) {
+
+    actionIntentType =
+      "execute_opportunity";
+
+    actionIntentStatus =
+      "authorized";
+
+    actionIntentReason =
+      "The system requests opportunity execution under the authorized policy.";
+
+  }
+
+  else if (
+    actionGateStatus ===
+      "monitoring_allowed"
+  ) {
+
+    actionIntentType =
+      "monitor_opportunity";
+
+    actionIntentStatus =
+      "authorized";
+
+    actionIntentReason =
+      "The system requests continued opportunity monitoring.";
+
+  }
+
+  else {
+
+    actionIntentType =
+      "none";
+
+    actionIntentStatus =
+      "blocked";
+
+    actionIntentReason =
+      "No recognized action is authorized by the Action Gate.";
+
+  }
+
+}
+
+else {
+
+  actionIntentType =
+    "none";
+
+  actionIntentStatus =
+    "blocked";
+
+  actionIntentReason =
+    "Action intent is blocked because the Action Gate did not authorize an action.";
+
+}
+
+
+/* ==========================================
+   DEBUGGER
+   ========================================== */
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Decision",
+    "ACTION_INTENT_CHECK",
+    "Intent: " +
+      actionIntentType +
+      " | Status: " +
+      actionIntentStatus,
+    "success"
+  );
+
+  OODebug.log(
+    "Decision",
+    "ACTION_INTENT_REASON",
+    actionIntentReason,
+    "info"
+  );
+
+    }  
+       
         /* ==========================================
            RESULT VALUES
            ========================================== */
