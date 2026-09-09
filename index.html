@@ -4734,7 +4734,50 @@ let actionPayloadReason =
 /* ==========================================
    CLAIM EXTRACTION
    ========================================== */
+/* ==========================================
+   STEP 8R — PROFILE STRUCTURE DIAGNOSTIC
+   ========================================== */
 
+try {
+
+  if (
+    window.OODebug &&
+    result &&
+    result.profile
+  ) {
+
+    const profileStructureKeys8R =
+      Object.keys(result.profile);
+
+    OODebug.log(
+      "Decision",
+      "PROFILE_KEYS",
+      "result.profile keys: " +
+        (
+          profileStructureKeys8R.length
+            ? profileStructureKeys8R.join(", ")
+            : "NONE"
+        ),
+      "info"
+    );
+
+  }
+
+} catch (profileDiagnosticError8R) {
+
+  if (window.OODebug) {
+
+    OODebug.log(
+      "Decision",
+      "PROFILE_KEYS_ERROR",
+      "Profile diagnostic error: " +
+        profileDiagnosticError8R.message,
+      "error"
+    );
+
+  }
+
+    }
 let unsupportedClaimTypes = [];
 /* ==========================================
    STEP 8R — CLAIM EXTRACTION CHECK
