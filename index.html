@@ -4750,7 +4750,94 @@ if (window.OODebug) {
   );
 
   }
-if (
+/* ==========================================
+   STEP 8R — CLAIM SOURCE DIAGNOSTIC
+   ========================================== */
+
+try {
+
+  if (window.OODebug) {
+
+    OODebug.log(
+      "Decision",
+      "CLAIM_SOURCE_RESULT",
+      "result exists: " +
+        Boolean(result),
+      "info"
+    );
+
+    OODebug.log(
+      "Decision",
+      "CLAIM_SOURCE_PROFILE",
+      "result.profile exists: " +
+        Boolean(
+          result &&
+          result.profile
+        ),
+      "info"
+    );
+
+    OODebug.log(
+      "Decision",
+      "CLAIM_SOURCE_CLAIMS",
+      "result.profile.claims exists: " +
+        Boolean(
+          result &&
+          result.profile &&
+          result.profile.claims
+        ),
+      "info"
+    );
+
+    OODebug.log(
+      "Decision",
+      "CLAIM_SOURCE_TYPE",
+      "Claims type: " +
+        (
+          result &&
+          result.profile &&
+          result.profile.claims
+            ? Object.prototype.toString.call(
+                result.profile.claims
+              )
+            : "N/A"
+        ),
+      "info"
+    );
+
+    OODebug.log(
+      "Decision",
+      "CLAIM_SOURCE_LENGTH",
+      "Claims length: " +
+        (
+          result &&
+          result.profile &&
+          result.profile.claims &&
+          typeof result.profile.claims.length === "number"
+            ? result.profile.claims.length
+            : "N/A"
+        ),
+      "info"
+    );
+
+  }
+
+} catch (diagnosticError) {
+
+  if (window.OODebug) {
+
+    OODebug.log(
+      "Decision",
+      "CLAIM_SOURCE_ERROR",
+      "Diagnostic error: " +
+        diagnosticError.message,
+      "error"
+    );
+
+  }
+
+    }
+        if (
   result &&
   result.profile &&
   result.profile.claims
