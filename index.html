@@ -5064,7 +5064,33 @@ try {
       false
 
   };
-/* ==========================================
+  if (window.OODebug) {
+
+    OODebug.log(
+      "Decision",
+      "PAYLOAD_BUILD_SUCCESS",
+      "Action payload object creation completed.",
+      "success"
+    );
+
+  }
+
+} catch (payloadBuildError8R) {
+
+  if (window.OODebug) {
+
+    OODebug.log(
+      "Decision",
+      "PAYLOAD_BUILD_ERROR",
+      "Payload build error: " +
+        payloadBuildError8R.message,
+      "error"
+    );
+
+  }
+
+}
+  /* ==========================================
    STEP 8R — PAYLOAD BUILT CHECK
    ========================================== */
 
