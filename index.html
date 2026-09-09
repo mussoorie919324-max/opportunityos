@@ -5002,9 +5002,24 @@ if (window.OODebug) {
     }
 
 /* ==========================================
-   ACTION PAYLOAD LOGIC
+   STEP 8R — PAYLOAD LOGIC ENTRY
    ========================================== */
 
+if (window.OODebug) {
+
+  OODebug.log(
+    "Decision",
+    "PAYLOAD_LOGIC_ENTRY",
+    "Entering action payload logic | Intent: " +
+      actionIntentType +
+      " | Status: " +
+      actionIntentStatus +
+      " | Targets: " +
+      unsupportedClaimTypes.length,
+    "info"
+  );
+
+    }
 if (
   actionIntentStatus === "authorized" &&
   actionIntentType === "validate_claims"
