@@ -6147,6 +6147,172 @@ if (window.OODebug) {
   );
 
   }
+     // ==========================================================
+// STEP 8Y — EVIDENCE SOURCE ELIGIBILITY GATE
+// ==========================================================
+
+let evidenceSourceEligibility = [];
+
+let evidenceSourceEligibilityStatus =
+  "blocked";
+
+let evidenceSourceEligibilityReason =
+  "Evidence source eligibility cannot be resolved.";
+
+
+/* ==========================================
+   STEP 8Y — ELIGIBILITY RESOLUTION
+   ========================================== */
+
+if (
+  evidenceSourceQualityStatus === "ready" &&
+  Array.isArray(
+    evidenceSourceQualityRequirements
+  ) &&
+  evidenceSourceQualityRequirements.length > 0
+) {
+
+  evidenceSourceEligibility =
+    evidenceSourceQualityRequirements.map(item => ({
+
+      claimType:
+        item.claimType,
+
+      eligibleSourceRequirements: {
+
+        authority:
+          "required",
+
+        reliability:
+          item.minimumReliability,
+
+        freshness:
+          item.freshnessRequired
+            ? "required"
+            : "optional",
+
+        relevance:
+          item.relevanceRequired
+            ? "required"
+            : "optional",
+
+        independence:
+          "required",
+
+        conflictCheck:
+          item.conflictCheckRequired
+            ? "required"
+            : "optional"
+
+      },
+
+      sourceEligibilityStatus:
+        "pending_validation"
+
+    }));
+
+
+  if (
+    evidenceSourceEligibility.length ===
+    evidenceSourceQualityRequirements.length
+  ) {
+
+    evidenceSourceEligibilityStatus =
+      "ready";
+
+    evidenceSourceEligibilityReason =
+      "Source eligibility requirements prepared for all validation targets. No external source has been accessed.";
+
+  }
+
+}
+
+
+/* ==========================================
+   STEP 8Y — DEBUGGER
+   ========================================== */
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_ELIGIBILITY_ENTRY",
+    "STEP 8Y started → Resolving evidence source eligibility requirements.",
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_ELIGIBILITY_CHECK",
+    "Eligibility: " +
+      evidenceSourceEligibilityStatus +
+      " | Claims: " +
+      evidenceSourceEligibility.length,
+    evidenceSourceEligibilityStatus === "ready"
+      ? "success"
+      : "warning"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_ELIGIBILITY_TARGETS",
+    "Claims: " +
+      (
+        evidenceSourceEligibility.length > 0
+          ? evidenceSourceEligibility
+              .map(item => item.claimType)
+              .join(", ")
+          : "NONE"
+      ),
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_ELIGIBILITY_RULES",
+    evidenceSourceEligibility.length > 0
+      ? evidenceSourceEligibility
+          .map(
+            item =>
+              item.claimType +
+              " → Authority: " +
+              item.eligibleSourceRequirements.authority +
+              " | Reliability: " +
+              item.eligibleSourceRequirements.reliability +
+              " | Freshness: " +
+              item.eligibleSourceRequirements.freshness +
+              " | Relevance: " +
+              item.eligibleSourceRequirements.relevance +
+              " | Independence: " +
+              item.eligibleSourceRequirements.independence +
+              " | Conflict: " +
+              item.eligibleSourceRequirements.conflictCheck
+          )
+          .join(" | ")
+      : "Eligibility rules: NONE",
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_ELIGIBILITY_SAFETY",
+    "External source access: NOT STARTED | Source retrieval: NOT STARTED | Evidence insertion: NOT STARTED | Claim support: NOT CHANGED",
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_ELIGIBILITY_REASON",
+    evidenceSourceEligibilityReason,
+    "info"
+  );
+
+    } 
         /* ==========================================
            RESULT VALUES
            ========================================== */
