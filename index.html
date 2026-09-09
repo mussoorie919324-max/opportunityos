@@ -5426,6 +5426,128 @@ if (window.OODebug) {
   );
 
     }   
+ // ==========================================================
+// STEP 8V — EVIDENCE SOURCE RESOLUTION
+// ==========================================================
+
+let evidenceSourceRequirements = [];
+let evidenceSourceResolutionStatus = "blocked";
+let evidenceSourceResolutionReason = "";
+
+debuggerLog(
+  "EVIDENCE_SOURCE_ENTRY",
+  "STEP 8V started → Resolving evidence requirements for validation targets..."
+);
+
+if (
+  validationTargets &&
+  Array.isArray(validationTargets) &&
+  validationTargets.length > 0
+) {
+  const sourceMap = {
+    earning: {
+      claimType: "earning",
+      evidenceCategory: "income_market_data",
+      sourceRequirement:
+        "Reliable earnings, income or compensation data relevant to the opportunity."
+    },
+
+    competition: {
+      claimType: "competition",
+      evidenceCategory: "competition_market_data",
+      sourceRequirement:
+        "Reliable evidence about competition, supply density, market saturation or competitor presence."
+    },
+
+    difficulty: {
+      claimType: "difficulty",
+      evidenceCategory: "entry_barrier_data",
+      sourceRequirement:
+        "Reliable evidence about required skills, qualifications, experience and barriers to entry."
+    },
+
+    risk: {
+      claimType: "risk",
+      evidenceCategory: "risk_regulatory_market_data",
+      sourceRequirement:
+        "Reliable evidence about regulatory, platform, operational, financial or market risks."
+    },
+
+    trend: {
+      claimType: "trend",
+      evidenceCategory: "demand_trend_data",
+      sourceRequirement:
+        "Reliable time-based evidence showing demand, growth, decline or trend direction."
+    }
+  };
+
+  evidenceSourceRequirements = validationTargets
+    .map(claimType => sourceMap[claimType])
+    .filter(Boolean);
+
+  const unresolvedTargets = validationTargets.filter(
+    claimType => !sourceMap[claimType]
+  );
+
+  if (unresolvedTargets.length === 0) {
+    evidenceSourceResolutionStatus = "ready";
+
+    evidenceSourceResolutionReason =
+      "Evidence requirements resolved for all validation targets.";
+  } else {
+    evidenceSourceResolutionStatus = "partial";
+
+    evidenceSourceResolutionReason =
+      `Evidence requirements unresolved for: ${unresolvedTargets.join(", ")}`;
+  }
+} else {
+  evidenceSourceResolutionStatus = "blocked";
+
+  evidenceSourceResolutionReason =
+    "No validation targets are available for evidence source resolution.";
+}
+
+
+// ----------------------------------------------------------
+// STEP 8V — DIAGNOSTIC LOGS
+// ----------------------------------------------------------
+
+debuggerLog(
+  "EVIDENCE_SOURCE_CHECK",
+  `Resolution: ${evidenceSourceResolutionStatus} | Requirements: ${evidenceSourceRequirements.length}`
+);
+
+debuggerLog(
+  "EVIDENCE_SOURCE_TARGETS",
+  evidenceSourceRequirements.length > 0
+    ? `Targets: ${evidenceSourceRequirements
+        .map(item => item.claimType)
+        .join(", ")}`
+    : "Targets: none"
+);
+
+debuggerLog(
+  "EVIDENCE_SOURCE_CATEGORIES",
+  evidenceSourceRequirements.length > 0
+    ? evidenceSourceRequirements
+        .map(
+          item =>
+            `${item.claimType} → ${item.evidenceCategory}`
+        )
+        .join(" | ")
+    : "Categories: none"
+);
+
+debuggerLog(
+  "EVIDENCE_SOURCE_SAFETY",
+  "Evidence retrieval: NOT STARTED | Evidence creation: NOT STARTED | Claim support: NOT CHANGED"
+);
+
+debuggerLog(
+  "EVIDENCE_SOURCE_REASON",
+  evidenceSourceResolutionReason
+);   
+      
         /* ==========================================
            RESULT VALUES
            ========================================== */
