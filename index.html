@@ -5334,7 +5334,98 @@ if (window.OODebug) {
   );
 
     }
-   
+/* ==========================================
+   STEP 8U
+   VALIDATION TARGET RESOLVER
+   ========================================== */
+
+let validationTargets =
+  [];
+
+let validationTargetStatus =
+  "blocked";
+
+let validationTargetReason =
+  "Validation targets cannot be resolved.";
+
+
+/* ==========================================
+   STEP 8U — TARGET RESOLUTION
+   ========================================== */
+
+if (
+  validationRequest &&
+  validationRequest.status !== "blocked" &&
+  validationRequest.requestType ===
+    "claim_validation"
+) {
+
+  validationTargets =
+    Array.isArray(
+      validationRequest.targetClaims
+    )
+      ? validationRequest.targetClaims
+          .filter(Boolean)
+      : [];
+
+  if (
+    validationTargets.length > 0
+  ) {
+
+    validationTargetStatus =
+      "ready";
+
+    validationTargetReason =
+      "Unsupported claims resolved as validation targets. No validation execution has occurred.";
+
+  }
+
+}
+
+
+/* ==========================================
+   STEP 8U — DEBUGGER
+   ========================================== */
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_TARGET_CHECK",
+    "Targets: " +
+      validationTargetStatus +
+      " | Count: " +
+      validationTargets.length,
+    "success"
+  );
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_TARGETS",
+    "Claims: " +
+      (
+        validationTargets.length > 0
+          ? validationTargets.join(", ")
+          : "NONE"
+      ),
+    "info"
+  );
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_TARGET_SAFETY",
+    "Validation execution: NOT STARTED | External source access: NOT STARTED",
+    "info"
+  );
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_TARGET_REASON",
+    validationTargetReason,
+    "info"
+  );
+
+    }   
         /* ==========================================
            RESULT VALUES
            ========================================== */
