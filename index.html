@@ -5049,7 +5049,26 @@ if (
       false
 
   };
+/* ==========================================
+   STEP 8R — PAYLOAD BUILT CHECK
+   ========================================== */
 
+if (window.OODebug) {
+
+  OODebug.log(
+    "Decision",
+    "PAYLOAD_BUILT_CHECK",
+    "Action payload object created successfully | Targets: " +
+      (
+        actionPayload &&
+        actionPayload.targetClaims
+          ? actionPayload.targetClaims.length
+          : 0
+      ),
+    "success"
+  );
+
+    }
   actionPayloadStatus =
     "ready";
 
