@@ -4419,7 +4419,132 @@ if (window.OODebug) {
   );
 
     }    
-       
+   /* ==========================================
+   STEP 8P
+   AUTHORITATIVE ACTION GATE
+   ========================================== */
+
+let actionGateStatus =
+  "blocked";
+
+let actionGateReason =
+  "Action blocked because the authoritative action contract is not valid.";
+
+let actionGateAllowed =
+  false;
+
+
+/* ==========================================
+   ACTION GATE LOGIC
+   ========================================== */
+
+if (
+  opportunityActionContract &&
+  opportunityActionContract.authoritative === true &&
+  actionContractStatus === "valid"
+) {
+
+  if (
+    opportunityActionContract.permissions.validation === true
+  ) {
+
+    actionGateStatus =
+      "validation_allowed";
+
+    actionGateReason =
+      "Validation action is authorized by the authoritative action contract.";
+
+    actionGateAllowed =
+      true;
+
+  }
+
+  else if (
+    opportunityActionContract.permissions.experiment === true
+  ) {
+
+    actionGateStatus =
+      "experiment_allowed";
+
+    actionGateReason =
+      "Controlled experiment is authorized by the authoritative action contract.";
+
+    actionGateAllowed =
+      true;
+
+  }
+
+  else if (
+    opportunityActionContract.permissions.execution === true
+  ) {
+
+    actionGateStatus =
+      "execution_allowed";
+
+    actionGateReason =
+      "Execution is authorized by the authoritative action contract.";
+
+    actionGateAllowed =
+      true;
+
+  }
+
+  else if (
+    opportunityActionContract.permissions.monitoring === true
+  ) {
+
+    actionGateStatus =
+      "monitoring_allowed";
+
+    actionGateReason =
+      "Monitoring is authorized by the authoritative action contract.";
+
+    actionGateAllowed =
+      true;
+
+  }
+
+  else {
+
+    actionGateStatus =
+      "blocked";
+
+    actionGateReason =
+      "No permitted action exists in the authoritative action contract.";
+
+    actionGateAllowed =
+      false;
+
+  }
+
+}
+
+
+/* ==========================================
+   DEBUGGER
+   ========================================== */
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Decision",
+    "ACTION_GATE_CHECK",
+    "Gate: " +
+      actionGateStatus +
+      " | Allowed: " +
+      actionGateAllowed,
+    "success"
+  );
+
+  OODebug.log(
+    "Decision",
+    "ACTION_GATE_REASON",
+    actionGateReason,
+    "info"
+  );
+
+  }    
+    
         /* ==========================================
            RESULT VALUES
            ========================================== */
