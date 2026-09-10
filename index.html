@@ -7409,7 +7409,94 @@ if (window.OODebug) {
   );
 
 }
+/* =========================================================
+   STEP 8AG — VALIDATION EXECUTION AUTHORIZATION GATE
+   ========================================================= */
 
+let evidenceValidationExecutionAuthorization = {
+  status: "blocked",
+  allowed: false,
+  reason:
+    "Validation execution is not authorized."
+};
+
+if (
+  evidenceValidationExecutionPlan &&
+  evidenceValidationExecutionPlan.status ===
+    "ready" &&
+  evidenceValidationExecutionPlan.allowed ===
+    true &&
+  Array.isArray(
+    evidenceValidationExecutionPlan.targets
+  ) &&
+  evidenceValidationExecutionPlan.targets.length > 0
+) {
+
+  evidenceValidationExecutionAuthorization = {
+
+    status: "ready",
+
+    allowed: true,
+
+    reason:
+      "Validation execution is authorized to enter the controlled execution boundary. No external source has been accessed and no evidence or claim support has been changed."
+
+  };
+
+}
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_EXECUTION_AUTHORIZATION_ENTRY",
+    "STEP 8AG started → Checking authorization for controlled validation execution.",
+    "info"
+  );
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_EXECUTION_AUTHORIZATION_CHECK",
+    "Authorization: " +
+      evidenceValidationExecutionAuthorization.status +
+      " | Allowed: " +
+      evidenceValidationExecutionAuthorization.allowed,
+    evidenceValidationExecutionAuthorization.status ===
+      "ready"
+      ? "success"
+      : "warning"
+  );
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_EXECUTION_AUTHORIZATION_TARGETS",
+    "Targets: " +
+      (
+        evidenceValidationExecutionPlan &&
+        Array.isArray(
+          evidenceValidationExecutionPlan.targets
+        )
+          ? evidenceValidationExecutionPlan.targets.length
+          : 0
+      ),
+    "info"
+  );
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_EXECUTION_AUTHORIZATION_SAFETY",
+    "External source access: NOT_STARTED | Source retrieval: NOT_STARTED | Evidence insertion: NOT_STARTED | Claim support: NOT_CHANGED",
+    "info"
+  );
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_EXECUTION_AUTHORIZATION_REASON",
+    evidenceValidationExecutionAuthorization.reason,
+    "info"
+  );
+
+    }
 /* ==========================================
    RESULT VALUES
    ========================================== */
