@@ -7075,7 +7075,174 @@ if (window.OODebug) {
   );
 
   }
-        
+ /* =========================================================
+   STEP 8AD — EVIDENCE SOURCE RESOLUTION CONTRACT
+   ========================================================= */
+
+let evidenceSourceResolutionContract = {
+  status: "blocked",
+  resolutionMode: "highest_priority_eligible_source",
+  requiredClaims: [],
+  resolutions: {},
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupport: "NOT_CHANGED"
+  },
+  reason: "Source resolution contract not initialized."
+};
+
+if (window.OODebug) {
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_RESOLUTION_ENTRY",
+    "STEP 8AD started → Formalizing evidence source resolution contract."
+  );
+}
+
+const sourceDecisionContract =
+  (typeof evidenceSourceSelectionDecisions !== "undefined")
+    ? evidenceSourceSelectionDecisions
+    : null;
+
+if (window.OODebug) {
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_RESOLUTION_CONNECTION_CHECK",
+    sourceDecisionContract
+      ? "STEP 8AC decision object found."
+      : "STEP 8AC decision object not found."
+  );
+}
+
+if (
+  !sourceDecisionContract ||
+  sourceDecisionContract.status !== "ready"
+) {
+
+  evidenceSourceResolutionContract.status = "blocked";
+
+  evidenceSourceResolutionContract.reason =
+    "Evidence source selection decisions are not ready.";
+
+  if (window.OODebug) {
+    OODebug.log(
+      "Verification",
+      "EVIDENCE_SOURCE_RESOLUTION_CHECK",
+      "Resolution: blocked → STEP 8AC source selection is not ready."
+    );
+  }
+
+} else {
+
+  const requiredClaims =
+    Array.isArray(sourceDecisionContract.requiredClaims)
+      ? sourceDecisionContract.requiredClaims
+      : [];
+
+  const decisions =
+    sourceDecisionContract.decisions || {};
+
+  evidenceSourceResolutionContract.requiredClaims =
+    [...requiredClaims];
+
+  evidenceSourceResolutionContract.resolutionMode =
+    sourceDecisionContract.selectionMode ||
+    "highest_priority_eligible_source";
+
+  let allResolved = true;
+
+  if (window.OODebug) {
+    OODebug.log(
+      "Verification",
+      "EVIDENCE_SOURCE_RESOLUTION_TARGETS",
+      "Claims: " + requiredClaims.join(", ")
+    );
+  }
+
+  requiredClaims.forEach(function (claim) {
+
+    const decision = decisions[claim] || {};
+
+    const selectedSource =
+      decision.selectedSourceType || null;
+
+    const fallbackSources =
+      Array.isArray(decision.fallbackSourceTypes)
+        ? [...decision.fallbackSourceTypes]
+        : [];
+
+    const resolutionStatus =
+      selectedSource
+        ? "resolved"
+        : "blocked";
+
+    if (!selectedSource) {
+      allResolved = false;
+    }
+
+    evidenceSourceResolutionContract.resolutions[claim] = {
+      claim: claim,
+      selectedSourceType: selectedSource,
+      fallbackSourceTypes: fallbackSources,
+      resolutionStatus: resolutionStatus,
+      resolutionMode:
+        decision.selectionMode ||
+        evidenceSourceResolutionContract.resolutionMode
+    };
+
+    if (window.OODebug) {
+      OODebug.log(
+        "Verification",
+        "EVIDENCE_SOURCE_RESOLUTION_ITEM",
+        claim +
+          " → " +
+          (selectedSource
+            ? "RESOLVED: " + selectedSource
+            : "BLOCKED") +
+          (fallbackSources.length
+            ? " | FALLBACK: " + fallbackSources.join(" > ")
+            : "")
+      );
+    }
+  });
+
+  evidenceSourceResolutionContract.status =
+    allResolved ? "ready" : "blocked";
+
+  evidenceSourceResolutionContract.reason =
+    allResolved
+      ? "Evidence source resolution contract created for all validation targets. No external source has been accessed."
+      : "One or more validation targets do not have a resolved evidence source.";
+
+  if (window.OODebug) {
+    OODebug.log(
+      "Verification",
+      "EVIDENCE_SOURCE_RESOLUTION_CHECK",
+      "Resolution: " +
+        evidenceSourceResolutionContract.status +
+        " | Claims: " +
+        requiredClaims.length
+    );
+  }
+}
+
+/* SAFETY — STEP 8AD DOES NOT ACCESS EXTERNAL SOURCES */
+
+if (window.OODebug) {
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_RESOLUTION_SAFETY",
+    "External source access: NOT_STARTED | Source retrieval: NOT_STARTED | Evidence insertion: NOT_STARTED | Claim support: NOT_CHANGED"
+  );
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_RESOLUTION_REASON",
+    evidenceSourceResolutionContract.reason
+  );
+    }       
         /* ==========================================
            RESULT VALUES
            ========================================== */
