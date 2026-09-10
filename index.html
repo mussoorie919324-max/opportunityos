@@ -7077,7 +7077,7 @@ if (window.OODebug) {
   }
  /* =========================================================
    STEP 8AD — EVIDENCE SOURCE RESOLUTION CONTRACT
-   FIXED CONNECTION TO STEP 8AC
+   FINAL CONNECTION FIX
    ========================================================= */
 
 let evidenceSourceResolutionContract = {
@@ -7117,8 +7117,6 @@ if (window.OODebug) {
   );
 }
 
-/* STEP 8AC → STEP 8AD CONNECTION */
-
 if (!sourceDecisionContract) {
 
   evidenceSourceResolutionContract.status = "blocked";
@@ -7128,24 +7126,29 @@ if (!sourceDecisionContract) {
 
 } else {
 
-  const requiredClaims =
-    Array.isArray(sourceDecisionContract.requiredClaims)
-      ? sourceDecisionContract.requiredClaims
-      : [];
+  /* Read the actual decision collection produced by STEP 8AC */
 
   const decisions =
     sourceDecisionContract.decisions ||
     sourceDecisionContract.selections ||
+    sourceDecisionContract.sourceDecisions ||
     {};
+
+  /* Derive claims directly from STEP 8AC decisions */
+
+  const requiredClaims =
+    Object.keys(decisions);
 
   evidenceSourceResolutionContract.requiredClaims =
     [...requiredClaims];
 
   evidenceSourceResolutionContract.resolutionMode =
     sourceDecisionContract.selectionMode ||
+    sourceDecisionContract.selection_mode ||
     "highest_priority_eligible_source";
 
-  let allResolved = true;
+  let allResolved =
+    requiredClaims.length > 0;
 
   if (window.OODebug) {
     OODebug.log(
@@ -7215,17 +7218,19 @@ if (!sourceDecisionContract) {
   });
 
   evidenceSourceResolutionContract.status =
-    allResolved && requiredClaims.length > 0
+    allResolved
       ? "ready"
       : "blocked";
 
   evidenceSourceResolutionContract.reason =
-    evidenceSourceResolutionContract.status === "ready"
+    allResolved
       ? "Evidence source resolution contract created for all validation targets. No external source has been accessed."
       : "One or more validation targets do not have a resolved evidence source.";
 }
 
-/* FINAL SAFETY STATE */
+/* =========================================================
+   SAFETY — NO EXTERNAL SOURCE ACCESS
+   ========================================================= */
 
 if (window.OODebug) {
 
