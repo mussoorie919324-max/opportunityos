@@ -6624,7 +6624,47 @@ if (window.OODebug) {
   );
 
     }  
+/* =========================================================
+   STEP 8AB — RUNTIME CONNECTION
+   ========================================================= */
 
+let evidenceSourceSelectionContract = null;
+
+if (
+  evidenceSourceCandidatePriorityStatus ===
+    "ready" &&
+  Array.isArray(
+    evidenceSourceCandidatePriorities
+  ) &&
+  evidenceSourceCandidatePriorities.length > 0
+) {
+
+  opportunityOSDebugger(
+    "Verification",
+    "EVIDENCE_SOURCE_SELECTION_CONNECTION",
+    "STEP 8AA → STEP 8AB connection started."
+  );
+
+  evidenceSourceSelectionContract =
+    buildEvidenceSourceSelectionContract(
+      evidenceSourceCandidatePriorities
+    );
+
+  opportunityOSDebugger(
+    "Verification",
+    "EVIDENCE_SOURCE_SELECTION_CONNECTION_CHECK",
+    `STEP 8AB returned: ${evidenceSourceSelectionContract?.status || "unknown"}`
+  );
+
+} else {
+
+  opportunityOSDebugger(
+    "Verification",
+    "EVIDENCE_SOURCE_SELECTION_CONNECTION_BLOCKED",
+    "STEP 8AB was not executed because STEP 8AA priority output is not ready."
+  );
+
+    }
   /* =========================================================
    STEP 8AB — EVIDENCE SOURCE SELECTION CONTRACT
    ========================================================= */
