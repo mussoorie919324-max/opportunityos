@@ -7815,7 +7815,168 @@ if (window.OODebug) {
   );
 
   } 
-    
+/* =========================================================
+   STEP 8AJ — VALIDATION RETRIEVAL AUTHORIZATION
+   ========================================================= */
+
+let evidenceValidationRetrievalAuthorization = {
+  status: "blocked",
+  allowed: false,
+  targets: [],
+  reason:
+    "Validation retrieval is not authorized."
+};
+
+
+/* ==========================================
+   STEP 8AJ — RETRIEVAL AUTHORIZATION CHECK
+   ========================================== */
+
+if (
+  evidenceValidationExecutionBoundary &&
+  evidenceValidationExecutionBoundary.status ===
+    "ready" &&
+  evidenceValidationExecutionBoundary.allowed ===
+    true &&
+  Array.isArray(
+    evidenceValidationExecutionBoundary.targets
+  ) &&
+  evidenceValidationExecutionBoundary.targets.length > 0
+) {
+
+  const retrievalTargets =
+    evidenceValidationExecutionBoundary.targets
+      .filter(
+        item =>
+          item &&
+          item.claimType &&
+          item.selectedSourceType
+      )
+      .map(
+        item => ({
+
+          claimType:
+            item.claimType,
+
+          selectedSourceType:
+            item.selectedSourceType,
+
+          fallbackSourceTypes:
+            Array.isArray(
+              item.fallbackSourceTypes
+            )
+              ? [...item.fallbackSourceTypes]
+              : [],
+
+          retrievalStatus:
+            "authorized",
+
+          externalSourceAccess:
+            "NOT_STARTED",
+
+          sourceRetrieval:
+            "NOT_STARTED",
+
+          evidenceInsertion:
+            "NOT_STARTED",
+
+          claimSupport:
+            "NOT_CHANGED"
+
+        })
+      );
+
+  const retrievalReady =
+    retrievalTargets.length ===
+      evidenceValidationExecutionBoundary.targets.length &&
+    retrievalTargets.length > 0;
+
+  evidenceValidationRetrievalAuthorization = {
+
+    status:
+      retrievalReady
+        ? "ready"
+        : "blocked",
+
+    allowed:
+      retrievalReady,
+
+    targets:
+      retrievalTargets,
+
+    reason:
+      retrievalReady
+        ? "Validation retrieval is authorized for the approved targets. Actual external source access has not started and no evidence or claim support has been changed."
+        : "Validation retrieval authorization blocked because one or more boundary targets are invalid."
+
+  };
+
+}
+
+
+/* ==========================================
+   STEP 8AJ — DEBUGGER
+   ========================================== */
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_RETRIEVAL_AUTHORIZATION_ENTRY",
+    "STEP 8AJ started → Checking authorization for controlled validation retrieval.",
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_RETRIEVAL_AUTHORIZATION_CHECK",
+    "Retrieval authorization: " +
+      evidenceValidationRetrievalAuthorization.status +
+      " | Allowed: " +
+      evidenceValidationRetrievalAuthorization.allowed +
+      " | Targets: " +
+      evidenceValidationRetrievalAuthorization.targets.length,
+    evidenceValidationRetrievalAuthorization.status ===
+      "ready"
+      ? "success"
+      : "warning"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_RETRIEVAL_AUTHORIZATION_TARGETS",
+    evidenceValidationRetrievalAuthorization.targets.length > 0
+      ? evidenceValidationRetrievalAuthorization.targets
+          .map(
+            item =>
+              item.claimType +
+              " → " +
+              item.selectedSourceType
+          )
+          .join(" | ")
+      : "Targets: NONE",
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_RETRIEVAL_AUTHORIZATION_SAFETY",
+    "External source access: NOT_STARTED | Source retrieval: NOT_STARTED | Evidence insertion: NOT_STARTED | Claim support: NOT_CHANGED",
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_RETRIEVAL_AUTHORIZATION_REASON",
+    evidenceValidationRetrievalAuthorization.reason,
+    "info"
+  );
+
+    }    
 /* ==========================================
   RESULT VALUES
    ========================================== */
