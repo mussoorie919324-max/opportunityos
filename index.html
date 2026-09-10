@@ -6639,30 +6639,52 @@ if (
   evidenceSourceCandidatePriorities.length > 0
 ) {
 
-  opportunityOSDebugger(
-    "Verification",
-    "EVIDENCE_SOURCE_SELECTION_CONNECTION",
-    "STEP 8AA → STEP 8AB connection started."
-  );
+  if (window.OODebug) {
+
+    OODebug.log(
+      "Verification",
+      "EVIDENCE_SOURCE_SELECTION_CONNECTION",
+      "STEP 8AA → STEP 8AB connection started.",
+      "info"
+    );
+
+  }
 
   evidenceSourceSelectionContract =
     buildEvidenceSourceSelectionContract(
       evidenceSourceCandidatePriorities
     );
 
-  opportunityOSDebugger(
-    "Verification",
-    "EVIDENCE_SOURCE_SELECTION_CONNECTION_CHECK",
-    `STEP 8AB returned: ${evidenceSourceSelectionContract?.status || "unknown"}`
-  );
+  if (window.OODebug) {
+
+    OODebug.log(
+      "Verification",
+      "EVIDENCE_SOURCE_SELECTION_CONNECTION_CHECK",
+      "STEP 8AB returned: " +
+        (
+          evidenceSourceSelectionContract?.status ||
+          "unknown"
+        ),
+      evidenceSourceSelectionContract?.status ===
+        "ready"
+        ? "success"
+        : "warning"
+    );
+
+  }
 
 } else {
 
-  opportunityOSDebugger(
-    "Verification",
-    "EVIDENCE_SOURCE_SELECTION_CONNECTION_BLOCKED",
-    "STEP 8AB was not executed because STEP 8AA priority output is not ready."
-  );
+  if (window.OODebug) {
+
+    OODebug.log(
+      "Verification",
+      "EVIDENCE_SOURCE_SELECTION_CONNECTION_BLOCKED",
+      "STEP 8AB was not executed because STEP 8AA priority output is not ready.",
+      "warning"
+    );
+
+  }
 
     }
   /* =========================================================
