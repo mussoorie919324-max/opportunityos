@@ -5992,7 +5992,16 @@ let evidenceSourceEligibilityStatus =
 
 let evidenceSourceEligibilityReason =
   "Evidence source eligibility cannot be resolved.";
+if (window.OODebug) {
 
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_ELIGIBILITY_ENTRY",
+    "STEP 8Y reached successfully.",
+    "info"
+  );
+
+    }
 
 /* ==========================================
    STEP 8Y — ELIGIBILITY RESOLUTION
