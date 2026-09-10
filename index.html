@@ -6624,7 +6624,7 @@ if (window.OODebug) {
   );
 
     }  
-     /* =========================================================
+/* =========================================================
    STEP 8AB — EVIDENCE SOURCE SELECTION CONTRACT
    ========================================================= */
 
@@ -6637,7 +6637,13 @@ function buildEvidenceSourceSelectionContract(priorityResult) {
     `STEP ${step} started → Building formal evidence source selection contract.`
   );
 
-  const priorities = priorityResult?.priorities || {};
+  const priorities =
+    priorityResult &&
+    typeof priorityResult === "object" &&
+    priorityResult.priorities &&
+    typeof priorityResult.priorities === "object"
+      ? priorityResult.priorities
+      : {};
 
   const requiredClaims = [
     "earning",
@@ -6647,37 +6653,17 @@ function buildEvidenceSourceSelectionContract(priorityResult) {
     "trend"
   ];
 
-  const selectionRules = {
-    earning: {
-      required: true,
-      selection_mode: "highest_priority_eligible_source",
-      allowed_source_types: priorities.earning || []
-    },
+  const selectionRules = {};
 
-    competition: {
+  requiredClaims.forEach(claim => {
+    selectionRules[claim] = {
       required: true,
       selection_mode: "highest_priority_eligible_source",
-      allowed_source_types: priorities.competition || []
-    },
-
-    difficulty: {
-      required: true,
-      selection_mode: "highest_priority_eligible_source",
-      allowed_source_types: priorities.difficulty || []
-    },
-
-    risk: {
-      required: true,
-      selection_mode: "highest_priority_eligible_source",
-      allowed_source_types: priorities.risk || []
-    },
-
-    trend: {
-      required: true,
-      selection_mode: "highest_priority_eligible_source",
-      allowed_source_types: priorities.trend || []
-    }
-  };
+      allowed_source_types: Array.isArray(priorities[claim])
+        ? [...priorities[claim]]
+        : []
+    };
+  });
 
   const contractReady = requiredClaims.every(
     claim =>
@@ -6691,11 +6677,15 @@ function buildEvidenceSourceSelectionContract(priorityResult) {
 
     contract_version: "8AB-v1",
 
-    required_claims: requiredClaims,
+    required_claims: [...requiredClaims],
 
     selection_policy: {
-      rule: "Select the highest-priority source type that passes the previously defined eligibility and quality gates.",
-      fallback: "Move to the next prioritized source type only if the higher-priority candidate fails eligibility or quality requirements.",
+      rule:
+        "Select the highest-priority source type that passes the previously defined eligibility and quality gates.",
+
+      fallback:
+        "Move to the next prioritized source type only if the higher-priority candidate fails eligibility or quality requirements.",
+
       no_automatic_claim_support: true
     },
 
@@ -6723,6 +6713,20 @@ function buildEvidenceSourceSelectionContract(priorityResult) {
 
   opportunityOSDebugger(
     "Verification",
+    "EVIDENCE_SOURCE_SELECTION_TARGETS",
+    `Claims: ${requiredClaims.join(", ")}`
+  );
+
+  requiredClaims.forEach(claim => {
+    opportunityOSDebugger(
+      "Verification",
+      "EVIDENCE_SOURCE_SELECTION_CLAIM",
+      `${claim} → ${selectionRules[claim].allowed_source_types.join(", ")}`
+    );
+  });
+
+  opportunityOSDebugger(
+    "Verification",
     "EVIDENCE_SOURCE_SELECTION_SAFETY",
     `External source access: ${contract.safety.external_source_access} | ` +
     `Source retrieval: ${contract.safety.source_retrieval} | ` +
@@ -6739,7 +6743,8 @@ function buildEvidenceSourceSelectionContract(priorityResult) {
   );
 
   return contract;
-  }  
+    }
+        
         /* ==========================================
            RESULT VALUES
            ========================================== */
