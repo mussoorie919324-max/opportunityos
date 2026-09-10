@@ -6624,11 +6624,13 @@ if (window.OODebug) {
   );
 
     }  
-/* =========================================================
+
+  /* =========================================================
    STEP 8AB — EVIDENCE SOURCE SELECTION CONTRACT
    ========================================================= */
 
 function buildEvidenceSourceSelectionContract(priorityResult) {
+
   const step = "8AB";
 
   opportunityOSDebugger(
@@ -6636,14 +6638,6 @@ function buildEvidenceSourceSelectionContract(priorityResult) {
     "EVIDENCE_SOURCE_SELECTION_CONTRACT_ENTRY",
     `STEP ${step} started → Building formal evidence source selection contract.`
   );
-
-  const priorities =
-    priorityResult &&
-    typeof priorityResult === "object" &&
-    priorityResult.priorities &&
-    typeof priorityResult.priorities === "object"
-      ? priorityResult.priorities
-      : {};
 
   const requiredClaims = [
     "earning",
@@ -6653,50 +6647,98 @@ function buildEvidenceSourceSelectionContract(priorityResult) {
     "trend"
   ];
 
+  const priorityItems =
+    Array.isArray(priorityResult)
+      ? priorityResult
+      : [];
+
   const selectionRules = {};
 
   requiredClaims.forEach(claim => {
+
+    const priorityItem =
+      priorityItems.find(
+        item =>
+          item &&
+          item.claimType === claim
+      );
+
     selectionRules[claim] = {
+
       required: true,
-      selection_mode: "highest_priority_eligible_source",
-      allowed_source_types: Array.isArray(priorities[claim])
-        ? [...priorities[claim]]
-        : []
+
+      selection_mode:
+        "highest_priority_eligible_source",
+
+      allowed_source_types:
+        priorityItem &&
+        Array.isArray(
+          priorityItem.prioritizedSourceTypes
+        )
+          ? [...priorityItem.prioritizedSourceTypes]
+          : []
+
     };
+
   });
 
-  const contractReady = requiredClaims.every(
-    claim =>
-      Array.isArray(selectionRules[claim]?.allowed_source_types) &&
-      selectionRules[claim].allowed_source_types.length > 0
-  );
+  const contractReady =
+    requiredClaims.every(
+      claim =>
+        Array.isArray(
+          selectionRules[claim]?.allowed_source_types
+        ) &&
+        selectionRules[claim]
+          .allowed_source_types.length > 0
+    );
 
   const contract = {
+
     step,
-    status: contractReady ? "ready" : "blocked",
 
-    contract_version: "8AB-v1",
+    status:
+      contractReady
+        ? "ready"
+        : "blocked",
 
-    required_claims: [...requiredClaims],
+    contract_version:
+      "8AB-v1",
+
+    required_claims:
+      [...requiredClaims],
 
     selection_policy: {
+
       rule:
         "Select the highest-priority source type that passes the previously defined eligibility and quality gates.",
 
       fallback:
         "Move to the next prioritized source type only if the higher-priority candidate fails eligibility or quality requirements.",
 
-      no_automatic_claim_support: true
+      no_automatic_claim_support:
+        true
+
     },
 
-    selection_rules: selectionRules,
+    selection_rules:
+      selectionRules,
 
     safety: {
-      external_source_access: "NOT_STARTED",
-      source_retrieval: "NOT_STARTED",
-      evidence_insertion: "NOT_STARTED",
-      claim_support: "NOT_CHANGED"
+
+      external_source_access:
+        "NOT_STARTED",
+
+      source_retrieval:
+        "NOT_STARTED",
+
+      evidence_insertion:
+        "NOT_STARTED",
+
+      claim_support:
+        "NOT_CHANGED"
+
     }
+
   };
 
   opportunityOSDebugger(
@@ -6707,23 +6749,21 @@ function buildEvidenceSourceSelectionContract(priorityResult) {
 
   opportunityOSDebugger(
     "Verification",
-    "EVIDENCE_SOURCE_SELECTION_RULE",
-    contract.selection_policy.rule
-  );
-
-  opportunityOSDebugger(
-    "Verification",
     "EVIDENCE_SOURCE_SELECTION_TARGETS",
     `Claims: ${requiredClaims.join(", ")}`
   );
 
-  requiredClaims.forEach(claim => {
-    opportunityOSDebugger(
-      "Verification",
-      "EVIDENCE_SOURCE_SELECTION_CLAIM",
-      `${claim} → ${selectionRules[claim].allowed_source_types.join(", ")}`
-    );
-  });
+  requiredClaims.forEach(
+    claim => {
+
+      opportunityOSDebugger(
+        "Verification",
+        "EVIDENCE_SOURCE_SELECTION_CLAIM",
+        `${claim} → ${selectionRules[claim].allowed_source_types.join(", ")}`
+      );
+
+    }
+  );
 
   opportunityOSDebugger(
     "Verification",
@@ -6743,7 +6783,7 @@ function buildEvidenceSourceSelectionContract(priorityResult) {
   );
 
   return contract;
-    }
+  }
         
         /* ==========================================
            RESULT VALUES
