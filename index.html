@@ -7977,6 +7977,202 @@ if (window.OODebug) {
   );
 
     }    
+/* =========================================================
+   STEP 8AK — EVIDENCE RETRIEVAL REQUEST SPECIFICATION
+   ========================================================= */
+
+let evidenceValidationRetrievalRequest = null;
+
+try {
+
+  debugLog(
+    "8AK",
+    "RETRIEVAL_REQUEST",
+    "Preparing structured evidence retrieval request..."
+  );
+
+  const boundaryReady =
+    evidenceValidationExecutionBoundary &&
+    evidenceValidationExecutionBoundary.status === "ready" &&
+    evidenceValidationExecutionBoundary.allowed === true;
+
+  const authorizedTargets =
+    boundaryReady &&
+    Array.isArray(
+      evidenceValidationExecutionBoundary.targets
+    )
+      ? evidenceValidationExecutionBoundary.targets
+      : [];
+
+  if (!boundaryReady) {
+
+    evidenceValidationRetrievalRequest = {
+      status: "blocked",
+      allowed: false,
+      reason:
+        "Evidence validation execution boundary is not ready.",
+      targets: [],
+      safety: {
+        externalSourceAccess: "NOT_STARTED",
+        sourceRetrieval: "NOT_STARTED",
+        evidenceInsertion: "NOT_STARTED",
+        claimSupport: "NOT_CHANGED"
+      }
+    };
+
+    debugLog(
+      "8AK",
+      "BLOCKED",
+      "Retrieval request blocked because 8AI boundary is not ready."
+    );
+
+  } else {
+
+    const retrievalTargets = authorizedTargets.map(
+      (target) => {
+
+        let requiredDataFields = [];
+
+        if (target.claimType === "earning") {
+          requiredDataFields = [
+            "occupation_or_work_type",
+            "country_or_region",
+            "earnings_measure",
+            "time_period",
+            "source_publication_date"
+          ];
+        }
+
+        if (target.claimType === "competition") {
+          requiredDataFields = [
+            "market_or_work_type",
+            "country_or_region",
+            "competition_measure",
+            "time_period",
+            "source_publication_date"
+          ];
+        }
+
+        if (target.claimType === "difficulty") {
+          requiredDataFields = [
+            "occupation_or_work_type",
+            "required_skills",
+            "qualification_or_entry_requirement",
+            "country_or_region",
+            "source_publication_date"
+          ];
+        }
+
+        if (target.claimType === "risk") {
+          requiredDataFields = [
+            "activity_or_market",
+            "risk_type",
+            "jurisdiction",
+            "restriction_or_warning",
+            "effective_date",
+            "source_publication_date"
+          ];
+        }
+
+        if (target.claimType === "trend") {
+          requiredDataFields = [
+            "indicator",
+            "geography",
+            "time_series",
+            "time_period",
+            "measurement_unit",
+            "source_publication_date"
+          ];
+        }
+
+        return {
+          claimType: target.claimType,
+          selectedSourceType: target.selectedSourceType,
+          fallbackSourceTypes:
+            Array.isArray(target.fallbackSourceTypes)
+              ? target.fallbackSourceTypes
+              : [],
+
+          retrievalStatus: "NOT_STARTED",
+
+          retrievalRequirements: {
+            requiredDataFields: requiredDataFields,
+            sourceIdentityRequired: true,
+            publicationDateRequired: true,
+            geographicContextRequired: true,
+            timeContextRequired: true,
+            directClaimRelevanceRequired: true
+          },
+
+          queryIntent:
+            "Retrieve evidence relevant to the specific opportunity claim without modifying the claim."
+        };
+      }
+    );
+
+    evidenceValidationRetrievalRequest = {
+      status: "ready",
+      allowed: true,
+
+      requestType:
+        "structured_evidence_retrieval",
+
+      sourceSelection:
+        "Use selected source type first; use fallback only if the selected source fails eligibility or quality requirements.",
+
+      targets: retrievalTargets,
+
+      safety: {
+        externalSourceAccess: "NOT_STARTED",
+        sourceRetrieval: "NOT_STARTED",
+        evidenceInsertion: "NOT_STARTED",
+        claimSupport: "NOT_CHANGED"
+      }
+    };
+
+    debugLog(
+      "8AK",
+      "PASS",
+      "Structured retrieval request prepared. " +
+      retrievalTargets.length +
+      " evidence targets ready; no source accessed and no evidence/claim changed."
+    );
+
+  }
+
+} catch (error) {
+
+  evidenceValidationRetrievalRequest = {
+    status: "error",
+    allowed: false,
+    reason:
+      error && error.message
+        ? error.message
+        : String(error),
+
+    targets: [],
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupport: "NOT_CHANGED"
+    }
+  };
+
+  debugLog(
+    "8AK",
+    "ERROR",
+    "8AK retrieval request specification failed: " +
+    (
+      error && error.message
+        ? error.message
+        : String(error)
+    )
+  );
+    }
+        
+    
 /* ==========================================
   RESULT VALUES
    ========================================== */
