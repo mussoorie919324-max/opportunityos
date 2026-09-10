@@ -7075,7 +7075,74 @@ if (window.OODebug) {
   );
 
   }
+/* =========================================================
+   STEP 8AD — EVIDENCE SOURCE SELECTION DECISION CONSUMPTION
+   ========================================================= */
 
+let evidenceSourceSelectionDecisionGate = {
+  status: "blocked",
+  reason: "Evidence source selection decision is not ready.",
+  allowed: false
+};
+
+if (
+  evidenceSourceSelectionDecisionStatus ===
+    "ready" &&
+  Array.isArray(
+    evidenceSourceSelectionDecisions
+  ) &&
+  evidenceSourceSelectionDecisions.length > 0
+) {
+
+  const allSelectionsReady =
+    evidenceSourceSelectionDecisions.every(
+      item =>
+        item &&
+        item.selectionStatus ===
+          "ready" &&
+        item.selectedSourceType
+    );
+
+  if (allSelectionsReady) {
+
+    evidenceSourceSelectionDecisionGate = {
+      status: "ready",
+      reason:
+        "Evidence source selection decisions are ready for downstream processing.",
+      allowed: true
+    };
+
+  }
+
+}
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_SELECTION_DECISION_CONSUMPTION",
+    "STEP 8AD → Decision gate: " +
+      evidenceSourceSelectionDecisionGate.status +
+      " | Allowed: " +
+      evidenceSourceSelectionDecisionGate.allowed,
+    evidenceSourceSelectionDecisionGate.status ===
+      "ready"
+      ? "success"
+      : "warning"
+  );
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_SELECTION_DECISION_CONSUMPTION_REASON",
+    evidenceSourceSelectionDecisionGate.reason,
+    "info"
+  );
+
+}
+
+/* ==========================================
+   RESULT VALUES
+   ========================================== */
 
         /* ==========================================
            RESULT VALUES
