@@ -7497,8 +7497,160 @@ if (window.OODebug) {
   );
 
     }
+/* =========================================================
+   STEP 8AH — CONTROLLED VALIDATION EXECUTION REQUEST
+   ========================================================= */
+
+let evidenceValidationExecutionRequest = {
+  status: "blocked",
+  allowed: false,
+  requestType: "claim_validation",
+  targets: [],
+  reason:
+    "Controlled validation execution request cannot be created."
+};
+
+if (
+  evidenceValidationExecutionAuthorization &&
+  evidenceValidationExecutionAuthorization.status ===
+    "ready" &&
+  evidenceValidationExecutionAuthorization.allowed ===
+    true &&
+  evidenceValidationExecutionPlan &&
+  Array.isArray(
+    evidenceValidationExecutionPlan.targets
+  ) &&
+  evidenceValidationExecutionPlan.targets.length > 0
+) {
+
+  const requestTargets =
+    evidenceValidationExecutionPlan.targets
+      .filter(
+        item =>
+          item &&
+          item.claimType &&
+          item.selectedSourceType
+      )
+      .map(
+        item => ({
+
+          claimType:
+            item.claimType,
+
+          selectedSourceType:
+            item.selectedSourceType,
+
+          fallbackSourceTypes:
+            Array.isArray(
+              item.fallbackSourceTypes
+            )
+              ? [...item.fallbackSourceTypes]
+              : [],
+
+          requestStatus:
+            "pending",
+
+          externalSourceAccess:
+            "NOT_STARTED",
+
+          sourceRetrieval:
+            "NOT_STARTED",
+
+          evidenceInsertion:
+            "NOT_STARTED",
+
+          claimSupport:
+            "NOT_CHANGED"
+
+        })
+      );
+
+  evidenceValidationExecutionRequest = {
+
+    status:
+      requestTargets.length > 0
+        ? "ready"
+        : "blocked",
+
+    allowed:
+      requestTargets.length > 0,
+
+    requestType:
+      "claim_validation",
+
+    targets:
+      requestTargets,
+
+    reason:
+      requestTargets.length > 0
+        ? "Controlled validation execution request created from the authorized 8AG boundary. Actual source access has not started."
+        : "Validation execution request blocked because no valid authorized targets are available."
+
+  };
+
+}
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_EXECUTION_REQUEST_ENTRY",
+    "STEP 8AH started → Creating controlled validation execution request.",
+    "info"
+  );
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_EXECUTION_REQUEST_CHECK",
+    "Request: " +
+      evidenceValidationExecutionRequest.status +
+      " | Allowed: " +
+      evidenceValidationExecutionRequest.allowed +
+      " | Type: " +
+      evidenceValidationExecutionRequest.requestType +
+      " | Targets: " +
+      evidenceValidationExecutionRequest.targets.length,
+    evidenceValidationExecutionRequest.status ===
+      "ready"
+      ? "success"
+      : "warning"
+  );
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_EXECUTION_REQUEST_TARGETS",
+    evidenceValidationExecutionRequest.targets.length > 0
+      ? evidenceValidationExecutionRequest.targets
+          .map(
+            item =>
+              item.claimType +
+              " → " +
+              item.selectedSourceType
+          )
+          .join(" | ")
+      : "Targets: NONE",
+    "info"
+  );
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_EXECUTION_REQUEST_SAFETY",
+    "External source access: NOT_STARTED | Source retrieval: NOT_STARTED | Evidence insertion: NOT_STARTED | Claim support: NOT_CHANGED",
+    "info"
+  );
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_EXECUTION_REQUEST_REASON",
+    evidenceValidationExecutionRequest.reason,
+    "info"
+  );
+
+  }
+ 
+    
 /* ==========================================
-   RESULT VALUES
+  RESULT VALUES
    ========================================== */
       const demand =
   profileValue(
