@@ -7978,153 +7978,79 @@ if (window.OODebug) {
 
     }    
 /* =========================================================
-   STEP 8AK — EVIDENCE RETRIEVAL REQUEST SPECIFICATION
+   STEP 8AK — EVIDENCE RETRIEVAL REQUEST
    ========================================================= */
+
+let evidenceValidationRetrievalRequest = {
+  status: "blocked",
+  allowed: false,
+  requestType: "structured_evidence_retrieval",
+  targets: [],
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupport: "NOT_CHANGED"
+  }
+};
+
 debugLog(
   "8AK",
   "ENTRY",
   "STEP 8AK reached successfully."
 );
-let evidenceValidationRetrievalRequest = null;
 
 try {
 
-  debugLog(
-    "8AK",
-    "RETRIEVAL_REQUEST",
-    "Preparing structured evidence retrieval request..."
-  );
+  const retrievalAuthorizationReady =
+    typeof evidenceValidationRetrievalAuthorization !== "undefined" &&
+    evidenceValidationRetrievalAuthorization !== null &&
+    evidenceValidationRetrievalAuthorization.status === "ready" &&
+    evidenceValidationRetrievalAuthorization.allowed === true;
 
-  const boundaryReady =
-    evidenceValidationExecutionBoundary &&
-    evidenceValidationExecutionBoundary.status === "ready" &&
-    evidenceValidationExecutionBoundary.allowed === true;
+  if (!retrievalAuthorizationReady) {
 
-  const authorizedTargets =
-    boundaryReady &&
-    Array.isArray(
-      evidenceValidationExecutionBoundary.targets
-    )
-      ? evidenceValidationExecutionBoundary.targets
-      : [];
-
-  if (!boundaryReady) {
-
-    evidenceValidationRetrievalRequest = {
-      status: "blocked",
-      allowed: false,
-      reason:
-        "Evidence validation execution boundary is not ready.",
-      targets: [],
-      safety: {
-        externalSourceAccess: "NOT_STARTED",
-        sourceRetrieval: "NOT_STARTED",
-        evidenceInsertion: "NOT_STARTED",
-        claimSupport: "NOT_CHANGED"
-      }
-    };
+    evidenceValidationRetrievalRequest.status = "blocked";
+    evidenceValidationRetrievalRequest.allowed = false;
 
     debugLog(
       "8AK",
       "BLOCKED",
-      "Retrieval request blocked because 8AI boundary is not ready."
+      "8AJ retrieval authorization is not ready."
     );
 
   } else {
 
-    const retrievalTargets = authorizedTargets.map(
-      (target) => {
-
-        let requiredDataFields = [];
-
-        if (target.claimType === "earning") {
-          requiredDataFields = [
-            "occupation_or_work_type",
-            "country_or_region",
-            "earnings_measure",
-            "time_period",
-            "source_publication_date"
-          ];
-        }
-
-        if (target.claimType === "competition") {
-          requiredDataFields = [
-            "market_or_work_type",
-            "country_or_region",
-            "competition_measure",
-            "time_period",
-            "source_publication_date"
-          ];
-        }
-
-        if (target.claimType === "difficulty") {
-          requiredDataFields = [
-            "occupation_or_work_type",
-            "required_skills",
-            "qualification_or_entry_requirement",
-            "country_or_region",
-            "source_publication_date"
-          ];
-        }
-
-        if (target.claimType === "risk") {
-          requiredDataFields = [
-            "activity_or_market",
-            "risk_type",
-            "jurisdiction",
-            "restriction_or_warning",
-            "effective_date",
-            "source_publication_date"
-          ];
-        }
-
-        if (target.claimType === "trend") {
-          requiredDataFields = [
-            "indicator",
-            "geography",
-            "time_series",
-            "time_period",
-            "measurement_unit",
-            "source_publication_date"
-          ];
-        }
-
-        return {
-          claimType: target.claimType,
-          selectedSourceType: target.selectedSourceType,
-          fallbackSourceTypes:
-            Array.isArray(target.fallbackSourceTypes)
-              ? target.fallbackSourceTypes
-              : [],
-
-          retrievalStatus: "NOT_STARTED",
-
-          retrievalRequirements: {
-            requiredDataFields: requiredDataFields,
-            sourceIdentityRequired: true,
-            publicationDateRequired: true,
-            geographicContextRequired: true,
-            timeContextRequired: true,
-            directClaimRelevanceRequired: true
-          },
-
-          queryIntent:
-            "Retrieve evidence relevant to the specific opportunity claim without modifying the claim."
-        };
-      }
-    );
+    const retrievalTargets =
+      Array.isArray(
+        evidenceValidationRetrievalAuthorization.targets
+      )
+        ? evidenceValidationRetrievalAuthorization.targets
+        : [];
 
     evidenceValidationRetrievalRequest = {
       status: "ready",
       allowed: true,
 
-      requestType:
-        "structured_evidence_retrieval",
+      requestType: "structured_evidence_retrieval",
 
-      sourceSelection:
-        "Use selected source type first; use fallback only if the selected source fails eligibility or quality requirements.",
+      targets: retrievalTargets.map(function(target) {
 
-      targets: retrievalTargets,
+        return {
+          claimType: target.claimType || null,
+
+          selectedSourceType:
+            target.selectedSourceType || null,
+
+          fallbackSourceTypes:
+            Array.isArray(target.fallbackSourceTypes)
+              ? target.fallbackSourceTypes
+              : [],
+
+          retrievalStatus: "NOT_STARTED"
+        };
+
+      }),
 
       safety: {
         externalSourceAccess: "NOT_STARTED",
@@ -8136,46 +8062,40 @@ try {
 
     debugLog(
       "8AK",
-      "PASS",
-      "Structured retrieval request prepared. " +
-      retrievalTargets.length +
-      " evidence targets ready; no source accessed and no evidence/claim changed."
+      "CHECK",
+      "Retrieval request: ready | Targets: " +
+      evidenceValidationRetrievalRequest.targets.length
     );
 
+    debugLog(
+      "8AK",
+      "SAFETY",
+      "External source access: NOT_STARTED | Source retrieval: NOT_STARTED | Evidence insertion: NOT_STARTED | Claim support: NOT_CHANGED"
+    );
+
+    debugLog(
+      "8AK",
+      "PASS",
+      "Structured evidence retrieval request prepared. No external source accessed and no evidence or claim support changed."
+    );
   }
 
 } catch (error) {
 
-  evidenceValidationRetrievalRequest = {
-    status: "error",
-    allowed: false,
-    reason:
-      error && error.message
-        ? error.message
-        : String(error),
-
-    targets: [],
-
-    safety: {
-      externalSourceAccess: "NOT_STARTED",
-      sourceRetrieval: "NOT_STARTED",
-      evidenceInsertion: "NOT_STARTED",
-      claimSupport: "NOT_CHANGED"
-    }
-  };
+  evidenceValidationRetrievalRequest.status = "error";
+  evidenceValidationRetrievalRequest.allowed = false;
 
   debugLog(
     "8AK",
     "ERROR",
-    "8AK retrieval request specification failed: " +
+    "8AK failed: " +
     (
       error && error.message
         ? error.message
         : String(error)
     )
   );
-    }
-        
+  }
     
 /* ==========================================
   RESULT VALUES
