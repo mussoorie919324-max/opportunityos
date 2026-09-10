@@ -6166,6 +6166,235 @@ if (window.OODebug) {
   );
 
     }     
+   // ==========================================================
+// STEP 8Z — EVIDENCE SOURCE CANDIDATE RESOLVER
+// ==========================================================
+
+let evidenceSourceCandidates = [];
+
+let evidenceSourceCandidateStatus =
+  "blocked";
+
+let evidenceSourceCandidateReason =
+  "Evidence source candidates cannot be resolved.";
+
+
+/* ==========================================
+   STEP 8Z — CANDIDATE RESOLUTION
+   ========================================== */
+
+if (
+  evidenceSourceEligibilityStatus ===
+    "ready" &&
+  Array.isArray(
+    evidenceSourceEligibility
+  ) &&
+  evidenceSourceEligibility.length > 0
+) {
+
+  evidenceSourceCandidates =
+    evidenceSourceEligibility.map(
+      item => {
+
+        let candidateSourceTypes = [];
+
+
+        if (
+          item.claimType ===
+          "earning"
+        ) {
+
+          candidateSourceTypes = [
+            "official_labor_market_data",
+            "official_platform_earnings_data",
+            "reputable_market_research",
+            "credible_independent_research"
+          ];
+
+        }
+
+
+        if (
+          item.claimType ===
+          "competition"
+        ) {
+
+          candidateSourceTypes = [
+            "official_market_data",
+            "reputable_market_research",
+            "platform_supply_data",
+            "credible_independent_research"
+          ];
+
+        }
+
+
+        if (
+          item.claimType ===
+          "difficulty"
+        ) {
+
+          candidateSourceTypes = [
+            "official_occupation_data",
+            "official_skill_requirements",
+            "reputable_education_or_training_data",
+            "credible_independent_research"
+          ];
+
+        }
+
+
+        if (
+          item.claimType ===
+          "risk"
+        ) {
+
+          candidateSourceTypes = [
+            "official_regulatory_data",
+            "official_platform_policy",
+            "reputable_market_research",
+            "credible_independent_risk_research"
+          ];
+
+        }
+
+
+        if (
+          item.claimType ===
+          "trend"
+        ) {
+
+          candidateSourceTypes = [
+            "official_time_series_data",
+            "official_demand_data",
+            "reputable_market_trend_research",
+            "credible_independent_trend_data"
+          ];
+
+        }
+
+
+        return {
+
+          claimType:
+            item.claimType,
+
+          candidateSourceTypes:
+            candidateSourceTypes,
+
+          candidateStatus:
+            candidateSourceTypes.length > 0
+              ? "ready"
+              : "blocked"
+
+        };
+
+      }
+    );
+
+
+  if (
+    evidenceSourceCandidates.length ===
+      evidenceSourceEligibility.length &&
+    evidenceSourceCandidates.every(
+      item =>
+        item.candidateStatus ===
+        "ready"
+    )
+  ) {
+
+    evidenceSourceCandidateStatus =
+      "ready";
+
+    evidenceSourceCandidateReason =
+      "Evidence source candidates resolved for all validation targets. No external source has been accessed.";
+
+  }
+
+}
+
+
+/* ==========================================
+   STEP 8Z — DEBUGGER
+   ========================================== */
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_CANDIDATE_ENTRY",
+    "STEP 8Z started → Resolving candidate evidence source types.",
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_CANDIDATE_CHECK",
+    "Candidates: " +
+      evidenceSourceCandidateStatus +
+      " | Claims: " +
+      evidenceSourceCandidates.length,
+    evidenceSourceCandidateStatus ===
+      "ready"
+      ? "success"
+      : "warning"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_CANDIDATE_TARGETS",
+    "Claims: " +
+      (
+        evidenceSourceCandidates.length > 0
+          ? evidenceSourceCandidates
+              .map(
+                item =>
+                  item.claimType
+              )
+              .join(", ")
+          : "NONE"
+      ),
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_CANDIDATE_TYPES",
+    evidenceSourceCandidates.length > 0
+      ? evidenceSourceCandidates
+          .map(
+            item =>
+              item.claimType +
+              " → " +
+              item.candidateSourceTypes.join(
+                ", "
+              )
+          )
+          .join(" | ")
+      : "Candidate source types: NONE",
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_CANDIDATE_SAFETY",
+    "External source access: NOT STARTED | Source retrieval: NOT STARTED | Evidence insertion: NOT STARTED | Claim support: NOT CHANGED",
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_CANDIDATE_REASON",
+    evidenceSourceCandidateReason,
+    "info"
+  );
+
+    }  
         /* ==========================================
            RESULT VALUES
            ========================================== */
