@@ -6624,6 +6624,122 @@ if (window.OODebug) {
   );
 
     }  
+     /* =========================================================
+   STEP 8AB — EVIDENCE SOURCE SELECTION CONTRACT
+   ========================================================= */
+
+function buildEvidenceSourceSelectionContract(priorityResult) {
+  const step = "8AB";
+
+  opportunityOSDebugger(
+    "Verification",
+    "EVIDENCE_SOURCE_SELECTION_CONTRACT_ENTRY",
+    `STEP ${step} started → Building formal evidence source selection contract.`
+  );
+
+  const priorities = priorityResult?.priorities || {};
+
+  const requiredClaims = [
+    "earning",
+    "competition",
+    "difficulty",
+    "risk",
+    "trend"
+  ];
+
+  const selectionRules = {
+    earning: {
+      required: true,
+      selection_mode: "highest_priority_eligible_source",
+      allowed_source_types: priorities.earning || []
+    },
+
+    competition: {
+      required: true,
+      selection_mode: "highest_priority_eligible_source",
+      allowed_source_types: priorities.competition || []
+    },
+
+    difficulty: {
+      required: true,
+      selection_mode: "highest_priority_eligible_source",
+      allowed_source_types: priorities.difficulty || []
+    },
+
+    risk: {
+      required: true,
+      selection_mode: "highest_priority_eligible_source",
+      allowed_source_types: priorities.risk || []
+    },
+
+    trend: {
+      required: true,
+      selection_mode: "highest_priority_eligible_source",
+      allowed_source_types: priorities.trend || []
+    }
+  };
+
+  const contractReady = requiredClaims.every(
+    claim =>
+      Array.isArray(selectionRules[claim]?.allowed_source_types) &&
+      selectionRules[claim].allowed_source_types.length > 0
+  );
+
+  const contract = {
+    step,
+    status: contractReady ? "ready" : "blocked",
+
+    contract_version: "8AB-v1",
+
+    required_claims: requiredClaims,
+
+    selection_policy: {
+      rule: "Select the highest-priority source type that passes the previously defined eligibility and quality gates.",
+      fallback: "Move to the next prioritized source type only if the higher-priority candidate fails eligibility or quality requirements.",
+      no_automatic_claim_support: true
+    },
+
+    selection_rules: selectionRules,
+
+    safety: {
+      external_source_access: "NOT_STARTED",
+      source_retrieval: "NOT_STARTED",
+      evidence_insertion: "NOT_STARTED",
+      claim_support: "NOT_CHANGED"
+    }
+  };
+
+  opportunityOSDebugger(
+    "Verification",
+    "EVIDENCE_SOURCE_SELECTION_CONTRACT_CHECK",
+    `Contract: ${contract.status} | Claims: ${requiredClaims.length}`
+  );
+
+  opportunityOSDebugger(
+    "Verification",
+    "EVIDENCE_SOURCE_SELECTION_RULE",
+    contract.selection_policy.rule
+  );
+
+  opportunityOSDebugger(
+    "Verification",
+    "EVIDENCE_SOURCE_SELECTION_SAFETY",
+    `External source access: ${contract.safety.external_source_access} | ` +
+    `Source retrieval: ${contract.safety.source_retrieval} | ` +
+    `Evidence insertion: ${contract.safety.evidence_insertion} | ` +
+    `Claim support: ${contract.safety.claim_support}`
+  );
+
+  opportunityOSDebugger(
+    "Verification",
+    "EVIDENCE_SOURCE_SELECTION_REASON",
+    contractReady
+      ? "Formal source selection contract resolved for all validation targets. No external source has been accessed."
+      : "Source selection contract blocked because one or more validation targets have no prioritized source candidates."
+  );
+
+  return contract;
+  }  
         /* ==========================================
            RESULT VALUES
            ========================================== */
