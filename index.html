@@ -6864,7 +6864,217 @@ function buildEvidenceSourceSelectionContract(priorityResult) {
   return contract;
 
     }
-  
+  /* =========================================================
+   STEP 8AC — EVIDENCE SOURCE SELECTION DECISION
+   ========================================================= */
+
+let evidenceSourceSelectionDecisions = [];
+
+let evidenceSourceSelectionDecisionStatus =
+  "blocked";
+
+let evidenceSourceSelectionDecisionReason =
+  "Evidence source selection decisions cannot be resolved.";
+
+
+/* ==========================================
+   STEP 8AC — DECISION RESOLUTION
+   ========================================== */
+
+if (
+  evidenceSourceSelectionContract &&
+  evidenceSourceSelectionContract.status ===
+    "ready" &&
+  evidenceSourceSelectionContract.selection_rules
+) {
+
+  const selectionRules =
+    evidenceSourceSelectionContract.selection_rules;
+
+  const requiredClaims =
+    Array.isArray(
+      evidenceSourceSelectionContract.required_claims
+    )
+      ? evidenceSourceSelectionContract.required_claims
+      : [];
+
+  evidenceSourceSelectionDecisions =
+    requiredClaims.map(
+      claim => {
+
+        const rule =
+          selectionRules[claim];
+
+        const allowedSourceTypes =
+          rule &&
+          Array.isArray(
+            rule.allowed_source_types
+          )
+            ? rule.allowed_source_types
+            : [];
+
+        const selectedSourceType =
+          allowedSourceTypes.length > 0
+            ? allowedSourceTypes[0]
+            : null;
+
+        const fallbackSourceTypes =
+          allowedSourceTypes.length > 1
+            ? allowedSourceTypes.slice(1)
+            : [];
+
+        return {
+
+          claimType:
+            claim,
+
+          selectionStatus:
+            selectedSourceType
+              ? "ready"
+              : "blocked",
+
+          selectedSourceType:
+            selectedSourceType,
+
+          fallbackSourceTypes:
+            fallbackSourceTypes,
+
+          selectionMode:
+            rule &&
+            rule.selection_mode
+              ? rule.selection_mode
+              : "highest_priority_eligible_source",
+
+          externalSourceAccess:
+            "NOT_STARTED",
+
+          sourceRetrieval:
+            "NOT_STARTED",
+
+          evidenceInsertion:
+            "NOT_STARTED",
+
+          claimSupport:
+            "NOT_CHANGED"
+
+        };
+
+      }
+    );
+
+
+  if (
+    evidenceSourceSelectionDecisions.length ===
+      requiredClaims.length &&
+    evidenceSourceSelectionDecisions.length > 0 &&
+    evidenceSourceSelectionDecisions.every(
+      item =>
+        item.selectionStatus ===
+        "ready"
+    )
+  ) {
+
+    evidenceSourceSelectionDecisionStatus =
+      "ready";
+
+    evidenceSourceSelectionDecisionReason =
+      "Source selection decisions resolved for all validation targets using the highest-priority candidate from the 8AB contract. No external source has been accessed.";
+
+  }
+
+}
+
+
+/* ==========================================
+   STEP 8AC — DEBUGGER
+   ========================================== */
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_DECISION_ENTRY",
+    "STEP 8AC started → Resolving evidence source selection decisions.",
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_DECISION_CHECK",
+    "Decision: " +
+      evidenceSourceSelectionDecisionStatus +
+      " | Claims: " +
+      evidenceSourceSelectionDecisions.length,
+    evidenceSourceSelectionDecisionStatus ===
+      "ready"
+      ? "success"
+      : "warning"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_DECISION_TARGETS",
+    "Claims: " +
+      (
+        evidenceSourceSelectionDecisions.length > 0
+          ? evidenceSourceSelectionDecisions
+              .map(
+                item =>
+                  item.claimType
+              )
+              .join(", ")
+          : "NONE"
+      ),
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_DECISION_SELECTIONS",
+    evidenceSourceSelectionDecisions.length > 0
+      ? evidenceSourceSelectionDecisions
+          .map(
+            item =>
+              item.claimType +
+              " → SELECTED: " +
+              (
+                item.selectedSourceType ||
+                "NONE"
+              ) +
+              (
+                item.fallbackSourceTypes.length > 0
+                  ? " | FALLBACK: " +
+                    item.fallbackSourceTypes.join(
+                      " > "
+                    )
+                  : ""
+              )
+          )
+          .join(" | ")
+      : "Selections: NONE",
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_DECISION_SAFETY",
+    "External source access: NOT_STARTED | Source retrieval: NOT_STARTED | Evidence insertion: NOT_STARTED | Claim support: NOT_CHANGED",
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_DECISION_REASON",
+    evidenceSourceSelectionDecisionReason,
+    "info"
+  );
+
+  }
         
         /* ==========================================
            RESULT VALUES
