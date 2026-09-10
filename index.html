@@ -7647,7 +7647,174 @@ if (window.OODebug) {
   );
 
   }
- 
+/* =========================================================
+   STEP 8AI — CONTROLLED VALIDATION EXECUTION BOUNDARY
+   ========================================================= */
+
+let evidenceValidationExecutionBoundary = {
+  status: "blocked",
+  allowed: false,
+  requestType: "claim_validation",
+  targets: [],
+  reason:
+    "Controlled validation execution boundary is not authorized."
+};
+
+
+/* ==========================================
+   STEP 8AI — BOUNDARY CHECK
+   ========================================== */
+
+if (
+  evidenceValidationExecutionRequest &&
+  evidenceValidationExecutionRequest.status ===
+    "ready" &&
+  evidenceValidationExecutionRequest.allowed ===
+    true &&
+  evidenceValidationExecutionRequest.requestType ===
+    "claim_validation" &&
+  Array.isArray(
+    evidenceValidationExecutionRequest.targets
+  ) &&
+  evidenceValidationExecutionRequest.targets.length > 0
+) {
+
+  const authorizedTargets =
+    evidenceValidationExecutionRequest.targets
+      .filter(
+        item =>
+          item &&
+          item.claimType &&
+          item.selectedSourceType
+      )
+      .map(
+        item => ({
+
+          claimType:
+            item.claimType,
+
+          selectedSourceType:
+            item.selectedSourceType,
+
+          fallbackSourceTypes:
+            Array.isArray(
+              item.fallbackSourceTypes
+            )
+              ? [...item.fallbackSourceTypes]
+              : [],
+
+          boundaryStatus:
+            "authorized",
+
+          externalSourceAccess:
+            "NOT_STARTED",
+
+          sourceRetrieval:
+            "NOT_STARTED",
+
+          evidenceInsertion:
+            "NOT_STARTED",
+
+          claimSupport:
+            "NOT_CHANGED"
+
+        })
+      );
+
+  const boundaryReady =
+    authorizedTargets.length ===
+      evidenceValidationExecutionRequest.targets.length &&
+    authorizedTargets.length > 0;
+
+  evidenceValidationExecutionBoundary = {
+
+    status:
+      boundaryReady
+        ? "ready"
+        : "blocked",
+
+    allowed:
+      boundaryReady,
+
+    requestType:
+      "claim_validation",
+
+    targets:
+      authorizedTargets,
+
+    reason:
+      boundaryReady
+        ? "Controlled validation execution boundary established from the authorized 8AH request. No external source has been accessed and no evidence or claim support has been changed."
+        : "Validation execution boundary blocked because one or more authorized targets are invalid."
+
+  };
+
+}
+
+
+/* ==========================================
+   STEP 8AI — DEBUGGER
+   ========================================== */
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_EXECUTION_BOUNDARY_ENTRY",
+    "STEP 8AI started → Establishing controlled validation execution boundary.",
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_EXECUTION_BOUNDARY_CHECK",
+    "Boundary: " +
+      evidenceValidationExecutionBoundary.status +
+      " | Allowed: " +
+      evidenceValidationExecutionBoundary.allowed +
+      " | Targets: " +
+      evidenceValidationExecutionBoundary.targets.length,
+    evidenceValidationExecutionBoundary.status ===
+      "ready"
+      ? "success"
+      : "warning"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_EXECUTION_BOUNDARY_TARGETS",
+    evidenceValidationExecutionBoundary.targets.length > 0
+      ? evidenceValidationExecutionBoundary.targets
+          .map(
+            item =>
+              item.claimType +
+              " → " +
+              item.selectedSourceType
+          )
+          .join(" | ")
+      : "Targets: NONE",
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_EXECUTION_BOUNDARY_SAFETY",
+    "External source access: NOT_STARTED | Source retrieval: NOT_STARTED | Evidence insertion: NOT_STARTED | Claim support: NOT_CHANGED",
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_EXECUTION_BOUNDARY_REASON",
+    evidenceValidationExecutionBoundary.reason,
+    "info"
+  );
+
+  } 
     
 /* ==========================================
   RESULT VALUES
