@@ -7234,10 +7234,182 @@ if (window.OODebug) {
   );
 
 }
+/* =========================================================
+   STEP 8AF — VALIDATION EXECUTION PLAN
+   ========================================================= */
+
+let evidenceValidationExecutionPlan = {
+  status: "blocked",
+  allowed: false,
+  targets: [],
+  executionOrder: [],
+  reason:
+    "Validation execution plan cannot be created."
+};
+
+if (
+  evidenceValidationReadiness &&
+  evidenceValidationReadiness.status ===
+    "ready" &&
+  evidenceValidationReadiness.allowed ===
+    true &&
+  Array.isArray(
+    evidenceValidationReadiness.targets
+  )
+) {
+
+  const validationTargets =
+    evidenceValidationReadiness.targets
+      .filter(
+        item =>
+          item &&
+          item.claimType &&
+          item.selectedSourceType
+      )
+      .map(
+        (item, index) => ({
+
+          order:
+            index + 1,
+
+          claimType:
+            item.claimType,
+
+          selectedSourceType:
+            item.selectedSourceType,
+
+          fallbackSourceTypes:
+            Array.isArray(
+              item.fallbackSourceTypes
+            )
+              ? item.fallbackSourceTypes
+              : [],
+
+          validationStatus:
+            "pending",
+
+          externalSourceAccess:
+            "NOT_STARTED",
+
+          sourceRetrieval:
+            "NOT_STARTED",
+
+          evidenceInsertion:
+            "NOT_STARTED",
+
+          claimSupport:
+            "NOT_CHANGED"
+
+        })
+      );
+
+  evidenceValidationExecutionPlan = {
+
+    status:
+      validationTargets.length > 0
+        ? "ready"
+        : "blocked",
+
+    allowed:
+      validationTargets.length > 0,
+
+    targets:
+      validationTargets,
+
+    executionOrder:
+      validationTargets.map(
+        item => item.claimType
+      ),
+
+    reason:
+      validationTargets.length > 0
+        ? "Validation execution plan created from 8AE readiness. No external source has been accessed and no claim support has been changed."
+        : "Validation execution plan blocked because no valid validation targets were available."
+
+  };
+
+}
+
 
 /* ==========================================
-   RESULT VALUES
+   STEP 8AF — DEBUGGER
    ========================================== */
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_EXECUTION_PLAN_ENTRY",
+    "STEP 8AF started → Building controlled validation execution plan.",
+    "info"
+  );
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_EXECUTION_PLAN_CHECK",
+    "Plan: " +
+      evidenceValidationExecutionPlan.status +
+      " | Allowed: " +
+      evidenceValidationExecutionPlan.allowed +
+      " | Targets: " +
+      evidenceValidationExecutionPlan.targets.length,
+    evidenceValidationExecutionPlan.status ===
+      "ready"
+      ? "success"
+      : "warning"
+  );
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_EXECUTION_PLAN_ORDER",
+    evidenceValidationExecutionPlan.executionOrder.length > 0
+      ? evidenceValidationExecutionPlan.executionOrder.join(
+          " → "
+        )
+      : "NONE",
+    "info"
+  );
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_EXECUTION_PLAN_TARGETS",
+    evidenceValidationExecutionPlan.targets.length > 0
+      ? evidenceValidationExecutionPlan.targets
+          .map(
+            item =>
+              item.claimType +
+              " → " +
+              item.selectedSourceType +
+              (
+                item.fallbackSourceTypes.length > 0
+                  ? " | FALLBACK: " +
+                    item.fallbackSourceTypes.join(
+                      " > "
+                    )
+                  : ""
+              )
+          )
+          .join(" | ")
+      : "Targets: NONE",
+    "info"
+  );
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_EXECUTION_PLAN_SAFETY",
+    "External source access: NOT_STARTED | Source retrieval: NOT_STARTED | Evidence insertion: NOT_STARTED | Claim support: NOT_CHANGED",
+    "info"
+  );
+
+  OODebug.log(
+    "Verification",
+    "VALIDATION_EXECUTION_PLAN_REASON",
+    evidenceValidationExecutionPlan.reason,
+    "info"
+  );
+
+}
+
 /* ==========================================
    RESULT VALUES
    ========================================== */
