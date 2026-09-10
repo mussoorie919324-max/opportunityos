@@ -6695,11 +6695,16 @@ function buildEvidenceSourceSelectionContract(priorityResult) {
 
   const step = "8AB";
 
-  opportunityOSDebugger(
+  if (window.OODebug) {
+
+  OODebug.log(
     "Verification",
     "EVIDENCE_SOURCE_SELECTION_CONTRACT_ENTRY",
-    `STEP ${step} started → Building formal evidence source selection contract.`
+    `STEP ${step} started → Building formal evidence source selection contract.`,
+    "info"
   );
+
+    }
 
   const requiredClaims = [
     "earning",
