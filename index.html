@@ -7077,6 +7077,7 @@ if (window.OODebug) {
   }
  /* =========================================================
    STEP 8AD — EVIDENCE SOURCE RESOLUTION CONTRACT
+   FIXED CONNECTION TO STEP 8AC
    ========================================================= */
 
 let evidenceSourceResolutionContract = {
@@ -7116,23 +7117,14 @@ if (window.OODebug) {
   );
 }
 
-if (
-  !sourceDecisionContract ||
-  sourceDecisionContract.status !== "ready"
-) {
+/* STEP 8AC → STEP 8AD CONNECTION */
+
+if (!sourceDecisionContract) {
 
   evidenceSourceResolutionContract.status = "blocked";
 
   evidenceSourceResolutionContract.reason =
-    "Evidence source selection decisions are not ready.";
-
-  if (window.OODebug) {
-    OODebug.log(
-      "Verification",
-      "EVIDENCE_SOURCE_RESOLUTION_CHECK",
-      "Resolution: blocked → STEP 8AC source selection is not ready."
-    );
-  }
+    "STEP 8AC decision object is unavailable.";
 
 } else {
 
@@ -7142,7 +7134,9 @@ if (
       : [];
 
   const decisions =
-    sourceDecisionContract.decisions || {};
+    sourceDecisionContract.decisions ||
+    sourceDecisionContract.selections ||
+    {};
 
   evidenceSourceResolutionContract.requiredClaims =
     [...requiredClaims];
@@ -7166,12 +7160,19 @@ if (
     const decision = decisions[claim] || {};
 
     const selectedSource =
-      decision.selectedSourceType || null;
+      decision.selectedSourceType ||
+      decision.selected_source_type ||
+      decision.selected ||
+      null;
 
     const fallbackSources =
       Array.isArray(decision.fallbackSourceTypes)
         ? [...decision.fallbackSourceTypes]
-        : [];
+        : (
+            Array.isArray(decision.fallback_source_types)
+              ? [...decision.fallback_source_types]
+              : []
+          );
 
     const resolutionStatus =
       selectedSource
@@ -7189,6 +7190,7 @@ if (
       resolutionStatus: resolutionStatus,
       resolutionMode:
         decision.selectionMode ||
+        decision.selection_mode ||
         evidenceSourceResolutionContract.resolutionMode
     };
 
@@ -7198,39 +7200,44 @@ if (
         "EVIDENCE_SOURCE_RESOLUTION_ITEM",
         claim +
           " → " +
-          (selectedSource
-            ? "RESOLVED: " + selectedSource
-            : "BLOCKED") +
-          (fallbackSources.length
-            ? " | FALLBACK: " + fallbackSources.join(" > ")
-            : "")
+          (
+            selectedSource
+              ? "RESOLVED: " + selectedSource
+              : "BLOCKED"
+          ) +
+          (
+            fallbackSources.length
+              ? " | FALLBACK: " + fallbackSources.join(" > ")
+              : ""
+          )
       );
     }
   });
 
   evidenceSourceResolutionContract.status =
-    allResolved ? "ready" : "blocked";
+    allResolved && requiredClaims.length > 0
+      ? "ready"
+      : "blocked";
 
   evidenceSourceResolutionContract.reason =
-    allResolved
+    evidenceSourceResolutionContract.status === "ready"
       ? "Evidence source resolution contract created for all validation targets. No external source has been accessed."
       : "One or more validation targets do not have a resolved evidence source.";
-
-  if (window.OODebug) {
-    OODebug.log(
-      "Verification",
-      "EVIDENCE_SOURCE_RESOLUTION_CHECK",
-      "Resolution: " +
-        evidenceSourceResolutionContract.status +
-        " | Claims: " +
-        requiredClaims.length
-    );
-  }
 }
 
-/* SAFETY — STEP 8AD DOES NOT ACCESS EXTERNAL SOURCES */
+/* FINAL SAFETY STATE */
 
 if (window.OODebug) {
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_RESOLUTION_CHECK",
+    "Resolution: " +
+      evidenceSourceResolutionContract.status +
+      " | Claims: " +
+      evidenceSourceResolutionContract.requiredClaims.length
+  );
+
   OODebug.log(
     "Verification",
     "EVIDENCE_SOURCE_RESOLUTION_SAFETY",
@@ -7242,7 +7249,7 @@ if (window.OODebug) {
     "EVIDENCE_SOURCE_RESOLUTION_REASON",
     evidenceSourceResolutionContract.reason
   );
-    }       
+  }      
         /* ==========================================
            RESULT VALUES
            ========================================== */
