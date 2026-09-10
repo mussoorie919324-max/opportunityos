@@ -6395,6 +6395,235 @@ if (window.OODebug) {
   );
 
     }  
+      // ==========================================================
+// STEP 8AA — EVIDENCE SOURCE CANDIDATE PRIORITIZER
+// ==========================================================
+
+let evidenceSourceCandidatePriorities = [];
+
+let evidenceSourceCandidatePriorityStatus =
+  "blocked";
+
+let evidenceSourceCandidatePriorityReason =
+  "Evidence source candidate priorities cannot be resolved.";
+
+
+/* ==========================================
+   STEP 8AA — PRIORITY RESOLUTION
+   ========================================== */
+
+if (
+  evidenceSourceCandidateStatus ===
+    "ready" &&
+  Array.isArray(
+    evidenceSourceCandidates
+  ) &&
+  evidenceSourceCandidates.length > 0
+) {
+
+  evidenceSourceCandidatePriorities =
+    evidenceSourceCandidates.map(
+      item => {
+
+        let prioritizedSourceTypes = [];
+
+
+        if (
+          item.claimType ===
+          "earning"
+        ) {
+
+          prioritizedSourceTypes = [
+            "official_labor_market_data",
+            "official_platform_earnings_data",
+            "reputable_market_research",
+            "credible_independent_research"
+          ];
+
+        }
+
+
+        if (
+          item.claimType ===
+          "competition"
+        ) {
+
+          prioritizedSourceTypes = [
+            "official_market_data",
+            "platform_supply_data",
+            "reputable_market_research",
+            "credible_independent_research"
+          ];
+
+        }
+
+
+        if (
+          item.claimType ===
+          "difficulty"
+        ) {
+
+          prioritizedSourceTypes = [
+            "official_occupation_data",
+            "official_skill_requirements",
+            "reputable_education_or_training_data",
+            "credible_independent_research"
+          ];
+
+        }
+
+
+        if (
+          item.claimType ===
+          "risk"
+        ) {
+
+          prioritizedSourceTypes = [
+            "official_regulatory_data",
+            "official_platform_policy",
+            "reputable_market_research",
+            "credible_independent_risk_research"
+          ];
+
+        }
+
+
+        if (
+          item.claimType ===
+          "trend"
+        ) {
+
+          prioritizedSourceTypes = [
+            "official_time_series_data",
+            "official_demand_data",
+            "reputable_market_trend_research",
+            "credible_independent_trend_data"
+          ];
+
+        }
+
+
+        return {
+
+          claimType:
+            item.claimType,
+
+          prioritizedSourceTypes:
+            prioritizedSourceTypes,
+
+          priorityStatus:
+            prioritizedSourceTypes.length > 0
+              ? "ready"
+              : "blocked"
+
+        };
+
+      }
+    );
+
+
+  if (
+    evidenceSourceCandidatePriorities.length ===
+      evidenceSourceCandidates.length &&
+    evidenceSourceCandidatePriorities.every(
+      item =>
+        item.priorityStatus ===
+        "ready"
+    )
+  ) {
+
+    evidenceSourceCandidatePriorityStatus =
+      "ready";
+
+    evidenceSourceCandidatePriorityReason =
+      "Evidence source candidate priorities resolved for all validation targets. No external source has been accessed.";
+
+  }
+
+}
+
+
+/* ==========================================
+   STEP 8AA — DEBUGGER
+   ========================================== */
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_PRIORITY_ENTRY",
+    "STEP 8AA started → Prioritizing candidate evidence source types.",
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_PRIORITY_CHECK",
+    "Priority: " +
+      evidenceSourceCandidatePriorityStatus +
+      " | Claims: " +
+      evidenceSourceCandidatePriorities.length,
+    evidenceSourceCandidatePriorityStatus ===
+      "ready"
+      ? "success"
+      : "warning"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_PRIORITY_TARGETS",
+    "Claims: " +
+      (
+        evidenceSourceCandidatePriorities.length > 0
+          ? evidenceSourceCandidatePriorities
+              .map(
+                item =>
+                  item.claimType
+              )
+              .join(", ")
+          : "NONE"
+      ),
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_PRIORITY_ORDER",
+    evidenceSourceCandidatePriorities.length > 0
+      ? evidenceSourceCandidatePriorities
+          .map(
+            item =>
+              item.claimType +
+              " → " +
+              item.prioritizedSourceTypes.join(
+                " > "
+              )
+          )
+          .join(" | ")
+      : "Priority order: NONE",
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_PRIORITY_SAFETY",
+    "External source access: NOT STARTED | Source retrieval: NOT STARTED | Evidence insertion: NOT STARTED | Claim support: NOT CHANGED",
+    "info"
+  );
+
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_SOURCE_PRIORITY_REASON",
+    evidenceSourceCandidatePriorityReason,
+    "info"
+  );
+
+    }  
         /* ==========================================
            RESULT VALUES
            ========================================== */
