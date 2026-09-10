@@ -6697,14 +6697,14 @@ function buildEvidenceSourceSelectionContract(priorityResult) {
 
   if (window.OODebug) {
 
-  OODebug.log(
-    "Verification",
-    "EVIDENCE_SOURCE_SELECTION_CONTRACT_ENTRY",
-    `STEP ${step} started → Building formal evidence source selection contract.`,
-    "info"
-  );
+    OODebug.log(
+      "Verification",
+      "EVIDENCE_SOURCE_SELECTION_CONTRACT_ENTRY",
+      `STEP ${step} started → Building formal evidence source selection contract.`,
+      "info"
+    );
 
-    }
+  }
 
   const requiredClaims = [
     "earning",
@@ -6808,49 +6808,63 @@ function buildEvidenceSourceSelectionContract(priorityResult) {
 
   };
 
-  opportunityOSDebugger(
-    "Verification",
-    "EVIDENCE_SOURCE_SELECTION_CONTRACT_CHECK",
-    `Contract: ${contract.status} | Claims: ${requiredClaims.length}`
-  );
+  if (window.OODebug) {
 
-  opportunityOSDebugger(
-    "Verification",
-    "EVIDENCE_SOURCE_SELECTION_TARGETS",
-    `Claims: ${requiredClaims.join(", ")}`
-  );
+    OODebug.log(
+      "Verification",
+      "EVIDENCE_SOURCE_SELECTION_CONTRACT_CHECK",
+      `Contract: ${contract.status} | Claims: ${requiredClaims.length}`,
+      contract.status ===
+        "ready"
+        ? "success"
+        : "warning"
+    );
 
-  requiredClaims.forEach(
-    claim => {
+    OODebug.log(
+      "Verification",
+      "EVIDENCE_SOURCE_SELECTION_TARGETS",
+      `Claims: ${requiredClaims.join(", ")}`,
+      "info"
+    );
 
-      opportunityOSDebugger(
-        "Verification",
-        "EVIDENCE_SOURCE_SELECTION_CLAIM",
-        `${claim} → ${selectionRules[claim].allowed_source_types.join(", ")}`
-      );
+    requiredClaims.forEach(
+      claim => {
 
-    }
-  );
+        OODebug.log(
+          "Verification",
+          "EVIDENCE_SOURCE_SELECTION_CLAIM",
+          `${claim} → ${selectionRules[claim].allowed_source_types.join(", ")}`,
+          "info"
+        );
 
-  opportunityOSDebugger(
-    "Verification",
-    "EVIDENCE_SOURCE_SELECTION_SAFETY",
-    `External source access: ${contract.safety.external_source_access} | ` +
-    `Source retrieval: ${contract.safety.source_retrieval} | ` +
-    `Evidence insertion: ${contract.safety.evidence_insertion} | ` +
-    `Claim support: ${contract.safety.claim_support}`
-  );
+      }
+    );
 
-  opportunityOSDebugger(
-    "Verification",
-    "EVIDENCE_SOURCE_SELECTION_REASON",
-    contractReady
-      ? "Formal source selection contract resolved for all validation targets. No external source has been accessed."
-      : "Source selection contract blocked because one or more validation targets have no prioritized source candidates."
-  );
+    OODebug.log(
+      "Verification",
+      "EVIDENCE_SOURCE_SELECTION_SAFETY",
+      `External source access: ${contract.safety.external_source_access} | ` +
+      `Source retrieval: ${contract.safety.source_retrieval} | ` +
+      `Evidence insertion: ${contract.safety.evidence_insertion} | ` +
+      `Claim support: ${contract.safety.claim_support}`,
+      "info"
+    );
+
+    OODebug.log(
+      "Verification",
+      "EVIDENCE_SOURCE_SELECTION_REASON",
+      contractReady
+        ? "Formal source selection contract resolved for all validation targets. No external source has been accessed."
+        : "Source selection contract blocked because one or more validation targets have no prioritized source candidates.",
+      "info"
+    );
+
+  }
 
   return contract;
-  }
+
+    }
+  
         
         /* ==========================================
            RESULT VALUES
