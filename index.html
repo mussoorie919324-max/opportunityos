@@ -7139,16 +7139,109 @@ if (window.OODebug) {
   );
 
 }
+/* =========================================================
+   STEP 8AE — DOWNSTREAM VALIDATION READINESS
+   ========================================================= */
+
+let evidenceValidationReadiness = {
+  status: "blocked",
+  allowed: false,
+  targets: [],
+  reason:
+    "Evidence validation is not ready for downstream processing."
+};
+
+if (
+  evidenceSourceSelectionDecisionGate &&
+  evidenceSourceSelectionDecisionGate.status ===
+    "ready" &&
+  evidenceSourceSelectionDecisionGate.allowed ===
+    true &&
+  Array.isArray(
+    evidenceSourceSelectionDecisions
+  )
+) {
+
+  const readyTargets =
+    evidenceSourceSelectionDecisions
+      .filter(
+        item =>
+          item &&
+          item.selectionStatus ===
+            "ready" &&
+          item.selectedSourceType
+      )
+      .map(
+        item => ({
+          claimType:
+            item.claimType,
+
+          selectedSourceType:
+            item.selectedSourceType,
+
+          fallbackSourceTypes:
+            Array.isArray(
+              item.fallbackSourceTypes
+            )
+              ? item.fallbackSourceTypes
+              : []
+        })
+      );
+
+  evidenceValidationReadiness = {
+
+    status:
+      readyTargets.length > 0
+        ? "ready"
+        : "blocked",
+
+    allowed:
+      readyTargets.length > 0,
+
+    targets:
+      readyTargets,
+
+    reason:
+      readyTargets.length > 0
+        ? "Validation targets are ready for downstream evidence processing. No external source has been accessed."
+        : "No valid evidence validation targets are available."
+  };
+
+}
+
+if (window.OODebug) {
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_VALIDATION_READINESS",
+    "STEP 8AE → Readiness: " +
+      evidenceValidationReadiness.status +
+      " | Allowed: " +
+      evidenceValidationReadiness.allowed +
+      " | Targets: " +
+      evidenceValidationReadiness.targets.length,
+    evidenceValidationReadiness.status ===
+      "ready"
+      ? "success"
+      : "warning"
+  );
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_VALIDATION_READINESS_REASON",
+    evidenceValidationReadiness.reason,
+    "info"
+  );
+
+}
 
 /* ==========================================
    RESULT VALUES
    ========================================== */
-
-        /* ==========================================
-           RESULT VALUES
-           ========================================== */
-
-        const demand =
+/* ==========================================
+   RESULT VALUES
+   ========================================== */
+      const demand =
   profileValue(
     result.profile,
     "demand"
