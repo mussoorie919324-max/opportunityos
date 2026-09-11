@@ -8137,7 +8137,167 @@ if (
   );
 
   }
-    
+/* =========================================================
+   STEP 8AL — CONTROLLED RETRIEVAL EXECUTION BOUNDARY
+   ========================================================= */
+
+let evidenceControlledRetrievalExecution = {
+  status: "blocked",
+  allowed: false,
+  requestType: "controlled_evidence_retrieval_execution",
+
+  targets: [],
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupport: "NOT_CHANGED"
+  }
+};
+
+try {
+
+  const retrievalRequestReady =
+    typeof evidenceValidationRetrievalRequest !== "undefined" &&
+    evidenceValidationRetrievalRequest !== null &&
+    evidenceValidationRetrievalRequest.status === "ready" &&
+    evidenceValidationRetrievalRequest.allowed === true;
+
+  if (retrievalRequestReady) {
+
+    const requestedTargets =
+      Array.isArray(
+        evidenceValidationRetrievalRequest.targets
+      )
+        ? evidenceValidationRetrievalRequest.targets
+        : [];
+
+    evidenceControlledRetrievalExecution = {
+      status: "ready",
+      allowed: true,
+
+      requestType:
+        "controlled_evidence_retrieval_execution",
+
+      targets: requestedTargets.map(function(target) {
+
+        return {
+          claimType: target.claimType || null,
+
+          selectedSourceType:
+            target.selectedSourceType || null,
+
+          fallbackSourceTypes:
+            Array.isArray(target.fallbackSourceTypes)
+              ? target.fallbackSourceTypes
+              : [],
+
+          executionStatus: "NOT_STARTED"
+        };
+
+      }),
+
+      safety: {
+        externalSourceAccess: "NOT_STARTED",
+        sourceRetrieval: "NOT_STARTED",
+        evidenceInsertion: "NOT_STARTED",
+        claimSupport: "NOT_CHANGED"
+      }
+    };
+
+  } else {
+
+    evidenceControlledRetrievalExecution.status =
+      "blocked";
+
+    evidenceControlledRetrievalExecution.allowed =
+      false;
+
+  }
+
+} catch (error) {
+
+  evidenceControlledRetrievalExecution = {
+    status: "error",
+    allowed: false,
+
+    requestType:
+      "controlled_evidence_retrieval_execution",
+
+    targets: [],
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupport: "NOT_CHANGED"
+    }
+  };
+
+}
+
+
+/* =========================================================
+   STEP 8AL — DEBUGGER CONNECTION
+   ========================================================= */
+
+if (
+  typeof window !== "undefined" &&
+  window.OODebug &&
+  typeof window.OODebug.log === "function"
+) {
+
+  OODebug.log(
+    "Verification",
+    "CONTROLLED_RETRIEVAL_EXECUTION_ENTRY",
+    "STEP 8AL started → Preparing controlled evidence retrieval execution boundary."
+  );
+
+  OODebug.log(
+    "Verification",
+    "CONTROLLED_RETRIEVAL_EXECUTION_CHECK",
+    "Execution boundary: " +
+      evidenceControlledRetrievalExecution.status +
+      " | Allowed: " +
+      evidenceControlledRetrievalExecution.allowed +
+      " | Targets: " +
+      evidenceControlledRetrievalExecution.targets.length
+  );
+
+  OODebug.log(
+    "Verification",
+    "CONTROLLED_RETRIEVAL_EXECUTION_TARGETS",
+    "Claims: " +
+      evidenceControlledRetrievalExecution.targets
+        .map(function(target) {
+          return target.claimType;
+        })
+        .join(", ")
+  );
+
+  OODebug.log(
+    "Verification",
+    "CONTROLLED_RETRIEVAL_EXECUTION_SAFETY",
+    "External source access: " +
+      evidenceControlledRetrievalExecution.safety.externalSourceAccess +
+      " | Source retrieval: " +
+      evidenceControlledRetrievalExecution.safety.sourceRetrieval +
+      " | Evidence insertion: " +
+      evidenceControlledRetrievalExecution.safety.evidenceInsertion +
+      " | Claim support: " +
+      evidenceControlledRetrievalExecution.safety.claimSupport
+  );
+
+  OODebug.log(
+    "Verification",
+    "CONTROLLED_RETRIEVAL_EXECUTION_REASON",
+    evidenceControlledRetrievalExecution.allowed === true
+      ? "Controlled retrieval execution boundary prepared. Actual external retrieval has NOT started."
+      : "Controlled retrieval execution blocked because 8AK retrieval request is not ready."
+  );
+
+    }    
 /* ==========================================
   RESULT VALUES
    ========================================== */
