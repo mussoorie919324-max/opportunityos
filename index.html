@@ -9053,7 +9053,272 @@ if (
   );
 
   }
-        
+ /* =========================================================
+   STEP 8AP — RETRIEVAL EXECUTION PREPARATION / DISPATCH BOUNDARY
+   ========================================================= */
+
+let evidenceRetrievalDispatchBoundary = {
+  status: "blocked",
+  allowed: false,
+
+  requestType:
+    "controlled_evidence_retrieval_dispatch",
+
+  searchQuery: null,
+
+  targets: [],
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupport: "NOT_CHANGED"
+  }
+};
+
+try {
+
+  const retrievalTaskValidationReady =
+    typeof evidenceRetrievalTaskValidation !== "undefined" &&
+    evidenceRetrievalTaskValidation !== null &&
+    evidenceRetrievalTaskValidation.status === "ready" &&
+    evidenceRetrievalTaskValidation.allowed === true;
+
+  if (retrievalTaskValidationReady) {
+
+    const validatedTargets =
+      Array.isArray(
+        evidenceRetrievalTaskValidation.targets
+      )
+        ? evidenceRetrievalTaskValidation.targets
+        : [];
+
+    const dispatchReady =
+      validatedTargets.length > 0 &&
+      validatedTargets.every(function(target) {
+        return (
+          target.validationStatus === "VALID" &&
+          !!target.claimType &&
+          !!target.selectedSourceType
+        );
+      });
+
+    if (dispatchReady) {
+
+      evidenceRetrievalDispatchBoundary = {
+
+        status: "ready",
+        allowed: true,
+
+        requestType:
+          "controlled_evidence_retrieval_dispatch",
+
+        searchQuery:
+          evidenceRetrievalTaskValidation.searchQuery || null,
+
+        targets:
+          validatedTargets.map(function(target) {
+
+            return {
+
+              claimType:
+                target.claimType || null,
+
+              selectedSourceType:
+                target.selectedSourceType || null,
+
+              fallbackSourceTypes:
+                Array.isArray(
+                  target.fallbackSourceTypes
+                )
+                  ? target.fallbackSourceTypes
+                  : [],
+
+              validationStatus:
+                target.validationStatus || "UNKNOWN",
+
+              dispatchStatus:
+                "NOT_STARTED",
+
+              retrievalStatus:
+                "NOT_STARTED",
+
+              evidenceStatus:
+                "NOT_STARTED",
+
+              claimSupportStatus:
+                "NOT_CHANGED"
+            };
+
+          }),
+
+        safety: {
+
+          externalSourceAccess:
+            "NOT_STARTED",
+
+          sourceRetrieval:
+            "NOT_STARTED",
+
+          evidenceInsertion:
+            "NOT_STARTED",
+
+          claimSupport:
+            "NOT_CHANGED"
+        }
+      };
+
+    } else {
+
+      evidenceRetrievalDispatchBoundary.status =
+        "blocked";
+
+      evidenceRetrievalDispatchBoundary.allowed =
+        false;
+
+    }
+
+  } else {
+
+    evidenceRetrievalDispatchBoundary.status =
+      "blocked";
+
+    evidenceRetrievalDispatchBoundary.allowed =
+      false;
+
+  }
+
+} catch (error) {
+
+  evidenceRetrievalDispatchBoundary = {
+
+    status: "error",
+    allowed: false,
+
+    requestType:
+      "controlled_evidence_retrieval_dispatch",
+
+    searchQuery: null,
+
+    targets: [],
+
+    safety: {
+
+      externalSourceAccess:
+        "NOT_STARTED",
+
+      sourceRetrieval:
+        "NOT_STARTED",
+
+      evidenceInsertion:
+        "NOT_STARTED",
+
+      claimSupport:
+        "NOT_CHANGED"
+    }
+  };
+
+}
+
+
+/* =========================================================
+   STEP 8AP — DEBUGGER CONNECTION
+   ========================================================= */
+
+if (
+  typeof window !== "undefined" &&
+  window.OODebug &&
+  typeof window.OODebug.log === "function"
+) {
+
+  OODebug.log(
+    "Verification",
+    "RETRIEVAL_DISPATCH_BOUNDARY_ENTRY",
+    "STEP 8AP started → Preparing controlled retrieval dispatch boundary."
+  );
+
+  OODebug.log(
+    "Verification",
+    "RETRIEVAL_DISPATCH_BOUNDARY_CHECK",
+    "Dispatch boundary: " +
+      evidenceRetrievalDispatchBoundary.status +
+      " | Allowed: " +
+      evidenceRetrievalDispatchBoundary.allowed +
+      " | Targets: " +
+      evidenceRetrievalDispatchBoundary.targets.length
+  );
+
+  OODebug.log(
+    "Verification",
+    "RETRIEVAL_DISPATCH_BOUNDARY_TARGETS",
+    "Claims: " +
+      evidenceRetrievalDispatchBoundary.targets
+        .map(function(target) {
+          return target.claimType;
+        })
+        .join(", ")
+  );
+
+  OODebug.log(
+    "Verification",
+    "RETRIEVAL_DISPATCH_BOUNDARY_SOURCES",
+    evidenceRetrievalDispatchBoundary.targets
+      .map(function(target) {
+        return (
+          target.claimType +
+          " → " +
+          target.selectedSourceType
+        );
+      })
+      .join(" | ")
+  );
+
+  OODebug.log(
+    "Verification",
+    "RETRIEVAL_DISPATCH_BOUNDARY_QUERY",
+    "Search query: " +
+      (
+        evidenceRetrievalDispatchBoundary.searchQuery ||
+        "NOT_AVAILABLE"
+      )
+  );
+
+  OODebug.log(
+    "Verification",
+    "RETRIEVAL_DISPATCH_BOUNDARY_STATUS",
+    evidenceRetrievalDispatchBoundary.targets
+      .map(function(target) {
+        return (
+          target.claimType +
+          " → " +
+          target.dispatchStatus
+        );
+      })
+      .join(" | ")
+  );
+
+  OODebug.log(
+    "Verification",
+    "RETRIEVAL_DISPATCH_BOUNDARY_SAFETY",
+    "External source access: " +
+      evidenceRetrievalDispatchBoundary.safety.externalSourceAccess +
+      " | Source retrieval: " +
+      evidenceRetrievalDispatchBoundary.safety.sourceRetrieval +
+      " | Evidence insertion: " +
+      evidenceRetrievalDispatchBoundary.safety.evidenceInsertion +
+      " | Claim support: " +
+      evidenceRetrievalDispatchBoundary.safety.claimSupport
+  );
+
+  OODebug.log(
+    "Verification",
+    "RETRIEVAL_DISPATCH_BOUNDARY_REASON",
+    evidenceRetrievalDispatchBoundary.allowed === true
+      ? "Controlled retrieval dispatch boundary prepared successfully. Actual external retrieval has NOT started."
+      : "Retrieval dispatch boundary blocked because 8AO validation is not ready."
+  );
+
+    }       
 /* ==========================================
   RESULT VALUES
    ========================================== */
