@@ -8741,6 +8741,319 @@ if (
   );
 
     }        
+/* =========================================================
+   STEP 8AO — EVIDENCE RETRIEVAL TASK VALIDATION
+   ========================================================= */
+
+let evidenceRetrievalTaskValidation = {
+  status: "blocked",
+  allowed: false,
+
+  requestType:
+    "evidence_retrieval_task_validation",
+
+  searchQuery: null,
+
+  targets: [],
+
+  validationChecks: {
+    taskCompleteness: false,
+    sourceSelection: false,
+    queryAvailability: false,
+    fallbackAvailability: false
+  },
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupport: "NOT_CHANGED"
+  }
+};
+
+try {
+
+  const retrievalTasksReady =
+    typeof evidenceRetrievalTasks !== "undefined" &&
+    evidenceRetrievalTasks !== null &&
+    evidenceRetrievalTasks.status === "ready" &&
+    evidenceRetrievalTasks.allowed === true;
+
+  if (retrievalTasksReady) {
+
+    const tasks =
+      Array.isArray(
+        evidenceRetrievalTasks.targets
+      )
+        ? evidenceRetrievalTasks.targets
+        : [];
+
+    const taskCompleteness =
+      tasks.length > 0 &&
+      tasks.every(function(task) {
+        return (
+          !!task.claimType &&
+          !!task.selectedSourceType &&
+          !!task.retrievalInstruction &&
+          task.taskStatus === "READY"
+        );
+      });
+
+    const sourceSelection =
+      tasks.length > 0 &&
+      tasks.every(function(task) {
+        return !!task.selectedSourceType;
+      });
+
+    const queryAvailability =
+      !!evidenceRetrievalTasks.searchQuery &&
+      tasks.every(function(task) {
+        return !!task.searchQuery;
+      });
+
+    const fallbackAvailability =
+      tasks.length > 0 &&
+      tasks.every(function(task) {
+        return Array.isArray(
+          task.fallbackSourceTypes
+        );
+      });
+
+    const validationPassed =
+      taskCompleteness &&
+      sourceSelection &&
+      queryAvailability &&
+      fallbackAvailability;
+
+    evidenceRetrievalTaskValidation = {
+
+      status:
+        validationPassed
+          ? "ready"
+          : "blocked",
+
+      allowed:
+        validationPassed,
+
+      requestType:
+        "evidence_retrieval_task_validation",
+
+      searchQuery:
+        evidenceRetrievalTasks.searchQuery || null,
+
+      targets:
+        tasks.map(function(task) {
+
+          return {
+
+            claimType:
+              task.claimType || null,
+
+            selectedSourceType:
+              task.selectedSourceType || null,
+
+            fallbackSourceTypes:
+              Array.isArray(
+                task.fallbackSourceTypes
+              )
+                ? task.fallbackSourceTypes
+                : [],
+
+            taskStatus:
+              task.taskStatus || "UNKNOWN",
+
+            validationStatus:
+              (
+                task.claimType &&
+                task.selectedSourceType &&
+                task.retrievalInstruction &&
+                task.searchQuery
+              )
+                ? "VALID"
+                : "INVALID",
+
+            retrievalStatus:
+              "NOT_STARTED",
+
+            evidenceStatus:
+              "NOT_STARTED",
+
+            claimSupportStatus:
+              "NOT_CHANGED"
+          };
+
+        }),
+
+      validationChecks: {
+
+        taskCompleteness:
+          taskCompleteness,
+
+        sourceSelection:
+          sourceSelection,
+
+        queryAvailability:
+          queryAvailability,
+
+        fallbackAvailability:
+          fallbackAvailability
+      },
+
+      safety: {
+
+        externalSourceAccess:
+          "NOT_STARTED",
+
+        sourceRetrieval:
+          "NOT_STARTED",
+
+        evidenceInsertion:
+          "NOT_STARTED",
+
+        claimSupport:
+          "NOT_CHANGED"
+      }
+    };
+
+  } else {
+
+    evidenceRetrievalTaskValidation.status =
+      "blocked";
+
+    evidenceRetrievalTaskValidation.allowed =
+      false;
+
+  }
+
+} catch (error) {
+
+  evidenceRetrievalTaskValidation = {
+
+    status: "error",
+    allowed: false,
+
+    requestType:
+      "evidence_retrieval_task_validation",
+
+    searchQuery: null,
+
+    targets: [],
+
+    validationChecks: {
+
+      taskCompleteness: false,
+      sourceSelection: false,
+      queryAvailability: false,
+      fallbackAvailability: false
+    },
+
+    safety: {
+
+      externalSourceAccess:
+        "NOT_STARTED",
+
+      sourceRetrieval:
+        "NOT_STARTED",
+
+      evidenceInsertion:
+        "NOT_STARTED",
+
+      claimSupport:
+        "NOT_CHANGED"
+    }
+  };
+
+}
+
+
+/* =========================================================
+   STEP 8AO — DEBUGGER CONNECTION
+   ========================================================= */
+
+if (
+  typeof window !== "undefined" &&
+  window.OODebug &&
+  typeof window.OODebug.log === "function"
+) {
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_RETRIEVAL_TASK_VALIDATION_ENTRY",
+    "STEP 8AO started → Validating prepared evidence retrieval tasks."
+  );
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_RETRIEVAL_TASK_VALIDATION_CHECK",
+    "Validation: " +
+      evidenceRetrievalTaskValidation.status +
+      " | Allowed: " +
+      evidenceRetrievalTaskValidation.allowed +
+      " | Targets: " +
+      evidenceRetrievalTaskValidation.targets.length
+  );
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_RETRIEVAL_TASK_VALIDATION_TARGETS",
+    "Claims: " +
+      evidenceRetrievalTaskValidation.targets
+        .map(function(target) {
+          return target.claimType;
+        })
+        .join(", ")
+  );
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_RETRIEVAL_TASK_VALIDATION_CHECKS",
+    "Completeness: " +
+      evidenceRetrievalTaskValidation.validationChecks.taskCompleteness +
+      " | Source selection: " +
+      evidenceRetrievalTaskValidation.validationChecks.sourceSelection +
+      " | Query: " +
+      evidenceRetrievalTaskValidation.validationChecks.queryAvailability +
+      " | Fallback: " +
+      evidenceRetrievalTaskValidation.validationChecks.fallbackAvailability
+  );
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_RETRIEVAL_TASK_VALIDATION_STATUS",
+    evidenceRetrievalTaskValidation.targets
+      .map(function(target) {
+        return (
+          target.claimType +
+          " → " +
+          target.validationStatus
+        );
+      })
+      .join(" | ")
+  );
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_RETRIEVAL_TASK_VALIDATION_SAFETY",
+    "External source access: " +
+      evidenceRetrievalTaskValidation.safety.externalSourceAccess +
+      " | Source retrieval: " +
+      evidenceRetrievalTaskValidation.safety.sourceRetrieval +
+      " | Evidence insertion: " +
+      evidenceRetrievalTaskValidation.safety.evidenceInsertion +
+      " | Claim support: " +
+      evidenceRetrievalTaskValidation.safety.claimSupport
+  );
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_RETRIEVAL_TASK_VALIDATION_REASON",
+    evidenceRetrievalTaskValidation.allowed === true
+      ? "All prepared retrieval tasks passed validation. Actual external retrieval has NOT started."
+      : "Retrieval task validation failed or the 8AN task preparation is not ready."
+  );
+
+  }
+        
 /* ==========================================
   RESULT VALUES
    ========================================== */
