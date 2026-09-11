@@ -10252,6 +10252,200 @@ if (
   );
 
   }
+/* =========================================================
+   STEP 8AT — CONTROLLED RETRIEVAL EXECUTION GATE
+   ========================================================= */
+
+let evidenceControlledRetrievalExecutionGate = {
+  status: "blocked",
+  allowed: false,
+
+  requestType:
+    "controlled_evidence_retrieval_execution_gate",
+
+  searchQuery: null,
+  targets: [],
+
+  gateChecks: {
+    preExecutionSafetyReady: false,
+    safetyChecksPassed: false,
+    targetsAvailable: false,
+    targetsAuthorized: false,
+    queryAvailable: false,
+    executionNotStarted: false
+  },
+
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupport: "NOT_CHANGED"
+  }
+};
+
+if (
+  typeof evidenceRetrievalPreExecutionSafetyCheck !== "undefined" &&
+  evidenceRetrievalPreExecutionSafetyCheck.status === "ready" &&
+  evidenceRetrievalPreExecutionSafetyCheck.allowed === true
+) {
+  const safetyTargets =
+    Array.isArray(evidenceRetrievalPreExecutionSafetyCheck.targets)
+      ? evidenceRetrievalPreExecutionSafetyCheck.targets
+      : [];
+
+  const queryAvailable =
+    typeof evidenceRetrievalPreExecutionSafetyCheck.searchQuery === "string" &&
+    evidenceRetrievalPreExecutionSafetyCheck.searchQuery.trim().length > 0;
+
+  const targetsAuthorized =
+    safetyTargets.length === 5 &&
+    safetyTargets.every(
+      target =>
+        target.authorizationStatus === "AUTHORIZED"
+    );
+
+  const executionNotStarted =
+    safetyTargets.every(
+      target =>
+        target.retrievalStatus === "NOT_STARTED" &&
+        target.evidenceStatus === "NOT_STARTED" &&
+        target.claimSupportStatus === "NOT_CHANGED"
+    );
+
+  const safetyChecksPassed =
+    evidenceRetrievalPreExecutionSafetyCheck.safetyChecks &&
+    evidenceRetrievalPreExecutionSafetyCheck.safetyChecks.authorizationReady === true &&
+    evidenceRetrievalPreExecutionSafetyCheck.safetyChecks.targetsAuthorized === true &&
+    evidenceRetrievalPreExecutionSafetyCheck.safetyChecks.queryAvailable === true &&
+    evidenceRetrievalPreExecutionSafetyCheck.safetyChecks.externalAccessNotStarted === true &&
+    evidenceRetrievalPreExecutionSafetyCheck.safetyChecks.retrievalNotStarted === true &&
+    evidenceRetrievalPreExecutionSafetyCheck.safetyChecks.evidenceInsertionNotStarted === true &&
+    evidenceRetrievalPreExecutionSafetyCheck.safetyChecks.claimSupportUnchanged === true;
+
+  if (
+    safetyChecksPassed &&
+    safetyTargets.length === 5 &&
+    targetsAuthorized &&
+    queryAvailable &&
+    executionNotStarted
+  ) {
+    evidenceControlledRetrievalExecutionGate.status = "ready";
+    evidenceControlledRetrievalExecutionGate.allowed = true;
+
+    evidenceControlledRetrievalExecutionGate.searchQuery =
+      evidenceRetrievalPreExecutionSafetyCheck.searchQuery;
+
+    evidenceControlledRetrievalExecutionGate.gateChecks = {
+      preExecutionSafetyReady: true,
+      safetyChecksPassed: true,
+      targetsAvailable: true,
+      targetsAuthorized: true,
+      queryAvailable: true,
+      executionNotStarted: true
+    };
+
+    evidenceControlledRetrievalExecutionGate.targets =
+      safetyTargets.map(target => ({
+        claimType: target.claimType,
+        selectedSourceType: target.selectedSourceType,
+        fallbackSourceTypes: Array.isArray(target.fallbackSourceTypes)
+          ? target.fallbackSourceTypes
+          : [],
+
+        authorizationStatus: target.authorizationStatus,
+
+        gateStatus: "CLEARED",
+
+        executionStatus: "NOT_STARTED",
+        retrievalStatus: "NOT_STARTED",
+        evidenceStatus: "NOT_STARTED",
+        claimSupportStatus: "NOT_CHANGED"
+      }));
+  }
+}
+
+
+/* =========================================================
+   STEP 8AT — DEBUGGER
+   ========================================================= */
+
+if (
+  typeof window !== "undefined" &&
+  window.OODebug &&
+  typeof window.OODebug.log === "function"
+) {
+  OODebug.log(
+    "CONTROLLED_RETRIEVAL_EXECUTION_GATE_ENTRY",
+    "STEP 8AT started → Checking controlled retrieval execution gate."
+  );
+
+  OODebug.log(
+    "CONTROLLED_RETRIEVAL_EXECUTION_GATE_RESULT",
+    "Gate: " +
+      evidenceControlledRetrievalExecutionGate.status +
+      " | Allowed: " +
+      evidenceControlledRetrievalExecutionGate.allowed +
+      " | Targets: " +
+      evidenceControlledRetrievalExecutionGate.targets.length
+  );
+
+  OODebug.log(
+    "CONTROLLED_RETRIEVAL_EXECUTION_GATE_CHECKS",
+    "Pre-execution safety: " +
+      evidenceControlledRetrievalExecutionGate.gateChecks.preExecutionSafetyReady +
+      " | Safety checks: " +
+      evidenceControlledRetrievalExecutionGate.gateChecks.safetyChecksPassed +
+      " | Targets: " +
+      evidenceControlledRetrievalExecutionGate.gateChecks.targetsAvailable +
+      " | Authorized: " +
+      evidenceControlledRetrievalExecutionGate.gateChecks.targetsAuthorized +
+      " | Query: " +
+      evidenceControlledRetrievalExecutionGate.gateChecks.queryAvailable +
+      " | Execution not started: " +
+      evidenceControlledRetrievalExecutionGate.gateChecks.executionNotStarted
+  );
+
+  OODebug.log(
+    "CONTROLLED_RETRIEVAL_EXECUTION_GATE_STATUS",
+    evidenceControlledRetrievalExecutionGate.targets
+      .map(
+        target =>
+          target.claimType +
+          " → " +
+          target.gateStatus +
+          " | Execution: " +
+          target.executionStatus
+      )
+      .join(" | ")
+  );
+
+  OODebug.log(
+    "CONTROLLED_RETRIEVAL_EXECUTION_GATE_SAFETY",
+    "External source access: " +
+      evidenceControlledRetrievalExecutionGate.safety.externalSourceAccess +
+      " | Source retrieval: " +
+      evidenceControlledRetrievalExecutionGate.safety.sourceRetrieval +
+      " | Evidence insertion: " +
+      evidenceControlledRetrievalExecutionGate.safety.evidenceInsertion +
+      " | Claim support: " +
+      evidenceControlledRetrievalExecutionGate.safety.claimSupport
+  );
+
+  OODebug.log(
+    "CONTROLLED_RETRIEVAL_EXECUTION_GATE_REASON",
+    evidenceControlledRetrievalExecutionGate.allowed
+      ? "Execution gate cleared. Actual external retrieval has NOT started."
+      : "Execution gate blocked. Pre-execution safety requirements are not fully satisfied."
+  );
+    }
+        
 /* ==========================================
   RESULT VALUES
    ========================================== */
