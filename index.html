@@ -8018,7 +8018,6 @@ try {
       requestType: "structured_evidence_retrieval",
 
       targets: authorizedTargets.map(function(target) {
-
         return {
           claimType: target.claimType || null,
 
@@ -8032,7 +8031,6 @@ try {
 
           retrievalStatus: "NOT_STARTED"
         };
-
       }),
 
       safety: {
@@ -8045,9 +8043,19 @@ try {
 
   } else {
 
-    evidenceValidationRetrievalRequest.status = "blocked";
-    evidenceValidationRetrievalRequest.allowed = false;
+    evidenceValidationRetrievalRequest = {
+      status: "blocked",
+      allowed: false,
+      requestType: "structured_evidence_retrieval",
+      targets: [],
 
+      safety: {
+        externalSourceAccess: "NOT_STARTED",
+        sourceRetrieval: "NOT_STARTED",
+        evidenceInsertion: "NOT_STARTED",
+        claimSupport: "NOT_CHANGED"
+      }
+    };
   }
 
 } catch (error) {
@@ -8067,6 +8075,68 @@ try {
   };
 
 }
+
+
+/* =========================================================
+   STEP 8AK — DEBUGGER CONNECTION
+   ========================================================= */
+
+if (
+  typeof window !== "undefined" &&
+  window.OODebug &&
+  typeof window.OODebug.log === "function"
+) {
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_RETRIEVAL_REQUEST_ENTRY",
+    "STEP 8AK started → Building structured evidence retrieval request."
+  );
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_RETRIEVAL_REQUEST_CHECK",
+    "Request: " +
+      evidenceValidationRetrievalRequest.status +
+      " | Allowed: " +
+      evidenceValidationRetrievalRequest.allowed +
+      " | Targets: " +
+      evidenceValidationRetrievalRequest.targets.length
+  );
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_RETRIEVAL_REQUEST_TARGETS",
+    "Claims: " +
+      evidenceValidationRetrievalRequest.targets
+        .map(function(target) {
+          return target.claimType;
+        })
+        .join(", ")
+  );
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_RETRIEVAL_REQUEST_SAFETY",
+    "External source access: " +
+      evidenceValidationRetrievalRequest.safety.externalSourceAccess +
+      " | Source retrieval: " +
+      evidenceValidationRetrievalRequest.safety.sourceRetrieval +
+      " | Evidence insertion: " +
+      evidenceValidationRetrievalRequest.safety.evidenceInsertion +
+      " | Claim support: " +
+      evidenceValidationRetrievalRequest.safety.claimSupport
+  );
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_RETRIEVAL_REQUEST_REASON",
+    evidenceValidationRetrievalRequest.allowed === true
+      ? "Structured evidence retrieval request prepared from authorized 8AJ retrieval targets. Actual source access has NOT started."
+      : "Evidence retrieval request blocked because 8AJ retrieval authorization is not ready."
+  );
+
+  }
     
 /* ==========================================
   RESULT VALUES
