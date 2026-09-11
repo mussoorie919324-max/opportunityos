@@ -8490,7 +8490,257 @@ if (
   );
 
     }
-        
+/* =========================================================
+   STEP 8AN — EVIDENCE RETRIEVAL TASK / QUERY PREPARATION
+   ========================================================= */
+
+let evidenceRetrievalTasks = {
+  status: "blocked",
+  allowed: false,
+
+  requestType:
+    "evidence_retrieval_task_query_preparation",
+
+  searchQuery: null,
+
+  targets: [],
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupport: "NOT_CHANGED"
+  }
+};
+
+try {
+
+  const retrievalContextReady =
+    typeof evidenceRetrievalContext !== "undefined" &&
+    evidenceRetrievalContext !== null &&
+    evidenceRetrievalContext.status === "ready" &&
+    evidenceRetrievalContext.allowed === true;
+
+  if (retrievalContextReady) {
+
+    const contextTargets =
+      Array.isArray(
+        evidenceRetrievalContext.targets
+      )
+        ? evidenceRetrievalContext.targets
+        : [];
+
+    const preparedSearchQuery =
+      evidenceRetrievalContext.searchQuery || null;
+
+    evidenceRetrievalTasks = {
+
+      status: "ready",
+      allowed: true,
+
+      requestType:
+        "evidence_retrieval_task_query_preparation",
+
+      searchQuery:
+        preparedSearchQuery,
+
+      targets: contextTargets.map(function(target) {
+
+        let retrievalInstruction = null;
+
+        if (target.claimType === "earning") {
+
+          retrievalInstruction =
+            "Find current official labor-market or earnings data relevant to the opportunity query.";
+
+        } else if (target.claimType === "competition") {
+
+          retrievalInstruction =
+            "Find current official market or industry data relevant to competition or market participation.";
+
+        } else if (target.claimType === "difficulty") {
+
+          retrievalInstruction =
+            "Find current official occupation or skills data relevant to entry difficulty, qualification, or required skills.";
+
+        } else if (target.claimType === "risk") {
+
+          retrievalInstruction =
+            "Find current official regulatory or authoritative risk information relevant to the opportunity.";
+
+        } else if (target.claimType === "trend") {
+
+          retrievalInstruction =
+            "Find current official time-series or trend data relevant to demand or market direction.";
+
+        } else {
+
+          retrievalInstruction =
+            "Find authoritative evidence relevant to this claim.";
+
+        }
+
+        return {
+
+          claimType:
+            target.claimType || null,
+
+          selectedSourceType:
+            target.selectedSourceType || null,
+
+          fallbackSourceTypes:
+            Array.isArray(target.fallbackSourceTypes)
+              ? target.fallbackSourceTypes
+              : [],
+
+          searchQuery:
+            preparedSearchQuery,
+
+          retrievalInstruction:
+            retrievalInstruction,
+
+          taskStatus:
+            "READY",
+
+          retrievalStatus:
+            "NOT_STARTED",
+
+          evidenceStatus:
+            "NOT_STARTED",
+
+          claimSupportStatus:
+            "NOT_CHANGED"
+        };
+
+      }),
+
+      safety: {
+        externalSourceAccess: "NOT_STARTED",
+        sourceRetrieval: "NOT_STARTED",
+        evidenceInsertion: "NOT_STARTED",
+        claimSupport: "NOT_CHANGED"
+      }
+    };
+
+  } else {
+
+    evidenceRetrievalTasks.status =
+      "blocked";
+
+    evidenceRetrievalTasks.allowed =
+      false;
+
+  }
+
+} catch (error) {
+
+  evidenceRetrievalTasks = {
+
+    status: "error",
+    allowed: false,
+
+    requestType:
+      "evidence_retrieval_task_query_preparation",
+
+    searchQuery: null,
+
+    targets: [],
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupport: "NOT_CHANGED"
+    }
+  };
+
+}
+
+
+/* =========================================================
+   STEP 8AN — DEBUGGER CONNECTION
+   ========================================================= */
+
+if (
+  typeof window !== "undefined" &&
+  window.OODebug &&
+  typeof window.OODebug.log === "function"
+) {
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_RETRIEVAL_TASK_ENTRY",
+    "STEP 8AN started → Preparing evidence retrieval tasks and source-specific query instructions."
+  );
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_RETRIEVAL_TASK_CHECK",
+    "Tasks: " +
+      evidenceRetrievalTasks.status +
+      " | Allowed: " +
+      evidenceRetrievalTasks.allowed +
+      " | Targets: " +
+      evidenceRetrievalTasks.targets.length
+  );
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_RETRIEVAL_TASK_TARGETS",
+    "Claims: " +
+      evidenceRetrievalTasks.targets
+        .map(function(target) {
+          return target.claimType;
+        })
+        .join(", ")
+  );
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_RETRIEVAL_TASK_SOURCES",
+    evidenceRetrievalTasks.targets
+      .map(function(target) {
+        return (
+          target.claimType +
+          " → " +
+          target.selectedSourceType
+        );
+      })
+      .join(" | ")
+  );
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_RETRIEVAL_TASK_QUERY",
+    "Search query: " +
+      (
+        evidenceRetrievalTasks.searchQuery ||
+        "NOT_AVAILABLE"
+      )
+  );
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_RETRIEVAL_TASK_SAFETY",
+    "External source access: " +
+      evidenceRetrievalTasks.safety.externalSourceAccess +
+      " | Source retrieval: " +
+      evidenceRetrievalTasks.safety.sourceRetrieval +
+      " | Evidence insertion: " +
+      evidenceRetrievalTasks.safety.evidenceInsertion +
+      " | Claim support: " +
+      evidenceRetrievalTasks.safety.claimSupport
+  );
+
+  OODebug.log(
+    "Verification",
+    "EVIDENCE_RETRIEVAL_TASK_REASON",
+    evidenceRetrievalTasks.allowed === true
+      ? "Retrieval tasks prepared from 8AM context. No external source has been accessed and no evidence has been inserted."
+      : "Retrieval task preparation blocked because 8AM retrieval context is not ready."
+  );
+
+    }        
 /* ==========================================
   RESULT VALUES
    ========================================== */
