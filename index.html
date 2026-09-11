@@ -9691,7 +9691,7 @@ try {
 
         status: "ready",
         allowed: true,
-
+    
         requestType:
           "controlled_evidence_retrieval_execution_request",
 
@@ -10113,8 +10113,145 @@ try {
 
         targetsAuthorized: true,
 
-        query
-        
+        queryAvailable: true,
+
+        externalAccessNotStarted: true,
+
+        retrievalNotStarted: true,
+
+        evidenceInsertionNotStarted: true,
+
+        claimSupportUnchanged: true
+      },
+
+      safety: {
+
+        externalSourceAccess:
+          "NOT_STARTED",
+
+        sourceRetrieval:
+          "NOT_STARTED",
+
+        evidenceInsertion:
+          "NOT_STARTED",
+
+        claimSupport:
+          "NOT_CHANGED"
+      }
+    };
+
+  }
+
+} catch (error) {
+
+  evidenceRetrievalPreExecutionSafetyCheck.status =
+    "error";
+
+  evidenceRetrievalPreExecutionSafetyCheck.allowed =
+    false;
+
+}
+
+
+/* =========================================================
+   STEP 8AS — DEBUGGER CONNECTION
+   ========================================================= */
+
+if (
+  typeof window !== "undefined" &&
+  window.OODebug &&
+  typeof window.OODebug.log === "function"
+) {
+
+  OODebug.log(
+    "Verification",
+    "PRE_EXECUTION_SAFETY_CHECK_ENTRY",
+    "STEP 8AS started → Running final pre-execution safety checks."
+  );
+
+  OODebug.log(
+    "Verification",
+    "PRE_EXECUTION_SAFETY_CHECK_RESULT",
+    "Safety check: " +
+      evidenceRetrievalPreExecutionSafetyCheck.status +
+      " | Allowed: " +
+      evidenceRetrievalPreExecutionSafetyCheck.allowed +
+      " | Targets: " +
+      evidenceRetrievalPreExecutionSafetyCheck.targets.length
+  );
+
+  OODebug.log(
+    "Verification",
+    "PRE_EXECUTION_SAFETY_CHECK_TARGETS",
+    "Claims: " +
+      evidenceRetrievalPreExecutionSafetyCheck.targets
+        .map(function(target) {
+          return target.claimType;
+        })
+        .join(", ")
+  );
+
+  OODebug.log(
+    "Verification",
+    "PRE_EXECUTION_SAFETY_CHECKS",
+    "Authorization: " +
+      evidenceRetrievalPreExecutionSafetyCheck.safetyChecks.authorizationReady +
+      " | Targets authorized: " +
+      evidenceRetrievalPreExecutionSafetyCheck.safetyChecks.targetsAuthorized +
+      " | Query: " +
+      evidenceRetrievalPreExecutionSafetyCheck.safetyChecks.queryAvailable +
+      " | External access not started: " +
+      evidenceRetrievalPreExecutionSafetyCheck.safetyChecks.externalAccessNotStarted +
+      " | Retrieval not started: " +
+      evidenceRetrievalPreExecutionSafetyCheck.safetyChecks.retrievalNotStarted +
+      " | Evidence insertion not started: " +
+      evidenceRetrievalPreExecutionSafetyCheck.safetyChecks.evidenceInsertionNotStarted +
+      " | Claim support unchanged: " +
+      evidenceRetrievalPreExecutionSafetyCheck.safetyChecks.claimSupportUnchanged
+  );
+
+  OODebug.log(
+    "Verification",
+    "PRE_EXECUTION_SAFETY_CHECK_STATUS",
+    evidenceRetrievalPreExecutionSafetyCheck.targets
+      .map(function(target) {
+        return (
+          target.claimType +
+          " → " +
+          target.authorizationStatus +
+          " | Retrieval: " +
+          target.retrievalStatus +
+          " | Evidence: " +
+          target.evidenceStatus +
+          " | Claim support: " +
+          target.claimSupportStatus
+        );
+      })
+      .join(" | ")
+  );
+
+  OODebug.log(
+    "Verification",
+    "PRE_EXECUTION_SAFETY_CHECK_SAFETY",
+    "External source access: " +
+      evidenceRetrievalPreExecutionSafetyCheck.safety.externalSourceAccess +
+      " | Source retrieval: " +
+      evidenceRetrievalPreExecutionSafetyCheck.safety.sourceRetrieval +
+      " | Evidence insertion: " +
+      evidenceRetrievalPreExecutionSafetyCheck.safety.evidenceInsertion +
+      " | Claim support: " +
+      evidenceRetrievalPreExecutionSafetyCheck.safety.claimSupport
+  );
+
+  OODebug.log(
+    "Verification",
+    "PRE_EXECUTION_SAFETY_CHECK_REASON",
+    evidenceRetrievalPreExecutionSafetyCheck.allowed === true
+      ? "Final pre-execution safety check passed. Actual external retrieval has NOT started."
+      : "Pre-execution safety check blocked. Controlled retrieval execution must remain stopped."
+  );
+
+  }
 /* ==========================================
   RESULT VALUES
    ========================================== */
