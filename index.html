@@ -9941,6 +9941,180 @@ if (
   );
 
   }        
+/* =========================================================
+   STEP 8AS — FINAL PRE-EXECUTION SAFETY CHECK
+   ========================================================= */
+
+let evidenceRetrievalPreExecutionSafetyCheck = {
+  status: "blocked",
+  allowed: false,
+
+  requestType:
+    "controlled_evidence_retrieval_pre_execution_safety_check",
+
+  searchQuery: null,
+
+  targets: [],
+
+  safetyChecks: {
+    authorizationReady: false,
+    targetsAuthorized: false,
+    queryAvailable: false,
+    externalAccessNotStarted: false,
+    retrievalNotStarted: false,
+    evidenceInsertionNotStarted: false,
+    claimSupportUnchanged: false
+  },
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupport: "NOT_CHANGED"
+  }
+};
+
+try {
+
+  const executionRequestReady =
+    typeof evidenceControlledRetrievalExecutionRequest !== "undefined" &&
+    evidenceControlledRetrievalExecutionRequest !== null &&
+    evidenceControlledRetrievalExecutionRequest.status === "ready" &&
+    evidenceControlledRetrievalExecutionRequest.allowed === true;
+
+  const requestTargets =
+    executionRequestReady &&
+    Array.isArray(
+      evidenceControlledRetrievalExecutionRequest.targets
+    )
+      ? evidenceControlledRetrievalExecutionRequest.targets
+      : [];
+
+  const authorizationReady =
+    requestTargets.length > 0 &&
+    requestTargets.every(function(target) {
+      return target.authorizationStatus === "AUTHORIZED";
+    });
+
+  const queryAvailable =
+    executionRequestReady &&
+    !!evidenceControlledRetrievalExecutionRequest.searchQuery;
+
+  const externalAccessNotStarted =
+    executionRequestReady &&
+    evidenceControlledRetrievalExecutionRequest
+      .executionPolicy
+      .externalSourceAccess === false;
+
+  const retrievalNotStarted =
+    requestTargets.length > 0 &&
+    requestTargets.every(function(target) {
+      return target.retrievalStatus === "NOT_STARTED";
+    });
+
+  const evidenceInsertionNotStarted =
+    requestTargets.length > 0 &&
+    requestTargets.every(function(target) {
+      return target.evidenceStatus === "NOT_STARTED";
+    });
+
+  const claimSupportUnchanged =
+    requestTargets.length > 0 &&
+    requestTargets.every(function(target) {
+      return target.claimSupportStatus === "NOT_CHANGED";
+    });
+
+  evidenceRetrievalPreExecutionSafetyCheck.safetyChecks = {
+
+    authorizationReady:
+      executionRequestReady,
+
+    targetsAuthorized:
+      authorizationReady,
+
+    queryAvailable:
+      queryAvailable,
+
+    externalAccessNotStarted:
+      externalAccessNotStarted,
+
+    retrievalNotStarted:
+      retrievalNotStarted,
+
+    evidenceInsertionNotStarted:
+      evidenceInsertionNotStarted,
+
+    claimSupportUnchanged:
+      claimSupportUnchanged
+  };
+
+  const safetyCheckPassed =
+    executionRequestReady &&
+    authorizationReady &&
+    queryAvailable &&
+    externalAccessNotStarted &&
+    retrievalNotStarted &&
+    evidenceInsertionNotStarted &&
+    claimSupportUnchanged;
+
+  if (safetyCheckPassed) {
+
+    evidenceRetrievalPreExecutionSafetyCheck = {
+
+      status: "ready",
+      allowed: true,
+
+      requestType:
+        "controlled_evidence_retrieval_pre_execution_safety_check",
+
+      searchQuery:
+        evidenceControlledRetrievalExecutionRequest.searchQuery,
+
+      targets:
+        requestTargets.map(function(target) {
+
+          return {
+
+            claimType:
+              target.claimType || null,
+
+            selectedSourceType:
+              target.selectedSourceType || null,
+
+            fallbackSourceTypes:
+              Array.isArray(target.fallbackSourceTypes)
+                ? target.fallbackSourceTypes
+                : [],
+
+            authorizationStatus:
+              target.authorizationStatus,
+
+            requestStatus:
+              target.requestStatus,
+
+            executionStatus:
+              "NOT_STARTED",
+
+            retrievalStatus:
+              "NOT_STARTED",
+
+            evidenceStatus:
+              "NOT_STARTED",
+
+            claimSupportStatus:
+              "NOT_CHANGED"
+          };
+
+        }),
+
+      safetyChecks: {
+
+        authorizationReady: true,
+
+        targetsAuthorized: true,
+
+        query
+        
 /* ==========================================
   RESULT VALUES
    ========================================== */
