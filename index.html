@@ -7976,7 +7976,9 @@ if (
   );
 
     }
-/* =========================================================
+
+
+      /* =========================================================
    STEP 8AK — EVIDENCE RETRIEVAL REQUEST
    ========================================================= */
 
@@ -7993,52 +7995,22 @@ let evidenceValidationRetrievalRequest = {
   }
 };
 
-if (typeof debugLog === "function") {
-  debugLog(
-    "8AK",
-    "ENTRY",
-    "STEP 8AK reached successfully."
-  );
-}
-
 try {
 
-  let authorizationReady = false;
-  let authorizedTargets = [];
-
-  if (
+  const retrievalAuthorizationReady =
     typeof evidenceValidationRetrievalAuthorization !== "undefined" &&
-    evidenceValidationRetrievalAuthorization !== null
-  ) {
+    evidenceValidationRetrievalAuthorization !== null &&
+    evidenceValidationRetrievalAuthorization.status === "ready" &&
+    evidenceValidationRetrievalAuthorization.allowed === true;
 
-    authorizationReady =
-      evidenceValidationRetrievalAuthorization.status === "ready" &&
-      evidenceValidationRetrievalAuthorization.allowed === true;
+  if (retrievalAuthorizationReady) {
 
-    if (
+    const authorizedTargets =
       Array.isArray(
         evidenceValidationRetrievalAuthorization.targets
       )
-    ) {
-      authorizedTargets =
-        evidenceValidationRetrievalAuthorization.targets;
-    }
-  }
-
-  if (!authorizationReady) {
-
-    evidenceValidationRetrievalRequest.status = "blocked";
-    evidenceValidationRetrievalRequest.allowed = false;
-
-    if (typeof debugLog === "function") {
-      debugLog(
-        "8AK",
-        "BLOCKED",
-        "8AJ retrieval authorization is not available in the current scope."
-      );
-    }
-
-  } else {
+        ? evidenceValidationRetrievalAuthorization.targets
+        : [];
 
     evidenceValidationRetrievalRequest = {
       status: "ready",
@@ -8048,18 +8020,12 @@ try {
       targets: authorizedTargets.map(function(target) {
 
         return {
-          claimType:
-            target && target.claimType
-              ? target.claimType
-              : null,
+          claimType: target.claimType || null,
 
           selectedSourceType:
-            target && target.selectedSourceType
-              ? target.selectedSourceType
-              : null,
+            target.selectedSourceType || null,
 
           fallbackSourceTypes:
-            target &&
             Array.isArray(target.fallbackSourceTypes)
               ? target.fallbackSourceTypes
               : [],
@@ -8077,46 +8043,30 @@ try {
       }
     };
 
-    if (typeof debugLog === "function") {
-      debugLog(
-        "8AK",
-        "CHECK",
-        "Retrieval request: ready | Targets: " +
-        evidenceValidationRetrievalRequest.targets.length
-      );
+  } else {
 
-      debugLog(
-        "8AK",
-        "SAFETY",
-        "External source access: NOT_STARTED | Source retrieval: NOT_STARTED | Evidence insertion: NOT_STARTED | Claim support: NOT_CHANGED"
-      );
+    evidenceValidationRetrievalRequest.status = "blocked";
+    evidenceValidationRetrievalRequest.allowed = false;
 
-      debugLog(
-        "8AK",
-        "PASS",
-        "Structured evidence retrieval request prepared. No external source accessed and no evidence or claim support changed."
-      );
-    }
   }
 
 } catch (error) {
 
-  evidenceValidationRetrievalRequest.status = "error";
-  evidenceValidationRetrievalRequest.allowed = false;
+  evidenceValidationRetrievalRequest = {
+    status: "error",
+    allowed: false,
+    requestType: "structured_evidence_retrieval",
+    targets: [],
 
-  if (typeof debugLog === "function") {
-    debugLog(
-      "8AK",
-      "ERROR",
-      "8AK failed: " +
-      (
-        error && error.message
-          ? error.message
-          : String(error)
-      )
-    );
-  }
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupport: "NOT_CHANGED"
     }
+  };
+
+}
     
 /* ==========================================
   RESULT VALUES
