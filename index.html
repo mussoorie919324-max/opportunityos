@@ -7994,55 +7994,73 @@ let evidenceValidationRetrievalRequest = {
   }
 };
 
-debugLog(
-  "8AK",
-  "ENTRY",
-  "STEP 8AK reached successfully."
-);
+if (typeof debugLog === "function") {
+  debugLog(
+    "8AK",
+    "ENTRY",
+    "STEP 8AK reached successfully."
+  );
+}
 
 try {
 
-  const retrievalAuthorizationReady =
-    typeof evidenceValidationRetrievalAuthorization !== "undefined" &&
-    evidenceValidationRetrievalAuthorization !== null &&
-    evidenceValidationRetrievalAuthorization.status === "ready" &&
-    evidenceValidationRetrievalAuthorization.allowed === true;
+  let authorizationReady = false;
+  let authorizedTargets = [];
 
-  if (!retrievalAuthorizationReady) {
+  if (
+    typeof evidenceValidationRetrievalAuthorization !== "undefined" &&
+    evidenceValidationRetrievalAuthorization !== null
+  ) {
+
+    authorizationReady =
+      evidenceValidationRetrievalAuthorization.status === "ready" &&
+      evidenceValidationRetrievalAuthorization.allowed === true;
+
+    if (
+      Array.isArray(
+        evidenceValidationRetrievalAuthorization.targets
+      )
+    ) {
+      authorizedTargets =
+        evidenceValidationRetrievalAuthorization.targets;
+    }
+  }
+
+  if (!authorizationReady) {
 
     evidenceValidationRetrievalRequest.status = "blocked";
     evidenceValidationRetrievalRequest.allowed = false;
 
-    debugLog(
-      "8AK",
-      "BLOCKED",
-      "8AJ retrieval authorization is not ready."
-    );
+    if (typeof debugLog === "function") {
+      debugLog(
+        "8AK",
+        "BLOCKED",
+        "8AJ retrieval authorization is not available in the current scope."
+      );
+    }
 
   } else {
-
-    const retrievalTargets =
-      Array.isArray(
-        evidenceValidationRetrievalAuthorization.targets
-      )
-        ? evidenceValidationRetrievalAuthorization.targets
-        : [];
 
     evidenceValidationRetrievalRequest = {
       status: "ready",
       allowed: true,
-
       requestType: "structured_evidence_retrieval",
 
-      targets: retrievalTargets.map(function(target) {
+      targets: authorizedTargets.map(function(target) {
 
         return {
-          claimType: target.claimType || null,
+          claimType:
+            target && target.claimType
+              ? target.claimType
+              : null,
 
           selectedSourceType:
-            target.selectedSourceType || null,
+            target && target.selectedSourceType
+              ? target.selectedSourceType
+              : null,
 
           fallbackSourceTypes:
+            target &&
             Array.isArray(target.fallbackSourceTypes)
               ? target.fallbackSourceTypes
               : [],
@@ -8060,24 +8078,26 @@ try {
       }
     };
 
-    debugLog(
-      "8AK",
-      "CHECK",
-      "Retrieval request: ready | Targets: " +
-      evidenceValidationRetrievalRequest.targets.length
-    );
+    if (typeof debugLog === "function") {
+      debugLog(
+        "8AK",
+        "CHECK",
+        "Retrieval request: ready | Targets: " +
+        evidenceValidationRetrievalRequest.targets.length
+      );
 
-    debugLog(
-      "8AK",
-      "SAFETY",
-      "External source access: NOT_STARTED | Source retrieval: NOT_STARTED | Evidence insertion: NOT_STARTED | Claim support: NOT_CHANGED"
-    );
+      debugLog(
+        "8AK",
+        "SAFETY",
+        "External source access: NOT_STARTED | Source retrieval: NOT_STARTED | Evidence insertion: NOT_STARTED | Claim support: NOT_CHANGED"
+      );
 
-    debugLog(
-      "8AK",
-      "PASS",
-      "Structured evidence retrieval request prepared. No external source accessed and no evidence or claim support changed."
-    );
+      debugLog(
+        "8AK",
+        "PASS",
+        "Structured evidence retrieval request prepared. No external source accessed and no evidence or claim support changed."
+      );
+    }
   }
 
 } catch (error) {
@@ -8085,17 +8105,19 @@ try {
   evidenceValidationRetrievalRequest.status = "error";
   evidenceValidationRetrievalRequest.allowed = false;
 
-  debugLog(
-    "8AK",
-    "ERROR",
-    "8AK failed: " +
-    (
-      error && error.message
-        ? error.message
-        : String(error)
-    )
-  );
+  if (typeof debugLog === "function") {
+    debugLog(
+      "8AK",
+      "ERROR",
+      "8AK failed: " +
+      (
+        error && error.message
+          ? error.message
+          : String(error)
+      )
+    );
   }
+    }
     
 /* ==========================================
   RESULT VALUES
