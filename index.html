@@ -7913,12 +7913,15 @@ if (
 
 }
 
-
 /* ==========================================
-   STEP 8AJ — DEBUGGER
-   ========================================== */
+STEP 8AJ — DEBUGGER
+========================================== */
 
-if (window.OODebug) {
+if (
+  typeof window !== "undefined" &&
+  window.OODebug &&
+  typeof window.OODebug.log === "function"
+) {
 
   OODebug.log(
     "Verification",
@@ -7926,7 +7929,6 @@ if (window.OODebug) {
     "STEP 8AJ started → Checking authorization for controlled validation retrieval.",
     "info"
   );
-
 
   OODebug.log(
     "Verification",
@@ -7937,29 +7939,27 @@ if (window.OODebug) {
       evidenceValidationRetrievalAuthorization.allowed +
       " | Targets: " +
       evidenceValidationRetrievalAuthorization.targets.length,
-    evidenceValidationRetrievalAuthorization.status ===
-      "ready"
+    evidenceValidationRetrievalAuthorization.status === "ready"
       ? "success"
       : "warning"
   );
-
 
   OODebug.log(
     "Verification",
     "VALIDATION_RETRIEVAL_AUTHORIZATION_TARGETS",
     evidenceValidationRetrievalAuthorization.targets.length > 0
       ? evidenceValidationRetrievalAuthorization.targets
-          .map(
-            item =>
-              item.claimType +
+          .map(function(item) {
+            return (
+              (item.claimType || "UNKNOWN") +
               " → " +
-              item.selectedSourceType
-          )
+              (item.selectedSourceType || "UNKNOWN")
+            );
+          })
           .join(" | ")
       : "Targets: NONE",
     "info"
   );
-
 
   OODebug.log(
     "Verification",
@@ -7968,7 +7968,6 @@ if (window.OODebug) {
     "info"
   );
 
-
   OODebug.log(
     "Verification",
     "VALIDATION_RETRIEVAL_AUTHORIZATION_REASON",
@@ -7976,7 +7975,7 @@ if (window.OODebug) {
     "info"
   );
 
-    }    
+    }
 /* =========================================================
    STEP 8AK — EVIDENCE RETRIEVAL REQUEST
    ========================================================= */
