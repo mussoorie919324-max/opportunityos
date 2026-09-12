@@ -12248,44 +12248,7 @@ if (
   }     
 /* =========================================================
    STEP 8BB — RETRIEVAL EXECUTION REQUEST HANDOFF
-   ========================================================= */
-
-let evidenceRetrievalExecutionRequestHandoff = {
-  status: "blocked",
-  allowed: false,
-
-  requestType:
-    "controlled_evidence_retrieval_execution_request_handoff",
-
-  searchQuery: null,
-  targets: [],
-
-  handoffChecks: {
-    boundaryReady: false,
-    targetsReady: false,
-    executionAuthorized: false,
-    queryAvailable: false,
-    executionNotStarted: false,
-    policySafe: false
-  },
-
-  executionPolicy: {
-    externalSourceAccess: false,
-    sourceRetrieval: false,
-    evidenceInsertion: false,
-    claimSupportUpdate: false
-  },
-
-  safety: {
-    externalSourceAccess: "NOT_STARTED",
-    sourceRetrieval: "NOT_STARTED",
-    evidenceInsertion: "NOT_STARTED",
-    claimSupport: "NOT_CHANGED"
-  }
-};
-/* =========================================================
-   STEP 8BB — RETRIEVAL EXECUTION REQUEST HANDOFF
-   SAFE / DEFENSIVE VERSION
+   SAFE SINGLE DECLARATION VERSION
    ========================================================= */
 
 let evidenceRetrievalExecutionRequestHandoff = {
@@ -12348,6 +12311,7 @@ try {
         ? boundary.targets
         : [];
 
+
     let searchQuery =
       typeof boundary.searchQuery === "string"
         ? boundary.searchQuery
@@ -12360,25 +12324,21 @@ try {
     let targetsReady =
       boundaryTargets.length === 5 &&
       boundaryTargets.every(function (target) {
-
         return (
           target &&
           target.executionBoundaryStatus === "READY"
         );
-
       });
 
 
     let executionAuthorized =
       boundaryTargets.length === 5 &&
       boundaryTargets.every(function (target) {
-
         return (
           target &&
           target.dispatchExecutionAuthorizationStatus ===
             "AUTHORIZED"
         );
-
       });
 
 
@@ -12390,7 +12350,6 @@ try {
     let executionNotStarted =
       boundaryTargets.length === 5 &&
       boundaryTargets.every(function (target) {
-
         return (
           target &&
           target.executionStatus === "NOT_STARTED" &&
@@ -12398,7 +12357,6 @@ try {
           target.evidenceStatus === "NOT_STARTED" &&
           target.claimSupportStatus === "NOT_CHANGED"
         );
-
       });
 
 
@@ -12588,17 +12546,23 @@ if (
   OODebug.log(
     "RETRIEVAL_EXECUTION_REQUEST_HANDOFF_CHECKS",
     "Boundary ready: " +
-      evidenceRetrievalExecutionRequestHandoff.handoffChecks.boundaryReady +
+      evidenceRetrievalExecutionRequestHandoff
+        .handoffChecks.boundaryReady +
       " | Targets ready: " +
-      evidenceRetrievalExecutionRequestHandoff.handoffChecks.targetsReady +
+      evidenceRetrievalExecutionRequestHandoff
+        .handoffChecks.targetsReady +
       " | Execution authorized: " +
-      evidenceRetrievalExecutionRequestHandoff.handoffChecks.executionAuthorized +
+      evidenceRetrievalExecutionRequestHandoff
+        .handoffChecks.executionAuthorized +
       " | Query: " +
-      evidenceRetrievalExecutionRequestHandoff.handoffChecks.queryAvailable +
+      evidenceRetrievalExecutionRequestHandoff
+        .handoffChecks.queryAvailable +
       " | Execution not started: " +
-      evidenceRetrievalExecutionRequestHandoff.handoffChecks.executionNotStarted +
+      evidenceRetrievalExecutionRequestHandoff
+        .handoffChecks.executionNotStarted +
       " | Policy safe: " +
-      evidenceRetrievalExecutionRequestHandoff.handoffChecks.policySafe
+      evidenceRetrievalExecutionRequestHandoff
+        .handoffChecks.policySafe
   );
 
 
@@ -12629,13 +12593,17 @@ if (
   OODebug.log(
     "RETRIEVAL_EXECUTION_REQUEST_HANDOFF_SAFETY",
     "External source access: " +
-      evidenceRetrievalExecutionRequestHandoff.safety.externalSourceAccess +
+      evidenceRetrievalExecutionRequestHandoff
+        .safety.externalSourceAccess +
       " | Source retrieval: " +
-      evidenceRetrievalExecutionRequestHandoff.safety.sourceRetrieval +
+      evidenceRetrievalExecutionRequestHandoff
+        .safety.sourceRetrieval +
       " | Evidence insertion: " +
-      evidenceRetrievalExecutionRequestHandoff.safety.evidenceInsertion +
+      evidenceRetrievalExecutionRequestHandoff
+        .safety.evidenceInsertion +
       " | Claim support: " +
-      evidenceRetrievalExecutionRequestHandoff.safety.claimSupport
+      evidenceRetrievalExecutionRequestHandoff
+        .safety.claimSupport
   );
 
 
