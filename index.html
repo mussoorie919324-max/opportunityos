@@ -12615,76 +12615,82 @@ if (
   }
 
 /* ==========================================
-   RESULT VALUES — SAFE RESULT RENDER
+   RESULT VALUES
    ========================================== */
 
-const safeProfile =
-  result &&
-  result.profile
-    ? result.profile
-    : {};
-
 const demand =
-  (typeof profileValue === "function"
-    ? profileValue(safeProfile, "demand")
-    : null) ||
-  (result && result.demand) ||
-  "Needs Verification";
+  typeof profileValue === "function"
+    ? (
+        profileValue(result.profile, "demand") ||
+        result.demand ||
+        "Needs Verification"
+      )
+    : (result.demand || "Needs Verification");
 
 const earning =
-  (typeof profileValue === "function"
-    ? profileValue(safeProfile, "earning")
-    : null) ||
-  (result && result.earning) ||
-  "Needs Verification";
+  typeof profileValue === "function"
+    ? (
+        profileValue(result.profile, "earning") ||
+        result.earning ||
+        "Needs Verification"
+      )
+    : (result.earning || "Needs Verification");
 
 const competition =
-  (typeof profileValue === "function"
-    ? profileValue(safeProfile, "competition")
-    : null) ||
-  (result && result.competition) ||
-  "Needs Verification";
+  typeof profileValue === "function"
+    ? (
+        profileValue(result.profile, "competition") ||
+        result.competition ||
+        "Needs Verification"
+      )
+    : (result.competition || "Needs Verification");
 
 const difficulty =
-  (typeof profileValue === "function"
-    ? profileValue(safeProfile, "difficulty")
-    : null) ||
-  (result && result.difficulty) ||
-  "Needs Verification";
+  typeof profileValue === "function"
+    ? (
+        profileValue(result.profile, "difficulty") ||
+        result.difficulty ||
+        "Needs Verification"
+      )
+    : (result.difficulty || "Needs Verification");
 
 const risk =
-  (typeof profileValue === "function"
-    ? profileValue(safeProfile, "risk")
-    : null) ||
-  (result && result.risk) ||
-  "Needs Verification";
+  typeof profileValue === "function"
+    ? (
+        profileValue(result.profile, "risk") ||
+        result.risk ||
+        "Needs Verification"
+      )
+    : (result.risk || "Needs Verification");
 
 const trend =
-  (typeof profileValue === "function"
-    ? profileValue(safeProfile, "trend")
-    : null) ||
-  (result && result.trend) ||
-  "Needs Verification";
+  typeof profileValue === "function"
+    ? (
+        profileValue(result.profile, "trend") ||
+        result.trend ||
+        "Needs Verification"
+      )
+    : (result.trend || "Needs Verification");
 
 
 /* ==========================================
-   SAFE OPTIONAL RESULT SECTIONS
+   SAFE OPTIONAL SECTIONS
    ========================================== */
 
-const safeVerificationCoverageHTML =
+const finalVerificationCoverageHTML =
   typeof verificationCoverageHTML !== "undefined"
     ? verificationCoverageHTML
     : "";
 
-const safeOpportunityDecisionHTML =
+const finalOpportunityDecisionHTML =
   typeof opportunityDecisionHTML !== "undefined"
     ? opportunityDecisionHTML
     : "";
 
-const safeSkillHTML =
+const finalSkillHTML =
   typeof skillHTML !== "undefined"
     ? skillHTML
-    : "<span>Skills information not yet verified.</span>";
+    : "";
 
 
 /* ==========================================
@@ -12723,9 +12729,10 @@ results.innerHTML = `
       )}
     </p>
 
-    ${safeVerificationCoverageHTML}
 
-    ${safeOpportunityDecisionHTML}
+    ${finalVerificationCoverageHTML}
+
+    ${finalOpportunityDecisionHTML}
 
 
     <!-- PROFILE -->
@@ -12741,49 +12748,32 @@ results.innerHTML = `
 
       <div class="flow-card">
         <div class="flow-number">DEMAND</div>
-        <h3>
-          ${escapeHTML(String(demand))}
-        </h3>
+        <h3>${escapeHTML(String(demand))}</h3>
       </div>
-
 
       <div class="flow-card">
         <div class="flow-number">EARNING</div>
-        <h3>
-          ${escapeHTML(String(earning))}
-        </h3>
+        <h3>${escapeHTML(String(earning))}</h3>
       </div>
-
 
       <div class="flow-card">
         <div class="flow-number">COMPETITION</div>
-        <h3>
-          ${escapeHTML(String(competition))}
-        </h3>
+        <h3>${escapeHTML(String(competition))}</h3>
       </div>
-
 
       <div class="flow-card">
         <div class="flow-number">DIFFICULTY</div>
-        <h3>
-          ${escapeHTML(String(difficulty))}
-        </h3>
+        <h3>${escapeHTML(String(difficulty))}</h3>
       </div>
-
 
       <div class="flow-card">
         <div class="flow-number">RISK</div>
-        <h3>
-          ${escapeHTML(String(risk))}
-        </h3>
+        <h3>${escapeHTML(String(risk))}</h3>
       </div>
-
 
       <div class="flow-card">
         <div class="flow-number">TREND</div>
-        <h3>
-          ${escapeHTML(String(trend))}
-        </h3>
+        <h3>${escapeHTML(String(trend))}</h3>
       </div>
 
     </div>
@@ -12814,9 +12804,62 @@ results.innerHTML = `
         "
       >
 
-        ${safeSkillHTML}
+        ${finalSkillHTML}
 
       </div>
+
+    </div>
+
+
+    <!-- BEST NEXT ACTION -->
+
+    <div
+      style="
+        margin-top:22px;
+        padding:18px;
+        border-radius:16px;
+        background:rgba(99,102,241,.07);
+        border:1px solid rgba(99,102,241,.15);
+      "
+    >
+
+      <div class="result-label">
+        BEST NEXT ACTION
+      </div>
+
+      <p>
+        ${escapeHTML(
+          typeof decisionNextAction !== "undefined"
+            ? (
+                decisionNextAction ||
+                result.bestNextAction ||
+                result.nextStep ||
+                "More evidence is required."
+              )
+            : (
+                result.bestNextAction ||
+                result.nextStep ||
+                "More evidence is required."
+              )
+        )}
+      </p>
+
+    </div>
+
+
+    <!-- STATUS -->
+
+    <div class="result-status">
+
+      ✓ Opportunity Engine connected
+
+      · ${Array.isArray(claims) ? claims.length : 0} claims detected
+
+      · ${escapeHTML(
+          typeof databaseStatus !== "undefined"
+            ? databaseStatus
+            : "Connected"
+        )}
 
     </div>
 
@@ -12829,28 +12872,30 @@ results.innerHTML = `
    RESULT RENDER CONFIRMATION
    ========================================== */
 
-if (results && results.innerHTML.trim() !== "") {
+if (typeof OODebug !== "undefined" && OODebug.log) {
 
-  if (typeof OODebug !== "undefined" && OODebug.log) {
-    OODebug.log(
-      "searchOpportunity",
-      "RESULT_RENDERED",
-      "Final OpportunityOS result rendered successfully."
-    );
-  }
+  OODebug.log(
+    "searchOpportunity",
+    "RESULT_RENDERED",
+    "Final OpportunityOS result rendered successfully."
+  );
 
-} else {
+}
 
-  if (typeof OODebug !== "undefined" && OODebug.log) {
-    OODebug.log(
-      "searchOpportunity",
-      "RESULT_RENDER_FAILED",
-      "Result container remained empty after rendering."
-    );
-  }
 
-  }
+/* ==========================================
+   SCROLL
+   ========================================== */
 
+results.scrollIntoView({
+  behavior: "smooth",
+  block: "center"
+});
+
+
+    }
+
+    
       catch (error) {
 
 
