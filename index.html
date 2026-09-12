@@ -12285,6 +12285,7 @@ let evidenceRetrievalExecutionRequestHandoff = {
 };
 /* =========================================================
    STEP 8BB — RETRIEVAL EXECUTION REQUEST HANDOFF
+   SAFE / DEFENSIVE VERSION
    ========================================================= */
 
 let evidenceRetrievalExecutionRequestHandoff = {
@@ -12323,185 +12324,236 @@ let evidenceRetrievalExecutionRequestHandoff = {
 
 
 /* =========================================================
-   STEP 8BB — HANDOFF CHECK
+   STEP 8BB — SAFE HANDOFF CHECK
    ========================================================= */
 
-if (
-  typeof evidenceRetrievalExecutionDispatchExecutionBoundary !==
-    "undefined" &&
-  evidenceRetrievalExecutionDispatchExecutionBoundary &&
-  evidenceRetrievalExecutionDispatchExecutionBoundary.status ===
-    "ready" &&
-  evidenceRetrievalExecutionDispatchExecutionBoundary.allowed ===
-    true
-) {
-  let boundaryTargets =
-    Array.isArray(
-      evidenceRetrievalExecutionDispatchExecutionBoundary.targets
-    )
-      ? evidenceRetrievalExecutionDispatchExecutionBoundary.targets
-      : [];
+try {
 
-  let searchQuery =
-    evidenceRetrievalExecutionDispatchExecutionBoundary.searchQuery;
-
-  let boundaryReady = true;
-
-  let targetsReady =
-    boundaryTargets.length === 5 &&
-    boundaryTargets.every(function (target) {
-      return (
-        target &&
-        target.executionBoundaryStatus ===
-          "READY"
-      );
-    });
-
-  let executionAuthorized =
-    boundaryTargets.length === 5 &&
-    boundaryTargets.every(function (target) {
-      return (
-        target &&
-        target.dispatchExecutionAuthorizationStatus ===
-          "AUTHORIZED"
-      );
-    });
-
-  let queryAvailable =
-    typeof searchQuery === "string" &&
-    searchQuery.trim().length > 0;
-
-  let executionNotStarted =
-    boundaryTargets.length === 5 &&
-    boundaryTargets.every(function (target) {
-      return (
-        target.executionStatus ===
-          "NOT_STARTED" &&
-        target.retrievalStatus ===
-          "NOT_STARTED" &&
-        target.evidenceStatus ===
-          "NOT_STARTED" &&
-        target.claimSupportStatus ===
-          "NOT_CHANGED"
-      );
-    });
-
-  let policySafe =
-    evidenceRetrievalExecutionDispatchExecutionBoundary
-      .executionPolicy &&
-    evidenceRetrievalExecutionDispatchExecutionBoundary
-      .executionPolicy.externalSourceAccess ===
-      false &&
-    evidenceRetrievalExecutionDispatchExecutionBoundary
-      .executionPolicy.sourceRetrieval ===
-      false &&
-    evidenceRetrievalExecutionDispatchExecutionBoundary
-      .executionPolicy.evidenceInsertion ===
-      false &&
-    evidenceRetrievalExecutionDispatchExecutionBoundary
-      .executionPolicy.claimSupportUpdate ===
-      false;
-
-
-  evidenceRetrievalExecutionRequestHandoff
-    .handoffChecks = {
-      boundaryReady:
-        boundaryReady,
-
-      targetsReady:
-        targetsReady,
-
-      executionAuthorized:
-        executionAuthorized,
-
-      queryAvailable:
-        queryAvailable,
-
-      executionNotStarted:
-        executionNotStarted,
-
-      policySafe:
-        policySafe
-    };
+  let boundary =
+    typeof evidenceRetrievalExecutionDispatchExecutionBoundary !==
+      "undefined"
+      ? evidenceRetrievalExecutionDispatchExecutionBoundary
+      : null;
 
 
   if (
-    boundaryReady &&
-    targetsReady &&
-    executionAuthorized &&
-    queryAvailable &&
-    executionNotStarted &&
-    policySafe
+    boundary &&
+    typeof boundary === "object" &&
+    boundary.status === "ready" &&
+    boundary.allowed === true
   ) {
-    evidenceRetrievalExecutionRequestHandoff
-      .status = "ready";
 
-    evidenceRetrievalExecutionRequestHandoff
-      .allowed = true;
+    let boundaryTargets =
+      Array.isArray(boundary.targets)
+        ? boundary.targets
+        : [];
 
-    evidenceRetrievalExecutionRequestHandoff
-      .searchQuery = searchQuery;
+    let searchQuery =
+      typeof boundary.searchQuery === "string"
+        ? boundary.searchQuery
+        : null;
 
-    evidenceRetrievalExecutionRequestHandoff
-      .targets = boundaryTargets.map(function (target) {
-        return {
-          claimType:
-            target.claimType,
 
-          selectedSourceType:
-            target.selectedSourceType,
+    let boundaryReady = true;
 
-          fallbackSourceTypes:
-            Array.isArray(
-              target.fallbackSourceTypes
-            )
-              ? target.fallbackSourceTypes
-              : [],
 
-          authorizationStatus:
-            target.authorizationStatus,
+    let targetsReady =
+      boundaryTargets.length === 5 &&
+      boundaryTargets.every(function (target) {
 
-          gateStatus:
-            target.gateStatus,
+        return (
+          target &&
+          target.executionBoundaryStatus === "READY"
+        );
 
-          executionAuthorizationStatus:
-            target.executionAuthorizationStatus,
-
-          handoffStatus:
-            target.handoffStatus,
-
-          dispatchPreparationStatus:
-            target.dispatchPreparationStatus,
-
-          dispatchAuthorizationStatus:
-            target.dispatchAuthorizationStatus,
-
-          boundaryStatus:
-            target.boundaryStatus,
-
-          dispatchExecutionAuthorizationStatus:
-            target.dispatchExecutionAuthorizationStatus,
-
-          executionBoundaryStatus:
-            target.executionBoundaryStatus,
-
-          requestHandoffStatus:
-            "READY",
-
-          executionStatus:
-            "NOT_STARTED",
-
-          retrievalStatus:
-            "NOT_STARTED",
-
-          evidenceStatus:
-            "NOT_STARTED",
-
-          claimSupportStatus:
-            "NOT_CHANGED"
-        };
       });
+
+
+    let executionAuthorized =
+      boundaryTargets.length === 5 &&
+      boundaryTargets.every(function (target) {
+
+        return (
+          target &&
+          target.dispatchExecutionAuthorizationStatus ===
+            "AUTHORIZED"
+        );
+
+      });
+
+
+    let queryAvailable =
+      typeof searchQuery === "string" &&
+      searchQuery.trim().length > 0;
+
+
+    let executionNotStarted =
+      boundaryTargets.length === 5 &&
+      boundaryTargets.every(function (target) {
+
+        return (
+          target &&
+          target.executionStatus === "NOT_STARTED" &&
+          target.retrievalStatus === "NOT_STARTED" &&
+          target.evidenceStatus === "NOT_STARTED" &&
+          target.claimSupportStatus === "NOT_CHANGED"
+        );
+
+      });
+
+
+    let boundaryPolicy =
+      boundary.executionPolicy &&
+      typeof boundary.executionPolicy === "object"
+        ? boundary.executionPolicy
+        : null;
+
+
+    let policySafe =
+      boundaryPolicy &&
+      boundaryPolicy.externalSourceAccess === false &&
+      boundaryPolicy.sourceRetrieval === false &&
+      boundaryPolicy.evidenceInsertion === false &&
+      boundaryPolicy.claimSupportUpdate === false;
+
+
+    evidenceRetrievalExecutionRequestHandoff
+      .handoffChecks = {
+
+        boundaryReady:
+          boundaryReady,
+
+        targetsReady:
+          targetsReady,
+
+        executionAuthorized:
+          executionAuthorized,
+
+        queryAvailable:
+          queryAvailable,
+
+        executionNotStarted:
+          executionNotStarted,
+
+        policySafe:
+          policySafe
+      };
+
+
+    if (
+      boundaryReady &&
+      targetsReady &&
+      executionAuthorized &&
+      queryAvailable &&
+      executionNotStarted &&
+      policySafe
+    ) {
+
+      evidenceRetrievalExecutionRequestHandoff
+        .status = "ready";
+
+      evidenceRetrievalExecutionRequestHandoff
+        .allowed = true;
+
+      evidenceRetrievalExecutionRequestHandoff
+        .searchQuery = searchQuery;
+
+
+      evidenceRetrievalExecutionRequestHandoff
+        .targets = boundaryTargets.map(function (target) {
+
+          return {
+
+            claimType:
+              target.claimType || null,
+
+            selectedSourceType:
+              target.selectedSourceType || null,
+
+            fallbackSourceTypes:
+              Array.isArray(target.fallbackSourceTypes)
+                ? target.fallbackSourceTypes
+                : [],
+
+            authorizationStatus:
+              target.authorizationStatus || null,
+
+            gateStatus:
+              target.gateStatus || null,
+
+            executionAuthorizationStatus:
+              target.executionAuthorizationStatus || null,
+
+            handoffStatus:
+              target.handoffStatus || null,
+
+            dispatchPreparationStatus:
+              target.dispatchPreparationStatus || null,
+
+            dispatchAuthorizationStatus:
+              target.dispatchAuthorizationStatus || null,
+
+            boundaryStatus:
+              target.boundaryStatus || null,
+
+            dispatchExecutionAuthorizationStatus:
+              target.dispatchExecutionAuthorizationStatus ||
+              null,
+
+            executionBoundaryStatus:
+              target.executionBoundaryStatus || null,
+
+            requestHandoffStatus:
+              "READY",
+
+            executionStatus:
+              "NOT_STARTED",
+
+            retrievalStatus:
+              "NOT_STARTED",
+
+            evidenceStatus:
+              "NOT_STARTED",
+
+            claimSupportStatus:
+              "NOT_CHANGED"
+          };
+
+        });
+
+    }
+
   }
+
+} catch (handoffError) {
+
+  evidenceRetrievalExecutionRequestHandoff.status =
+    "error";
+
+  evidenceRetrievalExecutionRequestHandoff.allowed =
+    false;
+
+  evidenceRetrievalExecutionRequestHandoff.error =
+    handoffError &&
+    handoffError.message
+      ? handoffError.message
+      : String(handoffError);
+
+
+  if (
+    typeof window !== "undefined" &&
+    window.OODebug &&
+    typeof window.OODebug.log === "function"
+  ) {
+
+    OODebug.log(
+      "RETRIEVAL_EXECUTION_REQUEST_HANDOFF_ERROR",
+      "STEP 8BB error",
+      evidenceRetrievalExecutionRequestHandoff.error
+    );
+
+  }
+
 }
 
 
@@ -12514,11 +12566,13 @@ if (
   window.OODebug &&
   typeof window.OODebug.log === "function"
 ) {
+
   OODebug.log(
     "RETRIEVAL_EXECUTION_REQUEST_HANDOFF_ENTRY",
     "STEP 8BB started",
     "Preparing controlled retrieval execution request handoff."
   );
+
 
   OODebug.log(
     "RETRIEVAL_EXECUTION_REQUEST_HANDOFF_RESULT",
@@ -12530,32 +12584,29 @@ if (
       evidenceRetrievalExecutionRequestHandoff.targets.length
   );
 
+
   OODebug.log(
     "RETRIEVAL_EXECUTION_REQUEST_HANDOFF_CHECKS",
     "Boundary ready: " +
-      evidenceRetrievalExecutionRequestHandoff
-        .handoffChecks.boundaryReady +
+      evidenceRetrievalExecutionRequestHandoff.handoffChecks.boundaryReady +
       " | Targets ready: " +
-      evidenceRetrievalExecutionRequestHandoff
-        .handoffChecks.targetsReady +
+      evidenceRetrievalExecutionRequestHandoff.handoffChecks.targetsReady +
       " | Execution authorized: " +
-      evidenceRetrievalExecutionRequestHandoff
-        .handoffChecks.executionAuthorized +
+      evidenceRetrievalExecutionRequestHandoff.handoffChecks.executionAuthorized +
       " | Query: " +
-      evidenceRetrievalExecutionRequestHandoff
-        .handoffChecks.queryAvailable +
+      evidenceRetrievalExecutionRequestHandoff.handoffChecks.queryAvailable +
       " | Execution not started: " +
-      evidenceRetrievalExecutionRequestHandoff
-        .handoffChecks.executionNotStarted +
+      evidenceRetrievalExecutionRequestHandoff.handoffChecks.executionNotStarted +
       " | Policy safe: " +
-      evidenceRetrievalExecutionRequestHandoff
-        .handoffChecks.policySafe
+      evidenceRetrievalExecutionRequestHandoff.handoffChecks.policySafe
   );
+
 
   OODebug.log(
     "RETRIEVAL_EXECUTION_REQUEST_HANDOFF_STATUS",
     evidenceRetrievalExecutionRequestHandoff.targets
       .map(function (target) {
+
         return (
           target.claimType +
           " → " +
@@ -12563,35 +12614,36 @@ if (
           " | Execution: " +
           target.executionStatus
         );
+
       })
       .join(" | ")
   );
+
 
   OODebug.log(
     "RETRIEVAL_EXECUTION_REQUEST_HANDOFF_POLICY",
     "External source access: false | Source retrieval: false | Evidence insertion: false | Claim support update: false"
   );
 
+
   OODebug.log(
     "RETRIEVAL_EXECUTION_REQUEST_HANDOFF_SAFETY",
     "External source access: " +
-      evidenceRetrievalExecutionRequestHandoff
-        .safety.externalSourceAccess +
+      evidenceRetrievalExecutionRequestHandoff.safety.externalSourceAccess +
       " | Source retrieval: " +
-      evidenceRetrievalExecutionRequestHandoff
-        .safety.sourceRetrieval +
+      evidenceRetrievalExecutionRequestHandoff.safety.sourceRetrieval +
       " | Evidence insertion: " +
-      evidenceRetrievalExecutionRequestHandoff
-        .safety.evidenceInsertion +
+      evidenceRetrievalExecutionRequestHandoff.safety.evidenceInsertion +
       " | Claim support: " +
-      evidenceRetrievalExecutionRequestHandoff
-        .safety.claimSupport
+      evidenceRetrievalExecutionRequestHandoff.safety.claimSupport
   );
+
 
   OODebug.log(
     "RETRIEVAL_EXECUTION_REQUEST_HANDOFF_REASON",
-    "Retrieval execution request handoff is ready. Actual external retrieval has NOT started."
+    "Retrieval execution request handoff completed safely. Actual external retrieval has NOT started."
   );
+
   }
 /* ==========================================
   RESULT VALUES
