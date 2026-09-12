@@ -11945,7 +11945,307 @@ if (
     "Retrieval execution dispatch execution is authorized. Actual external retrieval has NOT started."
   );
     }
-        
+   /* =========================================================
+   STEP 8BA — RETRIEVAL EXECUTION DISPATCH EXECUTION BOUNDARY
+   ========================================================= */
+
+let evidenceRetrievalExecutionDispatchExecutionBoundary = {
+  status: "blocked",
+  allowed: false,
+
+  requestType:
+    "controlled_evidence_retrieval_dispatch_execution_boundary",
+
+  searchQuery: null,
+  targets: [],
+
+  boundaryChecks: {
+    authorizationReady: false,
+    targetsAuthorized: false,
+    boundaryReady: false,
+    queryAvailable: false,
+    executionNotStarted: false,
+    policySafe: false
+  },
+
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupport: "NOT_CHANGED"
+  }
+};
+
+
+/* =========================================================
+   STEP 8BA — BOUNDARY CHECK
+   ========================================================= */
+
+if (
+  typeof evidenceRetrievalExecutionDispatchExecutionAuthorization !==
+    "undefined" &&
+  evidenceRetrievalExecutionDispatchExecutionAuthorization &&
+  evidenceRetrievalExecutionDispatchExecutionAuthorization.status ===
+    "ready" &&
+  evidenceRetrievalExecutionDispatchExecutionAuthorization.allowed ===
+    true
+) {
+  let authorizedTargets =
+    Array.isArray(
+      evidenceRetrievalExecutionDispatchExecutionAuthorization.targets
+    )
+      ? evidenceRetrievalExecutionDispatchExecutionAuthorization.targets
+      : [];
+
+  let searchQuery =
+    evidenceRetrievalExecutionDispatchExecutionAuthorization.searchQuery;
+
+  let authorizationReady = true;
+
+  let targetsAuthorized =
+    authorizedTargets.length === 5 &&
+    authorizedTargets.every(function (target) {
+      return (
+        target &&
+        target.dispatchExecutionAuthorizationStatus ===
+          "AUTHORIZED"
+      );
+    });
+
+  let boundaryReady =
+    authorizedTargets.length === 5 &&
+    authorizedTargets.every(function (target) {
+      return (
+        target &&
+        target.boundaryStatus === "READY"
+      );
+    });
+
+  let queryAvailable =
+    typeof searchQuery === "string" &&
+    searchQuery.trim().length > 0;
+
+  let executionNotStarted =
+    authorizedTargets.length === 5 &&
+    authorizedTargets.every(function (target) {
+      return (
+        target &&
+        target.executionStatus === "NOT_STARTED" &&
+        target.retrievalStatus === "NOT_STARTED" &&
+        target.evidenceStatus === "NOT_STARTED" &&
+        target.claimSupportStatus === "NOT_CHANGED"
+      );
+    });
+
+  let policySafe =
+    evidenceRetrievalExecutionDispatchExecutionAuthorization
+      .executionPolicy &&
+    evidenceRetrievalExecutionDispatchExecutionAuthorization
+      .executionPolicy.externalSourceAccess ===
+      false &&
+    evidenceRetrievalExecutionDispatchExecutionAuthorization
+      .executionPolicy.sourceRetrieval ===
+      false &&
+    evidenceRetrievalExecutionDispatchExecutionAuthorization
+      .executionPolicy.evidenceInsertion ===
+      false &&
+    evidenceRetrievalExecutionDispatchExecutionAuthorization
+      .executionPolicy.claimSupportUpdate ===
+      false;
+
+
+  evidenceRetrievalExecutionDispatchExecutionBoundary
+    .boundaryChecks = {
+      authorizationReady:
+        authorizationReady,
+
+      targetsAuthorized:
+        targetsAuthorized,
+
+      boundaryReady:
+        boundaryReady,
+
+      queryAvailable:
+        queryAvailable,
+
+      executionNotStarted:
+        executionNotStarted,
+
+      policySafe:
+        policySafe
+    };
+
+
+  if (
+    authorizationReady &&
+    targetsAuthorized &&
+    boundaryReady &&
+    queryAvailable &&
+    executionNotStarted &&
+    policySafe
+  ) {
+    evidenceRetrievalExecutionDispatchExecutionBoundary
+      .status = "ready";
+
+    evidenceRetrievalExecutionDispatchExecutionBoundary
+      .allowed = true;
+
+    evidenceRetrievalExecutionDispatchExecutionBoundary
+      .searchQuery = searchQuery;
+
+    evidenceRetrievalExecutionDispatchExecutionBoundary
+      .targets = authorizedTargets.map(function (target) {
+        return {
+          claimType:
+            target.claimType,
+
+          selectedSourceType:
+            target.selectedSourceType,
+
+          fallbackSourceTypes:
+            Array.isArray(target.fallbackSourceTypes)
+              ? target.fallbackSourceTypes
+              : [],
+
+          authorizationStatus:
+            target.authorizationStatus,
+
+          gateStatus:
+            target.gateStatus,
+
+          executionAuthorizationStatus:
+            target.executionAuthorizationStatus,
+
+          handoffStatus:
+            target.handoffStatus,
+
+          dispatchPreparationStatus:
+            target.dispatchPreparationStatus,
+
+          dispatchAuthorizationStatus:
+            target.dispatchAuthorizationStatus,
+
+          boundaryStatus:
+            target.boundaryStatus,
+
+          dispatchExecutionAuthorizationStatus:
+            target.dispatchExecutionAuthorizationStatus,
+
+          executionBoundaryStatus:
+            "READY",
+
+          executionStatus:
+            "NOT_STARTED",
+
+          retrievalStatus:
+            "NOT_STARTED",
+
+          evidenceStatus:
+            "NOT_STARTED",
+
+          claimSupportStatus:
+            "NOT_CHANGED"
+        };
+      });
+  }
+}
+
+
+/* =========================================================
+   STEP 8BA — DEBUGGER
+   ========================================================= */
+
+if (
+  typeof window !== "undefined" &&
+  window.OODebug &&
+  typeof window.OODebug.log === "function"
+) {
+  OODebug.log(
+    "RETRIEVAL_EXECUTION_DISPATCH_EXECUTION_BOUNDARY_ENTRY",
+    "STEP 8BA started",
+    "Establishing the controlled retrieval execution dispatch boundary."
+  );
+
+  OODebug.log(
+    "RETRIEVAL_EXECUTION_DISPATCH_EXECUTION_BOUNDARY_RESULT",
+    "Boundary: " +
+      evidenceRetrievalExecutionDispatchExecutionBoundary.status +
+      " | Allowed: " +
+      evidenceRetrievalExecutionDispatchExecutionBoundary.allowed +
+      " | Targets: " +
+      evidenceRetrievalExecutionDispatchExecutionBoundary.targets.length
+  );
+
+  OODebug.log(
+    "RETRIEVAL_EXECUTION_DISPATCH_EXECUTION_BOUNDARY_CHECKS",
+    "Authorization: " +
+      evidenceRetrievalExecutionDispatchExecutionBoundary
+        .boundaryChecks.authorizationReady +
+      " | Targets authorized: " +
+      evidenceRetrievalExecutionDispatchExecutionBoundary
+        .boundaryChecks.targetsAuthorized +
+      " | Boundary ready: " +
+      evidenceRetrievalExecutionDispatchExecutionBoundary
+        .boundaryChecks.boundaryReady +
+      " | Query: " +
+      evidenceRetrievalExecutionDispatchExecutionBoundary
+        .boundaryChecks.queryAvailable +
+      " | Execution not started: " +
+      evidenceRetrievalExecutionDispatchExecutionBoundary
+        .boundaryChecks.executionNotStarted +
+      " | Policy safe: " +
+      evidenceRetrievalExecutionDispatchExecutionBoundary
+        .boundaryChecks.policySafe
+  );
+
+  OODebug.log(
+    "RETRIEVAL_EXECUTION_DISPATCH_EXECUTION_BOUNDARY_STATUS",
+    evidenceRetrievalExecutionDispatchExecutionBoundary.targets
+      .map(function (target) {
+        return (
+          target.claimType +
+          " → " +
+          target.executionBoundaryStatus +
+          " | Execution: " +
+          target.executionStatus
+        );
+      })
+      .join(" | ")
+  );
+
+  OODebug.log(
+    "RETRIEVAL_EXECUTION_DISPATCH_EXECUTION_BOUNDARY_POLICY",
+    "External source access: false | Source retrieval: false | Evidence insertion: false | Claim support update: false"
+  );
+
+  OODebug.log(
+    "RETRIEVAL_EXECUTION_DISPATCH_EXECUTION_BOUNDARY_SAFETY",
+    "External source access: " +
+      evidenceRetrievalExecutionDispatchExecutionBoundary
+        .safety.externalSourceAccess +
+      " | Source retrieval: " +
+      evidenceRetrievalExecutionDispatchExecutionBoundary
+        .safety.sourceRetrieval +
+      " | Evidence insertion: " +
+      evidenceRetrievalExecutionDispatchExecutionBoundary
+        .safety.evidenceInsertion +
+      " | Claim support: " +
+      evidenceRetrievalExecutionDispatchExecutionBoundary
+        .safety.claimSupport
+  );
+
+  OODebug.log(
+    "RETRIEVAL_EXECUTION_DISPATCH_EXECUTION_BOUNDARY_REASON",
+    "Controlled retrieval execution dispatch boundary is ready. Actual external retrieval has NOT started."
+  );
+  }     
 /* ==========================================
   RESULT VALUES
    ========================================== */
