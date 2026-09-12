@@ -12879,7 +12879,30 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
     "RESULT_RENDERED",
     "Final OpportunityOS result rendered successfully."
   );
+OODebug.log(
+  "searchOpportunity",
+  "RESULT_DOM_CHECK",
+  "display=" + getComputedStyle(results).display +
+  " | visibility=" + getComputedStyle(results).visibility +
+  " | opacity=" + getComputedStyle(results).opacity
+);
 
+OODebug.log(
+  "searchOpportunity",
+  "RESULT_DOM_SIZE",
+  "width=" + results.offsetWidth +
+  " | height=" + results.offsetHeight
+);
+
+OODebug.log(
+  "searchOpportunity",
+  "RESULT_DOM_PARENT",
+  "parent=" + (
+    results.parentElement
+      ? results.parentElement.tagName
+      : "NONE"
+  )
+);
 }
 
 
