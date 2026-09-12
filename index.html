@@ -10646,6 +10646,248 @@ if (
       : "Controlled retrieval execution authorization is blocked."
   );
     }       
+/* =========================================================
+   STEP 8AV — RETRIEVAL EXECUTION AUTHORIZATION HANDOFF
+   ========================================================= */
+
+let evidenceRetrievalExecutionAuthorizationHandoff = {
+  status: "blocked",
+  allowed: false,
+
+  requestType:
+    "controlled_evidence_retrieval_execution_authorization_handoff",
+
+  searchQuery: null,
+  targets: [],
+
+  handoffChecks: {
+    authorizationReady: false,
+    authorizedTargets: false,
+    queryAvailable: false,
+    executionNotStarted: false,
+    policySafe: false
+  },
+
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupport: "NOT_CHANGED"
+  }
+};
+
+
+/* =========================================================
+   STEP 8AV — HANDOFF READINESS CHECK
+   ========================================================= */
+
+if (
+  evidenceControlledRetrievalExecutionAuthorization &&
+  evidenceControlledRetrievalExecutionAuthorization.status ===
+    "ready" &&
+  evidenceControlledRetrievalExecutionAuthorization.allowed ===
+    true
+) {
+
+  const authorizedTargets =
+    Array.isArray(
+      evidenceControlledRetrievalExecutionAuthorization.targets
+    )
+      ? evidenceControlledRetrievalExecutionAuthorization.targets
+      : [];
+
+  const queryAvailable =
+    typeof evidenceControlledRetrievalExecutionAuthorization.searchQuery ===
+      "string" &&
+    evidenceControlledRetrievalExecutionAuthorization.searchQuery.trim()
+      .length > 0;
+
+  const allAuthorized =
+    authorizedTargets.length > 0 &&
+    authorizedTargets.every(
+      target =>
+        target &&
+        target.authorizationStatus === "AUTHORIZED" &&
+        target.executionAuthorizationStatus === "AUTHORIZED"
+    );
+
+  const executionNotStarted =
+    authorizedTargets.every(
+      target =>
+        target.executionStatus === "NOT_STARTED" &&
+        target.retrievalStatus === "NOT_STARTED" &&
+        target.evidenceStatus === "NOT_STARTED" &&
+        target.claimSupportStatus === "NOT_CHANGED"
+    );
+
+  const policySafe = true;
+
+  if (
+    allAuthorized &&
+    queryAvailable &&
+    executionNotStarted &&
+    policySafe
+  ) {
+
+    evidenceRetrievalExecutionAuthorizationHandoff = {
+      status: "ready",
+      allowed: true,
+
+      requestType:
+        "controlled_evidence_retrieval_execution_authorization_handoff",
+
+      searchQuery:
+        evidenceControlledRetrievalExecutionAuthorization.searchQuery,
+
+      targets: authorizedTargets.map(target => ({
+        claimType: target.claimType,
+        selectedSourceType: target.selectedSourceType,
+        fallbackSourceTypes:
+          Array.isArray(target.fallbackSourceTypes)
+            ? target.fallbackSourceTypes
+            : [],
+
+        authorizationStatus: "AUTHORIZED",
+        gateStatus: "CLEARED",
+        executionAuthorizationStatus: "AUTHORIZED",
+
+        handoffStatus: "READY",
+
+        executionStatus: "NOT_STARTED",
+        retrievalStatus: "NOT_STARTED",
+        evidenceStatus: "NOT_STARTED",
+        claimSupportStatus: "NOT_CHANGED"
+      })),
+
+      handoffChecks: {
+        authorizationReady: true,
+        authorizedTargets: true,
+        queryAvailable: true,
+        executionNotStarted: true,
+        policySafe: true
+      },
+
+      executionPolicy: {
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false
+      },
+
+      safety: {
+        externalSourceAccess: "NOT_STARTED",
+        sourceRetrieval: "NOT_STARTED",
+        evidenceInsertion: "NOT_STARTED",
+        claimSupport: "NOT_CHANGED"
+      }
+    };
+  }
+}
+
+
+/* =========================================================
+   STEP 8AV — DEBUGGER
+   ========================================================= */
+
+if (
+  typeof window !== "undefined" &&
+  window.OODebug &&
+  typeof window.OODebug.log === "function"
+) {
+
+  OODebug.log(
+    "RETRIEVAL_EXECUTION_AUTHORIZATION_HANDOFF_ENTRY",
+    "STEP 8AV started → Preparing retrieval execution authorization handoff."
+  );
+
+  OODebug.log(
+    "RETRIEVAL_EXECUTION_AUTHORIZATION_HANDOFF_RESULT",
+    "Handoff: " +
+      evidenceRetrievalExecutionAuthorizationHandoff.status +
+      " | Allowed: " +
+      evidenceRetrievalExecutionAuthorizationHandoff.allowed +
+      " | Targets: " +
+      evidenceRetrievalExecutionAuthorizationHandoff.targets.length
+  );
+
+  OODebug.log(
+    "RETRIEVAL_EXECUTION_AUTHORIZATION_HANDOFF_CHECKS",
+    "Authorization: " +
+      evidenceRetrievalExecutionAuthorizationHandoff.handoffChecks
+        .authorizationReady +
+      " | Authorized targets: " +
+      evidenceRetrievalExecutionAuthorizationHandoff.handoffChecks
+        .authorizedTargets +
+      " | Query: " +
+      evidenceRetrievalExecutionAuthorizationHandoff.handoffChecks
+        .queryAvailable +
+      " | Execution not started: " +
+      evidenceRetrievalExecutionAuthorizationHandoff.handoffChecks
+        .executionNotStarted +
+      " | Policy safe: " +
+      evidenceRetrievalExecutionAuthorizationHandoff.handoffChecks
+        .policySafe
+  );
+
+  OODebug.log(
+    "RETRIEVAL_EXECUTION_AUTHORIZATION_HANDOFF_STATUS",
+    evidenceRetrievalExecutionAuthorizationHandoff.targets
+      .map(
+        target =>
+          target.claimType +
+          " → " +
+          target.handoffStatus +
+          " | Execution: " +
+          target.executionStatus
+      )
+      .join(" | ")
+  );
+
+  OODebug.log(
+    "RETRIEVAL_EXECUTION_AUTHORIZATION_HANDOFF_POLICY",
+    "External source access: " +
+      evidenceRetrievalExecutionAuthorizationHandoff.executionPolicy
+        .externalSourceAccess +
+      " | Source retrieval: " +
+      evidenceRetrievalExecutionAuthorizationHandoff.executionPolicy
+        .sourceRetrieval +
+      " | Evidence insertion: " +
+      evidenceRetrievalExecutionAuthorizationHandoff.executionPolicy
+        .evidenceInsertion +
+      " | Claim support update: " +
+      evidenceRetrievalExecutionAuthorizationHandoff.executionPolicy
+        .claimSupportUpdate
+  );
+
+  OODebug.log(
+    "RETRIEVAL_EXECUTION_AUTHORIZATION_HANDOFF_SAFETY",
+    "External source access: " +
+      evidenceRetrievalExecutionAuthorizationHandoff.safety
+        .externalSourceAccess +
+      " | Source retrieval: " +
+      evidenceRetrievalExecutionAuthorizationHandoff.safety
+        .sourceRetrieval +
+      " | Evidence insertion: " +
+      evidenceRetrievalExecutionAuthorizationHandoff.safety
+        .evidenceInsertion +
+      " | Claim support: " +
+      evidenceRetrievalExecutionAuthorizationHandoff.safety
+        .claimSupport
+  );
+
+  OODebug.log(
+    "RETRIEVAL_EXECUTION_AUTHORIZATION_HANDOFF_REASON",
+    "Authorization handoff ready. Actual external retrieval has NOT started."
+  );
+  }
+        
 /* ==========================================
   RESULT VALUES
    ========================================== */
