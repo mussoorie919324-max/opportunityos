@@ -14983,7 +14983,431 @@ if (
   );
 
   }
-        
+  /* =========================================================
+   STEP 8BI — CONTROLLED RETRIEVAL EXECUTOR INVOCATION HANDOFF
+   SAFE SINGLE DECLARATION VERSION
+   ========================================================= */
+
+let evidenceControlledRetrievalExecutorInvocationHandoff = {
+  status: "blocked",
+  allowed: false,
+
+  handoffType:
+    "controlled_retrieval_executor_invocation_handoff",
+
+  searchQuery: null,
+  targets: [],
+
+  handoffChecks: {
+    invocationGateReady: false,
+    invocationAllowed: false,
+    targetsReady: false,
+    authorizationReady: false,
+    queryAvailable: false,
+    executionNotStarted: false,
+    policySafe: false,
+    externalAccessBlocked: false
+  },
+
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupport: "NOT_CHANGED"
+  }
+};
+
+
+/* =========================================================
+   STEP 8BI — INVOCATION HANDOFF CHECK
+   ========================================================= */
+
+try {
+
+  let invocationGate =
+    typeof evidenceControlledRetrievalExecutorInvocationGate !==
+      "undefined"
+      ? evidenceControlledRetrievalExecutorInvocationGate
+      : null;
+
+
+  if (
+    invocationGate &&
+    typeof invocationGate === "object"
+  ) {
+
+    let invocationGateReady =
+      invocationGate.status === "ready";
+
+
+    let invocationAllowed =
+      invocationGate.allowed === true;
+
+
+    let invocationTargets =
+      Array.isArray(invocationGate.targets)
+        ? invocationGate.targets
+        : [];
+
+
+    let searchQuery =
+      typeof invocationGate.searchQuery === "string"
+        ? invocationGate.searchQuery
+        : null;
+
+
+    let targetsReady =
+      invocationTargets.length === 5 &&
+      invocationTargets.every(function (target) {
+
+        return (
+          target &&
+          target.invocationStatus === "READY" &&
+          target.executionStatus === "NOT_STARTED" &&
+          target.retrievalStatus === "NOT_STARTED" &&
+          target.evidenceStatus === "NOT_STARTED" &&
+          target.claimSupportStatus === "NOT_CHANGED"
+        );
+
+      });
+
+
+    let authorizationReady =
+      invocationTargets.length === 5 &&
+      invocationTargets.every(function (target) {
+
+        return (
+          target &&
+          target.authorizationStatus === "AUTHORIZED" &&
+          target.executionAuthorizationStatus ===
+            "AUTHORIZED" &&
+          target.dispatchAuthorizationStatus ===
+            "AUTHORIZED" &&
+          target.dispatchExecutionAuthorizationStatus ===
+            "AUTHORIZED" &&
+          target.executionBoundaryStatus === "READY"
+        );
+
+      });
+
+
+    let queryAvailable =
+      typeof searchQuery === "string" &&
+      searchQuery.trim().length > 0;
+
+
+    let executionNotStarted =
+      invocationTargets.length === 5 &&
+      invocationTargets.every(function (target) {
+
+        return (
+          target &&
+          target.executionStatus === "NOT_STARTED" &&
+          target.retrievalStatus === "NOT_STARTED" &&
+          target.evidenceStatus === "NOT_STARTED" &&
+          target.claimSupportStatus === "NOT_CHANGED"
+        );
+
+      });
+
+
+    let executionPolicy =
+      invocationGate.executionPolicy &&
+      typeof invocationGate.executionPolicy === "object"
+        ? invocationGate.executionPolicy
+        : null;
+
+
+    let policySafe =
+      executionPolicy &&
+      executionPolicy.externalSourceAccess === false &&
+      executionPolicy.sourceRetrieval === false &&
+      executionPolicy.evidenceInsertion === false &&
+      executionPolicy.claimSupportUpdate === false;
+
+
+    let externalAccessBlocked =
+      executionPolicy &&
+      executionPolicy.externalSourceAccess === false;
+
+
+    evidenceControlledRetrievalExecutorInvocationHandoff
+      .handoffChecks = {
+
+        invocationGateReady:
+          invocationGateReady,
+
+        invocationAllowed:
+          invocationAllowed,
+
+        targetsReady:
+          targetsReady,
+
+        authorizationReady:
+          authorizationReady,
+
+        queryAvailable:
+          queryAvailable,
+
+        executionNotStarted:
+          executionNotStarted,
+
+        policySafe:
+          policySafe,
+
+        externalAccessBlocked:
+          externalAccessBlocked
+      };
+
+
+    if (
+      invocationGateReady &&
+      invocationAllowed &&
+      targetsReady &&
+      authorizationReady &&
+      queryAvailable &&
+      executionNotStarted &&
+      policySafe &&
+      externalAccessBlocked
+    ) {
+
+      evidenceControlledRetrievalExecutorInvocationHandoff
+        .status = "ready";
+
+      evidenceControlledRetrievalExecutorInvocationHandoff
+        .allowed = true;
+
+      evidenceControlledRetrievalExecutorInvocationHandoff
+        .searchQuery = searchQuery;
+
+
+      evidenceControlledRetrievalExecutorInvocationHandoff
+        .targets = invocationTargets.map(function (target) {
+
+          return {
+
+            claimType:
+              target.claimType || null,
+
+            selectedSourceType:
+              target.selectedSourceType || null,
+
+            fallbackSourceTypes:
+              Array.isArray(target.fallbackSourceTypes)
+                ? target.fallbackSourceTypes
+                : [],
+
+            authorizationStatus:
+              target.authorizationStatus || null,
+
+            gateStatus:
+              target.gateStatus || null,
+
+            executionAuthorizationStatus:
+              target.executionAuthorizationStatus || null,
+
+            handoffStatus:
+              target.handoffStatus || null,
+
+            dispatchPreparationStatus:
+              target.dispatchPreparationStatus || null,
+
+            dispatchAuthorizationStatus:
+              target.dispatchAuthorizationStatus || null,
+
+            boundaryStatus:
+              target.boundaryStatus || null,
+
+            dispatchExecutionAuthorizationStatus:
+              target.dispatchExecutionAuthorizationStatus ||
+              null,
+
+            executionBoundaryStatus:
+              target.executionBoundaryStatus || null,
+
+            requestHandoffStatus:
+              target.requestHandoffStatus || null,
+
+            executorIntakeStatus:
+              target.executorIntakeStatus || null,
+
+            executionContextStatus:
+              target.executionContextStatus || null,
+
+            executorContractStatus:
+              target.executorContractStatus || null,
+
+            executorReadinessStatus:
+              target.executorReadinessStatus || null,
+
+            executorActivationStatus:
+              target.executorActivationStatus || null,
+
+            invocationStatus:
+              "HANDOFF_READY",
+
+            executionStatus:
+              "NOT_STARTED",
+
+            retrievalStatus:
+              "NOT_STARTED",
+
+            evidenceStatus:
+              "NOT_STARTED",
+
+            claimSupportStatus:
+              "NOT_CHANGED"
+          };
+
+        });
+
+    }
+
+  }
+
+} catch (invocationHandoffError) {
+
+  evidenceControlledRetrievalExecutorInvocationHandoff.status =
+    "error";
+
+  evidenceControlledRetrievalExecutorInvocationHandoff.allowed =
+    false;
+
+  evidenceControlledRetrievalExecutorInvocationHandoff.error =
+    invocationHandoffError &&
+    invocationHandoffError.message
+      ? invocationHandoffError.message
+      : String(invocationHandoffError);
+
+
+  if (
+    typeof window !== "undefined" &&
+    window.OODebug &&
+    typeof window.OODebug.log === "function"
+  ) {
+
+    OODebug.log(
+      "CONTROLLED_RETRIEVAL_EXECUTOR_INVOCATION_HANDOFF_ERROR",
+      "STEP 8BI error",
+      evidenceControlledRetrievalExecutorInvocationHandoff.error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   STEP 8BI — DEBUGGER
+   ========================================================= */
+
+if (
+  typeof window !== "undefined" &&
+  window.OODebug &&
+  typeof window.OODebug.log === "function"
+) {
+
+  OODebug.log(
+    "CONTROLLED_RETRIEVAL_EXECUTOR_INVOCATION_HANDOFF_ENTRY",
+    "STEP 8BI started",
+    "Checking controlled retrieval executor invocation handoff."
+  );
+
+
+  OODebug.log(
+    "CONTROLLED_RETRIEVAL_EXECUTOR_INVOCATION_HANDOFF_RESULT",
+    "Handoff: " +
+      evidenceControlledRetrievalExecutorInvocationHandoff.status +
+      " | Allowed: " +
+      evidenceControlledRetrievalExecutorInvocationHandoff.allowed +
+      " | Targets: " +
+      evidenceControlledRetrievalExecutorInvocationHandoff.targets.length
+  );
+
+
+  OODebug.log(
+    "CONTROLLED_RETRIEVAL_EXECUTOR_INVOCATION_HANDOFF_CHECKS",
+    "Invocation gate ready: " +
+      evidenceControlledRetrievalExecutorInvocationHandoff
+        .handoffChecks.invocationGateReady +
+      " | Invocation allowed: " +
+      evidenceControlledRetrievalExecutorInvocationHandoff
+        .handoffChecks.invocationAllowed +
+      " | Targets ready: " +
+      evidenceControlledRetrievalExecutorInvocationHandoff
+        .handoffChecks.targetsReady +
+      " | Authorization ready: " +
+      evidenceControlledRetrievalExecutorInvocationHandoff
+        .handoffChecks.authorizationReady +
+      " | Query: " +
+      evidenceControlledRetrievalExecutorInvocationHandoff
+        .handoffChecks.queryAvailable +
+      " | Execution not started: " +
+      evidenceControlledRetrievalExecutorInvocationHandoff
+        .handoffChecks.executionNotStarted +
+      " | Policy safe: " +
+      evidenceControlledRetrievalExecutorInvocationHandoff
+        .handoffChecks.policySafe +
+      " | External access blocked: " +
+      evidenceControlledRetrievalExecutorInvocationHandoff
+        .handoffChecks.externalAccessBlocked
+  );
+
+
+  OODebug.log(
+    "CONTROLLED_RETRIEVAL_EXECUTOR_INVOCATION_HANDOFF_STATUS",
+    evidenceControlledRetrievalExecutorInvocationHandoff.targets
+      .map(function (target) {
+
+        return (
+          target.claimType +
+          " → " +
+          target.invocationStatus +
+          " | Execution: " +
+          target.executionStatus
+        );
+
+      })
+      .join(" | ")
+  );
+
+
+  OODebug.log(
+    "CONTROLLED_RETRIEVAL_EXECUTOR_INVOCATION_HANDOFF_POLICY",
+    "External source access: false | Source retrieval: false | Evidence insertion: false | Claim support update: false"
+  );
+
+
+  OODebug.log(
+    "CONTROLLED_RETRIEVAL_EXECUTOR_INVOCATION_HANDOFF_SAFETY",
+    "External source access: " +
+      evidenceControlledRetrievalExecutorInvocationHandoff
+        .safety.externalSourceAccess +
+      " | Source retrieval: " +
+      evidenceControlledRetrievalExecutorInvocationHandoff
+        .safety.sourceRetrieval +
+      " | Evidence insertion: " +
+      evidenceControlledRetrievalExecutorInvocationHandoff
+        .safety.evidenceInsertion +
+      " | Claim support: " +
+      evidenceControlledRetrievalExecutorInvocationHandoff
+        .safety.claimSupport
+  );
+
+
+  OODebug.log(
+    "CONTROLLED_RETRIEVAL_EXECUTOR_INVOCATION_HANDOFF_REASON",
+    "Controlled retrieval executor invocation handoff is ready. Actual external retrieval has NOT started."
+  );
+
+  }      
 /* ==========================================
    RESULT VALUES
    ========================================== */
