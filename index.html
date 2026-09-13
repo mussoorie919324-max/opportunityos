@@ -16121,7 +16121,6 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
 /* ==========================================
    STEP 8BL — HANDOFF AUTHORIZATION CHECK
    ========================================== */
-
 if (
   step8BLUpstreamHandoff &&
   step8BLUpstreamHandoff.status === "ready" &&
@@ -16132,11 +16131,19 @@ if (
   controlledRetrievalExecutorHandoff = {
     status: "ready",
     allowed: true,
-    targets: step8BLUpstreamHandoff.targets,
+
+    searchQuery:
+      typeof step8BLUpstreamHandoff.searchQuery === "string"
+        ? step8BLUpstreamHandoff.searchQuery.trim()
+        : "",
+
+    targets:
+      step8BLUpstreamHandoff.targets,
+
     reason:
       "Controlled retrieval executor handoff received from STEP 8BK."
   };
-}
+    }
 
 /* ==========================================
    STEP 8BL — SAFETY BOUNDARY
