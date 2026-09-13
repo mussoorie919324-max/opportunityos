@@ -12671,7 +12671,44 @@ const trend =
         "Needs Verification"
       )
     : (result.trend || "Needs Verification");
+/* ==========================================
+   VERIFICATION CONFIDENCE
+   ========================================== */
 
+const verificationConfidence =
+  result &&
+  result.verification &&
+  typeof result.verification.confidence === "number"
+    ? Math.round(result.verification.confidence * 100)
+    : (
+        result &&
+        typeof result.verificationConfidence === "number"
+          ? Math.round(result.verificationConfidence * 100)
+          : null
+      );
+
+const verificationConfidenceHTML =
+  verificationConfidence !== null
+    ? `
+      <div
+        style="
+          margin-top:22px;
+          padding:18px;
+          border-radius:16px;
+          border:1px solid rgba(59,130,246,.18);
+          background:rgba(59,130,246,.05);
+        "
+      >
+        <div class="result-label">
+          🛡️ VERIFICATION CONFIDENCE
+        </div>
+
+        <h2 style="margin:8px 0 0;">
+          ${verificationConfidence}%
+        </h2>
+      </div>
+    `
+    : "";
 
 /* ==========================================
    SAFE OPTIONAL SECTIONS
@@ -12731,7 +12768,7 @@ results.innerHTML = `
 
 
     ${finalVerificationCoverageHTML}
-
+${verificationConfidenceHTML}
     ${finalOpportunityDecisionHTML}
 
 
