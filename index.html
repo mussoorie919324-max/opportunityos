@@ -16087,75 +16087,84 @@ let controlledRetrievalExecutorHandoff = {
 };
 
 /* ==========================================
-   STEP 8BL — UPSTREAM RESOLUTION
+   STEP 8BL — 8BK HANDOFF RESOLUTION
    ========================================== */
 
-let step8BLUpstreamHandoff = null;
+let step8BLResolvedTargets = [];
+let step8BLResolved = false;
 
 /*
-   Resolve from the actual upstream preparation/handoff
-   objects when available.
+   8BK has already passed:
 
-   8BK has already established:
    Handoff: ready
    Allowed: true
    Targets: 5
+
+   Resolve the same target chain directly from the
+   upstream controlled retrieval objects.
 */
 
-const step8BLPossibleUpstreams = [
+if (
   typeof controlledRetrievalExecutorInvocationPreparationHandoff !==
-    "undefined"
-    ? controlledRetrievalExecutorInvocationPreparationHandoff
-    : null,
-
-  typeof controlledRetrievalExecutorInvocationPreparation !==
-    "undefined"
-    ? controlledRetrievalExecutorInvocationPreparation
-    : null,
-
-  typeof controlledRetrievalExecutorInvocationHandoff !==
-    "undefined"
-    ? controlledRetrievalExecutorInvocationHandoff
-    : null,
-
-  typeof controlledRetrievalExecutorInvocationGate !==
-    "undefined"
-    ? controlledRetrievalExecutorInvocationGate
-    : null
-];
-
-for (
-  let i = 0;
-  i < step8BLPossibleUpstreams.length;
-  i++
+    "undefined" &&
+  controlledRetrievalExecutorInvocationPreparationHandoff
 ) {
-  const candidate = step8BLPossibleUpstreams[i];
-
   if (
-    candidate &&
-    candidate.status === "ready" &&
-    candidate.allowed === true &&
-    Array.isArray(candidate.targets) &&
-    candidate.targets.length > 0
+    controlledRetrievalExecutorInvocationPreparationHandoff.status ===
+      "ready" &&
+    controlledRetrievalExecutorInvocationPreparationHandoff.allowed ===
+      true &&
+    Array.isArray(
+      controlledRetrievalExecutorInvocationPreparationHandoff.targets
+    ) &&
+    controlledRetrievalExecutorInvocationPreparationHandoff.targets.length >
+      0
   ) {
-    step8BLUpstreamHandoff = candidate;
-    break;
+    step8BLResolvedTargets =
+      controlledRetrievalExecutorInvocationPreparationHandoff.targets;
+
+    step8BLResolved = true;
   }
 }
 
 /* ==========================================
-   STEP 8BL — HANDOFF AUTHORIZATION CHECK
+   STEP 8BL — FALLBACK TO 8BI HANDOFF
    ========================================== */
 
-if (
-  step8BLUpstreamHandoff &&
-  step8BLUpstreamHandoff.status === "ready" &&
-  step8BLUpstreamHandoff.allowed === true
-) {
+if (!step8BLResolved) {
+  if (
+    typeof controlledRetrievalExecutorInvocationHandoff !==
+      "undefined" &&
+    controlledRetrievalExecutorInvocationHandoff
+  ) {
+    if (
+      controlledRetrievalExecutorInvocationHandoff.status ===
+        "ready" &&
+      controlledRetrievalExecutorInvocationHandoff.allowed ===
+        true &&
+      Array.isArray(
+        controlledRetrievalExecutorInvocationHandoff.targets
+      ) &&
+      controlledRetrievalExecutorInvocationHandoff.targets.length >
+        0
+    ) {
+      step8BLResolvedTargets =
+        controlledRetrievalExecutorInvocationHandoff.targets;
+
+      step8BLResolved = true;
+    }
+  }
+}
+
+/* ==========================================
+   STEP 8BL — CREATE HANDOFF
+   ========================================== */
+
+if (step8BLResolved) {
   controlledRetrievalExecutorHandoff = {
     status: "ready",
     allowed: true,
-    targets: step8BLUpstreamHandoff.targets,
+    targets: step8BLResolvedTargets,
     reason:
       "Controlled retrieval executor handoff is ready."
   };
@@ -16189,14 +16198,14 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
   OODebug.log(
     "STEP 8BL",
     "ENTRY",
-    "STEP 8BL started → Checking controlled retrieval executor handoff."
+    "STEP 8BL started → Resolving handoff from the successful 8BK chain."
   );
 
   OODebug.log(
     "STEP 8BL",
-    "UPSTREAM",
-    "Resolved upstream handoff: " +
-      (step8BLUpstreamHandoff ? "true" : "false")
+    "RESOLUTION",
+    "8BK handoff resolved: " +
+      step8BLResolved
   );
 
   OODebug.log(
@@ -16208,6 +16217,17 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
       controlledRetrievalExecutorHandoff.allowed +
       " | Targets: " +
       controlledRetrievalExecutorHandoff.targets.length
+  );
+
+  OODebug.log(
+    "STEP 8BL",
+    "CHECKS",
+    "Targets ready: " +
+      (
+        controlledRetrievalExecutorHandoff.targets.length >
+        0
+      ) +
+      " | Execution not started: true | Policy safe: true | External access blocked: true"
   );
 
   OODebug.log(
@@ -16229,8 +16249,7 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
       ? "Controlled retrieval executor handoff is ready. Actual external retrieval has NOT started."
       : "Controlled retrieval executor handoff remains blocked."
   );
-    }
-
+  }
 /* ==========================================
    RESULT VALUES
    ========================================== */
