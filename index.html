@@ -12706,6 +12706,33 @@ const verificationConfidenceHTML =
         <h2 style="margin:8px 0 0;">
           ${verificationConfidence}%
         </h2>
+<p
+  style="
+    margin:8px 0 0;
+    line-height:1.5;
+    opacity:.78;
+  "
+>
+  Verification confidence reflects how strongly the available
+  evidence supports the current opportunity profile.
+</p>
+
+<div
+  style="
+    margin-top:10px;
+    font-size:13px;
+    opacity:.7;
+  "
+>
+  Current evidence confidence: ${
+    verificationConfidence < 40
+      ? "Limited"
+      : verificationConfidence < 70
+        ? "Moderate"
+        : verificationConfidence < 90
+          ? "Strong"
+          : "Very Strong"
+    }
       </div>
     `
     : "";
