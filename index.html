@@ -16098,7 +16098,26 @@ let controlledRetrievalExecutorHandoff = {
 
 const step8BLUpstreamHandoff =
   window.__OO_8BK_HANDOFF || null;
-
+if (typeof OODebug !== "undefined" && OODebug.log) {
+  OODebug.log(
+    "STEP_8BL",
+    "UPSTREAM_QUERY_CHECK",
+    "8BK searchQuery: " +
+      (
+        step8BLUpstreamHandoff &&
+        typeof step8BLUpstreamHandoff.searchQuery === "string"
+          ? step8BLUpstreamHandoff.searchQuery
+          : "MISSING"
+      ) +
+      " | Targets: " +
+      (
+        step8BLUpstreamHandoff &&
+        Array.isArray(step8BLUpstreamHandoff.targets)
+          ? step8BLUpstreamHandoff.targets.length
+          : 0
+      )
+  );
+    }
 /* ==========================================
    STEP 8BL — HANDOFF AUTHORIZATION CHECK
    ========================================== */
