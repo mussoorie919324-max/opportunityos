@@ -15704,7 +15704,287 @@ OODebug.log(
     evidenceControlledRetrievalExecutorInvocationPreparation.reason
   );
     }
- 
+ /* =========================================================
+   STEP 8BK — CONTROLLED RETRIEVAL EXECUTOR INVOCATION
+   PREPARATION HANDOFF
+   ========================================================= */
+
+let evidenceControlledRetrievalExecutorInvocationPreparationHandoff = {
+  status: "blocked",
+  allowed: false,
+  handoffType:
+    "controlled_retrieval_executor_invocation_preparation_handoff",
+  searchQuery: null,
+  targets: [],
+  checks: {},
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupport: "NOT_CHANGED"
+  },
+  reason:
+    "Controlled retrieval executor invocation preparation handoff is not authorized."
+};
+
+
+/* =========================================================
+   STEP 8BK — INPUT READINESS
+   ========================================================= */
+
+let step8BKPreparationReady =
+  typeof evidenceControlledRetrievalExecutorInvocationPreparation !==
+    "undefined" &&
+  evidenceControlledRetrievalExecutorInvocationPreparation &&
+  evidenceControlledRetrievalExecutorInvocationPreparation.status ===
+    "ready";
+
+let step8BKPreparationAllowed =
+  step8BKPreparationReady &&
+  evidenceControlledRetrievalExecutorInvocationPreparation.allowed === true;
+
+let step8BKTargets =
+  step8BKPreparationReady &&
+  Array.isArray(
+    evidenceControlledRetrievalExecutorInvocationPreparation.targets
+  )
+    ? evidenceControlledRetrievalExecutorInvocationPreparation.targets
+    : [];
+
+let step8BKQueryAvailable =
+  step8BKPreparationReady &&
+  typeof evidenceControlledRetrievalExecutorInvocationPreparation.searchQuery ===
+    "string" &&
+  evidenceControlledRetrievalExecutorInvocationPreparation.searchQuery.trim()
+    .length > 0;
+
+let step8BKTargetsReady =
+  step8BKTargets.length > 0 &&
+  step8BKTargets.every(function (target) {
+    return (
+      target &&
+      target.invocationStatus === "PREPARATION_READY" &&
+      target.executionStatus === "NOT_STARTED" &&
+      target.retrievalStatus === "NOT_STARTED" &&
+      target.evidenceStatus === "NOT_STARTED"
+    );
+  });
+
+let step8BKAuthorizationReady =
+  step8BKPreparationReady &&
+  evidenceControlledRetrievalExecutorInvocationPreparation.checks &&
+  evidenceControlledRetrievalExecutorInvocationPreparation.checks
+    .authorizationReady === true;
+
+let step8BKExecutionNotStarted =
+  step8BKPreparationReady &&
+  evidenceControlledRetrievalExecutorInvocationPreparation.checks &&
+  evidenceControlledRetrievalExecutorInvocationPreparation.checks
+    .executionNotStarted === true;
+
+let step8BKPolicySafe =
+  step8BKPreparationReady &&
+  evidenceControlledRetrievalExecutorInvocationPreparation.checks &&
+  evidenceControlledRetrievalExecutorInvocationPreparation.checks
+    .policySafe === true;
+
+let step8BKExternalAccessBlocked =
+  step8BKPreparationReady &&
+  evidenceControlledRetrievalExecutorInvocationPreparation.checks &&
+  evidenceControlledRetrievalExecutorInvocationPreparation.checks
+    .externalAccessBlocked === true;
+
+
+/* =========================================================
+   STEP 8BK — CONTROLLED HANDOFF DECISION
+   ========================================================= */
+
+let step8BKReady =
+  step8BKPreparationReady &&
+  step8BKPreparationAllowed &&
+  step8BKTargetsReady &&
+  step8BKQueryAvailable &&
+  step8BKAuthorizationReady &&
+  step8BKExecutionNotStarted &&
+  step8BKPolicySafe &&
+  step8BKExternalAccessBlocked;
+
+
+/* =========================================================
+   STEP 8BK — HANDOFF ENVELOPE
+   ========================================================= */
+
+if (step8BKReady) {
+
+  evidenceControlledRetrievalExecutorInvocationPreparationHandoff = {
+    status: "ready",
+    allowed: true,
+
+    handoffType:
+      "controlled_retrieval_executor_invocation_preparation_handoff",
+
+    searchQuery:
+      evidenceControlledRetrievalExecutorInvocationPreparation.searchQuery,
+
+    targets: step8BKTargets.map(function (target) {
+      return {
+        sourceType: target.sourceType || null,
+        fallbackSourceTypes:
+          Array.isArray(target.fallbackSourceTypes)
+            ? target.fallbackSourceTypes.slice()
+            : [],
+
+        invocationStatus: "HANDOFF_READY",
+        executionStatus: "NOT_STARTED",
+        retrievalStatus: "NOT_STARTED",
+        evidenceStatus: "NOT_STARTED"
+      };
+    }),
+
+    checks: {
+      preparationReady: true,
+      preparationAllowed: true,
+      targetsReady: true,
+      authorizationReady: true,
+      queryAvailable: true,
+      executionNotStarted: true,
+      policySafe: true,
+      externalAccessBlocked: true
+    },
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupport: "NOT_CHANGED"
+    },
+
+    reason:
+      "Controlled retrieval executor invocation preparation handoff is ready. Actual external retrieval has NOT started."
+  };
+
+} else {
+
+  evidenceControlledRetrievalExecutorInvocationPreparationHandoff = {
+    status: "blocked",
+    allowed: false,
+
+    handoffType:
+      "controlled_retrieval_executor_invocation_preparation_handoff",
+
+    searchQuery:
+      step8BKQueryAvailable
+        ? evidenceControlledRetrievalExecutorInvocationPreparation.searchQuery
+        : null,
+
+    targets: [],
+
+    checks: {
+      preparationReady: step8BKPreparationReady,
+      preparationAllowed: step8BKPreparationAllowed,
+      targetsReady: step8BKTargetsReady,
+      authorizationReady: step8BKAuthorizationReady,
+      queryAvailable: step8BKQueryAvailable,
+      executionNotStarted: step8BKExecutionNotStarted,
+      policySafe: step8BKPolicySafe,
+      externalAccessBlocked: step8BKExternalAccessBlocked
+    },
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupport: "NOT_CHANGED"
+    },
+
+    reason:
+      "Controlled retrieval executor invocation preparation handoff is blocked because one or more safety/readiness conditions are not satisfied."
+  };
+}
+
+
+/* =========================================================
+   STEP 8BK — DEBUGGER
+   ========================================================= */
+
+if (typeof OODebug !== "undefined" && OODebug.log) {
+
+  OODebug.log(
+    "STEP_8BK",
+    "CONTROLLED_RETRIEVAL_EXECUTOR_INVOCATION_PREPARATION_HANDOFF_ENTRY",
+    "STEP 8BK started → Checking controlled retrieval executor invocation preparation handoff."
+  );
+
+  OODebug.log(
+    "STEP_8BK",
+    "CONTROLLED_RETRIEVAL_EXECUTOR_INVOCATION_PREPARATION_HANDOFF_RESULT",
+    "Handoff: " +
+      evidenceControlledRetrievalExecutorInvocationPreparationHandoff.status +
+      " | Allowed: " +
+      evidenceControlledRetrievalExecutorInvocationPreparationHandoff.allowed +
+      " | Targets: " +
+      evidenceControlledRetrievalExecutorInvocationPreparationHandoff.targets.length
+  );
+
+  OODebug.log(
+    "STEP_8BK",
+    "CONTROLLED_RETRIEVAL_EXECUTOR_INVOCATION_PREPARATION_HANDOFF_CHECKS",
+    "Preparation ready: " +
+      step8BKPreparationReady +
+      " | Preparation allowed: " +
+      step8BKPreparationAllowed +
+      " | Targets ready: " +
+      step8BKTargetsReady +
+      " | Authorization ready: " +
+      step8BKAuthorizationReady +
+      " | Query: " +
+      step8BKQueryAvailable +
+      " | Execution not started: " +
+      step8BKExecutionNotStarted +
+      " | Policy safe: " +
+      step8BKPolicySafe +
+      " | External access blocked: " +
+      step8BKExternalAccessBlocked
+  );
+
+  OODebug.log(
+    "STEP_8BK",
+    "CONTROLLED_RETRIEVAL_EXECUTOR_INVOCATION_PREPARATION_HANDOFF_POLICY",
+    "External source access: false | Source retrieval: false | Evidence insertion: false | Claim support update: false"
+  );
+
+  OODebug.log(
+    "STEP_8BK",
+    "CONTROLLED_RETRIEVAL_EXECUTOR_INVOCATION_PREPARATION_HANDOFF_SAFETY",
+    "External source access: NOT_STARTED | Source retrieval: NOT_STARTED | Evidence insertion: NOT_STARTED | Claim support: NOT_CHANGED"
+  );
+
+  OODebug.log(
+    "STEP_8BK",
+    "CONTROLLED_RETRIEVAL_EXECUTOR_INVOCATION_PREPARATION_HANDOFF_REASON",
+    evidenceControlledRetrievalExecutorInvocationPreparationHandoff.reason
+  );
+  }
         
 /* ==========================================
    RESULT VALUES
