@@ -15705,8 +15705,7 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
     evidenceControlledRetrievalExecutorInvocationPreparation.reason
   );
   }
-
- /* =========================================================
+/* =========================================================
    STEP 8BK — CONTROLLED RETRIEVAL EXECUTOR INVOCATION
    PREPARATION HANDOFF
    ========================================================= */
@@ -15716,9 +15715,18 @@ let evidenceControlledRetrievalExecutorInvocationPreparationHandoff = {
   allowed: false,
   handoffType:
     "controlled_retrieval_executor_invocation_preparation_handoff",
-  searchQuery: null,
+  searchQuery: "",
   targets: [],
-  checks: {},
+  checks: {
+    preparationReady: false,
+    preparationAllowed: false,
+    targetsReady: false,
+    authorizationReady: false,
+    queryAvailable: false,
+    executionNotStarted: false,
+    policySafe: false,
+    externalAccessBlocked: false
+  },
   executionPolicy: {
     externalSourceAccess: false,
     sourceRetrieval: false,
@@ -15732,43 +15740,157 @@ let evidenceControlledRetrievalExecutorInvocationPreparationHandoff = {
     claimSupport: "NOT_CHANGED"
   },
   reason:
-    "Controlled retrieval executor invocation preparation handoff is not authorized."
+    "Controlled retrieval executor invocation preparation handoff has not been established."
 };
 
+if (typeof OODebug !== "undefined" && OODebug.log) {
+  OODebug.log(
+    "STEP_8BK",
+    "CONTROLLED_RETRIEVAL_EXECUTOR_INVOCATION_PREPARATION_HANDOFF_ENTRY",
+    "STEP 8BK started → Checking controlled retrieval executor invocation preparation handoff."
+  );
+}
 
-/* =========================================================
-   STEP 8BK — INPUT READINESS
-   ========================================================= */
+/* ==========================================
+   STEP 8BK — PREPARATION SOURCE
+   ========================================== */
 
-let step8BKPreparationReady =
-  typeof evidenceControlledRetrievalExecutorInvocationPreparation !==
-    "undefined" &&
-  evidenceControlledRetrievalExecutorInvocationPreparation &&
-  evidenceControlledRetrievalExecutorInvocationPreparation.status ===
-    "ready";
+const step8BKPreparation =
+  evidenceControlledRetrievalExecutorInvocationPreparation || null;
 
-let step8BKPreparationAllowed =
-  step8BKPreparationReady &&
-  evidenceControlledRetrievalExecutorInvocationPreparation.allowed === true;
+const step8BKPreparationReady =
+  !!(
+    step8BKPreparation &&
+    step8BKPreparation.status === "ready"
+  );
 
-let step8BKTargets =
-  step8BKPreparationReady &&
-  Array.isArray(
-    evidenceControlledRetrievalExecutorInvocationPreparation.targets
-  )
-    ? evidenceControlledRetrievalExecutorInvocationPreparation.targets
+const step8BKPreparationAllowed =
+  !!(
+    step8BKPreparation &&
+    step8BKPreparation.allowed === true
+  );
+
+/* ==========================================
+   STEP 8BK — TARGET RESOLUTION
+   ========================================== */
+
+const step8BKTargets =
+  step8BKPreparation &&
+  Array.isArray(step8BKPreparation.targets)
+    ? step8BKPreparation.targets
     : [];
 
-let step8BKQueryAvailable =
-  step8BKPreparationReady &&
-  typeof evidenceControlledRetrievalExecutorInvocationPreparation.searchQuery ===
-    "string" &&
-  evidenceControlledRetrievalExecutorInvocationPreparation.searchQuery.trim()
-    .length > 0;
+const step8BKTargetsReady =
+  step8BKTargets.length > 0;
 
-let step8BKTargetsReady =
+/* ==========================================
+   STEP 8BK — AUTHORIZATION RESOLUTION
+   ========================================== */
+
+const step8BKAuthorizationReady =
+  !!(
+    step8BKPreparation &&
+    (
+      step8BKPreparation.authorizationReady === true ||
+      (
+        step8BKPreparation.checks &&
+        step8BKPreparation.checks.authorizationReady === true
+      ) ||
+      (
+        typeof evidenceControlledRetrievalExecutorInvocationHandoff !==
+          "undefined" &&
+        evidenceControlledRetrievalExecutorInvocationHandoff &&
+        evidenceControlledRetrievalExecutorInvocationHandoff.allowed === true
+      )
+    )
+  );
+
+/* ==========================================
+   STEP 8BK — QUERY RESOLUTION
+   ========================================== */
+
+const step8BKSearchQuery =
+  step8BKPreparation &&
+  typeof step8BKPreparation.searchQuery === "string"
+    ? step8BKPreparation.searchQuery.trim()
+    : "";
+
+const step8BKQueryAvailable =
+  step8BKSearchQuery.length > 0;
+
+/* ==========================================
+   STEP 8BK — EXECUTION SAFETY RESOLUTION
+   ========================================== */
+
+const step8BKExecutionNotStarted =
+  !!(
+    step8BKPreparation &&
+    (
+      step8BKPreparation.executionNotStarted === true ||
+      (
+        step8BKPreparation.checks &&
+        step8BKPreparation.checks.executionNotStarted === true
+      ) ||
+      step8BKTargets.every(function(target) {
+        return (
+          target &&
+          target.executionStatus === "NOT_STARTED"
+        );
+      })
+    )
+  );
+
+/* ==========================================
+   STEP 8BK — POLICY SAFETY RESOLUTION
+   ========================================== */
+
+const step8BKPolicySafe =
+  !!(
+    step8BKPreparation &&
+    (
+      step8BKPreparation.policySafe === true ||
+      (
+        step8BKPreparation.checks &&
+        step8BKPreparation.checks.policySafe === true
+      ) ||
+      (
+        step8BKPreparation.executionPolicy &&
+        step8BKPreparation.executionPolicy.externalSourceAccess === false &&
+        step8BKPreparation.executionPolicy.sourceRetrieval === false &&
+        step8BKPreparation.executionPolicy.evidenceInsertion === false &&
+        step8BKPreparation.executionPolicy.claimSupportUpdate === false
+      )
+    )
+  );
+
+/* ==========================================
+   STEP 8BK — EXTERNAL ACCESS SAFETY
+   ========================================== */
+
+const step8BKExternalAccessBlocked =
+  !!(
+    step8BKPreparation &&
+    (
+      step8BKPreparation.externalAccessBlocked === true ||
+      (
+        step8BKPreparation.checks &&
+        step8BKPreparation.checks.externalAccessBlocked === true
+      ) ||
+      (
+        step8BKPreparation.executionPolicy &&
+        step8BKPreparation.executionPolicy.externalSourceAccess === false &&
+        step8BKPreparation.executionPolicy.sourceRetrieval === false
+      )
+    )
+  );
+
+/* ==========================================
+   STEP 8BK — TARGET SAFETY VALIDATION
+   ========================================== */
+
+const step8BKTargetsSafe =
   step8BKTargets.length > 0 &&
-  step8BKTargets.every(function (target) {
+  step8BKTargets.every(function(target) {
     return (
       target &&
       target.invocationStatus === "PREPARATION_READY" &&
@@ -15778,49 +15900,24 @@ let step8BKTargetsReady =
     );
   });
 
-let step8BKAuthorizationReady =
-  step8BKPreparationReady &&
-  evidenceControlledRetrievalExecutorInvocationPreparation.checks &&
-  evidenceControlledRetrievalExecutorInvocationPreparation.checks
-    .authorizationReady === true;
+/* ==========================================
+   STEP 8BK — FINAL READINESS
+   ========================================== */
 
-let step8BKExecutionNotStarted =
-  step8BKPreparationReady &&
-  evidenceControlledRetrievalExecutorInvocationPreparation.checks &&
-  evidenceControlledRetrievalExecutorInvocationPreparation.checks
-    .executionNotStarted === true;
-
-let step8BKPolicySafe =
-  step8BKPreparationReady &&
-  evidenceControlledRetrievalExecutorInvocationPreparation.checks &&
-  evidenceControlledRetrievalExecutorInvocationPreparation.checks
-    .policySafe === true;
-
-let step8BKExternalAccessBlocked =
-  step8BKPreparationReady &&
-  evidenceControlledRetrievalExecutorInvocationPreparation.checks &&
-  evidenceControlledRetrievalExecutorInvocationPreparation.checks
-    .externalAccessBlocked === true;
-
-
-/* =========================================================
-   STEP 8BK — CONTROLLED HANDOFF DECISION
-   ========================================================= */
-
-let step8BKReady =
+const step8BKReady =
   step8BKPreparationReady &&
   step8BKPreparationAllowed &&
   step8BKTargetsReady &&
-  step8BKQueryAvailable &&
+  step8BKTargetsSafe &&
   step8BKAuthorizationReady &&
+  step8BKQueryAvailable &&
   step8BKExecutionNotStarted &&
   step8BKPolicySafe &&
   step8BKExternalAccessBlocked;
 
-
-/* =========================================================
-   STEP 8BK — HANDOFF ENVELOPE
-   ========================================================= */
+/* ==========================================
+   STEP 8BK — BUILD HANDOFF
+   ========================================== */
 
 if (step8BKReady) {
 
@@ -15831,15 +15928,15 @@ if (step8BKReady) {
     handoffType:
       "controlled_retrieval_executor_invocation_preparation_handoff",
 
-    searchQuery:
-      evidenceControlledRetrievalExecutorInvocationPreparation.searchQuery,
+    searchQuery: step8BKSearchQuery,
 
-    targets: step8BKTargets.map(function (target) {
+    targets: step8BKTargets.map(function(target) {
       return {
+        claimKey: target.claimKey || null,
         sourceType: target.sourceType || null,
         fallbackSourceTypes:
           Array.isArray(target.fallbackSourceTypes)
-            ? target.fallbackSourceTypes.slice()
+            ? target.fallbackSourceTypes
             : [],
 
         invocationStatus: "HANDOFF_READY",
@@ -15887,17 +15984,14 @@ if (step8BKReady) {
     handoffType:
       "controlled_retrieval_executor_invocation_preparation_handoff",
 
-    searchQuery:
-      step8BKQueryAvailable
-        ? evidenceControlledRetrievalExecutorInvocationPreparation.searchQuery
-        : null,
+    searchQuery: step8BKSearchQuery,
 
     targets: [],
 
     checks: {
       preparationReady: step8BKPreparationReady,
       preparationAllowed: step8BKPreparationAllowed,
-      targetsReady: step8BKTargetsReady,
+      targetsReady: step8BKTargetsReady && step8BKTargetsSafe,
       authorizationReady: step8BKAuthorizationReady,
       queryAvailable: step8BKQueryAvailable,
       executionNotStarted: step8BKExecutionNotStarted,
@@ -15924,18 +16018,11 @@ if (step8BKReady) {
   };
 }
 
-
-/* =========================================================
+/* ==========================================
    STEP 8BK — DEBUGGER
-   ========================================================= */
+   ========================================== */
 
 if (typeof OODebug !== "undefined" && OODebug.log) {
-
-  OODebug.log(
-    "STEP_8BK",
-    "CONTROLLED_RETRIEVAL_EXECUTOR_INVOCATION_PREPARATION_HANDOFF_ENTRY",
-    "STEP 8BK started → Checking controlled retrieval executor invocation preparation handoff."
-  );
 
   OODebug.log(
     "STEP_8BK",
@@ -15956,7 +16043,7 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
       " | Preparation allowed: " +
       step8BKPreparationAllowed +
       " | Targets ready: " +
-      step8BKTargetsReady +
+      (step8BKTargetsReady && step8BKTargetsSafe) +
       " | Authorization ready: " +
       step8BKAuthorizationReady +
       " | Query: " +
@@ -15987,6 +16074,7 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
     evidenceControlledRetrievalExecutorInvocationPreparationHandoff.reason
   );
   }
+ 
         
 /* ==========================================
    RESULT VALUES
