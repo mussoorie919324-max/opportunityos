@@ -13375,7 +13375,397 @@ if (
   );
 
   }
-        
+/* =========================================================
+   STEP 8BE — CONTROLLED RETRIEVAL EXECUTOR CONTRACT
+   SAFE SINGLE DECLARATION VERSION
+   ========================================================= */
+
+let evidenceControlledRetrievalExecutorContract = {
+  status: "blocked",
+  allowed: false,
+
+  requestType:
+    "controlled_evidence_retrieval_executor_contract",
+
+  searchQuery: null,
+  targets: [],
+
+  contractChecks: {
+    contextReady: false,
+    targetsReady: false,
+    authorizationReady: false,
+    queryAvailable: false,
+    executionNotStarted: false,
+    policySafe: false
+  },
+
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupport: "NOT_CHANGED"
+  }
+};
+
+
+/* =========================================================
+   STEP 8BE — EXECUTOR CONTRACT CHECK
+   ========================================================= */
+
+try {
+
+  let context =
+    typeof evidenceControlledRetrievalExecutionContext !==
+      "undefined"
+      ? evidenceControlledRetrievalExecutionContext
+      : null;
+
+
+  if (
+    context &&
+    typeof context === "object" &&
+    context.status === "ready" &&
+    context.allowed === true
+  ) {
+
+    let contextTargets =
+      Array.isArray(context.targets)
+        ? context.targets
+        : [];
+
+
+    let searchQuery =
+      typeof context.searchQuery === "string"
+        ? context.searchQuery
+        : null;
+
+
+    let contextReady = true;
+
+
+    let targetsReady =
+      contextTargets.length === 5 &&
+      contextTargets.every(function (target) {
+        return (
+          target &&
+          target.executionContextStatus === "READY"
+        );
+      });
+
+
+    let authorizationReady =
+      contextTargets.length === 5 &&
+      contextTargets.every(function (target) {
+        return (
+          target &&
+          target.executionAuthorizationStatus ===
+            "AUTHORIZED" &&
+          target.dispatchExecutionAuthorizationStatus ===
+            "AUTHORIZED" &&
+          target.executionBoundaryStatus ===
+            "READY"
+        );
+      });
+
+
+    let queryAvailable =
+      typeof searchQuery === "string" &&
+      searchQuery.trim().length > 0;
+
+
+    let executionNotStarted =
+      contextTargets.length === 5 &&
+      contextTargets.every(function (target) {
+        return (
+          target &&
+          target.executionStatus === "NOT_STARTED" &&
+          target.retrievalStatus === "NOT_STARTED" &&
+          target.evidenceStatus === "NOT_STARTED" &&
+          target.claimSupportStatus === "NOT_CHANGED"
+        );
+      });
+
+
+    let contextPolicy =
+      context.executionPolicy &&
+      typeof context.executionPolicy === "object"
+        ? context.executionPolicy
+        : null;
+
+
+    let policySafe =
+      contextPolicy &&
+      contextPolicy.externalSourceAccess === false &&
+      contextPolicy.sourceRetrieval === false &&
+      contextPolicy.evidenceInsertion === false &&
+      contextPolicy.claimSupportUpdate === false;
+
+
+    evidenceControlledRetrievalExecutorContract
+      .contractChecks = {
+
+        contextReady:
+          contextReady,
+
+        targetsReady:
+          targetsReady,
+
+        authorizationReady:
+          authorizationReady,
+
+        queryAvailable:
+          queryAvailable,
+
+        executionNotStarted:
+          executionNotStarted,
+
+        policySafe:
+          policySafe
+      };
+
+
+    if (
+      contextReady &&
+      targetsReady &&
+      authorizationReady &&
+      queryAvailable &&
+      executionNotStarted &&
+      policySafe
+    ) {
+
+      evidenceControlledRetrievalExecutorContract
+        .status = "ready";
+
+      evidenceControlledRetrievalExecutorContract
+        .allowed = true;
+
+      evidenceControlledRetrievalExecutorContract
+        .searchQuery = searchQuery;
+
+
+      evidenceControlledRetrievalExecutorContract
+        .targets = contextTargets.map(function (target) {
+
+          return {
+
+            claimType:
+              target.claimType || null,
+
+            selectedSourceType:
+              target.selectedSourceType || null,
+
+            fallbackSourceTypes:
+              Array.isArray(target.fallbackSourceTypes)
+                ? target.fallbackSourceTypes
+                : [],
+
+            authorizationStatus:
+              target.authorizationStatus ||
+              null,
+
+            gateStatus:
+              target.gateStatus ||
+              null,
+
+            executionAuthorizationStatus:
+              target.executionAuthorizationStatus ||
+              null,
+
+            handoffStatus:
+              target.handoffStatus ||
+              null,
+
+            dispatchPreparationStatus:
+              target.dispatchPreparationStatus ||
+              null,
+
+            dispatchAuthorizationStatus:
+              target.dispatchAuthorizationStatus ||
+              null,
+
+            boundaryStatus:
+              target.boundaryStatus ||
+              null,
+
+            dispatchExecutionAuthorizationStatus:
+              target.dispatchExecutionAuthorizationStatus ||
+              null,
+
+            executionBoundaryStatus:
+              target.executionBoundaryStatus ||
+              null,
+
+            requestHandoffStatus:
+              target.requestHandoffStatus ||
+              null,
+
+            executorIntakeStatus:
+              target.executorIntakeStatus ||
+              null,
+
+            executionContextStatus:
+              target.executionContextStatus ||
+              null,
+
+            executorContractStatus:
+              "READY",
+
+            executionStatus:
+              "NOT_STARTED",
+
+            retrievalStatus:
+              "NOT_STARTED",
+
+            evidenceStatus:
+              "NOT_STARTED",
+
+            claimSupportStatus:
+              "NOT_CHANGED"
+          };
+
+        });
+
+    }
+
+  }
+
+} catch (executorContractError) {
+
+  evidenceControlledRetrievalExecutorContract.status =
+    "error";
+
+  evidenceControlledRetrievalExecutorContract.allowed =
+    false;
+
+  evidenceControlledRetrievalExecutorContract.error =
+    executorContractError &&
+    executorContractError.message
+      ? executorContractError.message
+      : String(executorContractError);
+
+
+  if (
+    typeof window !== "undefined" &&
+    window.OODebug &&
+    typeof window.OODebug.log === "function"
+  ) {
+
+    OODebug.log(
+      "CONTROLLED_RETRIEVAL_EXECUTOR_CONTRACT_ERROR",
+      "STEP 8BE error",
+      evidenceControlledRetrievalExecutorContract.error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   STEP 8BE — DEBUGGER
+   ========================================================= */
+
+if (
+  typeof window !== "undefined" &&
+  window.OODebug &&
+  typeof window.OODebug.log === "function"
+) {
+
+  OODebug.log(
+    "CONTROLLED_RETRIEVAL_EXECUTOR_CONTRACT_ENTRY",
+    "STEP 8BE started",
+    "Establishing the controlled retrieval executor contract."
+  );
+
+
+  OODebug.log(
+    "CONTROLLED_RETRIEVAL_EXECUTOR_CONTRACT_RESULT",
+    "Contract: " +
+      evidenceControlledRetrievalExecutorContract.status +
+      " | Allowed: " +
+      evidenceControlledRetrievalExecutorContract.allowed +
+      " | Targets: " +
+      evidenceControlledRetrievalExecutorContract.targets.length
+  );
+
+
+  OODebug.log(
+    "CONTROLLED_RETRIEVAL_EXECUTOR_CONTRACT_CHECKS",
+    "Context ready: " +
+      evidenceControlledRetrievalExecutorContract
+        .contractChecks.contextReady +
+      " | Targets ready: " +
+      evidenceControlledRetrievalExecutorContract
+        .contractChecks.targetsReady +
+      " | Authorization ready: " +
+      evidenceControlledRetrievalExecutorContract
+        .contractChecks.authorizationReady +
+      " | Query: " +
+      evidenceControlledRetrievalExecutorContract
+        .contractChecks.queryAvailable +
+      " | Execution not started: " +
+      evidenceControlledRetrievalExecutorContract
+        .contractChecks.executionNotStarted +
+      " | Policy safe: " +
+      evidenceControlledRetrievalExecutorContract
+        .contractChecks.policySafe
+  );
+
+
+  OODebug.log(
+    "CONTROLLED_RETRIEVAL_EXECUTOR_CONTRACT_STATUS",
+    evidenceControlledRetrievalExecutorContract.targets
+      .map(function (target) {
+
+        return (
+          target.claimType +
+          " → " +
+          target.executorContractStatus +
+          " | Execution: " +
+          target.executionStatus
+        );
+
+      })
+      .join(" | ")
+  );
+
+
+  OODebug.log(
+    "CONTROLLED_RETRIEVAL_EXECUTOR_CONTRACT_POLICY",
+    "External source access: false | Source retrieval: false | Evidence insertion: false | Claim support update: false"
+  );
+
+
+  OODebug.log(
+    "CONTROLLED_RETRIEVAL_EXECUTOR_CONTRACT_SAFETY",
+    "External source access: " +
+      evidenceControlledRetrievalExecutorContract
+        .safety.externalSourceAccess +
+      " | Source retrieval: " +
+      evidenceControlledRetrievalExecutorContract
+        .safety.sourceRetrieval +
+      " | Evidence insertion: " +
+      evidenceControlledRetrievalExecutorContract
+        .safety.evidenceInsertion +
+      " | Claim support: " +
+      evidenceControlledRetrievalExecutorContract
+        .safety.claimSupport
+  );
+
+
+  OODebug.log(
+    "CONTROLLED_RETRIEVAL_EXECUTOR_CONTRACT_REASON",
+    "Controlled retrieval executor contract prepared safely. Actual external retrieval has NOT started."
+  );
+
+  }        
 /* ==========================================
    RESULT VALUES
    ========================================== */
