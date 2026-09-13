@@ -16092,12 +16092,35 @@ let controlledRetrievalExecutorHandoff = {
 
 let step8BLUpstreamHandoff = null;
 
+/*
+   8BK has already confirmed:
+   Preparation handoff: ready
+   Allowed: true
+   Targets: 5
+
+   Resolve the upstream object from the known
+   8BK preparation-handoff stage.
+*/
+
 if (
   typeof controlledRetrievalExecutorInvocationPreparationHandoff !==
     "undefined"
 ) {
   step8BLUpstreamHandoff =
     controlledRetrievalExecutorInvocationPreparationHandoff;
+}
+
+/* ==========================================
+   STEP 8BL — FALLBACK UPSTREAM RESOLUTION
+   ========================================== */
+
+if (
+  !step8BLUpstreamHandoff &&
+  typeof controlledRetrievalExecutorInvocationPreparation !==
+    "undefined"
+) {
+  step8BLUpstreamHandoff =
+    controlledRetrievalExecutorInvocationPreparation;
 }
 
 /* ==========================================
@@ -16181,7 +16204,7 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
       ? "Controlled retrieval executor handoff is ready. Actual external retrieval has NOT started."
       : "Controlled retrieval executor handoff remains blocked."
   );
-    }
+  }
 
 /* ==========================================
    RESULT VALUES
