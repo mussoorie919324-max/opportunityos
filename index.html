@@ -16097,7 +16097,7 @@ let controlledRetrievalExecutorHandoff = {
    ========================================== */
 
 const step8BLUpstreamHandoff =
-  window.__OO_8BK_HANDOFF;
+  window.__OO_8BK_HANDOFF || null;
 
 /* ==========================================
    STEP 8BL — HANDOFF AUTHORIZATION CHECK
@@ -16209,8 +16209,8 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
       ? "Controlled retrieval executor handoff received from STEP 8BK. Actual external retrieval has NOT started."
       : "Controlled retrieval executor handoff remains blocked."
   );
-    }
-
+  }
+        
 /* ==========================================
    RESULT VALUES
    ========================================== */
