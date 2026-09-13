@@ -16074,7 +16074,7 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
     evidenceControlledRetrievalExecutorInvocationPreparationHandoff.reason
   );
   }
- /* =========================================================
+/* =========================================================
    STEP 8BL — CONTROLLED RETRIEVAL EXECUTOR HANDOFF
    ========================================================= */
 
@@ -16087,24 +16087,35 @@ let controlledRetrievalExecutorHandoff = {
 };
 
 /* ==========================================
+   STEP 8BL — UPSTREAM HANDOFF RESOLUTION
+   ========================================== */
+
+let step8BLUpstreamHandoff = null;
+
+if (
+  typeof controlledRetrievalExecutorInvocationPreparationHandoff !==
+    "undefined"
+) {
+  step8BLUpstreamHandoff =
+    controlledRetrievalExecutorInvocationPreparationHandoff;
+}
+
+/* ==========================================
    STEP 8BL — HANDOFF AUTHORIZATION CHECK
    ========================================== */
 
 if (
-  typeof controlledRetrievalExecutorInvocationPreparationHandoff !==
-    "undefined" &&
-  controlledRetrievalExecutorInvocationPreparationHandoff &&
-  controlledRetrievalExecutorInvocationPreparationHandoff.status ===
-    "ready" &&
-  controlledRetrievalExecutorInvocationPreparationHandoff.allowed ===
-    true
+  step8BLUpstreamHandoff &&
+  step8BLUpstreamHandoff.status === "ready" &&
+  step8BLUpstreamHandoff.allowed === true
 ) {
   controlledRetrievalExecutorHandoff = {
     status: "ready",
     allowed: true,
     targets:
-      controlledRetrievalExecutorInvocationPreparationHandoff.targets ||
-      [],
+      Array.isArray(step8BLUpstreamHandoff.targets)
+        ? step8BLUpstreamHandoff.targets
+        : [],
     reason:
       "Controlled retrieval executor handoff is ready."
   };
@@ -16131,6 +16142,13 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
     "STEP 8BL",
     "ENTRY",
     "STEP 8BL started → Checking controlled retrieval executor handoff."
+  );
+
+  OODebug.log(
+    "STEP 8BL",
+    "UPSTREAM",
+    "Upstream preparation handoff available: " +
+      (step8BLUpstreamHandoff ? "true" : "false")
   );
 
   OODebug.log(
@@ -16164,7 +16182,7 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
       : "Controlled retrieval executor handoff remains blocked."
   );
     }
-        
+
 /* ==========================================
    RESULT VALUES
    ========================================== */
