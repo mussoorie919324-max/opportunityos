@@ -16210,7 +16210,372 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
       : "Controlled retrieval executor handoff remains blocked."
   );
   }
-        
+ /* =========================================================
+   STEP 8BM — CONTROLLED RETRIEVAL EXECUTOR BOUNDARY
+   ========================================================= */
+
+let controlledRetrievalExecutorBoundary = {
+  status: "blocked",
+  allowed: false,
+  boundaryType:
+    "controlled_retrieval_executor_boundary",
+
+  searchQuery: null,
+  targets: [],
+
+  checks: {
+    handoffReady: false,
+    handoffAllowed: false,
+    targetsReady: false,
+    queryAvailable: false,
+    executionNotStarted: false,
+    externalAccessBlocked: false,
+    evidenceInsertionBlocked: false,
+    claimSupportUpdateBlocked: false
+  },
+
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupport: "NOT_CHANGED"
+  },
+
+  reason:
+    "Controlled retrieval executor boundary has not been authorized."
+};
+
+
+/* ==========================================
+   STEP 8BM — ENTRY
+   ========================================== */
+
+if (typeof OODebug !== "undefined" && OODebug.log) {
+  OODebug.log(
+    "STEP_8BM",
+    "CONTROLLED_RETRIEVAL_EXECUTOR_BOUNDARY_ENTRY",
+    "STEP 8BM started → Establishing controlled retrieval executor boundary."
+  );
+}
+
+
+/* ==========================================
+   STEP 8BM — 8BL SOURCE
+   ========================================== */
+
+const step8BMUpstreamHandoff =
+  typeof controlledRetrievalExecutorHandoff !== "undefined"
+    ? controlledRetrievalExecutorHandoff
+    : null;
+
+
+/* ==========================================
+   STEP 8BM — HANDOFF VALIDATION
+   ========================================== */
+
+const step8BMHandoffReady =
+  !!(
+    step8BMUpstreamHandoff &&
+    step8BMUpstreamHandoff.status === "ready"
+  );
+
+const step8BMHandoffAllowed =
+  !!(
+    step8BMHandoffReady &&
+    step8BMUpstreamHandoff.allowed === true
+  );
+
+
+/* ==========================================
+   STEP 8BM — TARGET VALIDATION
+   ========================================== */
+
+const step8BMTargets =
+  step8BMHandoffReady &&
+  Array.isArray(step8BMUpstreamHandoff.targets)
+    ? step8BMUpstreamHandoff.targets
+    : [];
+
+const step8BMTargetsReady =
+  step8BMTargets.length === 5;
+
+const step8BMTargetsSafe =
+  step8BMTargetsReady &&
+  step8BMTargets.every(function(target) {
+    return (
+      target &&
+      target.invocationStatus === "HANDOFF_READY" &&
+      target.executionStatus === "NOT_STARTED" &&
+      target.retrievalStatus === "NOT_STARTED" &&
+      target.evidenceStatus === "NOT_STARTED"
+    );
+  });
+
+
+/* ==========================================
+   STEP 8BM — QUERY VALIDATION
+   ========================================== */
+
+const step8BMSearchQuery =
+  step8BMHandoffReady &&
+  typeof step8BMUpstreamHandoff.searchQuery === "string"
+    ? step8BMUpstreamHandoff.searchQuery.trim()
+    : "";
+
+const step8BMQueryAvailable =
+  step8BMSearchQuery.length > 0;
+
+
+/* ==========================================
+   STEP 8BM — EXECUTION SAFETY
+   ========================================== */
+
+const step8BMExecutionNotStarted =
+  !!(
+    step8BMHandoffReady &&
+    step8BMUpstreamHandoff.executionStatus ===
+      "NOT_STARTED" &&
+    step8BMTargetsSafe
+  );
+
+
+/* ==========================================
+   STEP 8BM — EXTERNAL ACCESS SAFETY
+   ========================================== */
+
+const step8BMExternalAccessBlocked =
+  !!(
+    step8BMHandoffReady &&
+    step8BMUpstreamHandoff.externalSourceAccess ===
+      false &&
+    step8BMUpstreamHandoff.sourceRetrieval ===
+      false
+  );
+
+
+/* ==========================================
+   STEP 8BM — EVIDENCE / CLAIM SAFETY
+   ========================================== */
+
+const step8BMEvidenceInsertionBlocked =
+  !!(
+    step8BMHandoffReady &&
+    step8BMUpstreamHandoff.evidenceInsertion ===
+      false
+  );
+
+const step8BMClaimSupportUpdateBlocked =
+  !!(
+    step8BMHandoffReady &&
+    step8BMUpstreamHandoff.claimSupportUpdate ===
+      false
+  );
+
+
+/* ==========================================
+   STEP 8BM — FINAL BOUNDARY DECISION
+   ========================================== */
+
+const step8BMBoundaryAllowed =
+  step8BMHandoffReady &&
+  step8BMHandoffAllowed &&
+  step8BMTargetsReady &&
+  step8BMTargetsSafe &&
+  step8BMQueryAvailable &&
+  step8BMExecutionNotStarted &&
+  step8BMExternalAccessBlocked &&
+  step8BMEvidenceInsertionBlocked &&
+  step8BMClaimSupportUpdateBlocked;
+
+
+/* ==========================================
+   STEP 8BM — BUILD BOUNDARY
+   ========================================== */
+
+if (step8BMBoundaryAllowed) {
+
+  controlledRetrievalExecutorBoundary = {
+    status: "ready",
+    allowed: true,
+
+    boundaryType:
+      "controlled_retrieval_executor_boundary",
+
+    searchQuery:
+      step8BMSearchQuery,
+
+    targets:
+      step8BMTargets.map(function(target) {
+        return {
+          claimKey: target.claimKey || null,
+          sourceType: target.sourceType || null,
+          fallbackSourceTypes:
+            Array.isArray(target.fallbackSourceTypes)
+              ? target.fallbackSourceTypes
+              : [],
+
+          invocationStatus: "BOUNDARY_READY",
+          executionStatus: "NOT_STARTED",
+          retrievalStatus: "NOT_STARTED",
+          evidenceStatus: "NOT_STARTED"
+        };
+      }),
+
+    checks: {
+      handoffReady: true,
+      handoffAllowed: true,
+      targetsReady: true,
+      queryAvailable: true,
+      executionNotStarted: true,
+      externalAccessBlocked: true,
+      evidenceInsertionBlocked: true,
+      claimSupportUpdateBlocked: true
+    },
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupport: "NOT_CHANGED"
+    },
+
+    reason:
+      "Controlled retrieval executor boundary is ready. No external retrieval has started."
+  };
+
+} else {
+
+  controlledRetrievalExecutorBoundary = {
+    status: "blocked",
+    allowed: false,
+
+    boundaryType:
+      "controlled_retrieval_executor_boundary",
+
+    searchQuery:
+      step8BMSearchQuery || null,
+
+    targets: [],
+
+    checks: {
+      handoffReady:
+        step8BMHandoffReady,
+
+      handoffAllowed:
+        step8BMHandoffAllowed,
+
+      targetsReady:
+        step8BMTargetsReady &&
+        step8BMTargetsSafe,
+
+      queryAvailable:
+        step8BMQueryAvailable,
+
+      executionNotStarted:
+        step8BMExecutionNotStarted,
+
+      externalAccessBlocked:
+        step8BMExternalAccessBlocked,
+
+      evidenceInsertionBlocked:
+        step8BMEvidenceInsertionBlocked,
+
+      claimSupportUpdateBlocked:
+        step8BMClaimSupportUpdateBlocked
+    },
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupport: "NOT_CHANGED"
+    },
+
+    reason:
+      "Controlled retrieval executor boundary is blocked because one or more upstream safety conditions are not satisfied."
+  };
+}
+
+
+/* ==========================================
+   STEP 8BM — DEBUGGER
+   ========================================== */
+
+if (typeof OODebug !== "undefined" && OODebug.log) {
+
+  OODebug.log(
+    "STEP_8BM",
+    "CONTROLLED_RETRIEVAL_EXECUTOR_BOUNDARY_RESULT",
+    "Boundary: " +
+      controlledRetrievalExecutorBoundary.status +
+      " | Allowed: " +
+      controlledRetrievalExecutorBoundary.allowed +
+      " | Targets: " +
+      controlledRetrievalExecutorBoundary.targets.length
+  );
+
+  OODebug.log(
+    "STEP_8BM",
+    "CONTROLLED_RETRIEVAL_EXECUTOR_BOUNDARY_CHECKS",
+    "Handoff ready: " +
+      step8BMHandoffReady +
+      " | Handoff allowed: " +
+      step8BMHandoffAllowed +
+      " | Targets ready: " +
+      step8BMTargetsReady +
+      " | Targets safe: " +
+      step8BMTargetsSafe +
+      " | Query: " +
+      step8BMQueryAvailable +
+      " | Execution not started: " +
+      step8BMExecutionNotStarted +
+      " | External access blocked: " +
+      step8BMExternalAccessBlocked +
+      " | Evidence insertion blocked: " +
+      step8BMEvidenceInsertionBlocked +
+      " | Claim support blocked: " +
+      step8BMClaimSupportUpdateBlocked
+  );
+
+  OODebug.log(
+    "STEP_8BM",
+    "CONTROLLED_RETRIEVAL_EXECUTOR_BOUNDARY_POLICY",
+    "External source access: false | Source retrieval: false | Evidence insertion: false | Claim support update: false"
+  );
+
+  OODebug.log(
+    "STEP_8BM",
+    "CONTROLLED_RETRIEVAL_EXECUTOR_BOUNDARY_SAFETY",
+    "External source access: NOT_STARTED | Source retrieval: NOT_STARTED | Evidence insertion: NOT_STARTED | Claim support: NOT_CHANGED"
+  );
+
+  OODebug.log(
+    "STEP_8BM",
+    "CONTROLLED_RETRIEVAL_EXECUTOR_BOUNDARY_REASON",
+    controlledRetrievalExecutorBoundary.reason
+  );
+  }       
 /* ==========================================
    RESULT VALUES
    ========================================== */
