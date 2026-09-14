@@ -16602,6 +16602,296 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
     controlledRetrievalExecutorBoundary.reason
   );
   }       
+/* =========================================================
+   STEP 8BN — CONTROLLED RETRIEVAL EXECUTION REQUEST
+   ========================================================= */
+
+let controlledRetrievalExecutionRequest = {
+  status: "blocked",
+  allowed: false,
+
+  requestType:
+    "controlled_retrieval_execution_request",
+
+  searchQuery: null,
+  targets: [],
+
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupport: "NOT_CHANGED"
+  },
+
+  reason:
+    "Controlled retrieval execution request has not been authorized."
+};
+
+
+/* ==========================================
+   STEP 8BN — ENTRY
+   ========================================== */
+
+if (typeof OODebug !== "undefined" && OODebug.log) {
+
+  OODebug.log(
+    "STEP_8BN",
+    "CONTROLLED_RETRIEVAL_EXECUTION_REQUEST_ENTRY",
+    "STEP 8BN started → Preparing controlled retrieval execution request."
+  );
+}
+
+
+/* ==========================================
+   STEP 8BN — 8BM SOURCE
+   ========================================== */
+
+const step8BNBoundary =
+  typeof controlledRetrievalExecutorBoundary !== "undefined"
+    ? controlledRetrievalExecutorBoundary
+    : null;
+
+
+/* ==========================================
+   STEP 8BN — BOUNDARY VALIDATION
+   ========================================== */
+
+const step8BNBoundaryReady =
+  !!(
+    step8BNBoundary &&
+    step8BNBoundary.status === "ready"
+  );
+
+const step8BNBoundaryAllowed =
+  !!(
+    step8BNBoundaryReady &&
+    step8BNBoundary.allowed === true
+  );
+
+
+/* ==========================================
+   STEP 8BN — QUERY VALIDATION
+   ========================================== */
+
+const step8BNSearchQuery =
+  step8BNBoundaryReady &&
+  typeof step8BNBoundary.searchQuery === "string"
+    ? step8BNBoundary.searchQuery.trim()
+    : "";
+
+const step8BNQueryAvailable =
+  step8BNSearchQuery.length > 0;
+
+
+/* ==========================================
+   STEP 8BN — TARGET VALIDATION
+   ========================================== */
+
+const step8BNTargets =
+  step8BNBoundaryReady &&
+  Array.isArray(step8BNBoundary.targets)
+    ? step8BNBoundary.targets
+    : [];
+
+const step8BNTargetsReady =
+  step8BNTargets.length === 5;
+
+const step8BNTargetsSafe =
+  step8BNTargetsReady &&
+  step8BNTargets.every(function(target) {
+    return (
+      target &&
+      target.invocationStatus === "BOUNDARY_READY" &&
+      target.executionStatus === "NOT_STARTED" &&
+      target.retrievalStatus === "NOT_STARTED" &&
+      target.evidenceStatus === "NOT_STARTED"
+    );
+  });
+
+
+/* ==========================================
+   STEP 8BN — POLICY SAFETY
+   ========================================== */
+
+const step8BNPolicySafe =
+  !!(
+    step8BNBoundaryReady &&
+    step8BNBoundary.executionPolicy &&
+    step8BNBoundary.executionPolicy.externalSourceAccess === false &&
+    step8BNBoundary.executionPolicy.sourceRetrieval === false &&
+    step8BNBoundary.executionPolicy.evidenceInsertion === false &&
+    step8BNBoundary.executionPolicy.claimSupportUpdate === false
+  );
+
+
+/* ==========================================
+   STEP 8BN — EXECUTION REQUEST DECISION
+   ========================================== */
+
+const step8BNRequestAllowed =
+  step8BNBoundaryReady &&
+  step8BNBoundaryAllowed &&
+  step8BNQueryAvailable &&
+  step8BNTargetsSafe &&
+  step8BNPolicySafe;
+
+
+/* ==========================================
+   STEP 8BN — BUILD REQUEST
+   ========================================== */
+
+if (step8BNRequestAllowed) {
+
+  controlledRetrievalExecutionRequest = {
+
+    status: "ready",
+    allowed: true,
+
+    requestType:
+      "controlled_retrieval_execution_request",
+
+    searchQuery:
+      step8BNSearchQuery,
+
+    targets:
+      step8BNTargets.map(function(target) {
+        return {
+          claimKey:
+            target.claimKey || null,
+
+          sourceType:
+            target.sourceType || null,
+
+          fallbackSourceTypes:
+            Array.isArray(target.fallbackSourceTypes)
+              ? target.fallbackSourceTypes
+              : [],
+
+          invocationStatus:
+            "REQUEST_READY",
+
+          executionStatus:
+            "NOT_STARTED",
+
+          retrievalStatus:
+            "NOT_STARTED",
+
+          evidenceStatus:
+            "NOT_STARTED"
+        };
+      }),
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupport: "NOT_CHANGED"
+    },
+
+    reason:
+      "Controlled retrieval execution request is ready. No external retrieval has started."
+  };
+
+} else {
+
+  controlledRetrievalExecutionRequest = {
+
+    status: "blocked",
+    allowed: false,
+
+    requestType:
+      "controlled_retrieval_execution_request",
+
+    searchQuery:
+      step8BNSearchQuery || null,
+
+    targets: [],
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupport: "NOT_CHANGED"
+    },
+
+    reason:
+      "Controlled retrieval execution request is blocked because one or more 8BM boundary conditions are not satisfied."
+  };
+}
+
+
+/* ==========================================
+   STEP 8BN — DEBUGGER
+   ========================================== */
+
+if (typeof OODebug !== "undefined" && OODebug.log) {
+
+  OODebug.log(
+    "STEP_8BN",
+    "CONTROLLED_RETRIEVAL_EXECUTION_REQUEST_RESULT",
+    "Request: " +
+      controlledRetrievalExecutionRequest.status +
+      " | Allowed: " +
+      controlledRetrievalExecutionRequest.allowed +
+      " | Targets: " +
+      controlledRetrievalExecutionRequest.targets.length
+  );
+
+  OODebug.log(
+    "STEP_8BN",
+    "CONTROLLED_RETRIEVAL_EXECUTION_REQUEST_CHECKS",
+    "Boundary ready: " +
+      step8BNBoundaryReady +
+      " | Boundary allowed: " +
+      step8BNBoundaryAllowed +
+      " | Query: " +
+      step8BNQueryAvailable +
+      " | Targets safe: " +
+      step8BNTargetsSafe +
+      " | Policy safe: " +
+      step8BNPolicySafe
+  );
+
+  OODebug.log(
+    "STEP_8BN",
+    "CONTROLLED_RETRIEVAL_EXECUTION_REQUEST_POLICY",
+    "External source access: false | Source retrieval: false | Evidence insertion: false | Claim support update: false"
+  );
+
+  OODebug.log(
+    "STEP_8BN",
+    "CONTROLLED_RETRIEVAL_EXECUTION_REQUEST_SAFETY",
+    "External source access: NOT_STARTED | Source retrieval: NOT_STARTED | Evidence insertion: NOT_STARTED | Claim support: NOT_CHANGED"
+  );
+
+  OODebug.log(
+    "STEP_8BN",
+    "CONTROLLED_RETRIEVAL_EXECUTION_REQUEST_REASON",
+    controlledRetrievalExecutionRequest.reason
+  );
+  }
+        
 /* ==========================================
    RESULT VALUES
    ========================================== */
