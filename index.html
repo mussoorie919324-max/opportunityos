@@ -16891,7 +16891,348 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
     controlledRetrievalExecutionRequest.reason
   );
   }
-        
+/* =========================================================
+   STEP 8BO — CONTROLLED RETRIEVAL EXECUTION REQUEST HANDOFF
+   ========================================================= */
+
+let controlledRetrievalExecutionRequestHandoff = {
+  status: "blocked",
+  allowed: false,
+
+  handoffType:
+    "controlled_retrieval_execution_request_handoff",
+
+  searchQuery: null,
+  targets: [],
+
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupport: "NOT_CHANGED"
+  },
+
+  reason:
+    "Controlled retrieval execution request handoff has not been authorized."
+};
+
+
+/* =========================================================
+   STEP 8BO — ENTRY
+   ========================================================= */
+
+if (typeof OODebug !== "undefined") {
+  OODebug.log(
+    "8BO",
+    "START",
+    "Controlled retrieval execution request handoff started"
+  );
+}
+
+
+/* =========================================================
+   STEP 8BO — REQUEST SOURCE CHECK
+   ========================================================= */
+
+let eightBORequestReady =
+  controlledRetrievalExecutionRequest &&
+  controlledRetrievalExecutionRequest.status ===
+    "ready" &&
+  controlledRetrievalExecutionRequest.allowed ===
+    true;
+
+if (typeof OODebug !== "undefined") {
+  OODebug.log(
+    "8BO",
+    "REQUEST_CHECK",
+    "8BN execution request ready: " +
+      eightBORequestReady
+  );
+}
+
+
+/* =========================================================
+   STEP 8BO — QUERY CHECK
+   ========================================================= */
+
+let eightBOQueryReady =
+  eightBORequestReady &&
+  typeof controlledRetrievalExecutionRequest.searchQuery ===
+    "string" &&
+  controlledRetrievalExecutionRequest.searchQuery.trim()
+    .length > 0;
+
+if (typeof OODebug !== "undefined") {
+  OODebug.log(
+    "8BO",
+    "QUERY_CHECK",
+    "Search query ready: " +
+      eightBOQueryReady
+  );
+}
+
+
+/* =========================================================
+   STEP 8BO — TARGET CHECK
+   ========================================================= */
+
+let eightBOTargetsReady =
+  eightBORequestReady &&
+  Array.isArray(
+    controlledRetrievalExecutionRequest.targets
+  ) &&
+  controlledRetrievalExecutionRequest.targets.length === 5;
+
+if (typeof OODebug !== "undefined") {
+  OODebug.log(
+    "8BO",
+    "TARGET_CHECK",
+    "Targets ready: " +
+      eightBOTargetsReady +
+      " | Count: " +
+      (
+        controlledRetrievalExecutionRequest &&
+        Array.isArray(
+          controlledRetrievalExecutionRequest.targets
+        )
+          ? controlledRetrievalExecutionRequest.targets.length
+          : 0
+      )
+  );
+}
+
+
+/* =========================================================
+   STEP 8BO — TARGET SAFETY CHECK
+   ========================================================= */
+
+let eightBOTargetsSafe =
+  eightBOTargetsReady &&
+  controlledRetrievalExecutionRequest.targets.every(
+    function (target) {
+      return (
+        target &&
+        target.invocationStatus ===
+          "REQUEST_READY" &&
+        target.executionStatus ===
+          "NOT_STARTED" &&
+        target.retrievalStatus ===
+          "NOT_STARTED" &&
+        target.evidenceStatus ===
+          "NOT_STARTED"
+      );
+    }
+  );
+
+if (typeof OODebug !== "undefined") {
+  OODebug.log(
+    "8BO",
+    "TARGET_SAFETY",
+    "All targets safe for handoff: " +
+      eightBOTargetsSafe
+  );
+}
+
+
+/* =========================================================
+   STEP 8BO — EXECUTION POLICY SAFETY
+   ========================================================= */
+
+let eightBOExecutionPolicySafe =
+  eightBORequestReady &&
+  controlledRetrievalExecutionRequest.executionPolicy &&
+  controlledRetrievalExecutionRequest.executionPolicy
+    .externalSourceAccess === false &&
+  controlledRetrievalExecutionRequest.executionPolicy
+    .sourceRetrieval === false &&
+  controlledRetrievalExecutionRequest.executionPolicy
+    .evidenceInsertion === false &&
+  controlledRetrievalExecutionRequest.executionPolicy
+    .claimSupportUpdate === false;
+
+if (typeof OODebug !== "undefined") {
+  OODebug.log(
+    "8BO",
+    "POLICY_SAFETY",
+    "Execution policy remains safely blocked: " +
+      eightBOExecutionPolicySafe
+  );
+}
+
+
+/* =========================================================
+   STEP 8BO — FINAL HANDOFF DECISION
+   ========================================================= */
+
+let eightBOAllowed =
+  eightBORequestReady &&
+  eightBOQueryReady &&
+  eightBOTargetsReady &&
+  eightBOTargetsSafe &&
+  eightBOExecutionPolicySafe;
+
+
+/* =========================================================
+   STEP 8BO — BUILD HANDOFF
+   ========================================================= */
+
+if (eightBOAllowed) {
+
+  controlledRetrievalExecutionRequestHandoff = {
+    status: "ready",
+    allowed: true,
+
+    handoffType:
+      "controlled_retrieval_execution_request_handoff",
+
+    searchQuery:
+      controlledRetrievalExecutionRequest.searchQuery,
+
+    targets:
+      controlledRetrievalExecutionRequest.targets.map(
+        function (target) {
+          return {
+            claimKey: target.claimKey,
+            sourceType: target.sourceType,
+            fallbackSourceTypes:
+              Array.isArray(
+                target.fallbackSourceTypes
+              )
+                ? target.fallbackSourceTypes
+                : [],
+
+            invocationStatus:
+              "HANDOFF_READY",
+
+            executionStatus:
+              "NOT_STARTED",
+
+            retrievalStatus:
+              "NOT_STARTED",
+
+            evidenceStatus:
+              "NOT_STARTED"
+          };
+        }
+      ),
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupport: "NOT_CHANGED"
+    },
+
+    reason:
+      "Controlled retrieval execution request handoff is ready."
+  };
+
+} else {
+
+  controlledRetrievalExecutionRequestHandoff = {
+    status: "blocked",
+    allowed: false,
+
+    handoffType:
+      "controlled_retrieval_execution_request_handoff",
+
+    searchQuery:
+      eightBORequestReady
+        ? controlledRetrievalExecutionRequest.searchQuery
+        : null,
+
+    targets: [],
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupport: "NOT_CHANGED"
+    },
+
+    reason:
+      "Controlled retrieval execution request handoff is not authorized."
+  };
+}
+
+
+/* =========================================================
+   STEP 8BO — DEBUG RESULT
+   ========================================================= */
+
+if (typeof OODebug !== "undefined") {
+
+  OODebug.log(
+    "8BO",
+    "RESULT",
+    "Status: " +
+      controlledRetrievalExecutionRequestHandoff.status +
+      " | Allowed: " +
+      controlledRetrievalExecutionRequestHandoff.allowed
+  );
+
+  OODebug.log(
+    "8BO",
+    "QUERY",
+    "Search query: " +
+      (
+        controlledRetrievalExecutionRequestHandoff.searchQuery ||
+        "NONE"
+      )
+  );
+
+  OODebug.log(
+    "8BO",
+    "TARGETS",
+    "Targets: " +
+      controlledRetrievalExecutionRequestHandoff.targets.length
+  );
+
+  OODebug.log(
+    "8BO",
+    "EXTERNAL_ACCESS",
+    "External source access: NOT_STARTED"
+  );
+
+  OODebug.log(
+    "8BO",
+    "RETRIEVAL",
+    "Source retrieval: NOT_STARTED"
+  );
+
+  OODebug.log(
+    "8BO",
+    "EVIDENCE",
+    "Evidence insertion: NOT_STARTED"
+  );
+
+  OODebug.log(
+    "8BO",
+    "CLAIM_SUPPORT",
+    "Claim support update: NOT_CHANGED"
+  );
+  }        
 /* ==========================================
    RESULT VALUES
    ========================================== */
