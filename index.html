@@ -19768,10 +19768,366 @@ if (
   );
 
   }        
-/* ==========================================
+/* =========================================================
+   STEP 8BX — CONTROLLED RETRIEVAL INVOCATION BOUNDARY REQUEST AUTHORIZATION
+   ========================================================= */
+
+let controlledRetrievalInvocationBoundaryRequestAuthorization = {
+  status: "blocked",
+  allowed: false,
+
+  authorizationType:
+    "controlled_retrieval_invocation_boundary_request_authorization",
+
+  searchQuery: null,
+  targets: [],
+
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+
+  reason:
+    "Controlled retrieval invocation boundary request authorization is not ready."
+};
+
+
+/* =========================================================
+   8BX — SOURCE
+   ========================================================= */
+
+const bxSource =
+  typeof controlledRetrievalInvocationBoundaryRequest !==
+  "undefined"
+    ? controlledRetrievalInvocationBoundaryRequest
+    : null;
+
+let bxReady = true;
+
+
+/* =========================================================
+   8BX — REQUEST VALIDATION
+   ========================================================= */
+
+if (!bxSource) {
+  bxReady = false;
+}
+
+if (
+  bxSource &&
+  (
+    bxSource.status !== "ready" ||
+    bxSource.allowed !== true
+  )
+) {
+  bxReady = false;
+}
+
+
+/* =========================================================
+   8BX — QUERY VALIDATION
+   ========================================================= */
+
+if (
+  bxSource &&
+  (
+    typeof bxSource.searchQuery !== "string" ||
+    bxSource.searchQuery.trim() === ""
+  )
+) {
+  bxReady = false;
+}
+
+
+/* =========================================================
+   8BX — TARGET VALIDATION
+   ========================================================= */
+
+if (
+  bxSource &&
+  (
+    !Array.isArray(bxSource.targets) ||
+    bxSource.targets.length !== 5
+  )
+) {
+  bxReady = false;
+}
+
+
+if (
+  bxReady &&
+  Array.isArray(bxSource.targets)
+) {
+
+  bxSource.targets.forEach((target) => {
+
+    if (!target) {
+      bxReady = false;
+      return;
+    }
+
+    if (
+      target.invocationStatus !==
+      "BOUNDARY_REQUEST_READY"
+    ) {
+      bxReady = false;
+    }
+
+    if (
+      target.executionStatus !==
+      "NOT_STARTED"
+    ) {
+      bxReady = false;
+    }
+
+    if (
+      target.retrievalStatus !==
+      "NOT_STARTED"
+    ) {
+      bxReady = false;
+    }
+
+    if (
+      target.evidenceStatus !==
+      "NOT_STARTED"
+    ) {
+      bxReady = false;
+    }
+
+    if (
+      target.claimSupportStatus !==
+      "NOT_CHANGED"
+    ) {
+      bxReady = false;
+    }
+
+  });
+
+}
+
+
+/* =========================================================
+   8BX — EXECUTION POLICY SAFETY CHECK
+   ========================================================= */
+
+if (
+  bxReady &&
+  bxSource.executionPolicy
+) {
+
+  if (
+    bxSource.executionPolicy.externalSourceAccess !== false ||
+    bxSource.executionPolicy.sourceRetrieval !== false ||
+    bxSource.executionPolicy.evidenceInsertion !== false ||
+    bxSource.executionPolicy.claimSupportUpdate !== false
+  ) {
+    bxReady = false;
+  }
+
+}
+
+
+/* =========================================================
+   8BX — SAFETY STATE VALIDATION
+   ========================================================= */
+
+if (
+  bxReady &&
+  bxSource.safety
+) {
+
+  if (
+    bxSource.safety.externalSourceAccess !==
+    "NOT_STARTED"
+  ) {
+    bxReady = false;
+  }
+
+  if (
+    bxSource.safety.sourceRetrieval !==
+    "NOT_STARTED"
+  ) {
+    bxReady = false;
+  }
+
+  if (
+    bxSource.safety.evidenceInsertion !==
+    "NOT_STARTED"
+  ) {
+    bxReady = false;
+  }
+
+  if (
+    bxSource.safety.claimSupportUpdate !==
+    "NOT_CHANGED"
+  ) {
+    bxReady = false;
+  }
+
+}
+
+
+/* =========================================================
+   8BX — AUTHORIZATION OUTPUT
+   ========================================================= */
+
+if (bxReady) {
+
+  controlledRetrievalInvocationBoundaryRequestAuthorization = {
+
+    status: "ready",
+    allowed: true,
+
+    authorizationType:
+      "controlled_retrieval_invocation_boundary_request_authorization",
+
+    searchQuery:
+      bxSource.searchQuery.trim(),
+
+    targets:
+      bxSource.targets.map((target) => ({
+
+        claimKey:
+          target.claimKey,
+
+        sourceType:
+          target.sourceType,
+
+        fallbackSourceTypes:
+          Array.isArray(target.fallbackSourceTypes)
+            ? [...target.fallbackSourceTypes]
+            : [],
+
+        invocationStatus:
+          "BOUNDARY_REQUEST_AUTHORIZED",
+
+        executionStatus:
+          "NOT_STARTED",
+
+        retrievalStatus:
+          "NOT_STARTED",
+
+        evidenceStatus:
+          "NOT_STARTED",
+
+        claimSupportStatus:
+          "NOT_CHANGED"
+
+      })),
+
+    executionPolicy: {
+
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+
+    },
+
+    safety: {
+
+      externalSourceAccess:
+        "NOT_STARTED",
+
+      sourceRetrieval:
+        "NOT_STARTED",
+
+      evidenceInsertion:
+        "NOT_STARTED",
+
+      claimSupportUpdate:
+        "NOT_CHANGED"
+
+    },
+
+    reason:
+      "Controlled retrieval invocation boundary request is authorized at the control layer. Actual external retrieval remains safely blocked."
+
+  };
+
+}
+
+
+/* =========================================================
+   8BX — DEBUGGER
+   ========================================================= */
+
+if (
+  typeof OODebug !== "undefined" &&
+  OODebug &&
+  typeof OODebug.log === "function"
+) {
+
+  OODebug.log(
+    "8BX",
+    "AUTHORIZATION",
+    controlledRetrievalInvocationBoundaryRequestAuthorization.status ===
+      "ready"
+      ? "Controlled retrieval invocation boundary request authorization READY"
+      : "Controlled retrieval invocation boundary request authorization BLOCKED"
+  );
+
+  OODebug.log(
+    "8BX",
+    "QUERY",
+    controlledRetrievalInvocationBoundaryRequestAuthorization.searchQuery ||
+      "null"
+  );
+
+  OODebug.log(
+    "8BX",
+    "TARGETS",
+    String(
+      Array.isArray(
+        controlledRetrievalInvocationBoundaryRequestAuthorization.targets
+      )
+        ? controlledRetrievalInvocationBoundaryRequestAuthorization.targets.length
+        : 0
+    )
+  );
+
+  OODebug.log(
+    "8BX",
+    "EXTERNAL_ACCESS",
+    controlledRetrievalInvocationBoundaryRequestAuthorization.safety
+      .externalSourceAccess
+  );
+
+  OODebug.log(
+    "8BX",
+    "RETRIEVAL",
+    controlledRetrievalInvocationBoundaryRequestAuthorization.safety
+      .sourceRetrieval
+  );
+
+  OODebug.log(
+    "8BX",
+    "EVIDENCE_INSERTION",
+    controlledRetrievalInvocationBoundaryRequestAuthorization.safety
+      .evidenceInsertion
+  );
+
+  OODebug.log(
+    "8BX",
+    "CLAIM_SUPPORT",
+    controlledRetrievalInvocationBoundaryRequestAuthorization.safety
+      .claimSupportUpdate
+  );
+
+}
+   
+  /* ==========================================
    RESULT VALUES
    ========================================== */
-
 const demand =
   typeof profileValue === "function"
     ? (
