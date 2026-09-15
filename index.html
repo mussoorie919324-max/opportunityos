@@ -18707,7 +18707,333 @@ if (
   );
 
 }
-        
+/* =========================================================
+   STEP 8BU — CONTROLLED RETRIEVAL INVOCATION AUTHORIZATION HANDOFF
+   ========================================================= */
+
+let controlledRetrievalInvocationAuthorizationHandoff = {
+  status: "blocked",
+  allowed: false,
+
+  handoffType:
+    "controlled_retrieval_invocation_authorization_handoff",
+
+  searchQuery: null,
+  targets: [],
+
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+
+  reason:
+    "Controlled retrieval invocation authorization handoff is not ready."
+};
+
+
+/* =========================================================
+   8BU — SOURCE
+   ========================================================= */
+
+const buSource =
+  typeof controlledRetrievalInvocationAuthorization !==
+  "undefined"
+    ? controlledRetrievalInvocationAuthorization
+    : null;
+
+let buReady = true;
+
+
+/* =========================================================
+   8BU — AUTHORIZATION VALIDATION
+   ========================================================= */
+
+if (!buSource) {
+  buReady = false;
+}
+
+if (
+  buSource &&
+  (
+    buSource.status !== "ready" ||
+    buSource.allowed !== true
+  )
+) {
+  buReady = false;
+}
+
+
+/* =========================================================
+   8BU — QUERY VALIDATION
+   ========================================================= */
+
+if (
+  buSource &&
+  (
+    typeof buSource.searchQuery !== "string" ||
+    buSource.searchQuery.trim() === ""
+  )
+) {
+  buReady = false;
+}
+
+
+/* =========================================================
+   8BU — TARGET VALIDATION
+   ========================================================= */
+
+if (
+  buSource &&
+  (
+    !Array.isArray(buSource.targets) ||
+    buSource.targets.length !== 5
+  )
+) {
+  buReady = false;
+}
+
+
+if (
+  buReady &&
+  Array.isArray(buSource.targets)
+) {
+
+  buSource.targets.forEach((target) => {
+
+    if (!target) {
+      buReady = false;
+      return;
+    }
+
+
+    if (
+      target.invocationStatus !==
+      "INVOCATION_AUTHORIZED"
+    ) {
+      buReady = false;
+    }
+
+
+    if (
+      target.executionStatus !==
+      "NOT_STARTED"
+    ) {
+      buReady = false;
+    }
+
+
+    if (
+      target.retrievalStatus !==
+      "NOT_STARTED"
+    ) {
+      buReady = false;
+    }
+
+
+    if (
+      target.evidenceStatus !==
+      "NOT_STARTED"
+    ) {
+      buReady = false;
+    }
+
+
+    if (
+      target.claimSupportStatus !==
+      "NOT_CHANGED"
+    ) {
+      buReady = false;
+    }
+
+  });
+
+}
+
+
+/* =========================================================
+   8BU — POLICY SAFETY VALIDATION
+   ========================================================= */
+
+if (
+  buReady &&
+  buSource.executionPolicy
+) {
+
+  if (
+    buSource.executionPolicy.externalSourceAccess !== false ||
+    buSource.executionPolicy.sourceRetrieval !== false ||
+    buSource.executionPolicy.evidenceInsertion !== false ||
+    buSource.executionPolicy.claimSupportUpdate !== false
+  ) {
+    buReady = false;
+  }
+
+}
+
+
+/* =========================================================
+   8BU — HANDOFF OUTPUT
+   ========================================================= */
+
+if (buReady) {
+
+  controlledRetrievalInvocationAuthorizationHandoff = {
+
+    status: "ready",
+    allowed: true,
+
+    handoffType:
+      "controlled_retrieval_invocation_authorization_handoff",
+
+    searchQuery:
+      buSource.searchQuery.trim(),
+
+    targets:
+      buSource.targets.map((target) => ({
+
+        claimKey:
+          target.claimKey,
+
+        sourceType:
+          target.sourceType,
+
+        fallbackSourceTypes:
+          Array.isArray(target.fallbackSourceTypes)
+            ? [...target.fallbackSourceTypes]
+            : [],
+
+        invocationStatus:
+          "AUTHORIZATION_HANDOFF_READY",
+
+        executionStatus:
+          "NOT_STARTED",
+
+        retrievalStatus:
+          "NOT_STARTED",
+
+        evidenceStatus:
+          "NOT_STARTED",
+
+        claimSupportStatus:
+          "NOT_CHANGED"
+
+      })),
+
+    executionPolicy: {
+
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+
+    },
+
+    safety: {
+
+      externalSourceAccess:
+        "NOT_STARTED",
+
+      sourceRetrieval:
+        "NOT_STARTED",
+
+      evidenceInsertion:
+        "NOT_STARTED",
+
+      claimSupportUpdate:
+        "NOT_CHANGED"
+
+    },
+
+    reason:
+      "Controlled retrieval invocation authorization handoff is ready. Actual external retrieval remains safely blocked."
+
+  };
+
+}
+
+
+/* =========================================================
+   8BU — DEBUGGER
+   ========================================================= */
+
+if (
+  typeof OODebug !== "undefined" &&
+  OODebug &&
+  typeof OODebug.log === "function"
+) {
+
+  OODebug.log(
+    "8BU",
+    "HANDOFF",
+    controlledRetrievalInvocationAuthorizationHandoff.status ===
+      "ready"
+      ? "Controlled retrieval invocation authorization handoff READY"
+      : "Controlled retrieval invocation authorization handoff BLOCKED"
+  );
+
+
+  OODebug.log(
+    "8BU",
+    "QUERY",
+    controlledRetrievalInvocationAuthorizationHandoff.searchQuery ||
+      "null"
+  );
+
+
+  OODebug.log(
+    "8BU",
+    "TARGETS",
+    String(
+      Array.isArray(
+        controlledRetrievalInvocationAuthorizationHandoff.targets
+      )
+        ? controlledRetrievalInvocationAuthorizationHandoff.targets.length
+        : 0
+    )
+  );
+
+
+  OODebug.log(
+    "8BU",
+    "EXTERNAL_ACCESS",
+    controlledRetrievalInvocationAuthorizationHandoff.safety
+      .externalSourceAccess
+  );
+
+
+  OODebug.log(
+    "8BU",
+    "RETRIEVAL",
+    controlledRetrievalInvocationAuthorizationHandoff.safety
+      .sourceRetrieval
+  );
+
+
+  OODebug.log(
+    "8BU",
+    "EVIDENCE_INSERTION",
+    controlledRetrievalInvocationAuthorizationHandoff.safety
+      .evidenceInsertion
+  );
+
+
+  OODebug.log(
+    "8BU",
+    "CLAIM_SUPPORT",
+    controlledRetrievalInvocationAuthorizationHandoff.safety
+      .claimSupportUpdate
+  );
+
+  }        
 /* ==========================================
    RESULT VALUES
    ========================================== */
