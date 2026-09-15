@@ -18380,6 +18380,334 @@ if (
   );
 
   }     
+/* =========================================================
+   STEP 8BT — CONTROLLED RETRIEVAL INVOCATION AUTHORIZATION
+   ========================================================= */
+
+let controlledRetrievalInvocationAuthorization = {
+  status: "blocked",
+  allowed: false,
+
+  authorizationType:
+    "controlled_retrieval_invocation_authorization",
+
+  searchQuery: null,
+  targets: [],
+
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+
+  reason:
+    "Controlled retrieval invocation authorization is not ready."
+};
+
+
+/* =========================================================
+   8BT — SOURCE
+   ========================================================= */
+
+const btSource =
+  typeof controlledRetrievalExecutionInvocationRequest !==
+  "undefined"
+    ? controlledRetrievalExecutionInvocationRequest
+    : null;
+
+let btReady = true;
+
+
+/* =========================================================
+   8BT — REQUEST VALIDATION
+   ========================================================= */
+
+if (!btSource) {
+  btReady = false;
+}
+
+if (
+  btSource &&
+  (
+    btSource.status !== "ready" ||
+    btSource.allowed !== true
+  )
+) {
+  btReady = false;
+}
+
+
+/* =========================================================
+   8BT — QUERY VALIDATION
+   ========================================================= */
+
+if (
+  btSource &&
+  (
+    typeof btSource.searchQuery !== "string" ||
+    btSource.searchQuery.trim() === ""
+  )
+) {
+  btReady = false;
+}
+
+
+/* =========================================================
+   8BT — TARGET VALIDATION
+   ========================================================= */
+
+if (
+  btSource &&
+  (
+    !Array.isArray(btSource.targets) ||
+    btSource.targets.length !== 5
+  )
+) {
+  btReady = false;
+}
+
+
+if (
+  btReady &&
+  Array.isArray(btSource.targets)
+) {
+
+  btSource.targets.forEach((target) => {
+
+    if (!target) {
+      btReady = false;
+      return;
+    }
+
+
+    if (
+      target.invocationStatus !==
+      "INVOCATION_REQUEST_READY"
+    ) {
+      btReady = false;
+    }
+
+
+    if (
+      target.executionStatus !==
+      "NOT_STARTED"
+    ) {
+      btReady = false;
+    }
+
+
+    if (
+      target.retrievalStatus !==
+      "NOT_STARTED"
+    ) {
+      btReady = false;
+    }
+
+
+    if (
+      target.evidenceStatus !==
+      "NOT_STARTED"
+    ) {
+      btReady = false;
+    }
+
+
+    if (
+      target.claimSupportStatus !==
+      "NOT_CHANGED"
+    ) {
+      btReady = false;
+    }
+
+  });
+
+}
+
+
+/* =========================================================
+   8BT — EXECUTION POLICY SAFETY CHECK
+   ========================================================= */
+
+if (
+  btReady &&
+  btSource.executionPolicy
+) {
+
+  if (
+    btSource.executionPolicy.externalSourceAccess !== false ||
+    btSource.executionPolicy.sourceRetrieval !== false ||
+    btSource.executionPolicy.evidenceInsertion !== false ||
+    btSource.executionPolicy.claimSupportUpdate !== false
+  ) {
+    btReady = false;
+  }
+
+}
+
+
+/* =========================================================
+   8BT — AUTHORIZATION OUTPUT
+   ========================================================= */
+
+if (btReady) {
+
+  controlledRetrievalInvocationAuthorization = {
+
+    status: "ready",
+    allowed: true,
+
+    authorizationType:
+      "controlled_retrieval_invocation_authorization",
+
+    searchQuery:
+      btSource.searchQuery.trim(),
+
+    targets:
+      btSource.targets.map((target) => ({
+
+        claimKey:
+          target.claimKey,
+
+        sourceType:
+          target.sourceType,
+
+        fallbackSourceTypes:
+          Array.isArray(target.fallbackSourceTypes)
+            ? [...target.fallbackSourceTypes]
+            : [],
+
+        invocationStatus:
+          "INVOCATION_AUTHORIZED",
+
+        executionStatus:
+          "NOT_STARTED",
+
+        retrievalStatus:
+          "NOT_STARTED",
+
+        evidenceStatus:
+          "NOT_STARTED",
+
+        claimSupportStatus:
+          "NOT_CHANGED"
+
+      })),
+
+    executionPolicy: {
+
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+
+    },
+
+    safety: {
+
+      externalSourceAccess:
+        "NOT_STARTED",
+
+      sourceRetrieval:
+        "NOT_STARTED",
+
+      evidenceInsertion:
+        "NOT_STARTED",
+
+      claimSupportUpdate:
+        "NOT_CHANGED"
+
+    },
+
+    reason:
+      "Controlled retrieval invocation is authorized at the control layer. Actual external retrieval remains safely blocked."
+
+  };
+
+}
+
+
+/* =========================================================
+   8BT — DEBUGGER
+   ========================================================= */
+
+if (
+  typeof OODebug !== "undefined" &&
+  OODebug &&
+  typeof OODebug.log === "function"
+) {
+
+  OODebug.log(
+    "8BT",
+    "AUTHORIZATION",
+    controlledRetrievalInvocationAuthorization.status ===
+      "ready"
+      ? "Controlled retrieval invocation authorization READY"
+      : "Controlled retrieval invocation authorization BLOCKED"
+  );
+
+
+  OODebug.log(
+    "8BT",
+    "QUERY",
+    controlledRetrievalInvocationAuthorization.searchQuery ||
+      "null"
+  );
+
+
+  OODebug.log(
+    "8BT",
+    "TARGETS",
+    String(
+      Array.isArray(
+        controlledRetrievalInvocationAuthorization.targets
+      )
+        ? controlledRetrievalInvocationAuthorization.targets.length
+        : 0
+    )
+  );
+
+
+  OODebug.log(
+    "8BT",
+    "EXTERNAL_ACCESS",
+    controlledRetrievalInvocationAuthorization.safety
+      .externalSourceAccess
+  );
+
+
+  OODebug.log(
+    "8BT",
+    "RETRIEVAL",
+    controlledRetrievalInvocationAuthorization.safety
+      .sourceRetrieval
+  );
+
+
+  OODebug.log(
+    "8BT",
+    "EVIDENCE_INSERTION",
+    controlledRetrievalInvocationAuthorization.safety
+      .evidenceInsertion
+  );
+
+
+  OODebug.log(
+    "8BT",
+    "CLAIM_SUPPORT",
+    controlledRetrievalInvocationAuthorization.safety
+      .claimSupportUpdate
+  );
+
+}
+        
 /* ==========================================
    RESULT VALUES
    ========================================== */
