@@ -20481,6 +20481,368 @@ if (
   );
 
   }   
+/* =========================================================
+   STEP 8BZ — CONTROLLED RETRIEVAL INVOCATION AUTHORIZATION
+   HANDOFF BOUNDARY
+   ========================================================= */
+
+let controlledRetrievalInvocationAuthorizationHandoffBoundary = {
+  status: "blocked",
+  allowed: false,
+
+  boundaryType:
+    "controlled_retrieval_invocation_authorization_handoff_boundary",
+
+  searchQuery: null,
+  targets: [],
+
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+
+  reason:
+    "Controlled retrieval invocation authorization handoff boundary is not ready."
+};
+
+
+/* =========================================================
+   8BZ — SOURCE
+   ========================================================= */
+
+const bzSource =
+  typeof controlledRetrievalInvocationBoundaryRequestAuthorizationHandoff !==
+  "undefined"
+    ? controlledRetrievalInvocationBoundaryRequestAuthorizationHandoff
+    : null;
+
+let bzReady = true;
+
+
+/* =========================================================
+   8BZ — SOURCE READINESS CHECK
+   ========================================================= */
+
+if (!bzSource) {
+  bzReady = false;
+}
+
+if (
+  bzSource &&
+  (
+    bzSource.status !== "ready" ||
+    bzSource.allowed !== true
+  )
+) {
+  bzReady = false;
+}
+
+
+/* =========================================================
+   8BZ — QUERY CHECK
+   ========================================================= */
+
+if (
+  bzSource &&
+  (
+    typeof bzSource.searchQuery !== "string" ||
+    bzSource.searchQuery.trim() === ""
+  )
+) {
+  bzReady = false;
+}
+
+
+/* =========================================================
+   8BZ — TARGET COUNT CHECK
+   ========================================================= */
+
+if (
+  bzSource &&
+  (
+    !Array.isArray(bzSource.targets) ||
+    bzSource.targets.length !== 5
+  )
+) {
+  bzReady = false;
+}
+
+
+/* =========================================================
+   8BZ — TARGET SAFETY CHECK
+   ========================================================= */
+
+if (
+  bzReady &&
+  Array.isArray(bzSource.targets)
+) {
+
+  bzSource.targets.forEach((target) => {
+
+    if (!target) {
+      bzReady = false;
+      return;
+    }
+
+    if (
+      target.invocationStatus !==
+      "AUTHORIZATION_HANDOFF_READY"
+    ) {
+      bzReady = false;
+    }
+
+    if (
+      target.executionStatus !==
+      "NOT_STARTED"
+    ) {
+      bzReady = false;
+    }
+
+    if (
+      target.retrievalStatus !==
+      "NOT_STARTED"
+    ) {
+      bzReady = false;
+    }
+
+    if (
+      target.evidenceStatus !==
+      "NOT_STARTED"
+    ) {
+      bzReady = false;
+    }
+
+    if (
+      target.claimSupportStatus !==
+      "NOT_CHANGED"
+    ) {
+      bzReady = false;
+    }
+
+  });
+
+}
+
+
+/* =========================================================
+   8BZ — EXECUTION POLICY SAFETY CHECK
+   ========================================================= */
+
+if (
+  bzReady &&
+  bzSource.executionPolicy
+) {
+
+  if (
+    bzSource.executionPolicy.externalSourceAccess !== false ||
+    bzSource.executionPolicy.sourceRetrieval !== false ||
+    bzSource.executionPolicy.evidenceInsertion !== false ||
+    bzSource.executionPolicy.claimSupportUpdate !== false
+  ) {
+    bzReady = false;
+  }
+
+}
+
+
+/* =========================================================
+   8BZ — SAFETY STATE CHECK
+   ========================================================= */
+
+if (
+  bzReady &&
+  bzSource.safety
+) {
+
+  if (
+    bzSource.safety.externalSourceAccess !==
+    "NOT_STARTED"
+  ) {
+    bzReady = false;
+  }
+
+  if (
+    bzSource.safety.sourceRetrieval !==
+    "NOT_STARTED"
+  ) {
+    bzReady = false;
+  }
+
+  if (
+    bzSource.safety.evidenceInsertion !==
+    "NOT_STARTED"
+  ) {
+    bzReady = false;
+  }
+
+  if (
+    bzSource.safety.claimSupportUpdate !==
+    "NOT_CHANGED"
+  ) {
+    bzReady = false;
+  }
+
+}
+
+
+/* =========================================================
+   8BZ — BOUNDARY OUTPUT
+   ========================================================= */
+
+if (bzReady) {
+
+  controlledRetrievalInvocationAuthorizationHandoffBoundary = {
+
+    status: "ready",
+    allowed: true,
+
+    boundaryType:
+      "controlled_retrieval_invocation_authorization_handoff_boundary",
+
+    searchQuery:
+      bzSource.searchQuery.trim(),
+
+    targets:
+      bzSource.targets.map((target) => ({
+
+        claimKey:
+          target.claimKey,
+
+        sourceType:
+          target.sourceType,
+
+        fallbackSourceTypes:
+          Array.isArray(target.fallbackSourceTypes)
+            ? [...target.fallbackSourceTypes]
+            : [],
+
+        invocationStatus:
+          "AUTHORIZATION_HANDOFF_BOUNDARY_READY",
+
+        executionStatus:
+          "NOT_STARTED",
+
+        retrievalStatus:
+          "NOT_STARTED",
+
+        evidenceStatus:
+          "NOT_STARTED",
+
+        claimSupportStatus:
+          "NOT_CHANGED"
+
+      })),
+
+    executionPolicy: {
+
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+
+    },
+
+    safety: {
+
+      externalSourceAccess:
+        "NOT_STARTED",
+
+      sourceRetrieval:
+        "NOT_STARTED",
+
+      evidenceInsertion:
+        "NOT_STARTED",
+
+      claimSupportUpdate:
+        "NOT_CHANGED"
+
+    },
+
+    reason:
+      "Controlled retrieval invocation authorization handoff boundary is ready. Actual external retrieval remains safely blocked."
+
+  };
+
+}
+
+
+/* =========================================================
+   8BZ — DEBUGGER
+   ========================================================= */
+
+if (
+  typeof OODebug !== "undefined" &&
+  OODebug &&
+  typeof OODebug.log === "function"
+) {
+
+  OODebug.log(
+    "8BZ",
+    "BOUNDARY",
+    controlledRetrievalInvocationAuthorizationHandoffBoundary.status ===
+      "ready"
+      ? "Controlled retrieval invocation authorization handoff boundary READY"
+      : "Controlled retrieval invocation authorization handoff boundary BLOCKED"
+  );
+
+  OODebug.log(
+    "8BZ",
+    "QUERY",
+    controlledRetrievalInvocationAuthorizationHandoffBoundary.searchQuery ||
+      "null"
+  );
+
+  OODebug.log(
+    "8BZ",
+    "TARGETS",
+    String(
+      Array.isArray(
+        controlledRetrievalInvocationAuthorizationHandoffBoundary.targets
+      )
+        ? controlledRetrievalInvocationAuthorizationHandoffBoundary.targets.length
+        : 0
+    )
+  );
+
+  OODebug.log(
+    "8BZ",
+    "EXTERNAL_ACCESS",
+    controlledRetrievalInvocationAuthorizationHandoffBoundary.safety
+      .externalSourceAccess
+  );
+
+  OODebug.log(
+    "8BZ",
+    "RETRIEVAL",
+    controlledRetrievalInvocationAuthorizationHandoffBoundary.safety
+      .sourceRetrieval
+  );
+
+  OODebug.log(
+    "8BZ",
+    "EVIDENCE_INSERTION",
+    controlledRetrievalInvocationAuthorizationHandoffBoundary.safety
+      .evidenceInsertion
+  );
+
+  OODebug.log(
+    "8BZ",
+    "CLAIM_SUPPORT",
+    controlledRetrievalInvocationAuthorizationHandoffBoundary.safety
+      .claimSupportUpdate
+  );
+
+  }
+    
   /* ==========================================
    RESULT VALUES
    ========================================== */
