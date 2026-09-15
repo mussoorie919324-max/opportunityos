@@ -17779,6 +17779,304 @@ if (
   );
 
   }  
+/* =========================================================
+   STEP 8BR — CONTROLLED RETRIEVAL EXECUTION INVOCATION BOUNDARY
+   ========================================================= */
+
+let controlledRetrievalExecutionInvocationBoundary = {
+  status: "blocked",
+  allowed: false,
+
+  boundaryType:
+    "controlled_retrieval_execution_invocation_boundary",
+
+  searchQuery: null,
+  targets: [],
+
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+
+  reason:
+    "Controlled retrieval execution invocation boundary is not ready."
+};
+
+
+/* =========================================================
+   STEP 8BR — SOURCE HANDOFF
+   ========================================================= */
+
+const brSource =
+  typeof controlledRetrievalExecutionPreparationHandoff !== "undefined"
+    ? controlledRetrievalExecutionPreparationHandoff
+    : null;
+
+
+/* =========================================================
+   STEP 8BR — SAFE VALIDATION
+   ========================================================= */
+
+let brReady = true;
+
+if (!brSource) {
+  brReady = false;
+}
+
+if (
+  brSource &&
+  (
+    brSource.status !== "ready" ||
+    brSource.allowed !== true
+  )
+) {
+  brReady = false;
+}
+
+if (
+  brSource &&
+  (
+    typeof brSource.searchQuery !== "string" ||
+    brSource.searchQuery.trim() === ""
+  )
+) {
+  brReady = false;
+}
+
+if (
+  brSource &&
+  (
+    !Array.isArray(brSource.targets) ||
+    brSource.targets.length !== 5
+  )
+) {
+  brReady = false;
+}
+
+
+/* =========================================================
+   STEP 8BR — TARGET SAFETY VALIDATION
+   ========================================================= */
+
+if (
+  brReady &&
+  Array.isArray(brSource.targets)
+) {
+
+  brSource.targets.forEach((target) => {
+
+    if (!target) {
+      brReady = false;
+      return;
+    }
+
+    if (
+      target.invocationStatus !==
+      "PREPARATION_HANDOFF_READY"
+    ) {
+      brReady = false;
+    }
+
+    if (
+      target.executionStatus !==
+      "NOT_STARTED"
+    ) {
+      brReady = false;
+    }
+
+    if (
+      target.retrievalStatus !==
+      "NOT_STARTED"
+    ) {
+      brReady = false;
+    }
+
+    if (
+      target.evidenceStatus !==
+      "NOT_STARTED"
+    ) {
+      brReady = false;
+    }
+
+  });
+
+}
+
+
+/* =========================================================
+   STEP 8BR — EXECUTION POLICY SAFETY
+   ========================================================= */
+
+if (
+  brReady &&
+  brSource.executionPolicy
+) {
+
+  if (
+    brSource.executionPolicy.externalSourceAccess !== false ||
+    brSource.executionPolicy.sourceRetrieval !== false ||
+    brSource.executionPolicy.evidenceInsertion !== false ||
+    brSource.executionPolicy.claimSupportUpdate !== false
+  ) {
+    brReady = false;
+  }
+
+}
+
+
+/* =========================================================
+   STEP 8BR — BUILD INVOCATION BOUNDARY
+   ========================================================= */
+
+if (brReady) {
+
+  controlledRetrievalExecutionInvocationBoundary = {
+
+    status: "ready",
+    allowed: true,
+
+    boundaryType:
+      "controlled_retrieval_execution_invocation_boundary",
+
+    searchQuery:
+      brSource.searchQuery.trim(),
+
+    targets:
+      brSource.targets.map((target) => ({
+
+        claimKey:
+          target.claimKey,
+
+        sourceType:
+          target.sourceType,
+
+        fallbackSourceTypes:
+          Array.isArray(target.fallbackSourceTypes)
+            ? [...target.fallbackSourceTypes]
+            : [],
+
+        invocationStatus:
+          "INVOCATION_BOUNDARY_READY",
+
+        executionStatus:
+          "NOT_STARTED",
+
+        retrievalStatus:
+          "NOT_STARTED",
+
+        evidenceStatus:
+          "NOT_STARTED",
+
+        claimSupportStatus:
+          "NOT_CHANGED"
+
+      })),
+
+    executionPolicy: {
+
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+
+    },
+
+    safety: {
+
+      externalSourceAccess:
+        "NOT_STARTED",
+
+      sourceRetrieval:
+        "NOT_STARTED",
+
+      evidenceInsertion:
+        "NOT_STARTED",
+
+      claimSupportUpdate:
+        "NOT_CHANGED"
+
+    },
+
+    reason:
+      "Controlled retrieval execution invocation boundary is ready. Actual external retrieval remains safely blocked."
+  };
+
+}
+
+
+/* =========================================================
+   STEP 8BR — DEBUGGER
+   ========================================================= */
+
+if (
+  typeof OODebug !== "undefined" &&
+  OODebug &&
+  typeof OODebug.log === "function"
+) {
+
+  OODebug.log(
+    "8BR",
+    "BOUNDARY",
+    controlledRetrievalExecutionInvocationBoundary.status ===
+      "ready"
+      ? "Controlled retrieval execution invocation boundary READY"
+      : "Controlled retrieval execution invocation boundary BLOCKED"
+  );
+
+  OODebug.log(
+    "8BR",
+    "QUERY",
+    controlledRetrievalExecutionInvocationBoundary.searchQuery ||
+      "null"
+  );
+
+  OODebug.log(
+    "8BR",
+    "TARGETS",
+    String(
+      Array.isArray(
+        controlledRetrievalExecutionInvocationBoundary.targets
+      )
+        ? controlledRetrievalExecutionInvocationBoundary.targets.length
+        : 0
+    )
+  );
+
+  OODebug.log(
+    "8BR",
+    "EXTERNAL_ACCESS",
+    controlledRetrievalExecutionInvocationBoundary.safety.externalSourceAccess
+  );
+
+  OODebug.log(
+    "8BR",
+    "RETRIEVAL",
+    controlledRetrievalExecutionInvocationBoundary.safety.sourceRetrieval
+  );
+
+  OODebug.log(
+    "8BR",
+    "EVIDENCE_INSERTION",
+    controlledRetrievalExecutionInvocationBoundary.safety.evidenceInsertion
+  );
+
+  OODebug.log(
+    "8BR",
+    "CLAIM_SUPPORT",
+    controlledRetrievalExecutionInvocationBoundary.safety.claimSupportUpdate
+  );
+
+  }
+        
 /* ==========================================
    RESULT VALUES
    ========================================== */
