@@ -17480,7 +17480,7 @@ if (
     "NOT_CHANGED"
   );
   }
-   /* =========================================================
+ /* =========================================================
    STEP 8BQ — CONTROLLED RETRIEVAL EXECUTION PREPARATION HANDOFF
    ========================================================= */
 
@@ -17568,7 +17568,10 @@ if (
    STEP 8BQ — TARGET SAFETY CHECK
    ========================================================= */
 
-if (bqSource && Array.isArray(bqSource.targets)) {
+if (
+  bqReady &&
+  Array.isArray(bqSource.targets)
+) {
 
   bqSource.targets.forEach((target) => {
 
@@ -17577,19 +17580,33 @@ if (bqSource && Array.isArray(bqSource.targets)) {
       return;
     }
 
-    if (target.invocationStatus !== "PREPARATION_READY") {
+    if (
+      target.invocationStatus !==
+      "PREPARATION_READY"
+    ) {
       bqReady = false;
     }
 
-    if (target.executionStatus !== "NOT_STARTED") {
+    if (
+      target.executionStatus !==
+      "NOT_STARTED"
+    ) {
       bqReady = false;
     }
 
-    if (target.retrievalStatus !== "NOT_STARTED") {
+    if (
+      target.retrievalStatus !==
+      "NOT_STARTED"
+    ) {
       bqReady = false;
     }
 
-    if (target.evidenceInsertionStatus !== "NOT_STARTED") {
+    /* IMPORTANT:
+       8BP uses evidenceStatus */
+    if (
+      target.evidenceStatus !==
+      "NOT_STARTED"
+    ) {
       bqReady = false;
     }
 
@@ -17603,7 +17620,7 @@ if (bqSource && Array.isArray(bqSource.targets)) {
    ========================================================= */
 
 if (
-  bqSource &&
+  bqReady &&
   bqSource.executionPolicy
 ) {
 
@@ -17634,13 +17651,16 @@ if (bqReady) {
       "controlled_retrieval_execution_preparation_handoff",
 
     searchQuery:
-      bqSource.searchQuery,
+      bqSource.searchQuery.trim(),
 
     targets:
       bqSource.targets.map((target) => ({
 
-        claimKey: target.claimKey,
-        sourceType: target.sourceType,
+        claimKey:
+          target.claimKey,
+
+        sourceType:
+          target.sourceType,
 
         fallbackSourceTypes:
           Array.isArray(target.fallbackSourceTypes)
@@ -17656,7 +17676,7 @@ if (bqReady) {
         retrievalStatus:
           "NOT_STARTED",
 
-        evidenceInsertionStatus:
+        evidenceStatus:
           "NOT_STARTED",
 
         claimSupportStatus:
@@ -17700,12 +17720,17 @@ if (bqReady) {
    STEP 8BQ — DEBUGGER
    ========================================================= */
 
-if (typeof OODebug !== "undefined" && OODebug.log) {
+if (
+  typeof OODebug !== "undefined" &&
+  OODebug &&
+  typeof OODebug.log === "function"
+) {
 
   OODebug.log(
     "8BQ",
     "HANDOFF",
-    bqReady
+    controlledRetrievalExecutionPreparationHandoff.status ===
+      "ready"
       ? "Controlled retrieval execution preparation handoff READY"
       : "Controlled retrieval execution preparation handoff BLOCKED"
   );
@@ -17713,7 +17738,8 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
   OODebug.log(
     "8BQ",
     "QUERY",
-    controlledRetrievalExecutionPreparationHandoff.searchQuery || "null"
+    controlledRetrievalExecutionPreparationHandoff.searchQuery ||
+      "null"
   );
 
   OODebug.log(
@@ -17752,7 +17778,7 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
     controlledRetrievalExecutionPreparationHandoff.safety.claimSupportUpdate
   );
 
-    }     
+  }  
 /* ==========================================
    RESULT VALUES
    ========================================== */
