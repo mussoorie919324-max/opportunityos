@@ -18076,7 +18076,310 @@ if (
   );
 
   }
-        
+   /* =========================================================
+   STEP 8BS — CONTROLLED RETRIEVAL INVOCATION REQUEST
+   ========================================================= */
+
+let controlledRetrievalExecutionInvocationRequest = {
+  status: "blocked",
+  allowed: false,
+
+  requestType:
+    "controlled_retrieval_invocation_request",
+
+  searchQuery: null,
+  targets: [],
+
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+
+  reason:
+    "Controlled retrieval invocation request is not ready."
+};
+
+
+/* =========================================================
+   STEP 8BS — SOURCE BOUNDARY
+   ========================================================= */
+
+const bsSource =
+  typeof controlledRetrievalExecutionInvocationBoundary !== "undefined"
+    ? controlledRetrievalExecutionInvocationBoundary
+    : null;
+
+
+/* =========================================================
+   STEP 8BS — SAFE VALIDATION
+   ========================================================= */
+
+let bsReady = true;
+
+if (!bsSource) {
+  bsReady = false;
+}
+
+if (
+  bsSource &&
+  (
+    bsSource.status !== "ready" ||
+    bsSource.allowed !== true
+  )
+) {
+  bsReady = false;
+}
+
+if (
+  bsSource &&
+  (
+    typeof bsSource.searchQuery !== "string" ||
+    bsSource.searchQuery.trim() === ""
+  )
+) {
+  bsReady = false;
+}
+
+if (
+  bsSource &&
+  (
+    !Array.isArray(bsSource.targets) ||
+    bsSource.targets.length !== 5
+  )
+) {
+  bsReady = false;
+}
+
+
+/* =========================================================
+   STEP 8BS — TARGET SAFETY VALIDATION
+   ========================================================= */
+
+if (
+  bsReady &&
+  Array.isArray(bsSource.targets)
+) {
+
+  bsSource.targets.forEach((target) => {
+
+    if (!target) {
+      bsReady = false;
+      return;
+    }
+
+    if (
+      target.invocationStatus !==
+      "INVOCATION_BOUNDARY_READY"
+    ) {
+      bsReady = false;
+    }
+
+    if (
+      target.executionStatus !==
+      "NOT_STARTED"
+    ) {
+      bsReady = false;
+    }
+
+    if (
+      target.retrievalStatus !==
+      "NOT_STARTED"
+    ) {
+      bsReady = false;
+    }
+
+    if (
+      target.evidenceStatus !==
+      "NOT_STARTED"
+    ) {
+      bsReady = false;
+    }
+
+    if (
+      target.claimSupportStatus !==
+      "NOT_CHANGED"
+    ) {
+      bsReady = false;
+    }
+
+  });
+
+}
+
+
+/* =========================================================
+   STEP 8BS — EXECUTION POLICY SAFETY
+   ========================================================= */
+
+if (
+  bsReady &&
+  bsSource.executionPolicy
+) {
+
+  if (
+    bsSource.executionPolicy.externalSourceAccess !== false ||
+    bsSource.executionPolicy.sourceRetrieval !== false ||
+    bsSource.executionPolicy.evidenceInsertion !== false ||
+    bsSource.executionPolicy.claimSupportUpdate !== false
+  ) {
+    bsReady = false;
+  }
+
+}
+
+
+/* =========================================================
+   STEP 8BS — BUILD INVOCATION REQUEST
+   ========================================================= */
+
+if (bsReady) {
+
+  controlledRetrievalExecutionInvocationRequest = {
+
+    status: "ready",
+    allowed: true,
+
+    requestType:
+      "controlled_retrieval_invocation_request",
+
+    searchQuery:
+      bsSource.searchQuery.trim(),
+
+    targets:
+      bsSource.targets.map((target) => ({
+
+        claimKey:
+          target.claimKey,
+
+        sourceType:
+          target.sourceType,
+
+        fallbackSourceTypes:
+          Array.isArray(target.fallbackSourceTypes)
+            ? [...target.fallbackSourceTypes]
+            : [],
+
+        invocationStatus:
+          "INVOCATION_REQUEST_READY",
+
+        executionStatus:
+          "NOT_STARTED",
+
+        retrievalStatus:
+          "NOT_STARTED",
+
+        evidenceStatus:
+          "NOT_STARTED",
+
+        claimSupportStatus:
+          "NOT_CHANGED"
+
+      })),
+
+    executionPolicy: {
+
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+
+    },
+
+    safety: {
+
+      externalSourceAccess:
+        "NOT_STARTED",
+
+      sourceRetrieval:
+        "NOT_STARTED",
+
+      evidenceInsertion:
+        "NOT_STARTED",
+
+      claimSupportUpdate:
+        "NOT_CHANGED"
+
+    },
+
+    reason:
+      "Controlled retrieval invocation request is ready. Actual external retrieval remains safely blocked."
+  };
+
+}
+
+
+/* =========================================================
+   STEP 8BS — DEBUGGER
+   ========================================================= */
+
+if (
+  typeof OODebug !== "undefined" &&
+  OODebug &&
+  typeof OODebug.log === "function"
+) {
+
+  OODebug.log(
+    "8BS",
+    "REQUEST",
+    controlledRetrievalExecutionInvocationRequest.status ===
+      "ready"
+      ? "Controlled retrieval invocation request READY"
+      : "Controlled retrieval invocation request BLOCKED"
+  );
+
+  OODebug.log(
+    "8BS",
+    "QUERY",
+    controlledRetrievalExecutionInvocationRequest.searchQuery ||
+      "null"
+  );
+
+  OODebug.log(
+    "8BS",
+    "TARGETS",
+    String(
+      Array.isArray(
+        controlledRetrievalExecutionInvocationRequest.targets
+      )
+        ? controlledRetrievalExecutionInvocationRequest.targets.length
+        : 0
+    )
+  );
+
+  OODebug.log(
+    "8BS",
+    "EXTERNAL_ACCESS",
+    controlledRetrievalExecutionInvocationRequest.safety.externalSourceAccess
+  );
+
+  OODebug.log(
+    "8BS",
+    "RETRIEVAL",
+    controlledRetrievalExecutionInvocationRequest.safety.sourceRetrieval
+  );
+
+  OODebug.log(
+    "8BS",
+    "EVIDENCE_INSERTION",
+    controlledRetrievalExecutionInvocationRequest.safety.evidenceInsertion
+  );
+
+  OODebug.log(
+    "8BS",
+    "CLAIM_SUPPORT",
+    controlledRetrievalExecutionInvocationRequest.safety.claimSupportUpdate
+  );
+
+  }     
 /* ==========================================
    RESULT VALUES
    ========================================== */
