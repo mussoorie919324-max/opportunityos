@@ -17480,7 +17480,279 @@ if (
     "NOT_CHANGED"
   );
   }
-        
+   /* =========================================================
+   STEP 8BQ — CONTROLLED RETRIEVAL EXECUTION PREPARATION HANDOFF
+   ========================================================= */
+
+let controlledRetrievalExecutionPreparationHandoff = {
+  status: "blocked",
+  allowed: false,
+
+  handoffType:
+    "controlled_retrieval_execution_preparation_handoff",
+
+  searchQuery: null,
+  targets: [],
+
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+
+  reason:
+    "Controlled retrieval execution preparation handoff is not ready."
+};
+
+
+/* =========================================================
+   STEP 8BQ — SOURCE
+   ========================================================= */
+
+const bqSource =
+  typeof controlledRetrievalExecutionBoundaryPreparation !== "undefined"
+    ? controlledRetrievalExecutionBoundaryPreparation
+    : null;
+
+
+/* =========================================================
+   STEP 8BQ — VALIDATION
+   ========================================================= */
+
+let bqReady = true;
+
+if (!bqSource) {
+  bqReady = false;
+}
+
+if (
+  bqSource &&
+  (
+    bqSource.status !== "ready" ||
+    bqSource.allowed !== true
+  )
+) {
+  bqReady = false;
+}
+
+if (
+  bqSource &&
+  (
+    typeof bqSource.searchQuery !== "string" ||
+    bqSource.searchQuery.trim() === ""
+  )
+) {
+  bqReady = false;
+}
+
+if (
+  bqSource &&
+  (
+    !Array.isArray(bqSource.targets) ||
+    bqSource.targets.length !== 5
+  )
+) {
+  bqReady = false;
+}
+
+
+/* =========================================================
+   STEP 8BQ — TARGET SAFETY CHECK
+   ========================================================= */
+
+if (bqSource && Array.isArray(bqSource.targets)) {
+
+  bqSource.targets.forEach((target) => {
+
+    if (!target) {
+      bqReady = false;
+      return;
+    }
+
+    if (target.invocationStatus !== "PREPARATION_READY") {
+      bqReady = false;
+    }
+
+    if (target.executionStatus !== "NOT_STARTED") {
+      bqReady = false;
+    }
+
+    if (target.retrievalStatus !== "NOT_STARTED") {
+      bqReady = false;
+    }
+
+    if (target.evidenceInsertionStatus !== "NOT_STARTED") {
+      bqReady = false;
+    }
+
+  });
+
+}
+
+
+/* =========================================================
+   STEP 8BQ — EXECUTION POLICY SAFETY
+   ========================================================= */
+
+if (
+  bqSource &&
+  bqSource.executionPolicy
+) {
+
+  if (
+    bqSource.executionPolicy.externalSourceAccess !== false ||
+    bqSource.executionPolicy.sourceRetrieval !== false ||
+    bqSource.executionPolicy.evidenceInsertion !== false ||
+    bqSource.executionPolicy.claimSupportUpdate !== false
+  ) {
+    bqReady = false;
+  }
+
+}
+
+
+/* =========================================================
+   STEP 8BQ — BUILD HANDOFF
+   ========================================================= */
+
+if (bqReady) {
+
+  controlledRetrievalExecutionPreparationHandoff = {
+
+    status: "ready",
+    allowed: true,
+
+    handoffType:
+      "controlled_retrieval_execution_preparation_handoff",
+
+    searchQuery:
+      bqSource.searchQuery,
+
+    targets:
+      bqSource.targets.map((target) => ({
+
+        claimKey: target.claimKey,
+        sourceType: target.sourceType,
+
+        fallbackSourceTypes:
+          Array.isArray(target.fallbackSourceTypes)
+            ? [...target.fallbackSourceTypes]
+            : [],
+
+        invocationStatus:
+          "PREPARATION_HANDOFF_READY",
+
+        executionStatus:
+          "NOT_STARTED",
+
+        retrievalStatus:
+          "NOT_STARTED",
+
+        evidenceInsertionStatus:
+          "NOT_STARTED",
+
+        claimSupportStatus:
+          "NOT_CHANGED"
+
+      })),
+
+    executionPolicy: {
+
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+
+    },
+
+    safety: {
+
+      externalSourceAccess:
+        "NOT_STARTED",
+
+      sourceRetrieval:
+        "NOT_STARTED",
+
+      evidenceInsertion:
+        "NOT_STARTED",
+
+      claimSupportUpdate:
+        "NOT_CHANGED"
+
+    },
+
+    reason:
+      "Controlled retrieval execution preparation handoff is ready while all external execution remains safely blocked."
+  };
+
+}
+
+
+/* =========================================================
+   STEP 8BQ — DEBUGGER
+   ========================================================= */
+
+if (typeof OODebug !== "undefined" && OODebug.log) {
+
+  OODebug.log(
+    "8BQ",
+    "HANDOFF",
+    bqReady
+      ? "Controlled retrieval execution preparation handoff READY"
+      : "Controlled retrieval execution preparation handoff BLOCKED"
+  );
+
+  OODebug.log(
+    "8BQ",
+    "QUERY",
+    controlledRetrievalExecutionPreparationHandoff.searchQuery || "null"
+  );
+
+  OODebug.log(
+    "8BQ",
+    "TARGETS",
+    String(
+      Array.isArray(
+        controlledRetrievalExecutionPreparationHandoff.targets
+      )
+        ? controlledRetrievalExecutionPreparationHandoff.targets.length
+        : 0
+    )
+  );
+
+  OODebug.log(
+    "8BQ",
+    "EXTERNAL_ACCESS",
+    controlledRetrievalExecutionPreparationHandoff.safety.externalSourceAccess
+  );
+
+  OODebug.log(
+    "8BQ",
+    "RETRIEVAL",
+    controlledRetrievalExecutionPreparationHandoff.safety.sourceRetrieval
+  );
+
+  OODebug.log(
+    "8BQ",
+    "EVIDENCE_INSERTION",
+    controlledRetrievalExecutionPreparationHandoff.safety.evidenceInsertion
+  );
+
+  OODebug.log(
+    "8BQ",
+    "CLAIM_SUPPORT",
+    controlledRetrievalExecutionPreparationHandoff.safety.claimSupportUpdate
+  );
+
+    }     
 /* ==========================================
    RESULT VALUES
    ========================================== */
