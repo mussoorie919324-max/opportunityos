@@ -17233,6 +17233,254 @@ if (typeof OODebug !== "undefined") {
     "Claim support update: NOT_CHANGED"
   );
   }        
+/* =========================================================
+   STEP 8BP — CONTROLLED RETRIEVAL EXECUTION BOUNDARY PREPARATION
+   ========================================================= */
+
+let controlledRetrievalExecutionBoundaryPreparation = {
+  status: "blocked",
+  allowed: false,
+
+  preparationType:
+    "controlled_retrieval_execution_boundary_preparation",
+
+  searchQuery: null,
+  targets: [],
+
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+
+  reason:
+    "Controlled retrieval execution boundary preparation is not ready."
+};
+
+
+/* =========================================================
+   STEP 8BP — SOURCE HANDOFF
+   ========================================================= */
+
+const bpSource =
+  typeof controlledRetrievalExecutionRequestHandoff !== "undefined"
+    ? controlledRetrievalExecutionRequestHandoff
+    : null;
+
+
+/* =========================================================
+   STEP 8BP — SAFE VALIDATION
+   ========================================================= */
+
+let bpReady = true;
+
+if (!bpSource) {
+  bpReady = false;
+}
+
+if (
+  bpSource &&
+  (
+    bpSource.status !== "ready" ||
+    bpSource.allowed !== true
+  )
+) {
+  bpReady = false;
+}
+
+if (
+  bpSource &&
+  (
+    typeof bpSource.searchQuery !== "string" ||
+    bpSource.searchQuery.trim() === ""
+  )
+) {
+  bpReady = false;
+}
+
+if (
+  bpSource &&
+  (
+    !Array.isArray(bpSource.targets) ||
+    bpSource.targets.length !== 5
+  )
+) {
+  bpReady = false;
+}
+
+
+/* =========================================================
+   STEP 8BP — TARGET SAFETY VALIDATION
+   ========================================================= */
+
+if (bpReady) {
+
+  bpSource.targets.forEach((target) => {
+
+    if (
+      !target ||
+      target.invocationStatus !== "HANDOFF_READY"
+    ) {
+      bpReady = false;
+    }
+
+    if (
+      target.executionStatus !== "NOT_STARTED" ||
+      target.retrievalStatus !== "NOT_STARTED" ||
+      target.evidenceStatus !== "NOT_STARTED"
+    ) {
+      bpReady = false;
+    }
+
+  });
+}
+
+
+/* =========================================================
+   STEP 8BP — EXECUTION POLICY SAFETY
+   ========================================================= */
+
+if (bpReady) {
+
+  const policy = bpSource.executionPolicy || {};
+
+  if (
+    policy.externalSourceAccess !== false ||
+    policy.sourceRetrieval !== false ||
+    policy.evidenceInsertion !== false ||
+    policy.claimSupportUpdate !== false
+  ) {
+    bpReady = false;
+  }
+}
+
+
+/* =========================================================
+   STEP 8BP — PREPARATION OUTPUT
+   ========================================================= */
+
+if (bpReady) {
+
+  controlledRetrievalExecutionBoundaryPreparation = {
+
+    status: "ready",
+    allowed: true,
+
+    preparationType:
+      "controlled_retrieval_execution_boundary_preparation",
+
+    searchQuery:
+      bpSource.searchQuery.trim(),
+
+    targets:
+      bpSource.targets.map((target) => ({
+        claimKey: target.claimKey,
+        sourceType: target.sourceType,
+        fallbackSourceTypes:
+          Array.isArray(target.fallbackSourceTypes)
+            ? [...target.fallbackSourceTypes]
+            : [],
+
+        invocationStatus:
+          "PREPARATION_READY",
+
+        executionStatus:
+          "NOT_STARTED",
+
+        retrievalStatus:
+          "NOT_STARTED",
+
+        evidenceStatus:
+          "NOT_STARTED"
+      })),
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    reason:
+      "Controlled retrieval execution boundary preparation is ready. Actual retrieval remains blocked."
+  };
+}
+
+
+/* =========================================================
+   STEP 8BP — DEBUGGER
+   ========================================================= */
+
+if (
+  typeof OODebug !== "undefined" &&
+  OODebug &&
+  typeof OODebug.log === "function"
+) {
+
+  OODebug.log(
+    "8BP",
+    "PREPARATION",
+    controlledRetrievalExecutionBoundaryPreparation.status ===
+      "ready"
+      ? "Controlled retrieval execution boundary preparation READY"
+      : "Controlled retrieval execution boundary preparation BLOCKED"
+  );
+
+  OODebug.log(
+    "8BP",
+    "QUERY",
+    controlledRetrievalExecutionBoundaryPreparation.searchQuery ||
+      "null"
+  );
+
+  OODebug.log(
+    "8BP",
+    "TARGETS",
+    String(
+      controlledRetrievalExecutionBoundaryPreparation.targets.length
+    )
+  );
+
+  OODebug.log(
+    "8BP",
+    "EXTERNAL_ACCESS",
+    "NOT_STARTED"
+  );
+
+  OODebug.log(
+    "8BP",
+    "RETRIEVAL",
+    "NOT_STARTED"
+  );
+
+  OODebug.log(
+    "8BP",
+    "EVIDENCE_INSERTION",
+    "NOT_STARTED"
+  );
+
+  OODebug.log(
+    "8BP",
+    "CLAIM_SUPPORT",
+    "NOT_CHANGED"
+  );
+  }
+        
 /* ==========================================
    RESULT VALUES
    ========================================== */
