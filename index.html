@@ -25395,7 +25395,406 @@ if (
   );
 
   }
+/* =========================================================
+   STEP 8CL — CONTROLLED RETRIEVAL EXECUTION AUTHORIZATION
+   READINESS
+   ========================================================= */
 
+let controlledRetrievalExecutionAuthorizationReadiness = {
+  status: "blocked",
+  allowed: false,
+  searchQuery: "",
+  targets: [],
+  reason: "Controlled retrieval execution authorization readiness is not available."
+};
+
+/* ==========================================
+   STEP 8CL — SOURCE
+   ========================================== */
+
+const step8CLSource =
+  typeof controlledRetrievalExecutionAuthorizationBoundaryHandoff !== "undefined"
+    ? controlledRetrievalExecutionAuthorizationBoundaryHandoff
+    : null;
+
+/* ==========================================
+   STEP 8CL — BASIC CHECKS
+   ========================================== */
+
+const step8CLSourceReady =
+  !!(
+    step8CLSource &&
+    step8CLSource.status === "ready" &&
+    step8CLSource.allowed === true
+  );
+
+const step8CLQuery =
+  step8CLSource && typeof step8CLSource.searchQuery === "string"
+    ? step8CLSource.searchQuery.trim()
+    : "";
+
+const step8CLTargets =
+  step8CLSource && Array.isArray(step8CLSource.targets)
+    ? step8CLSource.targets
+    : [];
+
+const step8CLQueryReady = step8CLQuery.length > 0;
+
+const step8CLTargetsReady =
+  step8CLTargets.length === 5;
+
+const step8CLTargetsSafe =
+  step8CLTargetsReady &&
+  step8CLTargets.every(function (target) {
+    return (
+      target &&
+      target.invocationStatus ===
+        "EXECUTION_AUTHORIZATION_BOUNDARY_HANDOFF_READY"
+    );
+  });
+
+/* ==========================================
+   STEP 8CL — EXECUTION POLICY SAFETY
+   ========================================== */
+
+const step8CLPolicySafe =
+  !(
+    step8CLSource &&
+    step8CLSource.executionPolicy &&
+    (
+      step8CLSource.executionPolicy.externalSourceAccess === true ||
+      step8CLSource.executionPolicy.sourceRetrieval === true ||
+      step8CLSource.executionPolicy.evidenceInsertion === true ||
+      step8CLSource.executionPolicy.claimSupportUpdate === true
+    )
+  );
+
+/* ==========================================
+   STEP 8CL — SAFETY STATE
+   ========================================== */
+
+const step8CLSafetySafe =
+  !!(
+    step8CLSource &&
+    step8CLSource.externalAccess === "NOT_STARTED" &&
+    step8CLSource.retrieval === "NOT_STARTED" &&
+    step8CLSource.evidenceInsertion === "NOT_STARTED" &&
+    step8CLSource.claimSupport === "NOT_CHANGED"
+  );
+
+/* ==========================================
+   STEP 8CL — FINAL READINESS
+   ========================================== */
+
+const step8CLReady =
+  step8CLSourceReady &&
+  step8CLQueryReady &&
+  step8CLTargetsReady &&
+  step8CLTargetsSafe &&
+  step8CLPolicySafe &&
+  step8CLSafetySafe;
+
+if (step8CLReady) {
+
+  controlledRetrievalExecutionAuthorizationReadiness = {
+    status: "ready",
+    allowed: true,
+    searchQuery: step8CLQuery,
+    targets: step8CLTargets.map(function (target) {
+      return Object.assign({}, target, {
+        invocationStatus:
+          "EXECUTION_AUTHORIZATION_READINESS_READY"
+      });
+    }),
+    reason:
+      "Controlled retrieval execution authorization readiness is ready.",
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+    externalAccess: "NOT_STARTED",
+    retrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupport: "NOT_CHANGED"
+  };
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug &&
+    typeof OODebug.log === "function"
+  ) {
+    OODebug.log(
+      "8CL",
+      "READINESS",
+      "Controlled retrieval execution authorization readiness READY"
+    );
+    OODebug.log(
+      "8CL",
+      "QUERY",
+      step8CLQuery
+    );
+    OODebug.log(
+      "8CL",
+      "TARGETS",
+      String(step8CLTargets.length)
+    );
+    OODebug.log(
+      "8CL",
+      "SOURCE_READY",
+      String(step8CLSourceReady)
+    );
+    OODebug.log(
+      "8CL",
+      "SOURCE_ALLOWED",
+      String(
+        step8CLSource &&
+        step8CLSource.allowed === true
+      )
+    );
+    OODebug.log(
+      "8CL",
+      "QUERY_READY",
+      String(step8CLQueryReady)
+    );
+    OODebug.log(
+      "8CL",
+      "TARGETS_READY",
+      String(step8CLTargetsReady)
+    );
+    OODebug.log(
+      "8CL",
+      "TARGETS_SAFE",
+      String(step8CLTargetsSafe)
+    );
+    OODebug.log(
+      "8CL",
+      "POLICY_SAFE",
+      String(step8CLPolicySafe)
+    );
+    OODebug.log(
+      "8CL",
+      "SAFETY_SAFE",
+      String(step8CLSafetySafe)
+    );
+  }
+
+} else {
+
+  controlledRetrievalExecutionAuthorizationReadiness = {
+    status: "blocked",
+    allowed: false,
+    searchQuery: step8CLQuery,
+    targets: step8CLTargets,
+    reason:
+      "Controlled retrieval execution authorization readiness requirements are not satisfied."
+  };
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug &&
+    typeof OODebug.log === "function"
+  ) {
+    OODebug.log(
+      "8CL",
+      "BLOCKED",
+      controlledRetrievalExecutionAuthorizationReadiness.reason
+    );
+  }
+}
+
+
+/* =========================================================
+   STEP 8CM — CONTROLLED RETRIEVAL EXECUTION AUTHORIZATION
+   READINESS HANDOFF
+   ========================================================= */
+
+let controlledRetrievalExecutionAuthorizationReadinessHandoff = {
+  status: "blocked",
+  allowed: false,
+  searchQuery: "",
+  targets: [],
+  reason:
+    "Controlled retrieval execution authorization readiness handoff is not available."
+};
+
+/* ==========================================
+   STEP 8CM — SOURCE
+   ========================================== */
+
+const step8CMSource =
+  controlledRetrievalExecutionAuthorizationReadiness;
+
+/* ==========================================
+   STEP 8CM — BASIC CHECKS
+   ========================================== */
+
+const step8CMSourceReady =
+  !!(
+    step8CMSource &&
+    step8CMSource.status === "ready" &&
+    step8CMSource.allowed === true
+  );
+
+const step8CMQuery =
+  step8CMSource && typeof step8CMSource.searchQuery === "string"
+    ? step8CMSource.searchQuery.trim()
+    : "";
+
+const step8CMTargets =
+  step8CMSource && Array.isArray(step8CMSource.targets)
+    ? step8CMSource.targets
+    : [];
+
+const step8CMQueryReady =
+  step8CMQuery.length > 0;
+
+const step8CMTargetsReady =
+  step8CMTargets.length === 5;
+
+const step8CMTargetsSafe =
+  step8CMTargetsReady &&
+  step8CMTargets.every(function (target) {
+    return (
+      target &&
+      target.invocationStatus ===
+        "EXECUTION_AUTHORIZATION_READINESS_READY"
+    );
+  });
+
+/* ==========================================
+   STEP 8CM — EXECUTION POLICY SAFETY
+   ========================================== */
+
+const step8CMPolicySafe =
+  !(
+    step8CMSource &&
+    step8CMSource.executionPolicy &&
+    (
+      step8CMSource.executionPolicy.externalSourceAccess === true ||
+      step8CMSource.executionPolicy.sourceRetrieval === true ||
+      step8CMSource.executionPolicy.evidenceInsertion === true ||
+      step8CMSource.executionPolicy.claimSupportUpdate === true
+    )
+  );
+
+/* ==========================================
+   STEP 8CM — SAFETY STATE
+   ========================================== */
+
+const step8CMSafetySafe =
+  !!(
+    step8CMSource &&
+    step8CMSource.externalAccess === "NOT_STARTED" &&
+    step8CMSource.retrieval === "NOT_STARTED" &&
+    step8CMSource.evidenceInsertion === "NOT_STARTED" &&
+    step8CMSource.claimSupport === "NOT_CHANGED"
+  );
+
+/* ==========================================
+   STEP 8CM — FINAL HANDOFF
+   ========================================== */
+
+const step8CMReady =
+  step8CMSourceReady &&
+  step8CMQueryReady &&
+  step8CMTargetsReady &&
+  step8CMTargetsSafe &&
+  step8CMPolicySafe &&
+  step8CMSafetySafe;
+
+if (step8CMReady) {
+
+  controlledRetrievalExecutionAuthorizationReadinessHandoff = {
+    status: "ready",
+    allowed: true,
+    searchQuery: step8CMQuery,
+    targets: step8CMTargets.map(function (target) {
+      return Object.assign({}, target, {
+        invocationStatus:
+          "EXECUTION_AUTHORIZATION_READINESS_HANDOFF_READY"
+      });
+    }),
+    reason:
+      "Controlled retrieval execution authorization readiness handoff is ready.",
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+    externalAccess: "NOT_STARTED",
+    retrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupport: "NOT_CHANGED"
+  };
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug &&
+    typeof OODebug.log === "function"
+  ) {
+    OODebug.log(
+      "8CM",
+      "HANDOFF",
+      "Controlled retrieval execution authorization readiness handoff READY"
+    );
+    OODebug.log(
+      "8CM",
+      "QUERY",
+      step8CMQuery
+    );
+    OODebug.log(
+      "8CM",
+      "TARGETS",
+      String(step8CMTargets.length)
+    );
+    OODebug.log(
+      "8CM",
+      "EXTERNAL_ACCESS",
+      step8CMSource.externalAccess
+    );
+    OODebug.log(
+      "8CM",
+      "RETRIEVAL",
+      step8CMSource.retrieval
+    );
+    OODebug.log(
+      "8CM",
+      "EVIDENCE_INSERTION",
+      step8CMSource.evidenceInsertion
+    );
+    OODebug.log(
+      "8CM",
+      "CLAIM_SUPPORT",
+      step8CMSource.claimSupport
+    );
+  }
+
+} else {
+
+  controlledRetrievalExecutionAuthorizationReadinessHandoff = {
+    status: "blocked",
+    allowed: false,
+    searchQuery: step8CMQuery,
+    targets: step8CMTargets,
+    reason:
+      "Controlled retrieval execution authorization readiness handoff requirements are not satisfied."
+  };
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug &&
+    typeof OODebug.log === "function"
+  ) {
+    OODebug.log(
+      "8CM",
+      "BLOCKED",
+      controlledRetrievalExecutionAuthorizationReadinessHandoff.reason
+    );
+  }
+  }
 
 /* ==========================================
    RESULT VALUES
