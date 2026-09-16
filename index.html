@@ -21300,7 +21300,801 @@ if (
   );
 
   }  
- 
+ /* =========================================================
+   STEP 8CB — CONTROLLED RETRIEVAL INVOCATION
+   EXECUTION READINESS
+   ========================================================= */
+
+let controlledRetrievalInvocationExecutionReadiness = {
+  status: "blocked",
+  allowed: false,
+
+  readinessType:
+    "controlled_retrieval_invocation_execution_readiness",
+
+  searchQuery: null,
+  targets: [],
+
+  checks: {
+    sourceReady: false,
+    sourceAllowed: false,
+    queryReady: false,
+    targetsReady: false,
+    targetStatesSafe: false,
+    executionPolicySafe: false,
+    safetyStateSafe: false
+  },
+
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+
+  reason:
+    "Controlled retrieval invocation execution readiness is not ready."
+};
+
+
+/* =========================================================
+   8CB — SOURCE
+   ========================================================= */
+
+const cbSource =
+  typeof controlledRetrievalInvocationAuthorizationHandoffBoundaryValidation !==
+  "undefined"
+    ? controlledRetrievalInvocationAuthorizationHandoffBoundaryValidation
+    : null;
+
+let cbReady = true;
+
+
+/* =========================================================
+   8CB — SOURCE CHECK
+   ========================================================= */
+
+if (!cbSource) {
+  cbReady = false;
+} else {
+  controlledRetrievalInvocationExecutionReadiness
+    .checks.sourceReady = true;
+}
+
+if (
+  cbSource &&
+  (
+    cbSource.status !== "ready" ||
+    cbSource.allowed !== true
+  )
+) {
+  cbReady = false;
+} else if (cbSource) {
+  controlledRetrievalInvocationExecutionReadiness
+    .checks.sourceAllowed = true;
+}
+
+
+/* =========================================================
+   8CB — QUERY CHECK
+   ========================================================= */
+
+if (
+  cbSource &&
+  typeof cbSource.searchQuery === "string" &&
+  cbSource.searchQuery.trim() !== ""
+) {
+  controlledRetrievalInvocationExecutionReadiness
+    .checks.queryReady = true;
+} else {
+  cbReady = false;
+}
+
+
+/* =========================================================
+   8CB — TARGET CHECK
+   ========================================================= */
+
+if (
+  cbSource &&
+  Array.isArray(cbSource.targets) &&
+  cbSource.targets.length === 5
+) {
+  controlledRetrievalInvocationExecutionReadiness
+    .checks.targetsReady = true;
+} else {
+  cbReady = false;
+}
+
+
+/* =========================================================
+   8CB — TARGET SAFETY CHECK
+   ========================================================= */
+
+if (
+  cbReady &&
+  Array.isArray(cbSource.targets)
+) {
+
+  cbSource.targets.forEach((target) => {
+
+    if (!target) {
+      cbReady = false;
+      return;
+    }
+
+    if (
+      target.invocationStatus !==
+      "HANDOFF_BOUNDARY_VALIDATED"
+    ) {
+      cbReady = false;
+    }
+
+    if (
+      target.executionStatus !==
+      "NOT_STARTED"
+    ) {
+      cbReady = false;
+    }
+
+    if (
+      target.retrievalStatus !==
+      "NOT_STARTED"
+    ) {
+      cbReady = false;
+    }
+
+    if (
+      target.evidenceStatus !==
+      "NOT_STARTED"
+    ) {
+      cbReady = false;
+    }
+
+    if (
+      target.claimSupportStatus !==
+      "NOT_CHANGED"
+    ) {
+      cbReady = false;
+    }
+
+  });
+
+  if (cbReady) {
+    controlledRetrievalInvocationExecutionReadiness
+      .checks.targetStatesSafe = true;
+  }
+
+}
+
+
+/* =========================================================
+   8CB — EXECUTION POLICY CHECK
+   ========================================================= */
+
+if (
+  cbReady &&
+  cbSource.executionPolicy
+) {
+
+  if (
+    cbSource.executionPolicy.externalSourceAccess === false &&
+    cbSource.executionPolicy.sourceRetrieval === false &&
+    cbSource.executionPolicy.evidenceInsertion === false &&
+    cbSource.executionPolicy.claimSupportUpdate === false
+  ) {
+
+    controlledRetrievalInvocationExecutionReadiness
+      .checks.executionPolicySafe = true;
+
+  } else {
+    cbReady = false;
+  }
+
+} else {
+  cbReady = false;
+}
+
+
+/* =========================================================
+   8CB — SAFETY CHECK
+   ========================================================= */
+
+if (
+  cbReady &&
+  cbSource.safety
+) {
+
+  if (
+    cbSource.safety.externalSourceAccess ===
+      "NOT_STARTED" &&
+    cbSource.safety.sourceRetrieval ===
+      "NOT_STARTED" &&
+    cbSource.safety.evidenceInsertion ===
+      "NOT_STARTED" &&
+    cbSource.safety.claimSupportUpdate ===
+      "NOT_CHANGED"
+  ) {
+
+    controlledRetrievalInvocationExecutionReadiness
+      .checks.safetyStateSafe = true;
+
+  } else {
+    cbReady = false;
+  }
+
+} else {
+  cbReady = false;
+}
+
+
+/* =========================================================
+   8CB — OUTPUT
+   ========================================================= */
+
+if (cbReady) {
+
+  controlledRetrievalInvocationExecutionReadiness = {
+
+    status: "ready",
+    allowed: true,
+
+    readinessType:
+      "controlled_retrieval_invocation_execution_readiness",
+
+    searchQuery:
+      cbSource.searchQuery.trim(),
+
+    targets:
+      cbSource.targets.map((target) => ({
+
+        claimKey:
+          target.claimKey,
+
+        sourceType:
+          target.sourceType,
+
+        fallbackSourceTypes:
+          Array.isArray(target.fallbackSourceTypes)
+            ? [...target.fallbackSourceTypes]
+            : [],
+
+        invocationStatus:
+          "EXECUTION_READINESS_READY",
+
+        executionStatus:
+          "NOT_STARTED",
+
+        retrievalStatus:
+          "NOT_STARTED",
+
+        evidenceStatus:
+          "NOT_STARTED",
+
+        claimSupportStatus:
+          "NOT_CHANGED"
+
+      })),
+
+    checks: {
+
+      sourceReady: true,
+      sourceAllowed: true,
+      queryReady: true,
+      targetsReady: true,
+      targetStatesSafe: true,
+      executionPolicySafe: true,
+      safetyStateSafe: true
+
+    },
+
+    executionPolicy: {
+
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+
+    },
+
+    safety: {
+
+      externalSourceAccess:
+        "NOT_STARTED",
+
+      sourceRetrieval:
+        "NOT_STARTED",
+
+      evidenceInsertion:
+        "NOT_STARTED",
+
+      claimSupportUpdate:
+        "NOT_CHANGED"
+
+    },
+
+    reason:
+      "Controlled retrieval invocation execution readiness is validated. Actual external retrieval remains safely blocked."
+
+  };
+
+}
+
+
+/* =========================================================
+   8CB — DEBUGGER
+   ========================================================= */
+
+if (
+  typeof OODebug !== "undefined" &&
+  OODebug &&
+  typeof OODebug.log === "function"
+) {
+
+  OODebug.log(
+    "8CB",
+    "READINESS",
+    controlledRetrievalInvocationExecutionReadiness.status ===
+      "ready"
+      ? "Controlled retrieval invocation execution readiness READY"
+      : "Controlled retrieval invocation execution readiness BLOCKED"
+  );
+
+  OODebug.log(
+    "8CB",
+    "QUERY",
+    controlledRetrievalInvocationExecutionReadiness.searchQuery ||
+      "null"
+  );
+
+  OODebug.log(
+    "8CB",
+    "TARGETS",
+    String(
+      Array.isArray(
+        controlledRetrievalInvocationExecutionReadiness.targets
+      )
+        ? controlledRetrievalInvocationExecutionReadiness.targets.length
+        : 0
+    )
+  );
+
+  OODebug.log(
+    "8CB",
+    "SOURCE_READY",
+    String(
+      controlledRetrievalInvocationExecutionReadiness.checks.sourceReady
+    )
+  );
+
+  OODebug.log(
+    "8CB",
+    "SOURCE_ALLOWED",
+    String(
+      controlledRetrievalInvocationExecutionReadiness.checks.sourceAllowed
+    )
+  );
+
+  OODebug.log(
+    "8CB",
+    "QUERY_READY",
+    String(
+      controlledRetrievalInvocationExecutionReadiness.checks.queryReady
+    )
+  );
+
+  OODebug.log(
+    "8CB",
+    "TARGETS_READY",
+    String(
+      controlledRetrievalInvocationExecutionReadiness.checks.targetsReady
+    )
+  );
+
+  OODebug.log(
+    "8CB",
+    "TARGETS_SAFE",
+    String(
+      controlledRetrievalInvocationExecutionReadiness.checks.targetStatesSafe
+    )
+  );
+
+  OODebug.log(
+    "8CB",
+    "POLICY_SAFE",
+    String(
+      controlledRetrievalInvocationExecutionReadiness.checks.executionPolicySafe
+    )
+  );
+
+  OODebug.log(
+    "8CB",
+    "SAFETY_SAFE",
+    String(
+      controlledRetrievalInvocationExecutionReadiness.checks.safetyStateSafe
+    )
+  );
+
+  OODebug.log(
+    "8CB",
+    "EXTERNAL_ACCESS",
+    controlledRetrievalInvocationExecutionReadiness.safety.externalSourceAccess
+  );
+
+  OODebug.log(
+    "8CB",
+    "RETRIEVAL",
+    controlledRetrievalInvocationExecutionReadiness.safety.sourceRetrieval
+  );
+
+  OODebug.log(
+    "8CB",
+    "EVIDENCE_INSERTION",
+    controlledRetrievalInvocationExecutionReadiness.safety.evidenceInsertion
+  );
+
+  OODebug.log(
+    "8CB",
+    "CLAIM_SUPPORT",
+    controlledRetrievalInvocationExecutionReadiness.safety.claimSupportUpdate
+  );
+
+}
+
+
+/* =========================================================
+   STEP 8CC — CONTROLLED RETRIEVAL INVOCATION
+   EXECUTION READINESS HANDOFF
+   ========================================================= */
+
+let controlledRetrievalInvocationExecutionReadinessHandoff = {
+  status: "blocked",
+  allowed: false,
+
+  handoffType:
+    "controlled_retrieval_invocation_execution_readiness_handoff",
+
+  searchQuery: null,
+  targets: [],
+
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+
+  reason:
+    "Controlled retrieval invocation execution readiness handoff is not ready."
+};
+
+
+/* =========================================================
+   8CC — SOURCE
+   ========================================================= */
+
+const ccSource =
+  typeof controlledRetrievalInvocationExecutionReadiness !==
+  "undefined"
+    ? controlledRetrievalInvocationExecutionReadiness
+    : null;
+
+let ccReady = true;
+
+
+/* =========================================================
+   8CC — SOURCE CHECK
+   ========================================================= */
+
+if (!ccSource) {
+  ccReady = false;
+}
+
+if (
+  ccSource &&
+  (
+    ccSource.status !== "ready" ||
+    ccSource.allowed !== true
+  )
+) {
+  ccReady = false;
+}
+
+
+/* =========================================================
+   8CC — QUERY CHECK
+   ========================================================= */
+
+if (
+  ccSource &&
+  (
+    typeof ccSource.searchQuery !== "string" ||
+    ccSource.searchQuery.trim() === ""
+  )
+) {
+  ccReady = false;
+}
+
+
+/* =========================================================
+   8CC — TARGET CHECK
+   ========================================================= */
+
+if (
+  ccSource &&
+  (
+    !Array.isArray(ccSource.targets) ||
+    ccSource.targets.length !== 5
+  )
+) {
+  ccReady = false;
+}
+
+
+/* =========================================================
+   8CC — TARGET SAFETY CHECK
+   ========================================================= */
+
+if (
+  ccReady &&
+  Array.isArray(ccSource.targets)
+) {
+
+  ccSource.targets.forEach((target) => {
+
+    if (!target) {
+      ccReady = false;
+      return;
+    }
+
+    if (
+      target.invocationStatus !==
+      "EXECUTION_READINESS_READY"
+    ) {
+      ccReady = false;
+    }
+
+    if (
+      target.executionStatus !==
+      "NOT_STARTED"
+    ) {
+      ccReady = false;
+    }
+
+    if (
+      target.retrievalStatus !==
+      "NOT_STARTED"
+    ) {
+      ccReady = false;
+    }
+
+    if (
+      target.evidenceStatus !==
+      "NOT_STARTED"
+    ) {
+      ccReady = false;
+    }
+
+    if (
+      target.claimSupportStatus !==
+      "NOT_CHANGED"
+    ) {
+      ccReady = false;
+    }
+
+  });
+
+}
+
+
+/* =========================================================
+   8CC — POLICY CHECK
+   ========================================================= */
+
+if (
+  ccReady &&
+  ccSource.executionPolicy
+) {
+
+  if (
+    ccSource.executionPolicy.externalSourceAccess !== false ||
+    ccSource.executionPolicy.sourceRetrieval !== false ||
+    ccSource.executionPolicy.evidenceInsertion !== false ||
+    ccSource.executionPolicy.claimSupportUpdate !== false
+  ) {
+    ccReady = false;
+  }
+
+}
+
+
+/* =========================================================
+   8CC — SAFETY CHECK
+   ========================================================= */
+
+if (
+  ccReady &&
+  ccSource.safety
+) {
+
+  if (
+    ccSource.safety.externalSourceAccess !==
+      "NOT_STARTED" ||
+    ccSource.safety.sourceRetrieval !==
+      "NOT_STARTED" ||
+    ccSource.safety.evidenceInsertion !==
+      "NOT_STARTED" ||
+    ccSource.safety.claimSupportUpdate !==
+      "NOT_CHANGED"
+  ) {
+    ccReady = false;
+  }
+
+}
+
+
+/* =========================================================
+   8CC — HANDOFF OUTPUT
+   ========================================================= */
+
+if (ccReady) {
+
+  controlledRetrievalInvocationExecutionReadinessHandoff = {
+
+    status: "ready",
+    allowed: true,
+
+    handoffType:
+      "controlled_retrieval_invocation_execution_readiness_handoff",
+
+    searchQuery:
+      ccSource.searchQuery.trim(),
+
+    targets:
+      ccSource.targets.map((target) => ({
+
+        claimKey:
+          target.claimKey,
+
+        sourceType:
+          target.sourceType,
+
+        fallbackSourceTypes:
+          Array.isArray(target.fallbackSourceTypes)
+            ? [...target.fallbackSourceTypes]
+            : [],
+
+        invocationStatus:
+          "EXECUTION_READINESS_HANDOFF_READY",
+
+        executionStatus:
+          "NOT_STARTED",
+
+        retrievalStatus:
+          "NOT_STARTED",
+
+        evidenceStatus:
+          "NOT_STARTED",
+
+        claimSupportStatus:
+          "NOT_CHANGED"
+
+      })),
+
+    executionPolicy: {
+
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+
+    },
+
+    safety: {
+
+      externalSourceAccess:
+        "NOT_STARTED",
+
+      sourceRetrieval:
+        "NOT_STARTED",
+
+      evidenceInsertion:
+        "NOT_STARTED",
+
+      claimSupportUpdate:
+        "NOT_CHANGED"
+
+    },
+
+    reason:
+      "Controlled retrieval invocation execution readiness handoff is ready. Actual external retrieval remains safely blocked."
+
+  };
+
+}
+
+
+/* =========================================================
+   8CC — DEBUGGER
+   ========================================================= */
+
+if (
+  typeof OODebug !== "undefined" &&
+  OODebug &&
+  typeof OODebug.log === "function"
+) {
+
+  OODebug.log(
+    "8CC",
+    "HANDOFF",
+    controlledRetrievalInvocationExecutionReadinessHandoff.status ===
+      "ready"
+      ? "Controlled retrieval invocation execution readiness handoff READY"
+      : "Controlled retrieval invocation execution readiness handoff BLOCKED"
+  );
+
+  OODebug.log(
+    "8CC",
+    "QUERY",
+    controlledRetrievalInvocationExecutionReadinessHandoff.searchQuery ||
+      "null"
+  );
+
+  OODebug.log(
+    "8CC",
+    "TARGETS",
+    String(
+      Array.isArray(
+        controlledRetrievalInvocationExecutionReadinessHandoff.targets
+      )
+        ? controlledRetrievalInvocationExecutionReadinessHandoff.targets.length
+        : 0
+    )
+  );
+
+  OODebug.log(
+    "8CC",
+    "EXTERNAL_ACCESS",
+    controlledRetrievalInvocationExecutionReadinessHandoff.safety
+      .externalSourceAccess
+  );
+
+  OODebug.log(
+    "8CC",
+    "RETRIEVAL",
+    controlledRetrievalInvocationExecutionReadinessHandoff.safety
+      .sourceRetrieval
+  );
+
+  OODebug.log(
+    "8CC",
+    "EVIDENCE_INSERTION",
+    controlledRetrievalInvocationExecutionReadinessHandoff.safety
+      .evidenceInsertion
+  );
+
+  OODebug.log(
+    "8CC",
+    "CLAIM_SUPPORT",
+    controlledRetrievalInvocationExecutionReadinessHandoff.safety
+      .claimSupportUpdate
+  );
+
+}
   
   /* ==========================================
    RESULT VALUES
