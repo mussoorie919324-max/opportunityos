@@ -24533,7 +24533,400 @@ if (
   );
 
   }
-  
+/* =========================================================
+   STEP 8CJ — CONTROLLED RETRIEVAL EXECUTION AUTHORIZATION
+   ========================================================= */
+
+let controlledRetrievalExecutionAuthorization = {
+  status: "blocked",
+  allowed: false,
+  authorizationType:
+    "controlled_retrieval_execution_authorization",
+  searchQuery: null,
+  targets: [],
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+  reason:
+    "Controlled retrieval execution is not authorized."
+};
+
+const cjSource =
+  typeof controlledRetrievalExecutionValidationBoundaryHandoff !==
+  "undefined"
+    ? controlledRetrievalExecutionValidationBoundaryHandoff
+    : null;
+
+const cjSourceReady =
+  cjSource &&
+  cjSource.status === "ready";
+
+const cjSourceAllowed =
+  cjSource &&
+  cjSource.allowed === true;
+
+const cjQueryReady =
+  cjSource &&
+  typeof cjSource.searchQuery === "string" &&
+  cjSource.searchQuery.trim().length > 0;
+
+const cjTargetsReady =
+  cjSource &&
+  Array.isArray(cjSource.targets) &&
+  cjSource.targets.length === 5;
+
+const cjTargetsSafe =
+  cjTargetsReady &&
+  cjSource.targets.every(target =>
+    target &&
+    target.invocationStatus ===
+      "VALIDATION_BOUNDARY_HANDOFF_READY" &&
+    target.executionStatus === "NOT_STARTED" &&
+    target.retrievalStatus === "NOT_STARTED" &&
+    target.evidenceStatus === "NOT_STARTED" &&
+    target.claimSupportStatus === "NOT_CHANGED"
+  );
+
+const cjPolicySafe =
+  cjSource &&
+  cjSource.executionPolicy &&
+  cjSource.executionPolicy.externalSourceAccess === false &&
+  cjSource.executionPolicy.sourceRetrieval === false &&
+  cjSource.executionPolicy.evidenceInsertion === false &&
+  cjSource.executionPolicy.claimSupportUpdate === false;
+
+const cjSafetySafe =
+  cjSource &&
+  cjSource.safety &&
+  cjSource.safety.externalSourceAccess === "NOT_STARTED" &&
+  cjSource.safety.sourceRetrieval === "NOT_STARTED" &&
+  cjSource.safety.evidenceInsertion === "NOT_STARTED" &&
+  cjSource.safety.claimSupportUpdate === "NOT_CHANGED";
+
+if (
+  cjSourceReady &&
+  cjSourceAllowed &&
+  cjQueryReady &&
+  cjTargetsReady &&
+  cjTargetsSafe &&
+  cjPolicySafe &&
+  cjSafetySafe
+) {
+  controlledRetrievalExecutionAuthorization = {
+    status: "ready",
+    allowed: true,
+    authorizationType:
+      "controlled_retrieval_execution_authorization",
+
+    searchQuery: cjSource.searchQuery.trim(),
+
+    targets: cjSource.targets.map(target => ({
+      claimKey: target.claimKey,
+      sourceType: target.sourceType,
+      fallbackSourceTypes:
+        Array.isArray(target.fallbackSourceTypes)
+          ? [...target.fallbackSourceTypes]
+          : [],
+
+      invocationStatus:
+        "EXECUTION_AUTHORIZED",
+
+      executionStatus: "NOT_STARTED",
+      retrievalStatus: "NOT_STARTED",
+      evidenceStatus: "NOT_STARTED",
+      claimSupportStatus: "NOT_CHANGED"
+    })),
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    reason:
+      "Controlled retrieval execution authorization is ready while actual external access remains blocked."
+  };
+}
+
+if (typeof OODebug !== "undefined") {
+  OODebug(
+    "8CJ",
+    "AUTHORIZATION",
+    "Controlled retrieval execution authorization " +
+      controlledRetrievalExecutionAuthorization.status.toUpperCase()
+  );
+
+  OODebug(
+    "8CJ",
+    "QUERY",
+    controlledRetrievalExecutionAuthorization.searchQuery ||
+      "null"
+  );
+
+  OODebug(
+    "8CJ",
+    "TARGETS",
+    controlledRetrievalExecutionAuthorization.targets.length
+  );
+
+  OODebug(
+    "8CJ",
+    "SOURCE_READY",
+    cjSourceReady
+  );
+
+  OODebug(
+    "8CJ",
+    "SOURCE_ALLOWED",
+    cjSourceAllowed
+  );
+
+  OODebug(
+    "8CJ",
+    "QUERY_READY",
+    cjQueryReady
+  );
+
+  OODebug(
+    "8CJ",
+    "TARGETS_READY",
+    cjTargetsReady
+  );
+
+  OODebug(
+    "8CJ",
+    "TARGETS_SAFE",
+    cjTargetsSafe
+  );
+
+  OODebug(
+    "8CJ",
+    "POLICY_SAFE",
+    cjPolicySafe
+  );
+
+  OODebug(
+    "8CJ",
+    "SAFETY_SAFE",
+    cjSafetySafe
+  );
+
+  OODebug(
+    "8CJ",
+    "EXTERNAL_ACCESS",
+    "NOT_STARTED"
+  );
+
+  OODebug(
+    "8CJ",
+    "RETRIEVAL",
+    "NOT_STARTED"
+  );
+
+  OODebug(
+    "8CJ",
+    "EVIDENCE_INSERTION",
+    "NOT_STARTED"
+  );
+
+  OODebug(
+    "8CJ",
+    "CLAIM_SUPPORT",
+    "NOT_CHANGED"
+  );
+}
+
+
+/* =========================================================
+   STEP 8CK — CONTROLLED RETRIEVAL EXECUTION AUTHORIZATION HANDOFF
+   ========================================================= */
+
+let controlledRetrievalExecutionAuthorizationHandoff = {
+  status: "blocked",
+  allowed: false,
+  handoffType:
+    "controlled_retrieval_execution_authorization_handoff",
+  searchQuery: null,
+  targets: [],
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+  reason:
+    "Controlled retrieval execution authorization handoff is not ready."
+};
+
+const ckSource =
+  controlledRetrievalExecutionAuthorization;
+
+const ckSourceReady =
+  ckSource &&
+  ckSource.status === "ready";
+
+const ckSourceAllowed =
+  ckSource &&
+  ckSource.allowed === true;
+
+const ckQueryReady =
+  ckSource &&
+  typeof ckSource.searchQuery === "string" &&
+  ckSource.searchQuery.trim().length > 0;
+
+const ckTargetsReady =
+  ckSource &&
+  Array.isArray(ckSource.targets) &&
+  ckSource.targets.length === 5;
+
+const ckTargetsSafe =
+  ckTargetsReady &&
+  ckSource.targets.every(target =>
+    target &&
+    target.invocationStatus === "EXECUTION_AUTHORIZED" &&
+    target.executionStatus === "NOT_STARTED" &&
+    target.retrievalStatus === "NOT_STARTED" &&
+    target.evidenceStatus === "NOT_STARTED" &&
+    target.claimSupportStatus === "NOT_CHANGED"
+  );
+
+const ckPolicySafe =
+  ckSource &&
+  ckSource.executionPolicy &&
+  ckSource.executionPolicy.externalSourceAccess === false &&
+  ckSource.executionPolicy.sourceRetrieval === false &&
+  ckSource.executionPolicy.evidenceInsertion === false &&
+  ckSource.executionPolicy.claimSupportUpdate === false;
+
+const ckSafetySafe =
+  ckSource &&
+  ckSource.safety &&
+  ckSource.safety.externalSourceAccess === "NOT_STARTED" &&
+  ckSource.safety.sourceRetrieval === "NOT_STARTED" &&
+  ckSource.safety.evidenceInsertion === "NOT_STARTED" &&
+  ckSource.safety.claimSupportUpdate === "NOT_CHANGED";
+
+if (
+  ckSourceReady &&
+  ckSourceAllowed &&
+  ckQueryReady &&
+  ckTargetsReady &&
+  ckTargetsSafe &&
+  ckPolicySafe &&
+  ckSafetySafe
+) {
+  controlledRetrievalExecutionAuthorizationHandoff = {
+    status: "ready",
+    allowed: true,
+    handoffType:
+      "controlled_retrieval_execution_authorization_handoff",
+
+    searchQuery: ckSource.searchQuery.trim(),
+
+    targets: ckSource.targets.map(target => ({
+      claimKey: target.claimKey,
+      sourceType: target.sourceType,
+      fallbackSourceTypes:
+        Array.isArray(target.fallbackSourceTypes)
+          ? [...target.fallbackSourceTypes]
+          : [],
+
+      invocationStatus:
+        "AUTHORIZATION_HANDOFF_READY",
+
+      executionStatus: "NOT_STARTED",
+      retrievalStatus: "NOT_STARTED",
+      evidenceStatus: "NOT_STARTED",
+      claimSupportStatus: "NOT_CHANGED"
+    })),
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    reason:
+      "Authorization handoff is ready; actual retrieval remains explicitly blocked."
+  };
+}
+
+if (typeof OODebug !== "undefined") {
+  OODebug(
+    "8CK",
+    "HANDOFF",
+    "Controlled retrieval execution authorization handoff " +
+      controlledRetrievalExecutionAuthorizationHandoff.status.toUpperCase()
+  );
+
+  OODebug(
+    "8CK",
+    "QUERY",
+    controlledRetrievalExecutionAuthorizationHandoff.searchQuery ||
+      "null"
+  );
+
+  OODebug(
+    "8CK",
+    "TARGETS",
+    controlledRetrievalExecutionAuthorizationHandoff.targets.length
+  );
+
+  OODebug(
+    "8CK",
+    "EXTERNAL_ACCESS",
+    "NOT_STARTED"
+  );
+
+  OODebug(
+    "8CK",
+    "RETRIEVAL",
+    "NOT_STARTED"
+  );
+
+  OODebug(
+    "8CK",
+    "EVIDENCE_INSERTION",
+    "NOT_STARTED"
+  );
+
+  OODebug(
+    "8CK",
+    "CLAIM_SUPPORT",
+    "NOT_CHANGED"
+  );
+  }  
     
 /* ==========================================
    RESULT VALUES
