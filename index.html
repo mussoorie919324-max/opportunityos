@@ -22964,7 +22964,738 @@ if (
   );
 
   }
+/* =========================================================
+   STEP 8CF — CONTROLLED RETRIEVAL EXECUTION HANDOFF VALIDATION
+   ========================================================= */
 
+let controlledRetrievalExecutionHandoffValidation = {
+  status: "blocked",
+  allowed: false,
+
+  validationType:
+    "controlled_retrieval_execution_handoff_validation",
+
+  searchQuery: null,
+  targets: [],
+
+  checks: {
+    sourceReady: false,
+    sourceAllowed: false,
+    queryReady: false,
+    targetsReady: false,
+    targetStatesSafe: false,
+    executionPolicySafe: false,
+    safetyStateSafe: false
+  },
+
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+
+  reason:
+    "Controlled retrieval execution handoff validation is not ready."
+};
+
+/* =========================================================
+   8CF — SOURCE
+   ========================================================= */
+
+const cfSource =
+  typeof controlledRetrievalExecutionBoundaryHandoff !==
+  "undefined"
+    ? controlledRetrievalExecutionBoundaryHandoff
+    : null;
+
+let cfReady = true;
+
+/* =========================================================
+   8CF — SOURCE CHECK
+   ========================================================= */
+
+if (!cfSource) {
+  cfReady = false;
+} else {
+  controlledRetrievalExecutionHandoffValidation
+    .checks.sourceReady = true;
+}
+
+if (
+  cfSource &&
+  (
+    cfSource.status !== "ready" ||
+    cfSource.allowed !== true
+  )
+) {
+  cfReady = false;
+} else if (cfSource) {
+  controlledRetrievalExecutionHandoffValidation
+    .checks.sourceAllowed = true;
+}
+
+/* =========================================================
+   8CF — QUERY CHECK
+   ========================================================= */
+
+if (
+  cfSource &&
+  typeof cfSource.searchQuery === "string" &&
+  cfSource.searchQuery.trim() !== ""
+) {
+  controlledRetrievalExecutionHandoffValidation
+    .checks.queryReady = true;
+} else {
+  cfReady = false;
+}
+
+/* =========================================================
+   8CF — TARGET CHECK
+   ========================================================= */
+
+if (
+  cfSource &&
+  Array.isArray(cfSource.targets) &&
+  cfSource.targets.length === 5
+) {
+  controlledRetrievalExecutionHandoffValidation
+    .checks.targetsReady = true;
+} else {
+  cfReady = false;
+}
+
+/* =========================================================
+   8CF — TARGET SAFETY CHECK
+   ========================================================= */
+
+if (
+  cfReady &&
+  Array.isArray(cfSource.targets)
+) {
+
+  cfSource.targets.forEach((target) => {
+
+    if (!target) {
+      cfReady = false;
+      return;
+    }
+
+    if (
+      target.invocationStatus !==
+      "EXECUTION_BOUNDARY_HANDOFF_READY"
+    ) {
+      cfReady = false;
+    }
+
+    if (
+      target.executionStatus !==
+      "NOT_STARTED"
+    ) {
+      cfReady = false;
+    }
+
+    if (
+      target.retrievalStatus !==
+      "NOT_STARTED"
+    ) {
+      cfReady = false;
+    }
+
+    if (
+      target.evidenceStatus !==
+      "NOT_STARTED"
+    ) {
+      cfReady = false;
+    }
+
+    if (
+      target.claimSupportStatus !==
+      "NOT_CHANGED"
+    ) {
+      cfReady = false;
+    }
+
+  });
+
+  if (cfReady) {
+    controlledRetrievalExecutionHandoffValidation
+      .checks.targetStatesSafe = true;
+  }
+}
+
+/* =========================================================
+   8CF — EXECUTION POLICY CHECK
+   ========================================================= */
+
+if (
+  cfReady &&
+  cfSource.executionPolicy
+) {
+
+  if (
+    cfSource.executionPolicy.externalSourceAccess === false &&
+    cfSource.executionPolicy.sourceRetrieval === false &&
+    cfSource.executionPolicy.evidenceInsertion === false &&
+    cfSource.executionPolicy.claimSupportUpdate === false
+  ) {
+
+    controlledRetrievalExecutionHandoffValidation
+      .checks.executionPolicySafe = true;
+
+  } else {
+    cfReady = false;
+  }
+
+} else {
+  cfReady = false;
+}
+
+/* =========================================================
+   8CF — SAFETY CHECK
+   ========================================================= */
+
+if (
+  cfReady &&
+  cfSource.safety
+) {
+
+  if (
+    cfSource.safety.externalSourceAccess ===
+      "NOT_STARTED" &&
+    cfSource.safety.sourceRetrieval ===
+      "NOT_STARTED" &&
+    cfSource.safety.evidenceInsertion ===
+      "NOT_STARTED" &&
+    cfSource.safety.claimSupportUpdate ===
+      "NOT_CHANGED"
+  ) {
+
+    controlledRetrievalExecutionHandoffValidation
+      .checks.safetyStateSafe = true;
+
+  } else {
+    cfReady = false;
+  }
+
+} else {
+  cfReady = false;
+}
+
+/* =========================================================
+   8CF — OUTPUT
+   ========================================================= */
+
+if (cfReady) {
+
+  controlledRetrievalExecutionHandoffValidation = {
+
+    status: "ready",
+    allowed: true,
+
+    validationType:
+      "controlled_retrieval_execution_handoff_validation",
+
+    searchQuery:
+      cfSource.searchQuery.trim(),
+
+    targets:
+      cfSource.targets.map((target) => ({
+
+        claimKey:
+          target.claimKey,
+
+        sourceType:
+          target.sourceType,
+
+        fallbackSourceTypes:
+          Array.isArray(target.fallbackSourceTypes)
+            ? [...target.fallbackSourceTypes]
+            : [],
+
+        invocationStatus:
+          "HANDOFF_VALIDATED",
+
+        executionStatus:
+          "NOT_STARTED",
+
+        retrievalStatus:
+          "NOT_STARTED",
+
+        evidenceStatus:
+          "NOT_STARTED",
+
+        claimSupportStatus:
+          "NOT_CHANGED"
+
+      })),
+
+    checks: {
+      sourceReady: true,
+      sourceAllowed: true,
+      queryReady: true,
+      targetsReady: true,
+      targetStatesSafe: true,
+      executionPolicySafe: true,
+      safetyStateSafe: true
+    },
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess:
+        "NOT_STARTED",
+      sourceRetrieval:
+        "NOT_STARTED",
+      evidenceInsertion:
+        "NOT_STARTED",
+      claimSupportUpdate:
+        "NOT_CHANGED"
+    },
+
+    reason:
+      "Controlled retrieval execution handoff is validated. Actual external retrieval remains safely blocked."
+  };
+}
+
+/* =========================================================
+   8CF — DEBUGGER
+   ========================================================= */
+
+if (
+  typeof OODebug !== "undefined" &&
+  OODebug &&
+  typeof OODebug.log === "function"
+) {
+
+  OODebug.log(
+    "8CF",
+    "VALIDATION",
+    controlledRetrievalExecutionHandoffValidation.status ===
+      "ready"
+      ? "Controlled retrieval execution handoff VALIDATED"
+      : "Controlled retrieval execution handoff BLOCKED"
+  );
+
+  OODebug.log(
+    "8CF",
+    "QUERY",
+    controlledRetrievalExecutionHandoffValidation.searchQuery ||
+      "null"
+  );
+
+  OODebug.log(
+    "8CF",
+    "TARGETS",
+    String(
+      Array.isArray(
+        controlledRetrievalExecutionHandoffValidation.targets
+      )
+        ? controlledRetrievalExecutionHandoffValidation.targets.length
+        : 0
+    )
+  );
+
+  OODebug.log(
+    "8CF",
+    "TARGETS_SAFE",
+    String(
+      controlledRetrievalExecutionHandoffValidation.checks.targetStatesSafe
+    )
+  );
+
+  OODebug.log(
+    "8CF",
+    "POLICY_SAFE",
+    String(
+      controlledRetrievalExecutionHandoffValidation.checks.executionPolicySafe
+    )
+  );
+
+  OODebug.log(
+    "8CF",
+    "SAFETY_SAFE",
+    String(
+      controlledRetrievalExecutionHandoffValidation.checks.safetyStateSafe
+    )
+  );
+
+  OODebug.log(
+    "8CF",
+    "EXTERNAL_ACCESS",
+    controlledRetrievalExecutionHandoffValidation.safety
+      .externalSourceAccess
+  );
+
+  OODebug.log(
+    "8CF",
+    "RETRIEVAL",
+    controlledRetrievalExecutionHandoffValidation.safety
+      .sourceRetrieval
+  );
+
+  OODebug.log(
+    "8CF",
+    "EVIDENCE_INSERTION",
+    controlledRetrievalExecutionHandoffValidation.safety
+      .evidenceInsertion
+  );
+
+  OODebug.log(
+    "8CF",
+    "CLAIM_SUPPORT",
+    controlledRetrievalExecutionHandoffValidation.safety
+      .claimSupportUpdate
+  );
+}
+
+
+/* =========================================================
+   STEP 8CG — CONTROLLED RETRIEVAL EXECUTION VALIDATION HANDOFF
+   ========================================================= */
+
+let controlledRetrievalExecutionValidationHandoff = {
+
+  status: "blocked",
+  allowed: false,
+
+  handoffType:
+    "controlled_retrieval_execution_validation_handoff",
+
+  searchQuery: null,
+  targets: [],
+
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+
+  reason:
+    "Controlled retrieval execution validation handoff is not ready."
+};
+
+/* =========================================================
+   8CG — SOURCE
+   ========================================================= */
+
+const cgSource =
+  typeof controlledRetrievalExecutionHandoffValidation !==
+  "undefined"
+    ? controlledRetrievalExecutionHandoffValidation
+    : null;
+
+let cgReady = true;
+
+/* =========================================================
+   8CG — SOURCE CHECK
+   ========================================================= */
+
+if (!cgSource) {
+
+  cgReady = false;
+
+} else if (
+  cgSource.status !== "ready" ||
+  cgSource.allowed !== true
+) {
+
+  cgReady = false;
+}
+
+/* =========================================================
+   8CG — QUERY CHECK
+   ========================================================= */
+
+if (
+  cgSource &&
+  (
+    typeof cgSource.searchQuery !== "string" ||
+    cgSource.searchQuery.trim() === ""
+  )
+) {
+
+  cgReady = false;
+}
+
+/* =========================================================
+   8CG — TARGET CHECK
+   ========================================================= */
+
+if (
+  cgSource &&
+  (
+    !Array.isArray(cgSource.targets) ||
+    cgSource.targets.length !== 5
+  )
+) {
+
+  cgReady = false;
+}
+
+/* =========================================================
+   8CG — TARGET SAFETY CHECK
+   ========================================================= */
+
+if (
+  cgReady &&
+  Array.isArray(cgSource.targets)
+) {
+
+  cgSource.targets.forEach((target) => {
+
+    if (!target) {
+      cgReady = false;
+      return;
+    }
+
+    if (
+      target.invocationStatus !==
+      "HANDOFF_VALIDATED"
+    ) {
+      cgReady = false;
+    }
+
+    if (
+      target.executionStatus !==
+      "NOT_STARTED"
+    ) {
+      cgReady = false;
+    }
+
+    if (
+      target.retrievalStatus !==
+      "NOT_STARTED"
+    ) {
+      cgReady = false;
+    }
+
+    if (
+      target.evidenceStatus !==
+      "NOT_STARTED"
+    ) {
+      cgReady = false;
+    }
+
+    if (
+      target.claimSupportStatus !==
+      "NOT_CHANGED"
+    ) {
+      cgReady = false;
+    }
+
+  });
+}
+
+/* =========================================================
+   8CG — POLICY CHECK
+   ========================================================= */
+
+if (
+  cgReady &&
+  cgSource.executionPolicy
+) {
+
+  if (
+    cgSource.executionPolicy.externalSourceAccess !== false ||
+    cgSource.executionPolicy.sourceRetrieval !== false ||
+    cgSource.executionPolicy.evidenceInsertion !== false ||
+    cgSource.executionPolicy.claimSupportUpdate !== false
+  ) {
+
+    cgReady = false;
+  }
+
+} else {
+
+  cgReady = false;
+}
+
+/* =========================================================
+   8CG — SAFETY CHECK
+   ========================================================= */
+
+if (
+  cgReady &&
+  cgSource.safety
+) {
+
+  if (
+    cgSource.safety.externalSourceAccess !==
+      "NOT_STARTED" ||
+    cgSource.safety.sourceRetrieval !==
+      "NOT_STARTED" ||
+    cgSource.safety.evidenceInsertion !==
+      "NOT_STARTED" ||
+    cgSource.safety.claimSupportUpdate !==
+      "NOT_CHANGED"
+  ) {
+
+    cgReady = false;
+  }
+
+} else {
+
+  cgReady = false;
+}
+
+/* =========================================================
+   8CG — HANDOFF OUTPUT
+   ========================================================= */
+
+if (cgReady) {
+
+  controlledRetrievalExecutionValidationHandoff = {
+
+    status: "ready",
+    allowed: true,
+
+    handoffType:
+      "controlled_retrieval_execution_validation_handoff",
+
+    searchQuery:
+      cgSource.searchQuery.trim(),
+
+    targets:
+      cgSource.targets.map((target) => ({
+
+        claimKey:
+          target.claimKey,
+
+        sourceType:
+          target.sourceType,
+
+        fallbackSourceTypes:
+          Array.isArray(target.fallbackSourceTypes)
+            ? [...target.fallbackSourceTypes]
+            : [],
+
+        invocationStatus:
+          "VALIDATION_HANDOFF_READY",
+
+        executionStatus:
+          "NOT_STARTED",
+
+        retrievalStatus:
+          "NOT_STARTED",
+
+        evidenceStatus:
+          "NOT_STARTED",
+
+        claimSupportStatus:
+          "NOT_CHANGED"
+
+      })),
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess:
+        "NOT_STARTED",
+      sourceRetrieval:
+        "NOT_STARTED",
+      evidenceInsertion:
+        "NOT_STARTED",
+      claimSupportUpdate:
+        "NOT_CHANGED"
+    },
+
+    reason:
+      "Controlled retrieval execution validation handoff is ready. Actual external retrieval remains safely blocked."
+  };
+}
+
+/* =========================================================
+   8CG — DEBUGGER
+   ========================================================= */
+
+if (
+  typeof OODebug !== "undefined" &&
+  OODebug &&
+  typeof OODebug.log === "function"
+) {
+
+  OODebug.log(
+    "8CG",
+    "HANDOFF",
+    controlledRetrievalExecutionValidationHandoff.status ===
+      "ready"
+      ? "Controlled retrieval execution validation handoff READY"
+      : "Controlled retrieval execution validation handoff BLOCKED"
+  );
+
+  OODebug.log(
+    "8CG",
+    "QUERY",
+    controlledRetrievalExecutionValidationHandoff.searchQuery ||
+      "null"
+  );
+
+  OODebug.log(
+    "8CG",
+    "TARGETS",
+    String(
+      Array.isArray(
+        controlledRetrievalExecutionValidationHandoff.targets
+      )
+        ? controlledRetrievalExecutionValidationHandoff.targets.length
+        : 0
+    )
+  );
+
+  OODebug.log(
+    "8CG",
+    "EXTERNAL_ACCESS",
+    controlledRetrievalExecutionValidationHandoff.safety
+      .externalSourceAccess
+  );
+
+  OODebug.log(
+    "8CG",
+    "RETRIEVAL",
+    controlledRetrievalExecutionValidationHandoff.safety
+      .sourceRetrieval
+  );
+
+  OODebug.log(
+    "8CG",
+    "EVIDENCE_INSERTION",
+    controlledRetrievalExecutionValidationHandoff.safety
+      .evidenceInsertion
+  );
+
+  OODebug.log(
+    "8CG",
+    "CLAIM_SUPPORT",
+    controlledRetrievalExecutionValidationHandoff.safety
+      .claimSupportUpdate
+  );
+}
     
   /* ==========================================
    RESULT VALUES
