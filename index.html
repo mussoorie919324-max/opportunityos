@@ -22104,29 +22104,43 @@ let controlledRetrievalExecutionBoundary = {
   allowed: false,
   boundaryType:
     "controlled_retrieval_execution_boundary",
+
   searchQuery: null,
   targets: [],
+
   executionPolicy: {
     externalSourceAccess: false,
     sourceRetrieval: false,
     evidenceInsertion: false,
     claimSupportUpdate: false
   },
+
   safety: {
     externalSourceAccess: "NOT_STARTED",
     sourceRetrieval: "NOT_STARTED",
     evidenceInsertion: "NOT_STARTED",
     claimSupportUpdate: "NOT_CHANGED"
   },
+
   reason:
     "Controlled retrieval execution boundary is not ready."
 };
+
+
+/* ==========================================
+   STEP 8CD — SOURCE
+   ========================================== */
 
 const cdSource =
   typeof controlledRetrievalInvocationExecutionReadinessHandoff !==
   "undefined"
     ? controlledRetrievalInvocationExecutionReadinessHandoff
     : null;
+
+
+/* ==========================================
+   STEP 8CD — READINESS CHECK
+   ========================================== */
 
 let cdReady = true;
 
@@ -22154,12 +22168,23 @@ if (
   cdReady = false;
 }
 
+
+/* ==========================================
+   STEP 8CD — TARGET SAFETY CHECK
+   ========================================== */
+
 if (cdReady) {
   cdSource.targets.forEach((target) => {
+
     if (
       !target ||
       target.invocationStatus !==
-        "EXECUTION_READINESS_HANDOFF_READY" ||
+        "EXECUTION_READINESS_HANDOFF_READY"
+    ) {
+      cdReady = false;
+    }
+
+    if (
       target.executionStatus !== "NOT_STARTED" ||
       target.retrievalStatus !== "NOT_STARTED" ||
       target.evidenceStatus !== "NOT_STARTED" ||
@@ -22169,23 +22194,29 @@ if (cdReady) {
     }
 
     if (
-      target.executionPolicy &&
-      (
-        target.executionPolicy.externalSourceAccess === true ||
-        target.executionPolicy.sourceRetrieval === true ||
-        target.executionPolicy.evidenceInsertion === true ||
-        target.executionPolicy.claimSupportUpdate === true
-      )
+      !target.executionPolicy ||
+      target.executionPolicy.externalSourceAccess !== false ||
+      target.executionPolicy.sourceRetrieval !== false ||
+      target.executionPolicy.evidenceInsertion !== false ||
+      target.executionPolicy.claimSupportUpdate !== false
     ) {
       cdReady = false;
     }
   });
 }
 
+
+/* ==========================================
+   STEP 8CD — BUILD BOUNDARY
+   ========================================== */
+
 if (cdReady) {
+
   controlledRetrievalExecutionBoundary = {
+
     status: "ready",
     allowed: true,
+
     boundaryType:
       "controlled_retrieval_execution_boundary",
 
@@ -22193,8 +22224,11 @@ if (cdReady) {
       cdSource.searchQuery.trim(),
 
     targets: cdSource.targets.map((target) => ({
+
       claimKey: target.claimKey,
+
       sourceType: target.sourceType,
+
       fallbackSourceTypes:
         Array.isArray(target.fallbackSourceTypes)
           ? [...target.fallbackSourceTypes]
@@ -22238,11 +22272,17 @@ if (cdReady) {
     },
 
     reason:
-      "Controlled retrieval execution boundary is safely prepared."
+      "Controlled retrieval execution boundary is ready."
   };
 }
 
+
+/* ==========================================
+   STEP 8CD — DEBUG
+   ========================================== */
+
 if (typeof OODebug !== "undefined") {
+
   OODebug(
     "8CD",
     "BOUNDARY",
@@ -22298,33 +22338,49 @@ if (typeof OODebug !== "undefined") {
    ========================================================= */
 
 let controlledRetrievalExecutionBoundaryHandoff = {
+
   status: "blocked",
   allowed: false,
+
   handoffType:
     "controlled_retrieval_execution_boundary_handoff",
+
   searchQuery: null,
   targets: [],
+
   executionPolicy: {
     externalSourceAccess: false,
     sourceRetrieval: false,
     evidenceInsertion: false,
     claimSupportUpdate: false
   },
+
   safety: {
     externalSourceAccess: "NOT_STARTED",
     sourceRetrieval: "NOT_STARTED",
     evidenceInsertion: "NOT_STARTED",
     claimSupportUpdate: "NOT_CHANGED"
   },
+
   reason:
     "Controlled retrieval execution boundary handoff is not ready."
 };
+
+
+/* ==========================================
+   STEP 8CE — SOURCE
+   ========================================== */
 
 const ceSource =
   typeof controlledRetrievalExecutionBoundary !==
   "undefined"
     ? controlledRetrievalExecutionBoundary
     : null;
+
+
+/* ==========================================
+   STEP 8CE — READINESS CHECK
+   ========================================== */
 
 let ceReady = true;
 
@@ -22352,12 +22408,24 @@ if (
   ceReady = false;
 }
 
+
+/* ==========================================
+   STEP 8CE — TARGET SAFETY CHECK
+   ========================================== */
+
 if (ceReady) {
+
   ceSource.targets.forEach((target) => {
+
     if (
       !target ||
       target.invocationStatus !==
-        "EXECUTION_BOUNDARY_READY" ||
+        "EXECUTION_BOUNDARY_READY"
+    ) {
+      ceReady = false;
+    }
+
+    if (
       target.executionStatus !== "NOT_STARTED" ||
       target.retrievalStatus !== "NOT_STARTED" ||
       target.evidenceStatus !== "NOT_STARTED" ||
@@ -22365,11 +22433,28 @@ if (ceReady) {
     ) {
       ceReady = false;
     }
+
+    if (
+      !target.executionPolicy ||
+      target.executionPolicy.externalSourceAccess !== false ||
+      target.executionPolicy.sourceRetrieval !== false ||
+      target.executionPolicy.evidenceInsertion !== false ||
+      target.executionPolicy.claimSupportUpdate !== false
+    ) {
+      ceReady = false;
+    }
   });
 }
 
+
+/* ==========================================
+   STEP 8CE — BUILD HANDOFF
+   ========================================== */
+
 if (ceReady) {
+
   controlledRetrievalExecutionBoundaryHandoff = {
+
     status: "ready",
     allowed: true,
 
@@ -22380,8 +22465,11 @@ if (ceReady) {
       ceSource.searchQuery.trim(),
 
     targets: ceSource.targets.map((target) => ({
+
       claimKey: target.claimKey,
+
       sourceType: target.sourceType,
+
       fallbackSourceTypes:
         Array.isArray(target.fallbackSourceTypes)
           ? [...target.fallbackSourceTypes]
@@ -22425,11 +22513,17 @@ if (ceReady) {
     },
 
     reason:
-      "Controlled retrieval execution boundary handoff is safely ready."
+      "Controlled retrieval execution boundary handoff is ready."
   };
 }
 
+
+/* ==========================================
+   STEP 8CE — DEBUG
+   ========================================== */
+
 if (typeof OODebug !== "undefined") {
+
   OODebug(
     "8CE",
     "HANDOFF",
@@ -22479,6 +22573,7 @@ if (typeof OODebug !== "undefined") {
       .safety.claimSupportUpdate
   );
   }
+    
   /* ==========================================
    RESULT VALUES
    ========================================== */
