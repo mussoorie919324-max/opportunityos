@@ -25405,7 +25405,8 @@ let controlledRetrievalExecutionAuthorizationReadiness = {
   allowed: false,
   searchQuery: "",
   targets: [],
-  reason: "Controlled retrieval execution authorization readiness is not available."
+  reason:
+    "Controlled retrieval execution authorization readiness is not available."
 };
 
 /* ==========================================
@@ -25413,35 +25414,63 @@ let controlledRetrievalExecutionAuthorizationReadiness = {
    ========================================== */
 
 const step8CLSource =
-  typeof controlledRetrievalExecutionAuthorizationBoundaryHandoff !== "undefined"
+  typeof controlledRetrievalExecutionAuthorizationBoundaryHandoff !==
+  "undefined"
     ? controlledRetrievalExecutionAuthorizationBoundaryHandoff
     : null;
 
 /* ==========================================
-   STEP 8CL — BASIC CHECKS
+   STEP 8CL — SOURCE CHECK
    ========================================== */
 
 const step8CLSourceReady =
   !!(
     step8CLSource &&
-    step8CLSource.status === "ready" &&
+    step8CLSource.status === "ready"
+  );
+
+const step8CLSourceAllowed =
+  !!(
+    step8CLSource &&
     step8CLSource.allowed === true
   );
 
+/* ==========================================
+   STEP 8CL — QUERY
+   ========================================== */
+
 const step8CLQuery =
-  step8CLSource && typeof step8CLSource.searchQuery === "string"
+  step8CLSource &&
+  typeof step8CLSource.searchQuery === "string"
     ? step8CLSource.searchQuery.trim()
     : "";
 
+const step8CLQueryReady =
+  step8CLQuery.length > 0;
+
+/* ==========================================
+   STEP 8CL — TARGETS
+   ========================================== */
+
 const step8CLTargets =
-  step8CLSource && Array.isArray(step8CLSource.targets)
+  step8CLSource &&
+  Array.isArray(step8CLSource.targets)
     ? step8CLSource.targets
     : [];
 
-const step8CLQueryReady = step8CLQuery.length > 0;
-
 const step8CLTargetsReady =
   step8CLTargets.length === 5;
+
+/* ==========================================
+   STEP 8CL — TARGET STATE
+   ========================================== */
+
+const step8CLTargetStates =
+  step8CLTargets.map(function (target) {
+    return target && target.invocationStatus
+      ? target.invocationStatus
+      : "MISSING";
+  });
 
 const step8CLTargetsSafe =
   step8CLTargetsReady &&
@@ -25454,23 +25483,26 @@ const step8CLTargetsSafe =
   });
 
 /* ==========================================
-   STEP 8CL — EXECUTION POLICY SAFETY
+   STEP 8CL — POLICY
    ========================================== */
 
+const step8CLPolicy =
+  step8CLSource &&
+  step8CLSource.executionPolicy
+    ? step8CLSource.executionPolicy
+    : null;
+
 const step8CLPolicySafe =
-  !(
-    step8CLSource &&
-    step8CLSource.executionPolicy &&
-    (
-      step8CLSource.executionPolicy.externalSourceAccess === true ||
-      step8CLSource.executionPolicy.sourceRetrieval === true ||
-      step8CLSource.executionPolicy.evidenceInsertion === true ||
-      step8CLSource.executionPolicy.claimSupportUpdate === true
-    )
+  !!(
+    step8CLPolicy &&
+    step8CLPolicy.externalSourceAccess === false &&
+    step8CLPolicy.sourceRetrieval === false &&
+    step8CLPolicy.evidenceInsertion === false &&
+    step8CLPolicy.claimSupportUpdate === false
   );
 
 /* ==========================================
-   STEP 8CL — SAFETY STATE
+   STEP 8CL — SAFETY
    ========================================== */
 
 const step8CLSafetySafe =
@@ -25483,16 +25515,91 @@ const step8CLSafetySafe =
   );
 
 /* ==========================================
-   STEP 8CL — FINAL READINESS
+   STEP 8CL — FINAL CHECK
    ========================================== */
 
 const step8CLReady =
   step8CLSourceReady &&
+  step8CLSourceAllowed &&
   step8CLQueryReady &&
   step8CLTargetsReady &&
   step8CLTargetsSafe &&
   step8CLPolicySafe &&
   step8CLSafetySafe;
+
+/* ==========================================
+   STEP 8CL — DEBUG
+   ========================================== */
+
+if (
+  typeof OODebug !== "undefined" &&
+  OODebug &&
+  typeof OODebug.log === "function"
+) {
+  OODebug.log(
+    "8CL",
+    "SOURCE_READY",
+    String(step8CLSourceReady)
+  );
+
+  OODebug.log(
+    "8CL",
+    "SOURCE_ALLOWED",
+    String(step8CLSourceAllowed)
+  );
+
+  OODebug.log(
+    "8CL",
+    "QUERY",
+    step8CLQuery
+  );
+
+  OODebug.log(
+    "8CL",
+    "QUERY_READY",
+    String(step8CLQueryReady)
+  );
+
+  OODebug.log(
+    "8CL",
+    "TARGETS",
+    String(step8CLTargets.length)
+  );
+
+  OODebug.log(
+    "8CL",
+    "TARGETS_READY",
+    String(step8CLTargetsReady)
+  );
+
+  OODebug.log(
+    "8CL",
+    "TARGET_STATES",
+    step8CLTargetStates.join(" | ")
+  );
+
+  OODebug.log(
+    "8CL",
+    "TARGETS_SAFE",
+    String(step8CLTargetsSafe)
+  );
+
+  OODebug.log(
+    "8CL",
+    "POLICY_SAFE",
+    String(step8CLPolicySafe)
+  );
+
+  OODebug.log(
+    "8CL",
+    "SAFETY_SAFE",
+    String(step8CLSafetySafe)
+  );
+}
+
+/* ==========================================
+   STEP 8CL — OUTPUT
+   ========================================== */
 
 if (step8CLReady) {
 
@@ -25500,20 +25607,24 @@ if (step8CLReady) {
     status: "ready",
     allowed: true,
     searchQuery: step8CLQuery,
+
     targets: step8CLTargets.map(function (target) {
       return Object.assign({}, target, {
         invocationStatus:
           "EXECUTION_AUTHORIZATION_READINESS_READY"
       });
     }),
+
     reason:
       "Controlled retrieval execution authorization readiness is ready.",
+
     executionPolicy: {
       externalSourceAccess: false,
       sourceRetrieval: false,
       evidenceInsertion: false,
       claimSupportUpdate: false
     },
+
     externalAccess: "NOT_STARTED",
     retrieval: "NOT_STARTED",
     evidenceInsertion: "NOT_STARTED",
@@ -25529,54 +25640,6 @@ if (step8CLReady) {
       "8CL",
       "READINESS",
       "Controlled retrieval execution authorization readiness READY"
-    );
-    OODebug.log(
-      "8CL",
-      "QUERY",
-      step8CLQuery
-    );
-    OODebug.log(
-      "8CL",
-      "TARGETS",
-      String(step8CLTargets.length)
-    );
-    OODebug.log(
-      "8CL",
-      "SOURCE_READY",
-      String(step8CLSourceReady)
-    );
-    OODebug.log(
-      "8CL",
-      "SOURCE_ALLOWED",
-      String(
-        step8CLSource &&
-        step8CLSource.allowed === true
-      )
-    );
-    OODebug.log(
-      "8CL",
-      "QUERY_READY",
-      String(step8CLQueryReady)
-    );
-    OODebug.log(
-      "8CL",
-      "TARGETS_READY",
-      String(step8CLTargetsReady)
-    );
-    OODebug.log(
-      "8CL",
-      "TARGETS_SAFE",
-      String(step8CLTargetsSafe)
-    );
-    OODebug.log(
-      "8CL",
-      "POLICY_SAFE",
-      String(step8CLPolicySafe)
-    );
-    OODebug.log(
-      "8CL",
-      "SAFETY_SAFE",
-      String(step8CLSafetySafe)
     );
   }
 
@@ -25627,31 +25690,57 @@ const step8CMSource =
   controlledRetrievalExecutionAuthorizationReadiness;
 
 /* ==========================================
-   STEP 8CM — BASIC CHECKS
+   STEP 8CM — SOURCE
    ========================================== */
 
 const step8CMSourceReady =
   !!(
     step8CMSource &&
-    step8CMSource.status === "ready" &&
+    step8CMSource.status === "ready"
+  );
+
+const step8CMSourceAllowed =
+  !!(
+    step8CMSource &&
     step8CMSource.allowed === true
   );
 
+/* ==========================================
+   STEP 8CM — QUERY
+   ========================================== */
+
 const step8CMQuery =
-  step8CMSource && typeof step8CMSource.searchQuery === "string"
+  step8CMSource &&
+  typeof step8CMSource.searchQuery === "string"
     ? step8CMSource.searchQuery.trim()
     : "";
-
-const step8CMTargets =
-  step8CMSource && Array.isArray(step8CMSource.targets)
-    ? step8CMSource.targets
-    : [];
 
 const step8CMQueryReady =
   step8CMQuery.length > 0;
 
+/* ==========================================
+   STEP 8CM — TARGETS
+   ========================================== */
+
+const step8CMTargets =
+  step8CMSource &&
+  Array.isArray(step8CMSource.targets)
+    ? step8CMSource.targets
+    : [];
+
 const step8CMTargetsReady =
   step8CMTargets.length === 5;
+
+/* ==========================================
+   STEP 8CM — TARGET STATE
+   ========================================== */
+
+const step8CMTargetStates =
+  step8CMTargets.map(function (target) {
+    return target && target.invocationStatus
+      ? target.invocationStatus
+      : "MISSING";
+  });
 
 const step8CMTargetsSafe =
   step8CMTargetsReady &&
@@ -25664,23 +25753,26 @@ const step8CMTargetsSafe =
   });
 
 /* ==========================================
-   STEP 8CM — EXECUTION POLICY SAFETY
+   STEP 8CM — POLICY
    ========================================== */
 
+const step8CMPolicy =
+  step8CMSource &&
+  step8CMSource.executionPolicy
+    ? step8CMSource.executionPolicy
+    : null;
+
 const step8CMPolicySafe =
-  !(
-    step8CMSource &&
-    step8CMSource.executionPolicy &&
-    (
-      step8CMSource.executionPolicy.externalSourceAccess === true ||
-      step8CMSource.executionPolicy.sourceRetrieval === true ||
-      step8CMSource.executionPolicy.evidenceInsertion === true ||
-      step8CMSource.executionPolicy.claimSupportUpdate === true
-    )
+  !!(
+    step8CMPolicy &&
+    step8CMPolicy.externalSourceAccess === false &&
+    step8CMPolicy.sourceRetrieval === false &&
+    step8CMPolicy.evidenceInsertion === false &&
+    step8CMPolicy.claimSupportUpdate === false
   );
 
 /* ==========================================
-   STEP 8CM — SAFETY STATE
+   STEP 8CM — SAFETY
    ========================================== */
 
 const step8CMSafetySafe =
@@ -25693,16 +25785,91 @@ const step8CMSafetySafe =
   );
 
 /* ==========================================
-   STEP 8CM — FINAL HANDOFF
+   STEP 8CM — FINAL CHECK
    ========================================== */
 
 const step8CMReady =
   step8CMSourceReady &&
+  step8CMSourceAllowed &&
   step8CMQueryReady &&
   step8CMTargetsReady &&
   step8CMTargetsSafe &&
   step8CMPolicySafe &&
   step8CMSafetySafe;
+
+/* ==========================================
+   STEP 8CM — DEBUG
+   ========================================== */
+
+if (
+  typeof OODebug !== "undefined" &&
+  OODebug &&
+  typeof OODebug.log === "function"
+) {
+  OODebug.log(
+    "8CM",
+    "SOURCE_READY",
+    String(step8CMSourceReady)
+  );
+
+  OODebug.log(
+    "8CM",
+    "SOURCE_ALLOWED",
+    String(step8CMSourceAllowed)
+  );
+
+  OODebug.log(
+    "8CM",
+    "QUERY",
+    step8CMQuery
+  );
+
+  OODebug.log(
+    "8CM",
+    "QUERY_READY",
+    String(step8CMQueryReady)
+  );
+
+  OODebug.log(
+    "8CM",
+    "TARGETS",
+    String(step8CMTargets.length)
+  );
+
+  OODebug.log(
+    "8CM",
+    "TARGETS_READY",
+    String(step8CMTargetsReady)
+  );
+
+  OODebug.log(
+    "8CM",
+    "TARGET_STATES",
+    step8CMTargetStates.join(" | ")
+  );
+
+  OODebug.log(
+    "8CM",
+    "TARGETS_SAFE",
+    String(step8CMTargetsSafe)
+  );
+
+  OODebug.log(
+    "8CM",
+    "POLICY_SAFE",
+    String(step8CMPolicySafe)
+  );
+
+  OODebug.log(
+    "8CM",
+    "SAFETY_SAFE",
+    String(step8CMSafetySafe)
+  );
+}
+
+/* ==========================================
+   STEP 8CM — OUTPUT
+   ========================================== */
 
 if (step8CMReady) {
 
@@ -25710,20 +25877,24 @@ if (step8CMReady) {
     status: "ready",
     allowed: true,
     searchQuery: step8CMQuery,
+
     targets: step8CMTargets.map(function (target) {
       return Object.assign({}, target, {
         invocationStatus:
           "EXECUTION_AUTHORIZATION_READINESS_HANDOFF_READY"
       });
     }),
+
     reason:
       "Controlled retrieval execution authorization readiness handoff is ready.",
+
     executionPolicy: {
       externalSourceAccess: false,
       sourceRetrieval: false,
       evidenceInsertion: false,
       claimSupportUpdate: false
     },
+
     externalAccess: "NOT_STARTED",
     retrieval: "NOT_STARTED",
     evidenceInsertion: "NOT_STARTED",
@@ -25740,31 +25911,37 @@ if (step8CMReady) {
       "HANDOFF",
       "Controlled retrieval execution authorization readiness handoff READY"
     );
+
     OODebug.log(
       "8CM",
       "QUERY",
       step8CMQuery
     );
+
     OODebug.log(
       "8CM",
       "TARGETS",
       String(step8CMTargets.length)
     );
+
     OODebug.log(
       "8CM",
       "EXTERNAL_ACCESS",
       step8CMSource.externalAccess
     );
+
     OODebug.log(
       "8CM",
       "RETRIEVAL",
       step8CMSource.retrieval
     );
+
     OODebug.log(
       "8CM",
       "EVIDENCE_INSERTION",
       step8CMSource.evidenceInsertion
     );
+
     OODebug.log(
       "8CM",
       "CLAIM_SUPPORT",
@@ -25795,7 +25972,6 @@ if (step8CMReady) {
     );
   }
   }
-
 /* ==========================================
    RESULT VALUES
    ========================================== */
