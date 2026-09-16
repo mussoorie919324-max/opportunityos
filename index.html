@@ -22095,7 +22095,390 @@ if (
   );
 
 }
-  
+/* =========================================================
+   STEP 8CD — CONTROLLED RETRIEVAL EXECUTION BOUNDARY
+   ========================================================= */
+
+let controlledRetrievalExecutionBoundary = {
+  status: "blocked",
+  allowed: false,
+  boundaryType:
+    "controlled_retrieval_execution_boundary",
+  searchQuery: null,
+  targets: [],
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+  reason:
+    "Controlled retrieval execution boundary is not ready."
+};
+
+const cdSource =
+  typeof controlledRetrievalInvocationExecutionReadinessHandoff !==
+  "undefined"
+    ? controlledRetrievalInvocationExecutionReadinessHandoff
+    : null;
+
+let cdReady = true;
+
+if (
+  !cdSource ||
+  cdSource.status !== "ready" ||
+  cdSource.allowed !== true
+) {
+  cdReady = false;
+}
+
+if (
+  !cdSource ||
+  typeof cdSource.searchQuery !== "string" ||
+  !cdSource.searchQuery.trim()
+) {
+  cdReady = false;
+}
+
+if (
+  !cdSource ||
+  !Array.isArray(cdSource.targets) ||
+  cdSource.targets.length !== 5
+) {
+  cdReady = false;
+}
+
+if (cdReady) {
+  cdSource.targets.forEach((target) => {
+    if (
+      !target ||
+      target.invocationStatus !==
+        "EXECUTION_READINESS_HANDOFF_READY" ||
+      target.executionStatus !== "NOT_STARTED" ||
+      target.retrievalStatus !== "NOT_STARTED" ||
+      target.evidenceStatus !== "NOT_STARTED" ||
+      target.claimSupportStatus !== "NOT_CHANGED"
+    ) {
+      cdReady = false;
+    }
+
+    if (
+      target.executionPolicy &&
+      (
+        target.executionPolicy.externalSourceAccess === true ||
+        target.executionPolicy.sourceRetrieval === true ||
+        target.executionPolicy.evidenceInsertion === true ||
+        target.executionPolicy.claimSupportUpdate === true
+      )
+    ) {
+      cdReady = false;
+    }
+  });
+}
+
+if (cdReady) {
+  controlledRetrievalExecutionBoundary = {
+    status: "ready",
+    allowed: true,
+    boundaryType:
+      "controlled_retrieval_execution_boundary",
+
+    searchQuery:
+      cdSource.searchQuery.trim(),
+
+    targets: cdSource.targets.map((target) => ({
+      claimKey: target.claimKey,
+      sourceType: target.sourceType,
+      fallbackSourceTypes:
+        Array.isArray(target.fallbackSourceTypes)
+          ? [...target.fallbackSourceTypes]
+          : [],
+
+      invocationStatus:
+        "EXECUTION_BOUNDARY_READY",
+
+      executionStatus:
+        "NOT_STARTED",
+
+      retrievalStatus:
+        "NOT_STARTED",
+
+      evidenceStatus:
+        "NOT_STARTED",
+
+      claimSupportStatus:
+        "NOT_CHANGED",
+
+      executionPolicy: {
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false
+      }
+    })),
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    reason:
+      "Controlled retrieval execution boundary is safely prepared."
+  };
+}
+
+if (typeof OODebug !== "undefined") {
+  OODebug(
+    "8CD",
+    "BOUNDARY",
+    controlledRetrievalExecutionBoundary.status === "ready"
+      ? "READY"
+      : "BLOCKED"
+  );
+
+  OODebug(
+    "8CD",
+    "QUERY",
+    controlledRetrievalExecutionBoundary.searchQuery
+  );
+
+  OODebug(
+    "8CD",
+    "TARGETS",
+    controlledRetrievalExecutionBoundary.targets.length
+  );
+
+  OODebug(
+    "8CD",
+    "EXTERNAL_ACCESS",
+    controlledRetrievalExecutionBoundary
+      .safety.externalSourceAccess
+  );
+
+  OODebug(
+    "8CD",
+    "RETRIEVAL",
+    controlledRetrievalExecutionBoundary
+      .safety.sourceRetrieval
+  );
+
+  OODebug(
+    "8CD",
+    "EVIDENCE_INSERTION",
+    controlledRetrievalExecutionBoundary
+      .safety.evidenceInsertion
+  );
+
+  OODebug(
+    "8CD",
+    "CLAIM_SUPPORT",
+    controlledRetrievalExecutionBoundary
+      .safety.claimSupportUpdate
+  );
+}
+
+
+/* =========================================================
+   STEP 8CE — CONTROLLED RETRIEVAL EXECUTION BOUNDARY HANDOFF
+   ========================================================= */
+
+let controlledRetrievalExecutionBoundaryHandoff = {
+  status: "blocked",
+  allowed: false,
+  handoffType:
+    "controlled_retrieval_execution_boundary_handoff",
+  searchQuery: null,
+  targets: [],
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+  reason:
+    "Controlled retrieval execution boundary handoff is not ready."
+};
+
+const ceSource =
+  typeof controlledRetrievalExecutionBoundary !==
+  "undefined"
+    ? controlledRetrievalExecutionBoundary
+    : null;
+
+let ceReady = true;
+
+if (
+  !ceSource ||
+  ceSource.status !== "ready" ||
+  ceSource.allowed !== true
+) {
+  ceReady = false;
+}
+
+if (
+  !ceSource ||
+  typeof ceSource.searchQuery !== "string" ||
+  !ceSource.searchQuery.trim()
+) {
+  ceReady = false;
+}
+
+if (
+  !ceSource ||
+  !Array.isArray(ceSource.targets) ||
+  ceSource.targets.length !== 5
+) {
+  ceReady = false;
+}
+
+if (ceReady) {
+  ceSource.targets.forEach((target) => {
+    if (
+      !target ||
+      target.invocationStatus !==
+        "EXECUTION_BOUNDARY_READY" ||
+      target.executionStatus !== "NOT_STARTED" ||
+      target.retrievalStatus !== "NOT_STARTED" ||
+      target.evidenceStatus !== "NOT_STARTED" ||
+      target.claimSupportStatus !== "NOT_CHANGED"
+    ) {
+      ceReady = false;
+    }
+  });
+}
+
+if (ceReady) {
+  controlledRetrievalExecutionBoundaryHandoff = {
+    status: "ready",
+    allowed: true,
+
+    handoffType:
+      "controlled_retrieval_execution_boundary_handoff",
+
+    searchQuery:
+      ceSource.searchQuery.trim(),
+
+    targets: ceSource.targets.map((target) => ({
+      claimKey: target.claimKey,
+      sourceType: target.sourceType,
+      fallbackSourceTypes:
+        Array.isArray(target.fallbackSourceTypes)
+          ? [...target.fallbackSourceTypes]
+          : [],
+
+      invocationStatus:
+        "EXECUTION_BOUNDARY_HANDOFF_READY",
+
+      executionStatus:
+        "NOT_STARTED",
+
+      retrievalStatus:
+        "NOT_STARTED",
+
+      evidenceStatus:
+        "NOT_STARTED",
+
+      claimSupportStatus:
+        "NOT_CHANGED",
+
+      executionPolicy: {
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false
+      }
+    })),
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    reason:
+      "Controlled retrieval execution boundary handoff is safely ready."
+  };
+}
+
+if (typeof OODebug !== "undefined") {
+  OODebug(
+    "8CE",
+    "HANDOFF",
+    controlledRetrievalExecutionBoundaryHandoff.status ===
+      "ready"
+      ? "READY"
+      : "BLOCKED"
+  );
+
+  OODebug(
+    "8CE",
+    "QUERY",
+    controlledRetrievalExecutionBoundaryHandoff.searchQuery
+  );
+
+  OODebug(
+    "8CE",
+    "TARGETS",
+    controlledRetrievalExecutionBoundaryHandoff.targets.length
+  );
+
+  OODebug(
+    "8CE",
+    "EXTERNAL_ACCESS",
+    controlledRetrievalExecutionBoundaryHandoff
+      .safety.externalSourceAccess
+  );
+
+  OODebug(
+    "8CE",
+    "RETRIEVAL",
+    controlledRetrievalExecutionBoundaryHandoff
+      .safety.sourceRetrieval
+  );
+
+  OODebug(
+    "8CE",
+    "EVIDENCE_INSERTION",
+    controlledRetrievalExecutionBoundaryHandoff
+      .safety.evidenceInsertion
+  );
+
+  OODebug(
+    "8CE",
+    "CLAIM_SUPPORT",
+    controlledRetrievalExecutionBoundaryHandoff
+      .safety.claimSupportUpdate
+  );
+  }
   /* ==========================================
    RESULT VALUES
    ========================================== */
