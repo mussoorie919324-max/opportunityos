@@ -30088,6 +30088,321 @@ if (
     );
   }
   }
+/* =========================================================
+   STEP 8DD — CONTROLLED RETRIEVAL EXECUTION CONTROL VALIDATION
+   ========================================================= */
+
+let controlledRetrievalExecutionControlValidation = {
+  status: "blocked",
+  allowed: false,
+  searchQuery: "",
+  targets: [],
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+  reason:
+    "Controlled retrieval execution control validation is not ready."
+};
+
+const ddSource =
+  controlledRetrievalExecutionControlBoundaryHandoff;
+
+let ddReady =
+  ddSource &&
+  ddSource.status === "ready" &&
+  ddSource.allowed === true;
+
+let ddQueryReady =
+  ddSource &&
+  typeof ddSource.searchQuery === "string" &&
+  ddSource.searchQuery.trim().length > 0;
+
+let ddTargetsReady =
+  ddSource &&
+  Array.isArray(ddSource.targets) &&
+  ddSource.targets.length === 5;
+
+let ddTargetStatesSafe =
+  ddTargetsReady &&
+  ddSource.targets.every(function (target) {
+    return (
+      target &&
+      target.invocationStatus ===
+        "EXECUTION_CONTROL_BOUNDARY_HANDOFF_READY" &&
+      target.executionStatus === "NOT_STARTED" &&
+      target.retrievalStatus === "NOT_STARTED" &&
+      target.evidenceStatus === "NOT_STARTED" &&
+      target.claimSupportStatus === "NOT_CHANGED"
+    );
+  });
+
+let ddExecutionPolicySafe =
+  ddSource &&
+  ddSource.executionPolicy &&
+  ddSource.executionPolicy.externalSourceAccess === false &&
+  ddSource.executionPolicy.sourceRetrieval === false &&
+  ddSource.executionPolicy.evidenceInsertion === false &&
+  ddSource.executionPolicy.claimSupportUpdate === false;
+
+let ddSafetyStateSafe =
+  ddSource &&
+  ddSource.safety &&
+  ddSource.safety.externalSourceAccess === "NOT_STARTED" &&
+  ddSource.safety.sourceRetrieval === "NOT_STARTED" &&
+  ddSource.safety.evidenceInsertion === "NOT_STARTED" &&
+  ddSource.safety.claimSupportUpdate === "NOT_CHANGED";
+
+if (
+  ddReady &&
+  ddQueryReady &&
+  ddTargetsReady &&
+  ddTargetStatesSafe &&
+  ddExecutionPolicySafe &&
+  ddSafetyStateSafe
+) {
+  controlledRetrievalExecutionControlValidation = {
+    status: "ready",
+    allowed: true,
+
+    searchQuery: ddSource.searchQuery,
+
+    targets: ddSource.targets.map(function (target) {
+      return {
+        ...target,
+        invocationStatus:
+          "EXECUTION_CONTROL_VALIDATION_READY"
+      };
+    }),
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    reason:
+      "Controlled retrieval execution control validation is ready. Actual retrieval remains safely blocked."
+  };
+
+  if (typeof OODebug !== "undefined") {
+    OODebug.log(
+      "8DD",
+      "CONTROL_VALIDATION",
+      "Controlled retrieval execution control validation ready"
+    );
+
+    OODebug.log(
+      "8DD",
+      "QUERY",
+      ddSource.searchQuery
+    );
+
+    OODebug.log(
+      "8DD",
+      "TARGETS",
+      "Targets: " + ddSource.targets.length
+    );
+
+    OODebug.log(
+      "8DD",
+      "POLICY",
+      "External: false | Retrieval: false | Evidence: false | ClaimSupport: false"
+    );
+
+    OODebug.log(
+      "8DD",
+      "SAFETY",
+      "External: NOT_STARTED | Retrieval: NOT_STARTED | Evidence: NOT_STARTED | ClaimSupport: NOT_CHANGED"
+    );
+
+    OODebug.log(
+      "8DD",
+      "STATUS",
+      "status=ready | allowed=true"
+    );
+  }
+} else {
+  if (typeof OODebug !== "undefined") {
+    OODebug.log(
+      "8DD",
+      "BLOCKED",
+      "Execution control validation failed"
+    );
+  }
+}
+
+
+/* =========================================================
+   STEP 8DE — EXECUTION CONTROL VALIDATION HANDOFF
+   ========================================================= */
+
+let controlledRetrievalExecutionControlValidationHandoff = {
+  status: "blocked",
+  allowed: false,
+  searchQuery: "",
+  targets: [],
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+  reason:
+    "Execution control validation handoff is not ready."
+};
+
+const deSource =
+  controlledRetrievalExecutionControlValidation;
+
+let deReady =
+  deSource &&
+  deSource.status === "ready" &&
+  deSource.allowed === true;
+
+let deQueryReady =
+  deSource &&
+  typeof deSource.searchQuery === "string" &&
+  deSource.searchQuery.trim().length > 0;
+
+let deTargetsReady =
+  deSource &&
+  Array.isArray(deSource.targets) &&
+  deSource.targets.length === 5;
+
+let deTargetStatesSafe =
+  deTargetsReady &&
+  deSource.targets.every(function (target) {
+    return (
+      target &&
+      target.invocationStatus ===
+        "EXECUTION_CONTROL_VALIDATION_READY" &&
+      target.executionStatus === "NOT_STARTED" &&
+      target.retrievalStatus === "NOT_STARTED" &&
+      target.evidenceStatus === "NOT_STARTED" &&
+      target.claimSupportStatus === "NOT_CHANGED"
+    );
+  });
+
+let deExecutionPolicySafe =
+  deSource &&
+  deSource.executionPolicy &&
+  deSource.executionPolicy.externalSourceAccess === false &&
+  deSource.executionPolicy.sourceRetrieval === false &&
+  deSource.executionPolicy.evidenceInsertion === false &&
+  deSource.executionPolicy.claimSupportUpdate === false;
+
+let deSafetyStateSafe =
+  deSource &&
+  deSource.safety &&
+  deSource.safety.externalSourceAccess === "NOT_STARTED" &&
+  deSource.safety.sourceRetrieval === "NOT_STARTED" &&
+  deSource.safety.evidenceInsertion === "NOT_STARTED" &&
+  deSource.safety.claimSupportUpdate === "NOT_CHANGED";
+
+if (
+  deReady &&
+  deQueryReady &&
+  deTargetsReady &&
+  deTargetStatesSafe &&
+  deExecutionPolicySafe &&
+  deSafetyStateSafe
+) {
+  controlledRetrievalExecutionControlValidationHandoff = {
+    status: "ready",
+    allowed: true,
+
+    searchQuery: deSource.searchQuery,
+
+    targets: deSource.targets.map(function (target) {
+      return {
+        ...target,
+        invocationStatus:
+          "EXECUTION_CONTROL_VALIDATION_HANDOFF_READY"
+      };
+    }),
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    reason:
+      "Controlled retrieval execution control validation handoff is ready. Actual retrieval remains safely blocked."
+  };
+
+  if (typeof OODebug !== "undefined") {
+    OODebug.log(
+      "8DE",
+      "HANDOFF",
+      "Execution control validation handoff ready"
+    );
+
+    OODebug.log(
+      "8DE",
+      "QUERY",
+      deSource.searchQuery
+    );
+
+    OODebug.log(
+      "8DE",
+      "TARGETS",
+      "Targets: " + deSource.targets.length
+    );
+
+    OODebug.log(
+      "8DE",
+      "SAFETY",
+      "External: NOT_STARTED | Retrieval: NOT_STARTED | Evidence: NOT_STARTED | ClaimSupport: NOT_CHANGED"
+    );
+
+    OODebug.log(
+      "8DE",
+      "STATUS",
+      "status=ready | allowed=true"
+    );
+  }
+} else {
+  if (typeof OODebug !== "undefined") {
+    OODebug.log(
+      "8DE",
+      "BLOCKED",
+      "Execution control validation handoff validation failed"
+    );
+  }
+  }
+    
 /* ==========================================
    RESULT VALUES
    ========================================== */
