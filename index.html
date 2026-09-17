@@ -26808,6 +26808,552 @@ if (typeof OODebug !== "undefined") {
       controlledRetrievalExecutionAuthorizationValidationBoundaryHandoff.allowed
   );
   }  
+/* =========================================================
+   STEP 8CP — CONTROLLED RETRIEVAL EXECUTION PREPARATION
+   BOUNDARY
+   ========================================================= */
+
+let controlledRetrievalExecutionPreparationBoundary = {
+  status: "blocked",
+  allowed: false,
+  searchQuery: "",
+  targets: [],
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+  checks: {},
+  reason:
+    "Controlled retrieval execution preparation boundary is not ready."
+};
+
+/* =========================================================
+   STEP 8CP — SOURCE
+   ========================================================= */
+
+const cpSource =
+  controlledRetrievalExecutionAuthorizationValidationBoundaryHandoff;
+
+/* =========================================================
+   STEP 8CP — SOURCE CHECKS
+   ========================================================= */
+
+const cpSourceReady =
+  !!cpSource &&
+  cpSource.status === "ready";
+
+const cpSourceAllowed =
+  !!cpSource &&
+  cpSource.allowed === true;
+
+/* =========================================================
+   STEP 8CP — QUERY CHECK
+   ========================================================= */
+
+const cpQuery =
+  cpSourceReady &&
+  typeof cpSource.searchQuery === "string"
+    ? cpSource.searchQuery.trim()
+    : "";
+
+const cpQueryReady =
+  cpQuery.length > 0;
+
+/* =========================================================
+   STEP 8CP — TARGET CHECK
+   ========================================================= */
+
+const cpTargets =
+  cpSourceReady &&
+  Array.isArray(cpSource.targets)
+    ? cpSource.targets
+    : [];
+
+const cpTargetsReady =
+  cpTargets.length === 5;
+
+/* =========================================================
+   STEP 8CP — TARGET STATE SAFETY
+   ========================================================= */
+
+const cpTargetStatesSafe =
+  cpTargetsReady &&
+  cpTargets.every(target =>
+    target &&
+    target.invocationStatus ===
+      "EXECUTION_AUTHORIZATION_VALIDATION_BOUNDARY_HANDOFF_READY" &&
+    target.executionStatus === "NOT_STARTED" &&
+    target.retrievalStatus === "NOT_STARTED" &&
+    target.evidenceStatus === "NOT_STARTED" &&
+    target.claimSupportStatus === "NOT_CHANGED"
+  );
+
+/* =========================================================
+   STEP 8CP — EXECUTION POLICY SAFETY
+   ========================================================= */
+
+const cpExecutionPolicySafe =
+  !!cpSource &&
+  !!cpSource.executionPolicy &&
+  cpSource.executionPolicy.externalSourceAccess === false &&
+  cpSource.executionPolicy.sourceRetrieval === false &&
+  cpSource.executionPolicy.evidenceInsertion === false &&
+  cpSource.executionPolicy.claimSupportUpdate === false;
+
+/* =========================================================
+   STEP 8CP — SAFETY STATE
+   ========================================================= */
+
+const cpSafetySafe =
+  !!cpSource &&
+  !!cpSource.safety &&
+  cpSource.safety.externalSourceAccess ===
+    "NOT_STARTED" &&
+  cpSource.safety.sourceRetrieval ===
+    "NOT_STARTED" &&
+  cpSource.safety.evidenceInsertion ===
+    "NOT_STARTED" &&
+  cpSource.safety.claimSupportUpdate ===
+    "NOT_CHANGED";
+
+/* =========================================================
+   STEP 8CP — FINAL VALIDATION
+   ========================================================= */
+
+const cpReady =
+  cpSourceReady &&
+  cpSourceAllowed &&
+  cpQueryReady &&
+  cpTargetsReady &&
+  cpTargetStatesSafe &&
+  cpExecutionPolicySafe &&
+  cpSafetySafe;
+
+/* =========================================================
+   STEP 8CP — OUTPUT
+   ========================================================= */
+
+if (cpReady) {
+
+  controlledRetrievalExecutionPreparationBoundary = {
+    status: "ready",
+    allowed: true,
+
+    searchQuery: cpQuery,
+
+    targets: cpTargets.map(target => ({
+      ...target,
+      invocationStatus:
+        "EXECUTION_PREPARATION_BOUNDARY_READY"
+    })),
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    checks: {
+      sourceReady: true,
+      sourceAllowed: true,
+      queryReady: true,
+      targetsReady: true,
+      targetStatesSafe: true,
+      executionPolicySafe: true,
+      safetyStateSafe: true
+    },
+
+    reason:
+      "Controlled retrieval execution preparation boundary is validated. Actual retrieval remains safely blocked."
+  };
+
+} else {
+
+  controlledRetrievalExecutionPreparationBoundary = {
+    status: "blocked",
+    allowed: false,
+
+    searchQuery: cpQuery,
+
+    targets: cpTargets,
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    checks: {
+      sourceReady: cpSourceReady,
+      sourceAllowed: cpSourceAllowed,
+      queryReady: cpQueryReady,
+      targetsReady: cpTargetsReady,
+      targetStatesSafe: cpTargetStatesSafe,
+      executionPolicySafe: cpExecutionPolicySafe,
+      safetyStateSafe: cpSafetySafe
+    },
+
+    reason:
+      "Controlled retrieval execution preparation boundary is blocked because one or more safety conditions are not satisfied."
+  };
+}
+
+/* =========================================================
+   STEP 8CP — DEBUGGER
+   ========================================================= */
+
+if (typeof OODebug !== "undefined") {
+
+  OODebug.log(
+    "8CP",
+    "PREPARATION_BOUNDARY",
+    "Controlled retrieval execution preparation boundary evaluated"
+  );
+
+  OODebug.log(
+    "8CP",
+    "QUERY",
+    "Query: " +
+      controlledRetrievalExecutionPreparationBoundary.searchQuery
+  );
+
+  OODebug.log(
+    "8CP",
+    "TARGETS",
+    "Targets: " +
+      controlledRetrievalExecutionPreparationBoundary.targets.length
+  );
+
+  OODebug.log(
+    "8CP",
+    "SOURCE",
+    "Source ready: " +
+      controlledRetrievalExecutionPreparationBoundary.checks.sourceReady +
+      " | allowed: " +
+      controlledRetrievalExecutionPreparationBoundary.checks.sourceAllowed
+  );
+
+  OODebug.log(
+    "8CP",
+    "POLICY",
+    "External access: " +
+      controlledRetrievalExecutionPreparationBoundary.executionPolicy.externalSourceAccess +
+      " | retrieval: " +
+      controlledRetrievalExecutionPreparationBoundary.executionPolicy.sourceRetrieval +
+      " | evidence: " +
+      controlledRetrievalExecutionPreparationBoundary.executionPolicy.evidenceInsertion +
+      " | claim support: " +
+      controlledRetrievalExecutionPreparationBoundary.executionPolicy.claimSupportUpdate
+  );
+
+  OODebug.log(
+    "8CP",
+    "SAFETY",
+    "External access: " +
+      controlledRetrievalExecutionPreparationBoundary.safety.externalSourceAccess +
+      " | retrieval: " +
+      controlledRetrievalExecutionPreparationBoundary.safety.sourceRetrieval +
+      " | evidence insertion: " +
+      controlledRetrievalExecutionPreparationBoundary.safety.evidenceInsertion +
+      " | claim support: " +
+      controlledRetrievalExecutionPreparationBoundary.safety.claimSupportUpdate
+  );
+
+  OODebug.log(
+    "8CP",
+    "STATUS",
+    "Status: " +
+      controlledRetrievalExecutionPreparationBoundary.status +
+      " | allowed: " +
+      controlledRetrievalExecutionPreparationBoundary.allowed
+  );
+}
+/* =========================================================
+   STEP 8CQ — CONTROLLED RETRIEVAL EXECUTION PREPARATION
+   HANDOFF
+   ========================================================= */
+
+let controlledRetrievalExecutionPreparationBoundaryHandoff = {
+  status: "blocked",
+  allowed: false,
+  searchQuery: "",
+  targets: [],
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+  checks: {},
+  reason:
+    "Controlled retrieval execution preparation boundary handoff is not ready."
+};
+
+/* =========================================================
+   STEP 8CQ — SOURCE
+   ========================================================= */
+
+const cqSource =
+  controlledRetrievalExecutionPreparationBoundary;
+
+/* =========================================================
+   STEP 8CQ — SOURCE CHECKS
+   ========================================================= */
+
+const cqSourceReady =
+  !!cqSource &&
+  cqSource.status === "ready";
+
+const cqSourceAllowed =
+  !!cqSource &&
+  cqSource.allowed === true;
+
+/* =========================================================
+   STEP 8CQ — QUERY CHECK
+   ========================================================= */
+
+const cqQuery =
+  cqSourceReady &&
+  typeof cqSource.searchQuery === "string"
+    ? cqSource.searchQuery.trim()
+    : "";
+
+const cqQueryReady =
+  cqQuery.length > 0;
+
+/* =========================================================
+   STEP 8CQ — TARGET CHECK
+   ========================================================= */
+
+const cqTargets =
+  cqSourceReady &&
+  Array.isArray(cqSource.targets)
+    ? cqSource.targets
+    : [];
+
+const cqTargetsReady =
+  cqTargets.length === 5;
+
+/* =========================================================
+   STEP 8CQ — TARGET STATE SAFETY
+   ========================================================= */
+
+const cqTargetStatesSafe =
+  cqTargetsReady &&
+  cqTargets.every(target =>
+    target &&
+    target.invocationStatus ===
+      "EXECUTION_PREPARATION_BOUNDARY_READY" &&
+    target.executionStatus === "NOT_STARTED" &&
+    target.retrievalStatus === "NOT_STARTED" &&
+    target.evidenceStatus === "NOT_STARTED" &&
+    target.claimSupportStatus === "NOT_CHANGED"
+  );
+
+/* =========================================================
+   STEP 8CQ — EXECUTION POLICY SAFETY
+   ========================================================= */
+
+const cqExecutionPolicySafe =
+  !!cqSource &&
+  !!cqSource.executionPolicy &&
+  cqSource.executionPolicy.externalSourceAccess === false &&
+  cqSource.executionPolicy.sourceRetrieval === false &&
+  cqSource.executionPolicy.evidenceInsertion === false &&
+  cqSource.executionPolicy.claimSupportUpdate === false;
+
+/* =========================================================
+   STEP 8CQ — SAFETY STATE
+   ========================================================= */
+
+const cqSafetySafe =
+  !!cqSource &&
+  !!cqSource.safety &&
+  cqSource.safety.externalSourceAccess ===
+    "NOT_STARTED" &&
+  cqSource.safety.sourceRetrieval ===
+    "NOT_STARTED" &&
+  cqSource.safety.evidenceInsertion ===
+    "NOT_STARTED" &&
+  cqSource.safety.claimSupportUpdate ===
+    "NOT_CHANGED";
+
+/* =========================================================
+   STEP 8CQ — FINAL HANDOFF VALIDATION
+   ========================================================= */
+
+const cqReady =
+  cqSourceReady &&
+  cqSourceAllowed &&
+  cqQueryReady &&
+  cqTargetsReady &&
+  cqTargetStatesSafe &&
+  cqExecutionPolicySafe &&
+  cqSafetySafe;
+
+/* =========================================================
+   STEP 8CQ — OUTPUT
+   ========================================================= */
+
+if (cqReady) {
+
+  controlledRetrievalExecutionPreparationBoundaryHandoff = {
+    status: "ready",
+    allowed: true,
+
+    searchQuery: cqQuery,
+
+    targets: cqTargets.map(target => ({
+      ...target,
+      invocationStatus:
+        "EXECUTION_PREPARATION_HANDOFF_READY"
+    })),
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    checks: {
+      sourceReady: true,
+      sourceAllowed: true,
+      queryReady: true,
+      targetsReady: true,
+      targetStatesSafe: true,
+      executionPolicySafe: true,
+      safetyStateSafe: true
+    },
+
+    reason:
+      "Controlled retrieval execution preparation handoff is ready. Actual retrieval remains safely blocked."
+  };
+
+} else {
+
+  controlledRetrievalExecutionPreparationBoundaryHandoff = {
+    status: "blocked",
+    allowed: false,
+
+    searchQuery: cqQuery,
+
+    targets: cqTargets,
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    checks: {
+      sourceReady: cqSourceReady,
+      sourceAllowed: cqSourceAllowed,
+      queryReady: cqQueryReady,
+      targetsReady: cqTargetsReady,
+      targetStatesSafe: cqTargetStatesSafe,
+      executionPolicySafe: cqExecutionPolicySafe,
+      safetyStateSafe: cqSafetySafe
+    },
+
+    reason:
+      "Controlled retrieval execution preparation handoff is blocked because one or more safety conditions are not satisfied."
+  };
+}
+
+/* =========================================================
+   STEP 8CQ — DEBUGGER
+   ========================================================= */
+
+if (typeof OODebug !== "undefined") {
+
+  OODebug.log(
+    "8CQ",
+    "HANDOFF",
+    "Controlled retrieval execution preparation handoff evaluated"
+  );
+
+  OODebug.log(
+    "8CQ",
+    "QUERY",
+    "Query: " +
+      controlledRetrievalExecutionPreparationBoundaryHandoff.searchQuery
+  );
+
+  OODebug.log(
+    "8CQ",
+    "TARGETS",
+    "Targets: " +
+      controlledRetrievalExecutionPreparationBoundaryHandoff.targets.length
+  );
+
+  OODebug.log(
+    "8CQ",
+    "SAFETY",
+    "External access: " +
+      controlledRetrievalExecutionPreparationBoundaryHandoff.safety.externalSourceAccess +
+      " | retrieval: " +
+      controlledRetrievalExecutionPreparationBoundaryHandoff.safety.sourceRetrieval +
+      " | evidence insertion: " +
+      controlledRetrievalExecutionPreparationBoundaryHandoff.safety.evidenceInsertion +
+      " | claim support: " +
+      controlledRetrievalExecutionPreparationBoundaryHandoff.safety.claimSupportUpdate
+  );
+
+  OODebug.log(
+    "8CQ",
+    "STATUS",
+    "Status: " +
+      controlledRetrievalExecutionPreparationBoundaryHandoff.status +
+      " | allowed: " +
+      controlledRetrievalExecutionPreparationBoundaryHandoff.allowed
+  );
+}        
 /* ==========================================
    RESULT VALUES
    ========================================== */
