@@ -27354,6 +27354,552 @@ if (typeof OODebug !== "undefined") {
       controlledRetrievalExecutionPreparationBoundaryHandoff.allowed
   );
 }        
+/* =========================================================
+   STEP 8CR — CONTROLLED RETRIEVAL EXECUTION PREPARATION
+   VALIDATION
+   ========================================================= */
+
+let controlledRetrievalExecutionPreparationValidation = {
+  status: "blocked",
+  allowed: false,
+  searchQuery: "",
+  targets: [],
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+  checks: {},
+  reason:
+    "Controlled retrieval execution preparation validation is not ready."
+};
+
+/* =========================================================
+   STEP 8CR — SOURCE
+   ========================================================= */
+
+const crSource =
+  controlledRetrievalExecutionPreparationBoundaryHandoff;
+
+/* =========================================================
+   STEP 8CR — SOURCE CHECKS
+   ========================================================= */
+
+const crSourceReady =
+  !!crSource &&
+  crSource.status === "ready";
+
+const crSourceAllowed =
+  !!crSource &&
+  crSource.allowed === true;
+
+/* =========================================================
+   STEP 8CR — QUERY CHECK
+   ========================================================= */
+
+const crQuery =
+  crSourceReady &&
+  typeof crSource.searchQuery === "string"
+    ? crSource.searchQuery.trim()
+    : "";
+
+const crQueryReady =
+  crQuery.length > 0;
+
+/* =========================================================
+   STEP 8CR — TARGET CHECK
+   ========================================================= */
+
+const crTargets =
+  crSourceReady &&
+  Array.isArray(crSource.targets)
+    ? crSource.targets
+    : [];
+
+const crTargetsReady =
+  crTargets.length === 5;
+
+/* =========================================================
+   STEP 8CR — TARGET STATE SAFETY
+   ========================================================= */
+
+const crTargetStatesSafe =
+  crTargetsReady &&
+  crTargets.every(target =>
+    target &&
+    target.invocationStatus ===
+      "EXECUTION_PREPARATION_HANDOFF_READY" &&
+    target.executionStatus === "NOT_STARTED" &&
+    target.retrievalStatus === "NOT_STARTED" &&
+    target.evidenceStatus === "NOT_STARTED" &&
+    target.claimSupportStatus === "NOT_CHANGED"
+  );
+
+/* =========================================================
+   STEP 8CR — EXECUTION POLICY SAFETY
+   ========================================================= */
+
+const crExecutionPolicySafe =
+  !!crSource &&
+  !!crSource.executionPolicy &&
+  crSource.executionPolicy.externalSourceAccess === false &&
+  crSource.executionPolicy.sourceRetrieval === false &&
+  crSource.executionPolicy.evidenceInsertion === false &&
+  crSource.executionPolicy.claimSupportUpdate === false;
+
+/* =========================================================
+   STEP 8CR — SAFETY STATE
+   ========================================================= */
+
+const crSafetySafe =
+  !!crSource &&
+  !!crSource.safety &&
+  crSource.safety.externalSourceAccess ===
+    "NOT_STARTED" &&
+  crSource.safety.sourceRetrieval ===
+    "NOT_STARTED" &&
+  crSource.safety.evidenceInsertion ===
+    "NOT_STARTED" &&
+  crSource.safety.claimSupportUpdate ===
+    "NOT_CHANGED";
+
+/* =========================================================
+   STEP 8CR — FINAL VALIDATION
+   ========================================================= */
+
+const crReady =
+  crSourceReady &&
+  crSourceAllowed &&
+  crQueryReady &&
+  crTargetsReady &&
+  crTargetStatesSafe &&
+  crExecutionPolicySafe &&
+  crSafetySafe;
+
+/* =========================================================
+   STEP 8CR — OUTPUT
+   ========================================================= */
+
+if (crReady) {
+
+  controlledRetrievalExecutionPreparationValidation = {
+    status: "ready",
+    allowed: true,
+
+    searchQuery: crQuery,
+
+    targets: crTargets.map(target => ({
+      ...target,
+      invocationStatus:
+        "EXECUTION_PREPARATION_VALIDATION_READY"
+    })),
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    checks: {
+      sourceReady: true,
+      sourceAllowed: true,
+      queryReady: true,
+      targetsReady: true,
+      targetStatesSafe: true,
+      executionPolicySafe: true,
+      safetyStateSafe: true
+    },
+
+    reason:
+      "Controlled retrieval execution preparation validation is ready. Actual retrieval remains safely blocked."
+  };
+
+} else {
+
+  controlledRetrievalExecutionPreparationValidation = {
+    status: "blocked",
+    allowed: false,
+
+    searchQuery: crQuery,
+
+    targets: crTargets,
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    checks: {
+      sourceReady: crSourceReady,
+      sourceAllowed: crSourceAllowed,
+      queryReady: crQueryReady,
+      targetsReady: crTargetsReady,
+      targetStatesSafe: crTargetStatesSafe,
+      executionPolicySafe: crExecutionPolicySafe,
+      safetyStateSafe: crSafetySafe
+    },
+
+    reason:
+      "Controlled retrieval execution preparation validation is blocked because one or more safety conditions are not satisfied."
+  };
+}
+
+/* =========================================================
+   STEP 8CR — DEBUGGER
+   ========================================================= */
+
+if (typeof OODebug !== "undefined") {
+
+  OODebug.log(
+    "8CR",
+    "VALIDATION",
+    "Controlled retrieval execution preparation validation evaluated"
+  );
+
+  OODebug.log(
+    "8CR",
+    "QUERY",
+    "Query: " +
+      controlledRetrievalExecutionPreparationValidation.searchQuery
+  );
+
+  OODebug.log(
+    "8CR",
+    "TARGETS",
+    "Targets: " +
+      controlledRetrievalExecutionPreparationValidation.targets.length
+  );
+
+  OODebug.log(
+    "8CR",
+    "SOURCE",
+    "Source ready: " +
+      controlledRetrievalExecutionPreparationValidation.checks.sourceReady +
+      " | allowed: " +
+      controlledRetrievalExecutionPreparationValidation.checks.sourceAllowed
+  );
+
+  OODebug.log(
+    "8CR",
+    "POLICY",
+    "External access: " +
+      controlledRetrievalExecutionPreparationValidation.executionPolicy.externalSourceAccess +
+      " | retrieval: " +
+      controlledRetrievalExecutionPreparationValidation.executionPolicy.sourceRetrieval +
+      " | evidence: " +
+      controlledRetrievalExecutionPreparationValidation.executionPolicy.evidenceInsertion +
+      " | claim support: " +
+      controlledRetrievalExecutionPreparationValidation.executionPolicy.claimSupportUpdate
+  );
+
+  OODebug.log(
+    "8CR",
+    "SAFETY",
+    "External access: " +
+      controlledRetrievalExecutionPreparationValidation.safety.externalSourceAccess +
+      " | retrieval: " +
+      controlledRetrievalExecutionPreparationValidation.safety.sourceRetrieval +
+      " | evidence insertion: " +
+      controlledRetrievalExecutionPreparationValidation.safety.evidenceInsertion +
+      " | claim support: " +
+      controlledRetrievalExecutionPreparationValidation.safety.claimSupportUpdate
+  );
+
+  OODebug.log(
+    "8CR",
+    "STATUS",
+    "Status: " +
+      controlledRetrievalExecutionPreparationValidation.status +
+      " | allowed: " +
+      controlledRetrievalExecutionPreparationValidation.allowed
+  );
+}
+/* =========================================================
+   STEP 8CS — CONTROLLED RETRIEVAL EXECUTION PREPARATION
+   VALIDATION HANDOFF
+   ========================================================= */
+
+let controlledRetrievalExecutionPreparationValidationHandoff = {
+  status: "blocked",
+  allowed: false,
+  searchQuery: "",
+  targets: [],
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+  checks: {},
+  reason:
+    "Controlled retrieval execution preparation validation handoff is not ready."
+};
+
+/* =========================================================
+   STEP 8CS — SOURCE
+   ========================================================= */
+
+const csSource =
+  controlledRetrievalExecutionPreparationValidation;
+
+/* =========================================================
+   STEP 8CS — SOURCE CHECKS
+   ========================================================= */
+
+const csSourceReady =
+  !!csSource &&
+  csSource.status === "ready";
+
+const csSourceAllowed =
+  !!csSource &&
+  csSource.allowed === true;
+
+/* =========================================================
+   STEP 8CS — QUERY CHECK
+   ========================================================= */
+
+const csQuery =
+  csSourceReady &&
+  typeof csSource.searchQuery === "string"
+    ? csSource.searchQuery.trim()
+    : "";
+
+const csQueryReady =
+  csQuery.length > 0;
+
+/* =========================================================
+   STEP 8CS — TARGET CHECK
+   ========================================================= */
+
+const csTargets =
+  csSourceReady &&
+  Array.isArray(csSource.targets)
+    ? csSource.targets
+    : [];
+
+const csTargetsReady =
+  csTargets.length === 5;
+
+/* =========================================================
+   STEP 8CS — TARGET STATE SAFETY
+   ========================================================= */
+
+const csTargetStatesSafe =
+  csTargetsReady &&
+  csTargets.every(target =>
+    target &&
+    target.invocationStatus ===
+      "EXECUTION_PREPARATION_VALIDATION_READY" &&
+    target.executionStatus === "NOT_STARTED" &&
+    target.retrievalStatus === "NOT_STARTED" &&
+    target.evidenceStatus === "NOT_STARTED" &&
+    target.claimSupportStatus === "NOT_CHANGED"
+  );
+
+/* =========================================================
+   STEP 8CS — EXECUTION POLICY SAFETY
+   ========================================================= */
+
+const csExecutionPolicySafe =
+  !!csSource &&
+  !!csSource.executionPolicy &&
+  csSource.executionPolicy.externalSourceAccess === false &&
+  csSource.executionPolicy.sourceRetrieval === false &&
+  csSource.executionPolicy.evidenceInsertion === false &&
+  csSource.executionPolicy.claimSupportUpdate === false;
+
+/* =========================================================
+   STEP 8CS — SAFETY STATE
+   ========================================================= */
+
+const csSafetySafe =
+  !!csSource &&
+  !!csSource.safety &&
+  csSource.safety.externalSourceAccess ===
+    "NOT_STARTED" &&
+  csSource.safety.sourceRetrieval ===
+    "NOT_STARTED" &&
+  csSource.safety.evidenceInsertion ===
+    "NOT_STARTED" &&
+  csSource.safety.claimSupportUpdate ===
+    "NOT_CHANGED";
+
+/* =========================================================
+   STEP 8CS — FINAL HANDOFF VALIDATION
+   ========================================================= */
+
+const csReady =
+  csSourceReady &&
+  csSourceAllowed &&
+  csQueryReady &&
+  csTargetsReady &&
+  csTargetStatesSafe &&
+  csExecutionPolicySafe &&
+  csSafetySafe;
+
+/* =========================================================
+   STEP 8CS — OUTPUT
+   ========================================================= */
+
+if (csReady) {
+
+  controlledRetrievalExecutionPreparationValidationHandoff = {
+    status: "ready",
+    allowed: true,
+
+    searchQuery: csQuery,
+
+    targets: csTargets.map(target => ({
+      ...target,
+      invocationStatus:
+        "EXECUTION_PREPARATION_VALIDATION_HANDOFF_READY"
+    })),
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    checks: {
+      sourceReady: true,
+      sourceAllowed: true,
+      queryReady: true,
+      targetsReady: true,
+      targetStatesSafe: true,
+      executionPolicySafe: true,
+      safetyStateSafe: true
+    },
+
+    reason:
+      "Controlled retrieval execution preparation validation handoff is ready. Actual retrieval remains safely blocked."
+  };
+
+} else {
+
+  controlledRetrievalExecutionPreparationValidationHandoff = {
+    status: "blocked",
+    allowed: false,
+
+    searchQuery: csQuery,
+
+    targets: csTargets,
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    checks: {
+      sourceReady: csSourceReady,
+      sourceAllowed: csSourceAllowed,
+      queryReady: csQueryReady,
+      targetsReady: csTargetsReady,
+      targetStatesSafe: csTargetStatesSafe,
+      executionPolicySafe: csExecutionPolicySafe,
+      safetyStateSafe: csSafetySafe
+    },
+
+    reason:
+      "Controlled retrieval execution preparation validation handoff is blocked because one or more safety conditions are not satisfied."
+  };
+}
+
+/* =========================================================
+   STEP 8CS — DEBUGGER
+   ========================================================= */
+
+if (typeof OODebug !== "undefined") {
+
+  OODebug.log(
+    "8CS",
+    "HANDOFF",
+    "Controlled retrieval execution preparation validation handoff evaluated"
+  );
+
+  OODebug.log(
+    "8CS",
+    "QUERY",
+    "Query: " +
+      controlledRetrievalExecutionPreparationValidationHandoff.searchQuery
+  );
+
+  OODebug.log(
+    "8CS",
+    "TARGETS",
+    "Targets: " +
+      controlledRetrievalExecutionPreparationValidationHandoff.targets.length
+  );
+
+  OODebug.log(
+    "8CS",
+    "SAFETY",
+    "External access: " +
+      controlledRetrievalExecutionPreparationValidationHandoff.safety.externalSourceAccess +
+      " | retrieval: " +
+      controlledRetrievalExecutionPreparationValidationHandoff.safety.sourceRetrieval +
+      " | evidence insertion: " +
+      controlledRetrievalExecutionPreparationValidationHandoff.safety.evidenceInsertion +
+      " | claim support: " +
+      controlledRetrievalExecutionPreparationValidationHandoff.safety.claimSupportUpdate
+  );
+
+  OODebug.log(
+    "8CS",
+    "STATUS",
+    "Status: " +
+      controlledRetrievalExecutionPreparationValidationHandoff.status +
+      " | allowed: " +
+      controlledRetrievalExecutionPreparationValidationHandoff.allowed
+  );
+}    
 /* ==========================================
    RESULT VALUES
    ========================================== */
