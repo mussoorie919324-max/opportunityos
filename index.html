@@ -27900,6 +27900,552 @@ if (typeof OODebug !== "undefined") {
       controlledRetrievalExecutionPreparationValidationHandoff.allowed
   );
 }    
+/* =========================================================
+   STEP 8CT — CONTROLLED RETRIEVAL EXECUTION AUTHORIZATION
+   GATE
+   ========================================================= */
+
+let controlledRetrievalExecutionAuthorizationGate = {
+  status: "blocked",
+  allowed: false,
+  searchQuery: "",
+  targets: [],
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+  checks: {},
+  reason:
+    "Controlled retrieval execution authorization gate is not ready."
+};
+
+/* =========================================================
+   STEP 8CT — SOURCE
+   ========================================================= */
+
+const ctSource =
+  controlledRetrievalExecutionPreparationValidationHandoff;
+
+/* =========================================================
+   STEP 8CT — SOURCE CHECKS
+   ========================================================= */
+
+const ctSourceReady =
+  !!ctSource &&
+  ctSource.status === "ready";
+
+const ctSourceAllowed =
+  !!ctSource &&
+  ctSource.allowed === true;
+
+/* =========================================================
+   STEP 8CT — QUERY CHECK
+   ========================================================= */
+
+const ctQuery =
+  ctSourceReady &&
+  typeof ctSource.searchQuery === "string"
+    ? ctSource.searchQuery.trim()
+    : "";
+
+const ctQueryReady =
+  ctQuery.length > 0;
+
+/* =========================================================
+   STEP 8CT — TARGET CHECK
+   ========================================================= */
+
+const ctTargets =
+  ctSourceReady &&
+  Array.isArray(ctSource.targets)
+    ? ctSource.targets
+    : [];
+
+const ctTargetsReady =
+  ctTargets.length === 5;
+
+/* =========================================================
+   STEP 8CT — TARGET STATE SAFETY
+   ========================================================= */
+
+const ctTargetStatesSafe =
+  ctTargetsReady &&
+  ctTargets.every(target =>
+    target &&
+    target.invocationStatus ===
+      "EXECUTION_PREPARATION_VALIDATION_HANDOFF_READY" &&
+    target.executionStatus === "NOT_STARTED" &&
+    target.retrievalStatus === "NOT_STARTED" &&
+    target.evidenceStatus === "NOT_STARTED" &&
+    target.claimSupportStatus === "NOT_CHANGED"
+  );
+
+/* =========================================================
+   STEP 8CT — EXECUTION POLICY SAFETY
+   ========================================================= */
+
+const ctExecutionPolicySafe =
+  !!ctSource &&
+  !!ctSource.executionPolicy &&
+  ctSource.executionPolicy.externalSourceAccess === false &&
+  ctSource.executionPolicy.sourceRetrieval === false &&
+  ctSource.executionPolicy.evidenceInsertion === false &&
+  ctSource.executionPolicy.claimSupportUpdate === false;
+
+/* =========================================================
+   STEP 8CT — SAFETY STATE
+   ========================================================= */
+
+const ctSafetySafe =
+  !!ctSource &&
+  !!ctSource.safety &&
+  ctSource.safety.externalSourceAccess ===
+    "NOT_STARTED" &&
+  ctSource.safety.sourceRetrieval ===
+    "NOT_STARTED" &&
+  ctSource.safety.evidenceInsertion ===
+    "NOT_STARTED" &&
+  ctSource.safety.claimSupportUpdate ===
+    "NOT_CHANGED";
+
+/* =========================================================
+   STEP 8CT — FINAL GATE VALIDATION
+   ========================================================= */
+
+const ctReady =
+  ctSourceReady &&
+  ctSourceAllowed &&
+  ctQueryReady &&
+  ctTargetsReady &&
+  ctTargetStatesSafe &&
+  ctExecutionPolicySafe &&
+  ctSafetySafe;
+
+/* =========================================================
+   STEP 8CT — OUTPUT
+   ========================================================= */
+
+if (ctReady) {
+
+  controlledRetrievalExecutionAuthorizationGate = {
+    status: "ready",
+    allowed: true,
+
+    searchQuery: ctQuery,
+
+    targets: ctTargets.map(target => ({
+      ...target,
+      invocationStatus:
+        "EXECUTION_AUTHORIZATION_GATE_READY"
+    })),
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    checks: {
+      sourceReady: true,
+      sourceAllowed: true,
+      queryReady: true,
+      targetsReady: true,
+      targetStatesSafe: true,
+      executionPolicySafe: true,
+      safetyStateSafe: true
+    },
+
+    reason:
+      "Controlled retrieval execution authorization gate is validated. Actual retrieval remains safely blocked."
+  };
+
+} else {
+
+  controlledRetrievalExecutionAuthorizationGate = {
+    status: "blocked",
+    allowed: false,
+
+    searchQuery: ctQuery,
+
+    targets: ctTargets,
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    checks: {
+      sourceReady: ctSourceReady,
+      sourceAllowed: ctSourceAllowed,
+      queryReady: ctQueryReady,
+      targetsReady: ctTargetsReady,
+      targetStatesSafe: ctTargetStatesSafe,
+      executionPolicySafe: ctExecutionPolicySafe,
+      safetyStateSafe: ctSafetySafe
+    },
+
+    reason:
+      "Controlled retrieval execution authorization gate is blocked because one or more safety conditions are not satisfied."
+  };
+}
+
+/* =========================================================
+   STEP 8CT — DEBUGGER
+   ========================================================= */
+
+if (typeof OODebug !== "undefined") {
+
+  OODebug.log(
+    "8CT",
+    "GATE",
+    "Controlled retrieval execution authorization gate evaluated"
+  );
+
+  OODebug.log(
+    "8CT",
+    "QUERY",
+    "Query: " +
+      controlledRetrievalExecutionAuthorizationGate.searchQuery
+  );
+
+  OODebug.log(
+    "8CT",
+    "TARGETS",
+    "Targets: " +
+      controlledRetrievalExecutionAuthorizationGate.targets.length
+  );
+
+  OODebug.log(
+    "8CT",
+    "SOURCE",
+    "Source ready: " +
+      controlledRetrievalExecutionAuthorizationGate.checks.sourceReady +
+      " | allowed: " +
+      controlledRetrievalExecutionAuthorizationGate.checks.sourceAllowed
+  );
+
+  OODebug.log(
+    "8CT",
+    "POLICY",
+    "External access: " +
+      controlledRetrievalExecutionAuthorizationGate.executionPolicy.externalSourceAccess +
+      " | retrieval: " +
+      controlledRetrievalExecutionAuthorizationGate.executionPolicy.sourceRetrieval +
+      " | evidence: " +
+      controlledRetrievalExecutionAuthorizationGate.executionPolicy.evidenceInsertion +
+      " | claim support: " +
+      controlledRetrievalExecutionAuthorizationGate.executionPolicy.claimSupportUpdate
+  );
+
+  OODebug.log(
+    "8CT",
+    "SAFETY",
+    "External access: " +
+      controlledRetrievalExecutionAuthorizationGate.safety.externalSourceAccess +
+      " | retrieval: " +
+      controlledRetrievalExecutionAuthorizationGate.safety.sourceRetrieval +
+      " | evidence insertion: " +
+      controlledRetrievalExecutionAuthorizationGate.safety.evidenceInsertion +
+      " | claim support: " +
+      controlledRetrievalExecutionAuthorizationGate.safety.claimSupportUpdate
+  );
+
+  OODebug.log(
+    "8CT",
+    "STATUS",
+    "Status: " +
+      controlledRetrievalExecutionAuthorizationGate.status +
+      " | allowed: " +
+      controlledRetrievalExecutionAuthorizationGate.allowed
+  );
+}
+  /* =========================================================
+   STEP 8CU — CONTROLLED RETRIEVAL EXECUTION AUTHORIZATION
+   GATE HANDOFF
+   ========================================================= */
+
+let controlledRetrievalExecutionAuthorizationGateHandoff = {
+  status: "blocked",
+  allowed: false,
+  searchQuery: "",
+  targets: [],
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+  checks: {},
+  reason:
+    "Controlled retrieval execution authorization gate handoff is not ready."
+};
+
+/* =========================================================
+   STEP 8CU — SOURCE
+   ========================================================= */
+
+const cuSource =
+  controlledRetrievalExecutionAuthorizationGate;
+
+/* =========================================================
+   STEP 8CU — SOURCE CHECKS
+   ========================================================= */
+
+const cuSourceReady =
+  !!cuSource &&
+  cuSource.status === "ready";
+
+const cuSourceAllowed =
+  !!cuSource &&
+  cuSource.allowed === true;
+
+/* =========================================================
+   STEP 8CU — QUERY CHECK
+   ========================================================= */
+
+const cuQuery =
+  cuSourceReady &&
+  typeof cuSource.searchQuery === "string"
+    ? cuSource.searchQuery.trim()
+    : "";
+
+const cuQueryReady =
+  cuQuery.length > 0;
+
+/* =========================================================
+   STEP 8CU — TARGET CHECK
+   ========================================================= */
+
+const cuTargets =
+  cuSourceReady &&
+  Array.isArray(cuSource.targets)
+    ? cuSource.targets
+    : [];
+
+const cuTargetsReady =
+  cuTargets.length === 5;
+
+/* =========================================================
+   STEP 8CU — TARGET STATE SAFETY
+   ========================================================= */
+
+const cuTargetStatesSafe =
+  cuTargetsReady &&
+  cuTargets.every(target =>
+    target &&
+    target.invocationStatus ===
+      "EXECUTION_AUTHORIZATION_GATE_READY" &&
+    target.executionStatus === "NOT_STARTED" &&
+    target.retrievalStatus === "NOT_STARTED" &&
+    target.evidenceStatus === "NOT_STARTED" &&
+    target.claimSupportStatus === "NOT_CHANGED"
+  );
+
+/* =========================================================
+   STEP 8CU — EXECUTION POLICY SAFETY
+   ========================================================= */
+
+const cuExecutionPolicySafe =
+  !!cuSource &&
+  !!cuSource.executionPolicy &&
+  cuSource.executionPolicy.externalSourceAccess === false &&
+  cuSource.executionPolicy.sourceRetrieval === false &&
+  cuSource.executionPolicy.evidenceInsertion === false &&
+  cuSource.executionPolicy.claimSupportUpdate === false;
+
+/* =========================================================
+   STEP 8CU — SAFETY STATE
+   ========================================================= */
+
+const cuSafetySafe =
+  !!cuSource &&
+  !!cuSource.safety &&
+  cuSource.safety.externalSourceAccess ===
+    "NOT_STARTED" &&
+  cuSource.safety.sourceRetrieval ===
+    "NOT_STARTED" &&
+  cuSource.safety.evidenceInsertion ===
+    "NOT_STARTED" &&
+  cuSource.safety.claimSupportUpdate ===
+    "NOT_CHANGED";
+
+/* =========================================================
+   STEP 8CU — FINAL HANDOFF VALIDATION
+   ========================================================= */
+
+const cuReady =
+  cuSourceReady &&
+  cuSourceAllowed &&
+  cuQueryReady &&
+  cuTargetsReady &&
+  cuTargetStatesSafe &&
+  cuExecutionPolicySafe &&
+  cuSafetySafe;
+
+/* =========================================================
+   STEP 8CU — OUTPUT
+   ========================================================= */
+
+if (cuReady) {
+
+  controlledRetrievalExecutionAuthorizationGateHandoff = {
+    status: "ready",
+    allowed: true,
+
+    searchQuery: cuQuery,
+
+    targets: cuTargets.map(target => ({
+      ...target,
+      invocationStatus:
+        "EXECUTION_AUTHORIZATION_GATE_HANDOFF_READY"
+    })),
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    checks: {
+      sourceReady: true,
+      sourceAllowed: true,
+      queryReady: true,
+      targetsReady: true,
+      targetStatesSafe: true,
+      executionPolicySafe: true,
+      safetyStateSafe: true
+    },
+
+    reason:
+      "Controlled retrieval execution authorization gate handoff is ready. Actual retrieval remains safely blocked."
+  };
+
+} else {
+
+  controlledRetrievalExecutionAuthorizationGateHandoff = {
+    status: "blocked",
+    allowed: false,
+
+    searchQuery: cuQuery,
+
+    targets: cuTargets,
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    checks: {
+      sourceReady: cuSourceReady,
+      sourceAllowed: cuSourceAllowed,
+      queryReady: cuQueryReady,
+      targetsReady: cuTargetsReady,
+      targetStatesSafe: cuTargetStatesSafe,
+      executionPolicySafe: cuExecutionPolicySafe,
+      safetyStateSafe: cuSafetySafe
+    },
+
+    reason:
+      "Controlled retrieval execution authorization gate handoff is blocked because one or more safety conditions are not satisfied."
+  };
+}
+
+/* =========================================================
+   STEP 8CU — DEBUGGER
+   ========================================================= */
+
+if (typeof OODebug !== "undefined") {
+
+  OODebug.log(
+    "8CU",
+    "HANDOFF",
+    "Controlled retrieval execution authorization gate handoff evaluated"
+  );
+
+  OODebug.log(
+    "8CU",
+    "QUERY",
+    "Query: " +
+      controlledRetrievalExecutionAuthorizationGateHandoff.searchQuery
+  );
+
+  OODebug.log(
+    "8CU",
+    "TARGETS",
+    "Targets: " +
+      controlledRetrievalExecutionAuthorizationGateHandoff.targets.length
+  );
+
+  OODebug.log(
+    "8CU",
+    "SAFETY",
+    "External access: " +
+      controlledRetrievalExecutionAuthorizationGateHandoff.safety.externalSourceAccess +
+      " | retrieval: " +
+      controlledRetrievalExecutionAuthorizationGateHandoff.safety.sourceRetrieval +
+      " | evidence insertion: " +
+      controlledRetrievalExecutionAuthorizationGateHandoff.safety.evidenceInsertion +
+      " | claim support: " +
+      controlledRetrievalExecutionAuthorizationGateHandoff.safety.claimSupportUpdate
+  );
+
+  OODebug.log(
+    "8CU",
+    "STATUS",
+    "Status: " +
+      controlledRetrievalExecutionAuthorizationGateHandoff.status +
+      " | allowed: " +
+      controlledRetrievalExecutionAuthorizationGateHandoff.allowed
+  );
+}      
 /* ==========================================
    RESULT VALUES
    ========================================== */
