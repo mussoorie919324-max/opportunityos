@@ -31036,6 +31036,803 @@ if (
     );
   }
   }    
+/* =========================================================
+   STEP 8DJ — CONTROLLED RETRIEVAL EXECUTION CONTROL
+   READINESS VALIDATION BOUNDARY
+   ========================================================= */
+
+let controlledRetrievalExecutionControlReadinessValidationBoundary = {
+  status: "blocked",
+  allowed: false,
+  searchQuery: "",
+  targets: [],
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+  reason:
+    "Controlled retrieval execution control readiness validation boundary is not ready."
+};
+
+const djSource =
+  controlledRetrievalExecutionControlReadinessHandoff;
+
+let djReady =
+  djSource &&
+  djSource.status === "ready" &&
+  djSource.allowed === true;
+
+let djQueryReady =
+  djSource &&
+  typeof djSource.searchQuery === "string" &&
+  djSource.searchQuery.trim().length > 0;
+
+let djTargetsReady =
+  djSource &&
+  Array.isArray(djSource.targets) &&
+  djSource.targets.length === 5;
+
+let djTargetStatesSafe =
+  djTargetsReady &&
+  djSource.targets.every(function (target) {
+    return (
+      target &&
+      target.invocationStatus ===
+        "EXECUTION_CONTROL_READINESS_HANDOFF_READY" &&
+      target.executionStatus === "NOT_STARTED" &&
+      target.retrievalStatus === "NOT_STARTED" &&
+      target.evidenceStatus === "NOT_STARTED" &&
+      target.claimSupportStatus === "NOT_CHANGED"
+    );
+  });
+
+let djExecutionPolicySafe =
+  djSource &&
+  djSource.executionPolicy &&
+  djSource.executionPolicy.externalSourceAccess === false &&
+  djSource.executionPolicy.sourceRetrieval === false &&
+  djSource.executionPolicy.evidenceInsertion === false &&
+  djSource.executionPolicy.claimSupportUpdate === false;
+
+let djSafetyStateSafe =
+  djSource &&
+  djSource.safety &&
+  djSource.safety.externalSourceAccess === "NOT_STARTED" &&
+  djSource.safety.sourceRetrieval === "NOT_STARTED" &&
+  djSource.safety.evidenceInsertion === "NOT_STARTED" &&
+  djSource.safety.claimSupportUpdate === "NOT_CHANGED";
+
+if (
+  djReady &&
+  djQueryReady &&
+  djTargetsReady &&
+  djTargetStatesSafe &&
+  djExecutionPolicySafe &&
+  djSafetyStateSafe
+) {
+  controlledRetrievalExecutionControlReadinessValidationBoundary = {
+    status: "ready",
+    allowed: true,
+
+    searchQuery: djSource.searchQuery,
+
+    targets: djSource.targets.map(function (target) {
+      return {
+        ...target,
+        invocationStatus:
+          "EXECUTION_CONTROL_READINESS_VALIDATION_BOUNDARY_READY"
+      };
+    }),
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    reason:
+      "Controlled retrieval execution control readiness validation boundary is ready. Actual retrieval remains safely blocked."
+  };
+
+  if (typeof OODebug !== "undefined") {
+    OODebug.log(
+      "8DJ",
+      "VALIDATION_BOUNDARY",
+      "Execution control readiness validation boundary ready"
+    );
+
+    OODebug.log(
+      "8DJ",
+      "QUERY",
+      djSource.searchQuery
+    );
+
+    OODebug.log(
+      "8DJ",
+      "TARGETS",
+      "Targets: " + djSource.targets.length
+    );
+
+    OODebug.log(
+      "8DJ",
+      "POLICY",
+      "External: false | Retrieval: false | Evidence: false | ClaimSupport: false"
+    );
+
+    OODebug.log(
+      "8DJ",
+      "SAFETY",
+      "External: NOT_STARTED | Retrieval: NOT_STARTED | Evidence: NOT_STARTED | ClaimSupport: NOT_CHANGED"
+    );
+
+    OODebug.log(
+      "8DJ",
+      "STATUS",
+      "status=ready | allowed=true"
+    );
+  }
+} else {
+  if (typeof OODebug !== "undefined") {
+    OODebug.log(
+      "8DJ",
+      "BLOCKED",
+      "Execution control readiness validation boundary validation failed"
+    );
+  }
+}
+
+
+/* =========================================================
+   STEP 8DK — CONTROLLED RETRIEVAL EXECUTION CONTROL
+   READINESS VALIDATION BOUNDARY HANDOFF
+   ========================================================= */
+
+let controlledRetrievalExecutionControlReadinessValidationBoundaryHandoff = {
+  status: "blocked",
+  allowed: false,
+  searchQuery: "",
+  targets: [],
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+  reason:
+    "Execution control readiness validation boundary handoff is not ready."
+};
+
+const dkSource =
+  controlledRetrievalExecutionControlReadinessValidationBoundary;
+
+let dkReady =
+  dkSource &&
+  dkSource.status === "ready" &&
+  dkSource.allowed === true;
+
+let dkQueryReady =
+  dkSource &&
+  typeof dkSource.searchQuery === "string" &&
+  dkSource.searchQuery.trim().length > 0;
+
+let dkTargetsReady =
+  dkSource &&
+  Array.isArray(dkSource.targets) &&
+  dkSource.targets.length === 5;
+
+let dkTargetStatesSafe =
+  dkTargetsReady &&
+  dkSource.targets.every(function (target) {
+    return (
+      target &&
+      target.invocationStatus ===
+        "EXECUTION_CONTROL_READINESS_VALIDATION_BOUNDARY_READY" &&
+      target.executionStatus === "NOT_STARTED" &&
+      target.retrievalStatus === "NOT_STARTED" &&
+      target.evidenceStatus === "NOT_STARTED" &&
+      target.claimSupportStatus === "NOT_CHANGED"
+    );
+  });
+
+let dkExecutionPolicySafe =
+  dkSource &&
+  dkSource.executionPolicy &&
+  dkSource.executionPolicy.externalSourceAccess === false &&
+  dkSource.executionPolicy.sourceRetrieval === false &&
+  dkSource.executionPolicy.evidenceInsertion === false &&
+  dkSource.executionPolicy.claimSupportUpdate === false;
+
+let dkSafetyStateSafe =
+  dkSource &&
+  dkSource.safety &&
+  dkSource.safety.externalSourceAccess === "NOT_STARTED" &&
+  dkSource.safety.sourceRetrieval === "NOT_STARTED" &&
+  dkSource.safety.evidenceInsertion === "NOT_STARTED" &&
+  dkSource.safety.claimSupportUpdate === "NOT_CHANGED";
+
+if (
+  dkReady &&
+  dkQueryReady &&
+  dkTargetsReady &&
+  dkTargetStatesSafe &&
+  dkExecutionPolicySafe &&
+  dkSafetyStateSafe
+) {
+  controlledRetrievalExecutionControlReadinessValidationBoundaryHandoff = {
+    status: "ready",
+    allowed: true,
+
+    searchQuery: dkSource.searchQuery,
+
+    targets: dkSource.targets.map(function (target) {
+      return {
+        ...target,
+        invocationStatus:
+          "EXECUTION_CONTROL_READINESS_VALIDATION_BOUNDARY_HANDOFF_READY"
+      };
+    }),
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    reason:
+      "Controlled retrieval execution control readiness validation boundary handoff is ready. Actual retrieval remains safely blocked."
+  };
+
+  if (typeof OODebug !== "undefined") {
+    OODebug.log(
+      "8DK",
+      "HANDOFF",
+      "Execution control readiness validation boundary handoff ready"
+    );
+
+    OODebug.log(
+      "8DK",
+      "QUERY",
+      dkSource.searchQuery
+    );
+
+    OODebug.log(
+      "8DK",
+      "TARGETS",
+      "Targets: " + dkSource.targets.length
+    );
+
+    OODebug.log(
+      "8DK",
+      "SAFETY",
+      "External: NOT_STARTED | Retrieval: NOT_STARTED | Evidence: NOT_STARTED | ClaimSupport: NOT_CHANGED"
+    );
+
+    OODebug.log(
+      "8DK",
+      "STATUS",
+      "status=ready | allowed=true"
+    );
+  }
+} else {
+  if (typeof OODebug !== "undefined") {
+    OODebug.log(
+      "8DK",
+      "BLOCKED",
+      "Execution control readiness validation boundary handoff validation failed"
+    );
+  }
+}
+
+
+/* =========================================================
+   STEP 8DL — CONTROLLED RETRIEVAL EXECUTION CONTROL
+   AUTHORIZATION READINESS
+   ========================================================= */
+
+let controlledRetrievalExecutionControlAuthorizationReadiness = {
+  status: "blocked",
+  allowed: false,
+  searchQuery: "",
+  targets: [],
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+  reason:
+    "Controlled retrieval execution control authorization readiness is not ready."
+};
+
+const dlSource =
+  controlledRetrievalExecutionControlReadinessValidationBoundaryHandoff;
+
+let dlReady =
+  dlSource &&
+  dlSource.status === "ready" &&
+  dlSource.allowed === true;
+
+let dlQueryReady =
+  dlSource &&
+  typeof dlSource.searchQuery === "string" &&
+  dlSource.searchQuery.trim().length > 0;
+
+let dlTargetsReady =
+  dlSource &&
+  Array.isArray(dlSource.targets) &&
+  dlSource.targets.length === 5;
+
+let dlTargetStatesSafe =
+  dlTargetsReady &&
+  dlSource.targets.every(function (target) {
+    return (
+      target &&
+      target.invocationStatus ===
+        "EXECUTION_CONTROL_READINESS_VALIDATION_BOUNDARY_HANDOFF_READY" &&
+      target.executionStatus === "NOT_STARTED" &&
+      target.retrievalStatus === "NOT_STARTED" &&
+      target.evidenceStatus === "NOT_STARTED" &&
+      target.claimSupportStatus === "NOT_CHANGED"
+    );
+  });
+
+let dlExecutionPolicySafe =
+  dlSource &&
+  dlSource.executionPolicy &&
+  dlSource.executionPolicy.externalSourceAccess === false &&
+  dlSource.executionPolicy.sourceRetrieval === false &&
+  dlSource.executionPolicy.evidenceInsertion === false &&
+  dlSource.executionPolicy.claimSupportUpdate === false;
+
+let dlSafetyStateSafe =
+  dlSource &&
+  dlSource.safety &&
+  dlSource.safety.externalSourceAccess === "NOT_STARTED" &&
+  dlSource.safety.sourceRetrieval === "NOT_STARTED" &&
+  dlSource.safety.evidenceInsertion === "NOT_STARTED" &&
+  dlSource.safety.claimSupportUpdate === "NOT_CHANGED";
+
+if (
+  dlReady &&
+  dlQueryReady &&
+  dlTargetsReady &&
+  dlTargetStatesSafe &&
+  dlExecutionPolicySafe &&
+  dlSafetyStateSafe
+) {
+  controlledRetrievalExecutionControlAuthorizationReadiness = {
+    status: "ready",
+    allowed: true,
+
+    searchQuery: dlSource.searchQuery,
+
+    targets: dlSource.targets.map(function (target) {
+      return {
+        ...target,
+        invocationStatus:
+          "EXECUTION_CONTROL_AUTHORIZATION_READINESS_READY"
+      };
+    }),
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    reason:
+      "Controlled retrieval execution control authorization readiness is ready. Actual retrieval remains safely blocked."
+  };
+
+  if (typeof OODebug !== "undefined") {
+    OODebug.log(
+      "8DL",
+      "AUTHORIZATION_READINESS",
+      "Execution control authorization readiness ready"
+    );
+
+    OODebug.log(
+      "8DL",
+      "QUERY",
+      dlSource.searchQuery
+    );
+
+    OODebug.log(
+      "8DL",
+      "TARGETS",
+      "Targets: " + dlSource.targets.length
+    );
+
+    OODebug.log(
+      "8DL",
+      "POLICY",
+      "External: false | Retrieval: false | Evidence: false | ClaimSupport: false"
+    );
+
+    OODebug.log(
+      "8DL",
+      "SAFETY",
+      "External: NOT_STARTED | Retrieval: NOT_STARTED | Evidence: NOT_STARTED | ClaimSupport: NOT_CHANGED"
+    );
+
+    OODebug.log(
+      "8DL",
+      "STATUS",
+      "status=ready | allowed=true"
+    );
+  }
+} else {
+  if (typeof OODebug !== "undefined") {
+    OODebug.log(
+      "8DL",
+      "BLOCKED",
+      "Execution control authorization readiness validation failed"
+    );
+  }
+}
+
+
+/* =========================================================
+   STEP 8DM — CONTROLLED RETRIEVAL EXECUTION CONTROL
+   AUTHORIZATION READINESS HANDOFF
+   ========================================================= */
+
+let controlledRetrievalExecutionControlAuthorizationReadinessHandoff = {
+  status: "blocked",
+  allowed: false,
+  searchQuery: "",
+  targets: [],
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+  reason:
+    "Execution control authorization readiness handoff is not ready."
+};
+
+const dmSource =
+  controlledRetrievalExecutionControlAuthorizationReadiness;
+
+let dmReady =
+  dmSource &&
+  dmSource.status === "ready" &&
+  dmSource.allowed === true;
+
+let dmQueryReady =
+  dmSource &&
+  typeof dmSource.searchQuery === "string" &&
+  dmSource.searchQuery.trim().length > 0;
+
+let dmTargetsReady =
+  dmSource &&
+  Array.isArray(dmSource.targets) &&
+  dmSource.targets.length === 5;
+
+let dmTargetStatesSafe =
+  dmTargetsReady &&
+  dmSource.targets.every(function (target) {
+    return (
+      target &&
+      target.invocationStatus ===
+        "EXECUTION_CONTROL_AUTHORIZATION_READINESS_READY" &&
+      target.executionStatus === "NOT_STARTED" &&
+      target.retrievalStatus === "NOT_STARTED" &&
+      target.evidenceStatus === "NOT_STARTED" &&
+      target.claimSupportStatus === "NOT_CHANGED"
+    );
+  });
+
+let dmExecutionPolicySafe =
+  dmSource &&
+  dmSource.executionPolicy &&
+  dmSource.executionPolicy.externalSourceAccess === false &&
+  dmSource.executionPolicy.sourceRetrieval === false &&
+  dmSource.executionPolicy.evidenceInsertion === false &&
+  dmSource.executionPolicy.claimSupportUpdate === false;
+
+let dmSafetyStateSafe =
+  dmSource &&
+  dmSource.safety &&
+  dmSource.safety.externalSourceAccess === "NOT_STARTED" &&
+  dmSource.safety.sourceRetrieval === "NOT_STARTED" &&
+  dmSource.safety.evidenceInsertion === "NOT_STARTED" &&
+  dmSource.safety.claimSupportUpdate === "NOT_CHANGED";
+
+if (
+  dmReady &&
+  dmQueryReady &&
+  dmTargetsReady &&
+  dmTargetStatesSafe &&
+  dmExecutionPolicySafe &&
+  dmSafetyStateSafe
+) {
+  controlledRetrievalExecutionControlAuthorizationReadinessHandoff = {
+    status: "ready",
+    allowed: true,
+
+    searchQuery: dmSource.searchQuery,
+
+    targets: dmSource.targets.map(function (target) {
+      return {
+        ...target,
+        invocationStatus:
+          "EXECUTION_CONTROL_AUTHORIZATION_READINESS_HANDOFF_READY"
+      };
+    }),
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    reason:
+      "Controlled retrieval execution control authorization readiness handoff is ready. Actual retrieval remains safely blocked."
+  };
+
+  if (typeof OODebug !== "undefined") {
+    OODebug.log(
+      "8DM",
+      "HANDOFF",
+      "Execution control authorization readiness handoff ready"
+    );
+
+    OODebug.log(
+      "8DM",
+      "QUERY",
+      dmSource.searchQuery
+    );
+
+    OODebug.log(
+      "8DM",
+      "TARGETS",
+      "Targets: " + dmSource.targets.length
+    );
+
+    OODebug.log(
+      "8DM",
+      "SAFETY",
+      "External: NOT_STARTED | Retrieval: NOT_STARTED | Evidence: NOT_STARTED | ClaimSupport: NOT_CHANGED"
+    );
+
+    OODebug.log(
+      "8DM",
+      "STATUS",
+      "status=ready | allowed=true"
+    );
+  }
+} else {
+  if (typeof OODebug !== "undefined") {
+    OODebug.log(
+      "8DM",
+      "BLOCKED",
+      "Execution control authorization readiness handoff validation failed"
+    );
+  }
+}
+
+
+/* =========================================================
+   STEP 8DN — CONTROLLED RETRIEVAL EXECUTION CONTROL
+   AUTHORIZATION VALIDATION
+   ========================================================= */
+
+let controlledRetrievalExecutionControlAuthorizationValidation = {
+  status: "blocked",
+  allowed: false,
+  searchQuery: "",
+  targets: [],
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+  reason:
+    "Controlled retrieval execution control authorization validation is not ready."
+};
+
+const dnSource =
+  controlledRetrievalExecutionControlAuthorizationReadinessHandoff;
+
+let dnReady =
+  dnSource &&
+  dnSource.status === "ready" &&
+  dnSource.allowed === true;
+
+let dnQueryReady =
+  dnSource &&
+  typeof dnSource.searchQuery === "string" &&
+  dnSource.searchQuery.trim().length > 0;
+
+let dnTargetsReady =
+  dnSource &&
+  Array.isArray(dnSource.targets) &&
+  dnSource.targets.length === 5;
+
+let dnTargetStatesSafe =
+  dnTargetsReady &&
+  dnSource.targets.every(function (target) {
+    return (
+      target &&
+      target.invocationStatus ===
+        "EXECUTION_CONTROL_AUTHORIZATION_READINESS_HANDOFF_READY" &&
+      target.executionStatus === "NOT_STARTED" &&
+      target.retrievalStatus === "NOT_STARTED" &&
+      target.evidenceStatus === "NOT_STARTED" &&
+      target.claimSupportStatus === "NOT_CHANGED"
+    );
+  });
+
+let dnExecutionPolicySafe =
+  dnSource &&
+  dnSource.executionPolicy &&
+  dnSource.executionPolicy.externalSourceAccess === false &&
+  dnSource.executionPolicy.sourceRetrieval === false &&
+  dnSource.executionPolicy.evidenceInsertion === false &&
+  dnSource.executionPolicy.claimSupportUpdate === false;
+
+let dnSafetyStateSafe =
+  dnSource &&
+  dnSource.safety &&
+  dnSource.safety.externalSourceAccess === "NOT_STARTED" &&
+  dnSource.safety.sourceRetrieval === "NOT_STARTED" &&
+  dnSource.safety.evidenceInsertion === "NOT_STARTED" &&
+  dnSource.safety.claimSupportUpdate === "NOT_CHANGED";
+
+if (
+  dnReady &&
+  dnQueryReady &&
+  dnTargetsReady &&
+  dnTargetStatesSafe &&
+  dnExecutionPolicySafe &&
+  dnSafetyStateSafe
+) {
+  controlledRetrievalExecutionControlAuthorizationValidation = {
+    status: "ready",
+    allowed: true,
+
+    searchQuery: dnSource.searchQuery,
+
+    targets: dnSource.targets.map(function (target) {
+      return {
+        ...target,
+        invocationStatus:
+          "EXECUTION_CONTROL_AUTHORIZATION_VALIDATION_READY"
+      };
+    }),
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    reason:
+      "Controlled retrieval execution control authorization validation is ready. Actual retrieval remains safely blocked."
+  };
+
+  if (typeof OODebug !== "undefined") {
+    OODebug.log(
+      "8DN",
+      "AUTHORIZATION_VALIDATION",
+      "Execution control authorization validation ready"
+    );
+
+    OODebug.log(
+      "8DN",
+      "QUERY",
+      dnSource.searchQuery
+    );
+
+    OODebug.log(
+      "8DN",
+      "TARGETS",
+      "Targets: " + dnSource.targets.length
+    );
+
+    OODebug.log(
+      "8DN",
+      "POLICY",
+      "External: false | Retrieval: false | Evidence: false | ClaimSupport: false"
+    );
+
+    OODebug.log(
+      "8DN",
+      "SAFETY",
+      "External: NOT_STARTED | Retrieval: NOT_STARTED | Evidence: NOT_STARTED | ClaimSupport: NOT_CHANGED"
+    );
+
+    OODebug.log(
+      "8DN",
+      "STATUS",
+      "status=ready | allowed=true"
+    );
+  }
+} else {
+  if (typeof OODebug !== "undefined") 
+    {
+    OODebug.log(
+      "8DN",
+      "BLOCKED",
+      "Execution control authorization validation failed"
+    );
+  }
+    }    
 /* ==========================================
    RESULT VALUES
    ========================================== */
