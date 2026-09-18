@@ -36001,19 +36001,11 @@ let evidenceEvaluationAuthorizationValidation = {
 
 
 /* =========================================================
-   8EM — AUTHORITATIVE BRIDGE SOURCE
+   8EM — AUTHORITATIVE 8EL HANDOFF SOURCE
    ========================================================= */
 
-let step8EMSource = null;
-
-if (
-  typeof globalThis !== "undefined" &&
-  globalThis.__OO_8EL_HANDOFF
-) {
-  step8EMSource =
-    globalThis.__OO_8EL_HANDOFF;
-}
-
+let step8EMSource =
+  evidenceEvaluationAuthorizationReadinessHandoff;
 
 /* =========================================================
    8EM — QUERY RESOLUTION
