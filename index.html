@@ -36015,13 +36015,12 @@ let step8EMQuery = "";
 
 if (
   step8EMSource &&
-  typeof step8EMSource.query === "string" &&
-  step8EMSource.query.trim().length > 0
+  typeof step8EMSource.searchQuery === "string" &&
+  step8EMSource.searchQuery.trim().length > 0
 ) {
   step8EMQuery =
-    step8EMSource.query.trim();
-}
-
+    step8EMSource.searchQuery.trim();
+  }
 
 /*
    If the 8EL handoff did not carry the query,
