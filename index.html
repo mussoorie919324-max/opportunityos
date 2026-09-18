@@ -34196,6 +34196,272 @@ if (
     )
   );
   }       
+/* =========================================================
+   STEP 8EE — LAYER 5 FINAL VERIFICATION
+   ========================================================= */
+
+let controlledRetrievalLayer5FinalVerification = {
+  status: "blocked",
+  allowed: false,
+
+  layer: "LAYER_5",
+  layerName: "CONTROLLED_RETRIEVAL_EXECUTION",
+
+  searchQuery: "",
+  targets: [],
+
+  checks: {
+    sourceReady: false,
+    queryReady: false,
+    targetCountReady: false,
+    targetStatesSafe: false,
+    invocationStatusReady: false,
+    executionPolicySafe: false,
+    safetyStateSafe: false
+  },
+
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+
+  reason:
+    "Layer 5 final verification has not passed."
+};
+
+
+/* =========================================================
+   8EE — SOURCE
+   ========================================================= */
+
+const eightEE_Source =
+  controlledRetrievalExecutionControlExecutionAuthorizationGateHandoff;
+
+
+/* =========================================================
+   8EE — SOURCE CHECK
+   ========================================================= */
+
+const eightEE_SourceReady =
+  eightEE_Source &&
+  eightEE_Source.status === "ready" &&
+  eightEE_Source.allowed === true;
+
+
+/* =========================================================
+   8EE — QUERY CHECK
+   ========================================================= */
+
+const eightEE_QueryReady =
+  eightEE_Source &&
+  typeof eightEE_Source.searchQuery === "string" &&
+  eightEE_Source.searchQuery.trim().length > 0;
+
+
+/* =========================================================
+   8EE — TARGET COUNT CHECK
+   ========================================================= */
+
+const eightEE_TargetCountReady =
+  eightEE_Source &&
+  Array.isArray(eightEE_Source.targets) &&
+  eightEE_Source.targets.length === 5;
+
+
+/* =========================================================
+   8EE — TARGET STATE CHECK
+   ========================================================= */
+
+const eightEE_TargetStatesSafe =
+  eightEE_TargetCountReady &&
+  eightEE_Source.targets.every(function (target) {
+    return (
+      target &&
+      target.executionStatus === "NOT_STARTED" &&
+      target.retrievalStatus === "NOT_STARTED" &&
+      target.evidenceStatus === "NOT_STARTED" &&
+      target.claimSupportStatus === "NOT_CHANGED"
+    );
+  });
+
+
+/* =========================================================
+   8EE — INVOCATION STATUS CHECK
+   ========================================================= */
+
+const eightEE_InvocationStatusReady =
+  eightEE_TargetCountReady &&
+  eightEE_Source.targets.every(function (target) {
+    return (
+      target &&
+      target.invocationStatus ===
+        "EXECUTION_CONTROL_EXECUTION_AUTHORIZATION_GATE_HANDOFF_READY"
+    );
+  });
+
+
+/* =========================================================
+   8EE — EXECUTION POLICY CHECK
+   ========================================================= */
+
+const eightEE_ExecutionPolicySafe =
+  eightEE_Source &&
+  eightEE_Source.executionPolicy &&
+  eightEE_Source.executionPolicy.externalSourceAccess === false &&
+  eightEE_Source.executionPolicy.sourceRetrieval === false &&
+  eightEE_Source.executionPolicy.evidenceInsertion === false &&
+  eightEE_Source.executionPolicy.claimSupportUpdate === false;
+
+
+/* =========================================================
+   8EE — SAFETY STATE CHECK
+   ========================================================= */
+
+const eightEE_SafetyStateSafe =
+  eightEE_Source &&
+  eightEE_Source.safety &&
+  eightEE_Source.safety.externalSourceAccess ===
+    "NOT_STARTED" &&
+  eightEE_Source.safety.sourceRetrieval ===
+    "NOT_STARTED" &&
+  eightEE_Source.safety.evidenceInsertion ===
+    "NOT_STARTED" &&
+  eightEE_Source.safety.claimSupportUpdate ===
+    "NOT_CHANGED";
+
+
+/* =========================================================
+   8EE — FINAL VERIFICATION RESULT
+   ========================================================= */
+
+if (
+  eightEE_SourceReady &&
+  eightEE_QueryReady &&
+  eightEE_TargetCountReady &&
+  eightEE_TargetStatesSafe &&
+  eightEE_InvocationStatusReady &&
+  eightEE_ExecutionPolicySafe &&
+  eightEE_SafetyStateSafe
+) {
+  controlledRetrievalLayer5FinalVerification = {
+    status: "ready",
+    allowed: true,
+
+    layer: "LAYER_5",
+    layerName: "CONTROLLED_RETRIEVAL_EXECUTION",
+
+    searchQuery: eightEE_Source.searchQuery,
+
+    targets: eightEE_Source.targets.map(function (target) {
+      return {
+        ...target
+      };
+    }),
+
+    checks: {
+      sourceReady: true,
+      queryReady: true,
+      targetCountReady: true,
+      targetStatesSafe: true,
+      invocationStatusReady: true,
+      executionPolicySafe: true,
+      safetyStateSafe: true
+    },
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    reason:
+      "Layer 5 final verification passed. Controlled retrieval execution architecture is complete and actual retrieval remains safely blocked."
+  };
+}
+
+
+/* =========================================================
+   8EE — DEBUGGER
+   ========================================================= */
+
+if (
+  typeof OODebug !== "undefined" &&
+  OODebug.log
+) {
+  OODebug.log(
+    "8EE",
+    "LAYER_5_FINAL_VERIFICATION",
+    controlledRetrievalLayer5FinalVerification.status
+  );
+
+  OODebug.log(
+    "8EE",
+    "LAYER",
+    controlledRetrievalLayer5FinalVerification.layer +
+      " → " +
+      controlledRetrievalLayer5FinalVerification.layerName
+  );
+
+  OODebug.log(
+    "8EE",
+    "QUERY",
+    controlledRetrievalLayer5FinalVerification.searchQuery
+  );
+
+  OODebug.log(
+    "8EE",
+    "TARGETS",
+    controlledRetrievalLayer5FinalVerification.targets.length
+  );
+
+  OODebug.log(
+    "8EE",
+    "CHECKS",
+    JSON.stringify(
+      controlledRetrievalLayer5FinalVerification.checks
+    )
+  );
+
+  OODebug.log(
+    "8EE",
+    "POLICY",
+    JSON.stringify(
+      controlledRetrievalLayer5FinalVerification.executionPolicy
+    )
+  );
+
+  OODebug.log(
+    "8EE",
+    "SAFETY",
+    JSON.stringify(
+      controlledRetrievalLayer5FinalVerification.safety
+    )
+  );
+
+  OODebug.log(
+    "8EE",
+    "REASON",
+    controlledRetrievalLayer5FinalVerification.reason
+  );
+}
+        
 /* ==========================================
    RESULT VALUES
    ========================================== */
