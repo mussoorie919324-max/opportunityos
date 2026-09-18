@@ -33072,6 +33072,611 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
       controlledRetrievalExecutionControlExecutionAuthorizationReadinessHandoff.allowed
   );
   }    
+/* =========================================================
+   STEP 8DW — CONTROLLED RETRIEVAL EXECUTION
+   EXECUTION AUTHORIZATION READINESS VALIDATION BOUNDARY
+   ========================================================= */
+
+let controlledRetrievalExecutionControlExecutionAuthorizationReadinessValidationBoundary = {
+  status: "blocked",
+  allowed: false,
+  searchQuery: "",
+  targets: [],
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+  reason:
+    "Controlled retrieval execution authorization readiness validation boundary is not ready."
+};
+
+const dwSource =
+  controlledRetrievalExecutionControlExecutionAuthorizationReadinessHandoff;
+
+const dwReady =
+  !!dwSource &&
+  dwSource.status === "ready" &&
+  dwSource.allowed === true &&
+  typeof dwSource.searchQuery === "string" &&
+  dwSource.searchQuery.trim().length > 0 &&
+  Array.isArray(dwSource.targets) &&
+  dwSource.targets.length === 5 &&
+  dwSource.targets.every(function (target) {
+    return (
+      target &&
+      target.invocationStatus ===
+        "EXECUTION_CONTROL_EXECUTION_AUTHORIZATION_READINESS_HANDOFF_READY" &&
+      target.executionStatus === "NOT_STARTED" &&
+      target.retrievalStatus === "NOT_STARTED" &&
+      target.evidenceStatus === "NOT_STARTED" &&
+      target.claimSupportStatus === "NOT_CHANGED"
+    );
+  }) &&
+  !!dwSource.executionPolicy &&
+  dwSource.executionPolicy.externalSourceAccess === false &&
+  dwSource.executionPolicy.sourceRetrieval === false &&
+  dwSource.executionPolicy.evidenceInsertion === false &&
+  dwSource.executionPolicy.claimSupportUpdate === false &&
+  !!dwSource.safety &&
+  dwSource.safety.externalSourceAccess === "NOT_STARTED" &&
+  dwSource.safety.sourceRetrieval === "NOT_STARTED" &&
+  dwSource.safety.evidenceInsertion === "NOT_STARTED" &&
+  dwSource.safety.claimSupportUpdate === "NOT_CHANGED";
+
+if (dwReady) {
+  controlledRetrievalExecutionControlExecutionAuthorizationReadinessValidationBoundary = {
+    status: "ready",
+    allowed: true,
+
+    searchQuery:
+      dwSource.searchQuery.trim(),
+
+    targets:
+      dwSource.targets.map(function (target) {
+        return {
+          ...target,
+          invocationStatus:
+            "EXECUTION_CONTROL_EXECUTION_AUTHORIZATION_READINESS_VALIDATION_BOUNDARY_READY",
+          executionStatus: "NOT_STARTED",
+          retrievalStatus: "NOT_STARTED",
+          evidenceStatus: "NOT_STARTED",
+          claimSupportStatus: "NOT_CHANGED"
+        };
+      }),
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    reason:
+      "Controlled retrieval execution authorization readiness validation boundary is validated. Actual retrieval remains safely blocked."
+  };
+}
+
+if (typeof OODebug !== "undefined" && OODebug.log) {
+  OODebug.log(
+    "8DW",
+    "VALIDATION_BOUNDARY",
+    "Authorization readiness validation boundary evaluated"
+  );
+
+  OODebug.log(
+    "8DW",
+    "QUERY",
+    "Query: " +
+      (controlledRetrievalExecutionControlExecutionAuthorizationReadinessValidationBoundary.searchQuery ||
+        "NOT_READY")
+  );
+
+  OODebug.log(
+    "8DW",
+    "TARGETS",
+    "Targets: " +
+      controlledRetrievalExecutionControlExecutionAuthorizationReadinessValidationBoundary.targets.length
+  );
+
+  OODebug.log(
+    "8DW",
+    "POLICY",
+    "External=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationReadinessValidationBoundary.executionPolicy.externalSourceAccess +
+      " Retrieval=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationReadinessValidationBoundary.executionPolicy.sourceRetrieval +
+      " Evidence=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationReadinessValidationBoundary.executionPolicy.evidenceInsertion +
+      " ClaimSupport=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationReadinessValidationBoundary.executionPolicy.claimSupportUpdate
+  );
+
+  OODebug.log(
+    "8DW",
+    "SAFETY",
+    "External=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationReadinessValidationBoundary.safety.externalSourceAccess +
+      " Retrieval=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationReadinessValidationBoundary.safety.sourceRetrieval +
+      " Evidence=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationReadinessValidationBoundary.safety.evidenceInsertion +
+      " ClaimSupport=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationReadinessValidationBoundary.safety.claimSupportUpdate
+  );
+
+  OODebug.log(
+    "8DW",
+    "STATUS",
+    "Status=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationReadinessValidationBoundary.status +
+      " Allowed=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationReadinessValidationBoundary.allowed
+  );
+}
+
+
+/* =========================================================
+   STEP 8DX — CONTROLLED RETRIEVAL EXECUTION
+   AUTHORIZATION READINESS VALIDATION BOUNDARY HANDOFF
+   ========================================================= */
+
+let controlledRetrievalExecutionControlExecutionAuthorizationReadinessValidationBoundaryHandoff = {
+  status: "blocked",
+  allowed: false,
+  searchQuery: "",
+  targets: [],
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+  reason:
+    "Authorization readiness validation boundary handoff is not ready."
+};
+
+const dxSource =
+  controlledRetrievalExecutionControlExecutionAuthorizationReadinessValidationBoundary;
+
+const dxReady =
+  !!dxSource &&
+  dxSource.status === "ready" &&
+  dxSource.allowed === true &&
+  typeof dxSource.searchQuery === "string" &&
+  dxSource.searchQuery.trim().length > 0 &&
+  Array.isArray(dxSource.targets) &&
+  dxSource.targets.length === 5 &&
+  dxSource.targets.every(function (target) {
+    return (
+      target &&
+      target.invocationStatus ===
+        "EXECUTION_CONTROL_EXECUTION_AUTHORIZATION_READINESS_VALIDATION_BOUNDARY_READY" &&
+      target.executionStatus === "NOT_STARTED" &&
+      target.retrievalStatus === "NOT_STARTED" &&
+      target.evidenceStatus === "NOT_STARTED" &&
+      target.claimSupportStatus === "NOT_CHANGED"
+    );
+  }) &&
+  !!dxSource.executionPolicy &&
+  dxSource.executionPolicy.externalSourceAccess === false &&
+  dxSource.executionPolicy.sourceRetrieval === false &&
+  dxSource.executionPolicy.evidenceInsertion === false &&
+  dxSource.executionPolicy.claimSupportUpdate === false &&
+  !!dxSource.safety &&
+  dxSource.safety.externalSourceAccess === "NOT_STARTED" &&
+  dxSource.safety.sourceRetrieval === "NOT_STARTED" &&
+  dxSource.safety.evidenceInsertion === "NOT_STARTED" &&
+  dxSource.safety.claimSupportUpdate === "NOT_CHANGED";
+
+if (dxReady) {
+  controlledRetrievalExecutionControlExecutionAuthorizationReadinessValidationBoundaryHandoff = {
+    status: "ready",
+    allowed: true,
+
+    searchQuery:
+      dxSource.searchQuery.trim(),
+
+    targets:
+      dxSource.targets.map(function (target) {
+        return {
+          ...target,
+          invocationStatus:
+            "EXECUTION_CONTROL_EXECUTION_AUTHORIZATION_READINESS_VALIDATION_BOUNDARY_HANDOFF_READY",
+          executionStatus: "NOT_STARTED",
+          retrievalStatus: "NOT_STARTED",
+          evidenceStatus: "NOT_STARTED",
+          claimSupportStatus: "NOT_CHANGED"
+        };
+      }),
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    reason:
+      "Controlled retrieval execution authorization readiness validation boundary handoff is ready. Actual retrieval remains safely blocked."
+  };
+}
+
+if (typeof OODebug !== "undefined" && OODebug.log) {
+  OODebug.log(
+    "8DX",
+    "HANDOFF",
+    "Authorization readiness validation boundary handoff evaluated"
+  );
+
+  OODebug.log(
+    "8DX",
+    "QUERY",
+    "Query: " +
+      (controlledRetrievalExecutionControlExecutionAuthorizationReadinessValidationBoundaryHandoff.searchQuery ||
+        "NOT_READY")
+  );
+
+  OODebug.log(
+    "8DX",
+    "TARGETS",
+    "Targets: " +
+      controlledRetrievalExecutionControlExecutionAuthorizationReadinessValidationBoundaryHandoff.targets.length
+  );
+
+  OODebug.log(
+    "8DX",
+    "SAFETY",
+    "External=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationReadinessValidationBoundaryHandoff.safety.externalSourceAccess +
+      " Retrieval=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationReadinessValidationBoundaryHandoff.safety.sourceRetrieval +
+      " Evidence=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationReadinessValidationBoundaryHandoff.safety.evidenceInsertion +
+      " ClaimSupport=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationReadinessValidationBoundaryHandoff.safety.claimSupportUpdate
+  );
+
+  OODebug.log(
+    "8DX",
+    "STATUS",
+    "Status=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationReadinessValidationBoundaryHandoff.status +
+      " Allowed=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationReadinessValidationBoundaryHandoff.allowed
+  );
+}
+
+
+/* =========================================================
+   STEP 8DY — CONTROLLED RETRIEVAL EXECUTION
+   EXECUTION AUTHORIZATION VALIDATION
+   ========================================================= */
+
+let controlledRetrievalExecutionControlExecutionAuthorizationValidation = {
+  status: "blocked",
+  allowed: false,
+  searchQuery: "",
+  targets: [],
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+  reason:
+    "Controlled retrieval execution authorization validation is not ready."
+};
+
+const dySource =
+  controlledRetrievalExecutionControlExecutionAuthorizationReadinessValidationBoundaryHandoff;
+
+const dyReady =
+  !!dySource &&
+  dySource.status === "ready" &&
+  dySource.allowed === true &&
+  typeof dySource.searchQuery === "string" &&
+  dySource.searchQuery.trim().length > 0 &&
+  Array.isArray(dySource.targets) &&
+  dySource.targets.length === 5 &&
+  dySource.targets.every(function (target) {
+    return (
+      target &&
+      target.invocationStatus ===
+        "EXECUTION_CONTROL_EXECUTION_AUTHORIZATION_READINESS_VALIDATION_BOUNDARY_HANDOFF_READY" &&
+      target.executionStatus === "NOT_STARTED" &&
+      target.retrievalStatus === "NOT_STARTED" &&
+      target.evidenceStatus === "NOT_STARTED" &&
+      target.claimSupportStatus === "NOT_CHANGED"
+    );
+  }) &&
+  !!dySource.executionPolicy &&
+  dySource.executionPolicy.externalSourceAccess === false &&
+  dySource.executionPolicy.sourceRetrieval === false &&
+  dySource.executionPolicy.evidenceInsertion === false &&
+  dySource.executionPolicy.claimSupportUpdate === false &&
+  !!dySource.safety &&
+  dySource.safety.externalSourceAccess === "NOT_STARTED" &&
+  dySource.safety.sourceRetrieval === "NOT_STARTED" &&
+  dySource.safety.evidenceInsertion === "NOT_STARTED" &&
+  dySource.safety.claimSupportUpdate === "NOT_CHANGED";
+
+if (dyReady) {
+  controlledRetrievalExecutionControlExecutionAuthorizationValidation = {
+    status: "ready",
+    allowed: true,
+
+    searchQuery:
+      dySource.searchQuery.trim(),
+
+    targets:
+      dySource.targets.map(function (target) {
+        return {
+          ...target,
+          invocationStatus:
+            "EXECUTION_CONTROL_EXECUTION_AUTHORIZATION_VALIDATION_READY",
+          executionStatus: "NOT_STARTED",
+          retrievalStatus: "NOT_STARTED",
+          evidenceStatus: "NOT_STARTED",
+          claimSupportStatus: "NOT_CHANGED"
+        };
+      }),
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    reason:
+      "Controlled retrieval execution authorization validation is validated. Actual retrieval remains safely blocked."
+  };
+}
+
+if (typeof OODebug !== "undefined" && OODebug.log) {
+  OODebug.log(
+    "8DY",
+    "AUTHORIZATION_VALIDATION",
+    "Execution authorization validation evaluated"
+  );
+
+  OODebug.log(
+    "8DY",
+    "QUERY",
+    "Query: " +
+      (controlledRetrievalExecutionControlExecutionAuthorizationValidation.searchQuery ||
+        "NOT_READY")
+  );
+
+  OODebug.log(
+    "8DY",
+    "TARGETS",
+    "Targets: " +
+      controlledRetrievalExecutionControlExecutionAuthorizationValidation.targets.length
+  );
+
+  OODebug.log(
+    "8DY",
+    "POLICY",
+    "External=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationValidation.executionPolicy.externalSourceAccess +
+      " Retrieval=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationValidation.executionPolicy.sourceRetrieval +
+      " Evidence=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationValidation.executionPolicy.evidenceInsertion +
+      " ClaimSupport=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationValidation.executionPolicy.claimSupportUpdate
+  );
+
+  OODebug.log(
+    "8DY",
+    "SAFETY",
+    "External=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationValidation.safety.externalSourceAccess +
+      " Retrieval=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationValidation.safety.sourceRetrieval +
+      " Evidence=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationValidation.safety.evidenceInsertion +
+      " ClaimSupport=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationValidation.safety.claimSupportUpdate
+  );
+
+  OODebug.log(
+    "8DY",
+    "STATUS",
+    "Status=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationValidation.status +
+      " Allowed=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationValidation.allowed
+  );
+}
+
+
+/* =========================================================
+   STEP 8DZ — CONTROLLED RETRIEVAL EXECUTION
+   EXECUTION AUTHORIZATION VALIDATION HANDOFF
+   ========================================================= */
+
+let controlledRetrievalExecutionControlExecutionAuthorizationValidationHandoff = {
+  status: "blocked",
+  allowed: false,
+  searchQuery: "",
+  targets: [],
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+  reason:
+    "Controlled retrieval execution authorization validation handoff is not ready."
+};
+
+const dzSource =
+  controlledRetrievalExecutionControlExecutionAuthorizationValidation;
+
+const dzReady =
+  !!dzSource &&
+  dzSource.status === "ready" &&
+  dzSource.allowed === true &&
+  typeof dzSource.searchQuery === "string" &&
+  dzSource.searchQuery.trim().length > 0 &&
+  Array.isArray(dzSource.targets) &&
+  dzSource.targets.length === 5 &&
+  dzSource.targets.every(function (target) {
+    return (
+      target &&
+      target.invocationStatus ===
+        "EXECUTION_CONTROL_EXECUTION_AUTHORIZATION_VALIDATION_READY" &&
+      target.executionStatus === "NOT_STARTED" &&
+      target.retrievalStatus === "NOT_STARTED" &&
+      target.evidenceStatus === "NOT_STARTED" &&
+      target.claimSupportStatus === "NOT_CHANGED"
+    );
+  }) &&
+  !!dzSource.executionPolicy &&
+  dzSource.executionPolicy.externalSourceAccess === false &&
+  dzSource.executionPolicy.sourceRetrieval === false &&
+  dzSource.executionPolicy.evidenceInsertion === false &&
+  dzSource.executionPolicy.claimSupportUpdate === false &&
+  !!dzSource.safety &&
+  dzSource.safety.externalSourceAccess === "NOT_STARTED" &&
+  dzSource.safety.sourceRetrieval === "NOT_STARTED" &&
+  dzSource.safety.evidenceInsertion === "NOT_STARTED" &&
+  dzSource.safety.claimSupportUpdate === "NOT_CHANGED";
+
+if (dzReady) {
+  controlledRetrievalExecutionControlExecutionAuthorizationValidationHandoff = {
+    status: "ready",
+    allowed: true,
+
+    searchQuery:
+      dzSource.searchQuery.trim(),
+
+    targets:
+      dzSource.targets.map(function (target) {
+        return {
+          ...target,
+          invocationStatus:
+            "EXECUTION_CONTROL_EXECUTION_AUTHORIZATION_VALIDATION_HANDOFF_READY",
+          executionStatus: "NOT_STARTED",
+          retrievalStatus: "NOT_STARTED",
+          evidenceStatus: "NOT_STARTED",
+          claimSupportStatus: "NOT_CHANGED"
+        };
+      }),
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    reason:
+      "Controlled retrieval execution authorization validation handoff is ready. Actual retrieval remains safely blocked."
+  };
+}
+
+if (typeof OODebug !== "undefined" && OODebug.log) {
+  OODebug.log(
+    "8DZ",
+    "HANDOFF",
+    "Execution authorization validation handoff evaluated"
+  );
+
+  OODebug.log(
+    "8DZ",
+    "QUERY",
+    "Query: " +
+      (controlledRetrievalExecutionControlExecutionAuthorizationValidationHandoff.searchQuery ||
+        "NOT_READY")
+  );
+
+  OODebug.log(
+    "8DZ",
+    "TARGETS",
+    "Targets: " +
+      controlledRetrievalExecutionControlExecutionAuthorizationValidationHandoff.targets.length
+  );
+
+  OODebug.log(
+    "8DZ",
+    "SAFETY",
+    "External=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationValidationHandoff.safety.externalSourceAccess +
+      " Retrieval=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationValidationHandoff.safety.sourceRetrieval +
+      " Evidence=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationValidationHandoff.safety.evidenceInsertion +
+      " ClaimSupport=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationValidationHandoff.safety.claimSupportUpdate
+  );
+
+  OODebug.log(
+    "8DZ",
+    "STATUS",
+    "Status=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationValidationHandoff.status +
+      " Allowed=" +
+      controlledRetrievalExecutionControlExecutionAuthorizationValidationHandoff.allowed
+  );
+}
+        
 /* ==========================================
    RESULT VALUES
    ========================================== */
