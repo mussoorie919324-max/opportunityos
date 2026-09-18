@@ -34461,7 +34461,255 @@ if (
     controlledRetrievalLayer5FinalVerification.reason
   );
 }
-        
+  /* =========================================================
+   STEP 8EF — EVIDENCE EVALUATION INPUT BOUNDARY
+   ========================================================= */
+
+let evidenceEvaluationInputBoundary = {
+  status: "blocked",
+  allowed: false,
+
+  layer: "LAYER_6",
+  layerName: "EVIDENCE_EVALUATION_AND_VERIFICATION",
+
+  searchQuery: "",
+  targets: [],
+
+  checks: {
+    sourceReady: false,
+    queryReady: false,
+    targetCountReady: false,
+    targetStatesSafe: false,
+    policySafe: false,
+    safetySafe: false
+  },
+
+  executionPolicy: {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false
+  },
+
+  safety: {
+    externalSourceAccess: "NOT_STARTED",
+    sourceRetrieval: "NOT_STARTED",
+    evidenceInsertion: "NOT_STARTED",
+    claimSupportUpdate: "NOT_CHANGED"
+  },
+
+  reason:
+    "Evidence evaluation input boundary has not been validated."
+};
+
+
+/* =========================================================
+   8EF — SOURCE
+   ========================================================= */
+
+const eightEF_Source =
+  controlledRetrievalExecutionControlExecutionAuthorizationGateHandoff;
+
+
+/* =========================================================
+   8EF — SOURCE CHECK
+   ========================================================= */
+
+const eightEF_SourceReady =
+  eightEF_Source &&
+  eightEF_Source.status === "ready" &&
+  eightEF_Source.allowed === true;
+
+
+/* =========================================================
+   8EF — QUERY CHECK
+   ========================================================= */
+
+const eightEF_QueryReady =
+  eightEF_Source &&
+  typeof eightEF_Source.searchQuery === "string" &&
+  eightEF_Source.searchQuery.trim().length > 0;
+
+
+/* =========================================================
+   8EF — TARGET CHECK
+   ========================================================= */
+
+const eightEF_TargetCountReady =
+  eightEF_Source &&
+  Array.isArray(eightEF_Source.targets) &&
+  eightEF_Source.targets.length === 5;
+
+
+/* =========================================================
+   8EF — TARGET SAFETY CHECK
+   ========================================================= */
+
+const eightEF_TargetStatesSafe =
+  eightEF_TargetCountReady &&
+  eightEF_Source.targets.every(function (target) {
+    return (
+      target &&
+      target.executionStatus === "NOT_STARTED" &&
+      target.retrievalStatus === "NOT_STARTED" &&
+      target.evidenceStatus === "NOT_STARTED" &&
+      target.claimSupportStatus === "NOT_CHANGED"
+    );
+  });
+
+
+/* =========================================================
+   8EF — POLICY CHECK
+   ========================================================= */
+
+const eightEF_PolicySafe =
+  eightEF_Source &&
+  eightEF_Source.executionPolicy &&
+  eightEF_Source.executionPolicy.externalSourceAccess === false &&
+  eightEF_Source.executionPolicy.sourceRetrieval === false &&
+  eightEF_Source.executionPolicy.evidenceInsertion === false &&
+  eightEF_Source.executionPolicy.claimSupportUpdate === false;
+
+
+/* =========================================================
+   8EF — SAFETY CHECK
+   ========================================================= */
+
+const eightEF_SafetySafe =
+  eightEF_Source &&
+  eightEF_Source.safety &&
+  eightEF_Source.safety.externalSourceAccess ===
+    "NOT_STARTED" &&
+  eightEF_Source.safety.sourceRetrieval ===
+    "NOT_STARTED" &&
+  eightEF_Source.safety.evidenceInsertion ===
+    "NOT_STARTED" &&
+  eightEF_Source.safety.claimSupportUpdate ===
+    "NOT_CHANGED";
+
+
+/* =========================================================
+   8EF — FINAL INPUT BOUNDARY
+   ========================================================= */
+
+if (
+  eightEF_SourceReady &&
+  eightEF_QueryReady &&
+  eightEF_TargetCountReady &&
+  eightEF_TargetStatesSafe &&
+  eightEF_PolicySafe &&
+  eightEF_SafetySafe
+) {
+  evidenceEvaluationInputBoundary = {
+    status: "ready",
+    allowed: true,
+
+    layer: "LAYER_6",
+    layerName: "EVIDENCE_EVALUATION_AND_VERIFICATION",
+
+    searchQuery: eightEF_Source.searchQuery,
+
+    targets: eightEF_Source.targets.map(function (target) {
+      return {
+        ...target,
+        invocationStatus:
+          "EVIDENCE_EVALUATION_INPUT_BOUNDARY_READY"
+      };
+    }),
+
+    checks: {
+      sourceReady: true,
+      queryReady: true,
+      targetCountReady: true,
+      targetStatesSafe: true,
+      policySafe: true,
+      safetySafe: true
+    },
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    reason:
+      "Evidence evaluation input boundary is validated. Evidence evaluation may be architecturally prepared, while retrieval and evidence insertion remain safely blocked."
+  };
+}
+
+
+/* =========================================================
+   8EF — DEBUGGER
+   ========================================================= */
+
+if (
+  typeof OODebug !== "undefined" &&
+  OODebug.log
+) {
+  OODebug.log(
+    "8EF",
+    "EVIDENCE_EVALUATION_INPUT_BOUNDARY",
+    evidenceEvaluationInputBoundary.status
+  );
+
+  OODebug.log(
+    "8EF",
+    "LAYER",
+    evidenceEvaluationInputBoundary.layer +
+      " → " +
+      evidenceEvaluationInputBoundary.layerName
+  );
+
+  OODebug.log(
+    "8EF",
+    "QUERY",
+    evidenceEvaluationInputBoundary.searchQuery
+  );
+
+  OODebug.log(
+    "8EF",
+    "TARGETS",
+    evidenceEvaluationInputBoundary.targets.length
+  );
+
+  OODebug.log(
+    "8EF",
+    "CHECKS",
+    JSON.stringify(
+      evidenceEvaluationInputBoundary.checks
+    )
+  );
+
+  OODebug.log(
+    "8EF",
+    "POLICY",
+    JSON.stringify(
+      evidenceEvaluationInputBoundary.executionPolicy
+    )
+  );
+
+  OODebug.log(
+    "8EF",
+    "SAFETY",
+    JSON.stringify(
+      evidenceEvaluationInputBoundary.safety
+    )
+  );
+
+  OODebug.log(
+    "8EF",
+    "REASON",
+    evidenceEvaluationInputBoundary.reason
+  );
+  }      
 /* ==========================================
    RESULT VALUES
    ========================================== */
