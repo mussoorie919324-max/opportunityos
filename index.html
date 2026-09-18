@@ -35965,6 +35965,14 @@ if (
   );
   }     
 /* =========================================================
+   STEP 8EL — GLOBAL HANDOFF BRIDGE
+   ========================================================= */
+
+if (typeof globalThis !== "undefined") {
+  globalThis.__OO_8EL_HANDOFF =
+    evidenceEvaluationAuthorizationReadinessHandoff;
+}
+/* =========================================================
    STEP 8EM — EVIDENCE EVALUATION AUTHORIZATION VALIDATION
    SCOPE-SAFE VERSION
    ========================================================= */
@@ -36028,12 +36036,12 @@ try {
 
 if (
   !step8EMSource &&
-  typeof window !== "undefined" &&
-  window.__OO_8EL_HANDOFF
+  typeof globalThis !== "undefined" &&
+  globalThis.__OO_8EL_HANDOFF
 ) {
-  step8EMSource = window.__OO_8EL_HANDOFF;
+  step8EMSource =
+    globalThis.__OO_8EL_HANDOFF;
 }
-
 
 /* =========================================================
    8EM — VALIDATION CHECKS
