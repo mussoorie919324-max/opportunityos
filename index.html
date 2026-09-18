@@ -35965,109 +35965,43 @@ if (
   );
   }     
 /* =========================================================
-   STEP 8EL — AUTHORITATIVE HANDOFF BRIDGE
-   ========================================================= */
-
-if (typeof globalThis !== "undefined") {
-  globalThis.__OO_8EL_HANDOFF = {
-    status:
-      evidenceEvaluationAuthorizationReadinessHandoff.status,
-
-    allowed:
-      evidenceEvaluationAuthorizationReadinessHandoff.allowed,
-
-    layer:
-      evidenceEvaluationAuthorizationReadinessHandoff.layer,
-
-    layerName:
-      evidenceEvaluationAuthorizationReadinessHandoff.layerName,
-
-    query:
-      evidenceEvaluationAuthorizationReadinessHandoff.query,
-
-    targets:
-      Array.isArray(
-        evidenceEvaluationAuthorizationReadinessHandoff.targets
-      )
-        ? evidenceEvaluationAuthorizationReadinessHandoff.targets.map(
-            (target) => ({
-              ...target
-            })
-          )
-        : [],
-
-    executionPolicy: {
-      externalSourceAccess: false,
-      sourceRetrieval: false,
-      evidenceInsertion: false,
-      claimSupportUpdate: false
-    },
-
-    safety: {
-      externalSourceAccess: "NOT_STARTED",
-      sourceRetrieval: "NOT_STARTED",
-      evidenceInsertion: "NOT_STARTED",
-      claimSupportUpdate: "NOT_CHANGED"
-    },
-
-    reason:
-      evidenceEvaluationAuthorizationReadinessHandoff.reason
-  };
-
-  if (
-    typeof OODebug !== "undefined" &&
-    OODebug.log
-  ) {
-    OODebug.log(
-      "8EL",
-      "HANDOFF_BRIDGE",
-      globalThis.__OO_8EL_HANDOFF.status
-    );
-
-    OODebug.log(
-      "8EL",
-      "BRIDGE_QUERY",
-      globalThis.__OO_8EL_HANDOFF.query || ""
-    );
-
-    OODebug.log(
-      "8EL",
-      "BRIDGE_TARGETS",
-      globalThis.__OO_8EL_HANDOFF.targets.length
-    );
-  }
-  }
-/* =========================================================
    STEP 8EM — EVIDENCE EVALUATION AUTHORIZATION VALIDATION
-   SCOPE-SAFE VERSION
+   QUERY-SAFE / BRIDGE-SAFE VERSION
    ========================================================= */
 
 let evidenceEvaluationAuthorizationValidation = {
   status: "blocked",
   allowed: false,
+
   layer: "LAYER_6",
   layerName: "EVIDENCE_EVALUATION_AND_VERIFICATION",
+
   query: "",
   targets: [],
+
   checks: {},
+
   executionPolicy: {
     externalSourceAccess: false,
     sourceRetrieval: false,
     evidenceInsertion: false,
     claimSupportUpdate: false
   },
+
   safety: {
     externalSourceAccess: "NOT_STARTED",
     sourceRetrieval: "NOT_STARTED",
     evidenceInsertion: "NOT_STARTED",
     claimSupportUpdate: "NOT_CHANGED"
   },
+
   reason:
     "Evidence evaluation authorization validation has not passed."
 };
 
+
 /* =========================================================
-   STEP 8EM — AUTHORITATIVE SOURCE RESOLUTION
+   8EM — AUTHORITATIVE BRIDGE SOURCE
    ========================================================= */
 
 let step8EMSource = null;
@@ -36080,57 +36014,51 @@ if (
     globalThis.__OO_8EL_HANDOFF;
 }
 
-if (
-  typeof OODebug !== "undefined" &&
-  OODebug.log
-) {
-  OODebug.log(
-    "8EM",
-    "SOURCE_BRIDGE",
-    step8EMSource ? "RECEIVED" : "MISSING"
-  );
-
-  OODebug.log(
-    "8EM",
-    "SOURCE_STATUS",
-    step8EMSource
-      ? step8EMSource.status
-      : "NONE"
-  );
-
-  OODebug.log(
-    "8EM",
-    "SOURCE_QUERY",
-    step8EMSource
-      ? step8EMSource.query || ""
-      : ""
-  );
-
-  OODebug.log(
-    "8EM",
-    "SOURCE_TARGETS",
-    step8EMSource &&
-    Array.isArray(step8EMSource.targets)
-      ? step8EMSource.targets.length
-      : 0
-  );
-}
 
 /* =========================================================
-   8EM — GLOBAL BRIDGE FALLBACK
+   8EM — QUERY RESOLUTION
    ========================================================= */
 
+let step8EMQuery = "";
+
 if (
-  !step8EMSource &&
-  typeof globalThis !== "undefined" &&
-  globalThis.__OO_8EL_HANDOFF
+  step8EMSource &&
+  typeof step8EMSource.query === "string" &&
+  step8EMSource.query.trim().length > 0
 ) {
-  step8EMSource =
-    globalThis.__OO_8EL_HANDOFF;
+  step8EMQuery =
+    step8EMSource.query.trim();
 }
 
+
+/*
+   If the 8EL handoff did not carry the query,
+   use the current OpportunityOS search input.
+
+   This does NOT perform retrieval.
+   It only reads the already-entered search text.
+*/
+
+if (
+  !step8EMQuery &&
+  typeof document !== "undefined"
+) {
+  const step8EMSearchInput =
+    document.getElementById("searchInput");
+
+  if (
+    step8EMSearchInput &&
+    typeof step8EMSearchInput.value === "string" &&
+    step8EMSearchInput.value.trim().length > 0
+  ) {
+    step8EMQuery =
+      step8EMSearchInput.value.trim();
+  }
+}
+
+
 /* =========================================================
-   8EM — VALIDATION CHECKS
+   8EM — SOURCE CHECKS
    ========================================================= */
 
 const step8EMSourceReady =
@@ -36139,15 +36067,17 @@ const step8EMSourceReady =
   step8EMSource.allowed === true &&
   step8EMSource.layer === "LAYER_6";
 
+
 const step8EMQueryReady =
-  !!step8EMSource &&
-  typeof step8EMSource.query === "string" &&
-  step8EMSource.query.trim().length > 0;
+  typeof step8EMQuery === "string" &&
+  step8EMQuery.trim().length > 0;
+
 
 const step8EMTargetCountReady =
   !!step8EMSource &&
   Array.isArray(step8EMSource.targets) &&
   step8EMSource.targets.length === 5;
+
 
 const step8EMTargetsReady =
   step8EMTargetCountReady &&
@@ -36157,6 +36087,7 @@ const step8EMTargetsReady =
       target.invocationStatus ===
         "EVIDENCE_EVALUATION_AUTHORIZATION_READINESS_HANDOFF_READY"
   );
+
 
 const step8EMTargetStatesSafe =
   step8EMTargetCountReady &&
@@ -36168,6 +36099,7 @@ const step8EMTargetStatesSafe =
       target.claimSupportStatus === "NOT_CHANGED"
   );
 
+
 const step8EMPolicySafe =
   !!step8EMSource &&
   step8EMSource.executionPolicy &&
@@ -36175,6 +36107,7 @@ const step8EMPolicySafe =
   step8EMSource.executionPolicy.sourceRetrieval === false &&
   step8EMSource.executionPolicy.evidenceInsertion === false &&
   step8EMSource.executionPolicy.claimSupportUpdate === false;
+
 
 const step8EMSafetySafe =
   !!step8EMSource &&
@@ -36189,6 +36122,10 @@ const step8EMSafetySafe =
     "NOT_CHANGED";
 
 
+/* =========================================================
+   8EM — FINAL VALIDATION
+   ========================================================= */
+
 const step8EMAllChecks =
   step8EMSourceReady &&
   step8EMQueryReady &&
@@ -36200,11 +36137,13 @@ const step8EMAllChecks =
 
 
 /* =========================================================
-   8EM — BUILD READY RESULT
+   8EM — READY RESULT
    ========================================================= */
 
 if (step8EMAllChecks) {
+
   evidenceEvaluationAuthorizationValidation = {
+
     status: "ready",
     allowed: true,
 
@@ -36212,27 +36151,37 @@ if (step8EMAllChecks) {
     layerName:
       "EVIDENCE_EVALUATION_AND_VERIFICATION",
 
-    query: step8EMSource.query,
+    query: step8EMQuery,
 
-    targets: step8EMSource.targets.map(
-      (target) => ({
-        ...target,
-        invocationStatus:
-          "EVIDENCE_EVALUATION_AUTHORIZATION_VALIDATION_READY"
-      })
-    ),
+    targets:
+      step8EMSource.targets.map(
+        (target) => ({
+          ...target,
+
+          invocationStatus:
+            "EVIDENCE_EVALUATION_AUTHORIZATION_VALIDATION_READY"
+        })
+      ),
 
     checks: {
-      sourceReady: step8EMSourceReady,
-      queryReady: step8EMQueryReady,
+      sourceReady:
+        step8EMSourceReady,
+
+      queryReady:
+        step8EMQueryReady,
+
       targetCountReady:
         step8EMTargetCountReady,
+
       authorizationReadinessHandoffReady:
         step8EMTargetsReady,
+
       targetStatesSafe:
         step8EMTargetStatesSafe,
+
       policySafe:
         step8EMPolicySafe,
+
       safetySafe:
         step8EMSafetySafe
     },
@@ -36265,6 +36214,7 @@ if (
   typeof OODebug !== "undefined" &&
   OODebug.log
 ) {
+
   OODebug.log(
     "8EM",
     "EVIDENCE_EVALUATION_AUTHORIZATION_VALIDATION",
@@ -36312,7 +36262,7 @@ if (
       evidenceEvaluationAuthorizationValidation.safety
     )
   );
-}
+  }
 
 
 /* =========================================================
