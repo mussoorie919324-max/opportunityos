@@ -35965,13 +35965,78 @@ if (
   );
   }     
 /* =========================================================
-   STEP 8EL — GLOBAL HANDOFF BRIDGE
+   STEP 8EL — AUTHORITATIVE HANDOFF BRIDGE
    ========================================================= */
 
 if (typeof globalThis !== "undefined") {
-  globalThis.__OO_8EL_HANDOFF =
-    evidenceEvaluationAuthorizationReadinessHandoff;
-}
+  globalThis.__OO_8EL_HANDOFF = {
+    status:
+      evidenceEvaluationAuthorizationReadinessHandoff.status,
+
+    allowed:
+      evidenceEvaluationAuthorizationReadinessHandoff.allowed,
+
+    layer:
+      evidenceEvaluationAuthorizationReadinessHandoff.layer,
+
+    layerName:
+      evidenceEvaluationAuthorizationReadinessHandoff.layerName,
+
+    query:
+      evidenceEvaluationAuthorizationReadinessHandoff.query,
+
+    targets:
+      Array.isArray(
+        evidenceEvaluationAuthorizationReadinessHandoff.targets
+      )
+        ? evidenceEvaluationAuthorizationReadinessHandoff.targets.map(
+            (target) => ({
+              ...target
+            })
+          )
+        : [],
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    reason:
+      evidenceEvaluationAuthorizationReadinessHandoff.reason
+  };
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug.log
+  ) {
+    OODebug.log(
+      "8EL",
+      "HANDOFF_BRIDGE",
+      globalThis.__OO_8EL_HANDOFF.status
+    );
+
+    OODebug.log(
+      "8EL",
+      "BRIDGE_QUERY",
+      globalThis.__OO_8EL_HANDOFF.query || ""
+    );
+
+    OODebug.log(
+      "8EL",
+      "BRIDGE_TARGETS",
+      globalThis.__OO_8EL_HANDOFF.targets.length
+    );
+  }
+  }
 /* =========================================================
    STEP 8EM — EVIDENCE EVALUATION AUTHORIZATION VALIDATION
    SCOPE-SAFE VERSION
@@ -36001,34 +36066,55 @@ let evidenceEvaluationAuthorizationValidation = {
     "Evidence evaluation authorization validation has not passed."
 };
 
-
 /* =========================================================
-   8EM — SAFE SOURCE RESOLUTION
+   STEP 8EM — AUTHORITATIVE SOURCE RESOLUTION
    ========================================================= */
 
 let step8EMSource = null;
 
-/*
-   Prefer the existing 8EL handoff if it is available
-   in the current scope.
-
-   Fallback to the global bridge if the previous step
-   was created inside another function/block.
-*/
-
-try {
-  if (
-    typeof evidenceEvaluationAuthorizationReadinessHandoff !==
-      "undefined" &&
-    evidenceEvaluationAuthorizationReadinessHandoff
-  ) {
-    step8EMSource =
-      evidenceEvaluationAuthorizationReadinessHandoff;
-  }
-} catch (error) {
-  step8EMSource = null;
+if (
+  typeof globalThis !== "undefined" &&
+  globalThis.__OO_8EL_HANDOFF
+) {
+  step8EMSource =
+    globalThis.__OO_8EL_HANDOFF;
 }
 
+if (
+  typeof OODebug !== "undefined" &&
+  OODebug.log
+) {
+  OODebug.log(
+    "8EM",
+    "SOURCE_BRIDGE",
+    step8EMSource ? "RECEIVED" : "MISSING"
+  );
+
+  OODebug.log(
+    "8EM",
+    "SOURCE_STATUS",
+    step8EMSource
+      ? step8EMSource.status
+      : "NONE"
+  );
+
+  OODebug.log(
+    "8EM",
+    "SOURCE_QUERY",
+    step8EMSource
+      ? step8EMSource.query || ""
+      : ""
+  );
+
+  OODebug.log(
+    "8EM",
+    "SOURCE_TARGETS",
+    step8EMSource &&
+    Array.isArray(step8EMSource.targets)
+      ? step8EMSource.targets.length
+      : 0
+  );
+}
 
 /* =========================================================
    8EM — GLOBAL BRIDGE FALLBACK
