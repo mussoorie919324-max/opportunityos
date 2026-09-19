@@ -38487,61 +38487,20 @@ let evidenceEvaluationExecutionAuthorizationValidation = {
 };
 
 /* =========================================================
-   8EY — SAFE 8EX HANDOFF READ
+    SAFE 8EX HANDOFF READ
    ========================================================= */
-
 let eightEY_Source = null;
 
 if (
-  typeof window !== "undefined" &&
-  window.__OO_8EX_HANDOFF
+  typeof globalThis !== "undefined" &&
+  globalThis.__OpportunityOS_HandoffRegistry &&
+  globalThis.__OpportunityOS_HandoffRegistry["8EX"]
 ) {
   eightEY_Source =
-    window.__OO_8EX_HANDOFF;
-}
-
-
-/* =========================================================
-   8EY — HANDOFF DIAGNOSTIC
-   ========================================================= */
-
-if (
-  typeof OODebug !== "undefined" &&
-  OODebug.log
-) {
-
-  OODebug.log(
-    "8EY",
-    "HANDOFF_EXISTS",
-    !!eightEY_Source
-  );
-
-  OODebug.log(
-    "8EY",
-    "HANDOFF_QUERY",
-    eightEY_Source &&
-    typeof eightEY_Source.query === "string"
-      ? eightEY_Source.query
-      : ""
-  );
-
-  OODebug.log(
-    "8EY",
-    "HANDOFF_TARGETS",
-    eightEY_Source &&
-    Array.isArray(eightEY_Source.targets)
-      ? eightEY_Source.targets.length
-      : 0
-  );
-
-  OODebug.log(
-    "8EY",
-    "HANDOFF_STATUS",
-    eightEY_Source
-      ? eightEY_Source.status
-      : "MISSING"
-  );
+    globalThis.__OpportunityOS_HandoffRegistry["8EX"];
   }
+
+  
 
 /* =========================================================
    8EY — VALIDATION
