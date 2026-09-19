@@ -38326,7 +38326,75 @@ if (eightEX_Ready) {
       "Evidence evaluation execution authorization boundary handoff is ready. Evaluation execution architecture may continue while actual retrieval, evidence insertion, and claim support mutation remain safely blocked."
   };
 }
+/* =========================================================
+   STEP 8EX → 8EY
+   PERSISTENT GLOBAL HANDOFF REGISTRY
+   ========================================================= */
 
+if (
+  typeof globalThis !== "undefined"
+) {
+
+  if (
+    !globalThis.__OpportunityOS_HandoffRegistry
+  ) {
+    globalThis.__OpportunityOS_HandoffRegistry = {};
+  }
+
+  globalThis.__OpportunityOS_HandoffRegistry["8EX"] =
+    evidenceEvaluationExecutionAuthorizationBoundaryHandoff;
+}
+
+
+/* =========================================================
+   8EX → 8EY HANDOFF VERIFICATION
+   ========================================================= */
+
+if (
+  typeof OODebug !== "undefined" &&
+  OODebug.log
+) {
+
+  const eightEX_GlobalHandoff =
+    (
+      typeof globalThis !== "undefined" &&
+      globalThis.__OpportunityOS_HandoffRegistry
+    )
+      ? globalThis.__OpportunityOS_HandoffRegistry["8EX"]
+      : null;
+
+  OODebug.log(
+    "8EX",
+    "GLOBAL_HANDOFF_EXISTS",
+    !!eightEX_GlobalHandoff
+  );
+
+  OODebug.log(
+    "8EX",
+    "GLOBAL_HANDOFF_QUERY",
+    eightEX_GlobalHandoff &&
+    typeof eightEX_GlobalHandoff.query === "string"
+      ? eightEX_GlobalHandoff.query
+      : ""
+  );
+
+  OODebug.log(
+    "8EX",
+    "GLOBAL_HANDOFF_TARGETS",
+    eightEX_GlobalHandoff &&
+    Array.isArray(eightEX_GlobalHandoff.targets)
+      ? eightEX_GlobalHandoff.targets.length
+      : 0
+  );
+
+  OODebug.log(
+    "8EX",
+    "GLOBAL_HANDOFF_STATUS",
+    eightEX_GlobalHandoff
+      ? eightEX_GlobalHandoff.status
+      : "MISSING"
+  );
+    }
 
 /* =========================================================
    8EX — DEBUGGER
