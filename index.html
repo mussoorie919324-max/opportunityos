@@ -38386,19 +38386,6 @@ if (
   );
   }
 /* =========================================================
-   STEP 8EX → 8EY SAFE HANDOFF BRIDGE
-   ========================================================= */
-
-if (
-  typeof evidenceEvaluationExecutionAuthorizationBoundaryHandoff !==
-  "undefined"
-) {
-  window.__OO_8EX_HANDOFF =
-    evidenceEvaluationExecutionAuthorizationBoundaryHandoff;
-}
-
-
-/* =========================================================
    STEP 8EY — EVIDENCE EVALUATION EXECUTION AUTHORIZATION
    VALIDATION
    ========================================================= */
@@ -38410,7 +38397,7 @@ let evidenceEvaluationExecutionAuthorizationValidation = {
   layer: "LAYER_6",
   layerName: "EVIDENCE_EVALUATION_AND_VERIFICATION",
 
-  searchQuery: "",
+  query: "",
   targets: [],
 
   executionPolicy: {
@@ -38432,25 +38419,32 @@ let evidenceEvaluationExecutionAuthorizationValidation = {
 };
 
 
-/* ---------------------------------------------------------
-   8EY SOURCE
-   --------------------------------------------------------- */
+/* =========================================================
+   8EY — SOURCE
+   ========================================================= */
 
 let eightEY_Source =
   window.__OO_8EX_HANDOFF || null;
 
 
+/* =========================================================
+   8EY — VALIDATION
+   ========================================================= */
+
 const eightEY_Ready =
-  eightEY_Source &&
+  !!eightEY_Source &&
   eightEY_Source.status === "ready" &&
   eightEY_Source.allowed === true &&
   eightEY_Source.layer === "LAYER_6" &&
   eightEY_Source.layerName ===
     "EVIDENCE_EVALUATION_AND_VERIFICATION" &&
-  typeof eightEY_Source.searchQuery === "string" &&
-  eightEY_Source.searchQuery.trim().length > 0 &&
+
+  typeof eightEY_Source.query === "string" &&
+  eightEY_Source.query.trim().length > 0 &&
+
   Array.isArray(eightEY_Source.targets) &&
   eightEY_Source.targets.length === 5 &&
+
   eightEY_Source.targets.every(function (target) {
     return (
       target &&
@@ -38462,11 +38456,13 @@ const eightEY_Ready =
       target.claimSupportStatus === "NOT_CHANGED"
     );
   }) &&
+
   eightEY_Source.executionPolicy &&
   eightEY_Source.executionPolicy.externalSourceAccess === false &&
   eightEY_Source.executionPolicy.sourceRetrieval === false &&
   eightEY_Source.executionPolicy.evidenceInsertion === false &&
   eightEY_Source.executionPolicy.claimSupportUpdate === false &&
+
   eightEY_Source.safety &&
   eightEY_Source.safety.externalSourceAccess ===
     "NOT_STARTED" &&
@@ -38478,24 +38474,33 @@ const eightEY_Ready =
     "NOT_CHANGED";
 
 
+/* =========================================================
+   8EY — RESULT
+   ========================================================= */
+
 if (eightEY_Ready) {
+
   evidenceEvaluationExecutionAuthorizationValidation = {
+
     status: "ready",
     allowed: true,
 
     layer: "LAYER_6",
-    layerName: "EVIDENCE_EVALUATION_AND_VERIFICATION",
+    layerName:
+      "EVIDENCE_EVALUATION_AND_VERIFICATION",
 
-    searchQuery: eightEY_Source.searchQuery,
+    query:
+      eightEY_Source.query.trim(),
 
-    targets: eightEY_Source.targets.map(function (target) {
-      return {
-        ...target,
+    targets:
+      eightEY_Source.targets.map(function (target) {
+        return {
+          ...target,
 
-        invocationStatus:
-          "EVIDENCE_EVALUATION_EXECUTION_AUTHORIZATION_VALIDATION_READY"
-      };
-    }),
+          invocationStatus:
+            "EVIDENCE_EVALUATION_EXECUTION_AUTHORIZATION_VALIDATION_READY"
+        };
+      }),
 
     executionPolicy: {
       externalSourceAccess: false,
@@ -38517,7 +38522,14 @@ if (eightEY_Ready) {
 }
 
 
-if (typeof OODebug !== "undefined" && OODebug.log) {
+/* =========================================================
+   8EY — DEBUGGER
+   ========================================================= */
+
+if (
+  typeof OODebug !== "undefined" &&
+  OODebug.log
+) {
 
   OODebug.log(
     "8EY",
@@ -38534,7 +38546,7 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
   OODebug.log(
     "8EY",
     "QUERY",
-    evidenceEvaluationExecutionAuthorizationValidation.searchQuery
+    evidenceEvaluationExecutionAuthorizationValidation.query
   );
 
   OODebug.log(
@@ -38552,8 +38564,8 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
       queryReady:
         !!(
           eightEY_Source &&
-          typeof eightEY_Source.searchQuery === "string" &&
-          eightEY_Source.searchQuery.trim().length > 0
+          typeof eightEY_Source.query === "string" &&
+          eightEY_Source.query.trim().length > 0
         ),
 
       targetCountReady:
@@ -38614,7 +38626,7 @@ let evidenceEvaluationExecutionAuthorizationValidationHandoff = {
   layer: "LAYER_6",
   layerName: "EVIDENCE_EVALUATION_AND_VERIFICATION",
 
-  searchQuery: "",
+  query: "",
   targets: [],
 
   executionPolicy: {
@@ -38641,16 +38653,19 @@ let eightEZ_Source =
 
 
 const eightEZ_Ready =
-  eightEZ_Source &&
+  !!eightEZ_Source &&
   eightEZ_Source.status === "ready" &&
   eightEZ_Source.allowed === true &&
   eightEZ_Source.layer === "LAYER_6" &&
   eightEZ_Source.layerName ===
     "EVIDENCE_EVALUATION_AND_VERIFICATION" &&
-  typeof eightEZ_Source.searchQuery === "string" &&
-  eightEZ_Source.searchQuery.trim().length > 0 &&
+
+  typeof eightEZ_Source.query === "string" &&
+  eightEZ_Source.query.trim().length > 0 &&
+
   Array.isArray(eightEZ_Source.targets) &&
   eightEZ_Source.targets.length === 5 &&
+
   eightEZ_Source.targets.every(function (target) {
     return (
       target &&
@@ -38662,11 +38677,13 @@ const eightEZ_Ready =
       target.claimSupportStatus === "NOT_CHANGED"
     );
   }) &&
+
   eightEZ_Source.executionPolicy &&
   eightEZ_Source.executionPolicy.externalSourceAccess === false &&
   eightEZ_Source.executionPolicy.sourceRetrieval === false &&
   eightEZ_Source.executionPolicy.evidenceInsertion === false &&
   eightEZ_Source.executionPolicy.claimSupportUpdate === false &&
+
   eightEZ_Source.safety &&
   eightEZ_Source.safety.externalSourceAccess ===
     "NOT_STARTED" &&
@@ -38679,23 +38696,28 @@ const eightEZ_Ready =
 
 
 if (eightEZ_Ready) {
+
   evidenceEvaluationExecutionAuthorizationValidationHandoff = {
+
     status: "ready",
     allowed: true,
 
     layer: "LAYER_6",
-    layerName: "EVIDENCE_EVALUATION_AND_VERIFICATION",
+    layerName:
+      "EVIDENCE_EVALUATION_AND_VERIFICATION",
 
-    searchQuery: eightEZ_Source.searchQuery,
+    query:
+      eightEZ_Source.query.trim(),
 
-    targets: eightEZ_Source.targets.map(function (target) {
-      return {
-        ...target,
+    targets:
+      eightEZ_Source.targets.map(function (target) {
+        return {
+          ...target,
 
-        invocationStatus:
-          "EVIDENCE_EVALUATION_EXECUTION_AUTHORIZATION_VALIDATION_HANDOFF_READY"
-      };
-    }),
+          invocationStatus:
+            "EVIDENCE_EVALUATION_EXECUTION_AUTHORIZATION_VALIDATION_HANDOFF_READY"
+        };
+      }),
 
     executionPolicy: {
       externalSourceAccess: false,
@@ -38717,7 +38739,14 @@ if (eightEZ_Ready) {
 }
 
 
-if (typeof OODebug !== "undefined" && OODebug.log) {
+/* =========================================================
+   8EZ — DEBUGGER
+   ========================================================= */
+
+if (
+  typeof OODebug !== "undefined" &&
+  OODebug.log
+) {
 
   OODebug.log(
     "8EZ",
@@ -38734,7 +38763,7 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
   OODebug.log(
     "8EZ",
     "QUERY",
-    evidenceEvaluationExecutionAuthorizationValidationHandoff.searchQuery
+    evidenceEvaluationExecutionAuthorizationValidationHandoff.query
   );
 
   OODebug.log(
@@ -38774,7 +38803,7 @@ let evidenceEvaluationExecutionAuthorizationGate = {
   layer: "LAYER_6",
   layerName: "EVIDENCE_EVALUATION_AND_VERIFICATION",
 
-  searchQuery: "",
+  query: "",
   targets: [],
 
   executionPolicy: {
@@ -38801,16 +38830,19 @@ let eightFA_Source =
 
 
 const eightFA_Ready =
-  eightFA_Source &&
+  !!eightFA_Source &&
   eightFA_Source.status === "ready" &&
   eightFA_Source.allowed === true &&
   eightFA_Source.layer === "LAYER_6" &&
   eightFA_Source.layerName ===
     "EVIDENCE_EVALUATION_AND_VERIFICATION" &&
-  typeof eightFA_Source.searchQuery === "string" &&
-  eightFA_Source.searchQuery.trim().length > 0 &&
+
+  typeof eightFA_Source.query === "string" &&
+  eightFA_Source.query.trim().length > 0 &&
+
   Array.isArray(eightFA_Source.targets) &&
   eightFA_Source.targets.length === 5 &&
+
   eightFA_Source.targets.every(function (target) {
     return (
       target &&
@@ -38822,11 +38854,13 @@ const eightFA_Ready =
       target.claimSupportStatus === "NOT_CHANGED"
     );
   }) &&
+
   eightFA_Source.executionPolicy &&
   eightFA_Source.executionPolicy.externalSourceAccess === false &&
   eightFA_Source.executionPolicy.sourceRetrieval === false &&
   eightFA_Source.executionPolicy.evidenceInsertion === false &&
   eightFA_Source.executionPolicy.claimSupportUpdate === false &&
+
   eightFA_Source.safety &&
   eightFA_Source.safety.externalSourceAccess ===
     "NOT_STARTED" &&
@@ -38839,23 +38873,28 @@ const eightFA_Ready =
 
 
 if (eightFA_Ready) {
+
   evidenceEvaluationExecutionAuthorizationGate = {
+
     status: "ready",
     allowed: true,
 
     layer: "LAYER_6",
-    layerName: "EVIDENCE_EVALUATION_AND_VERIFICATION",
+    layerName:
+      "EVIDENCE_EVALUATION_AND_VERIFICATION",
 
-    searchQuery: eightFA_Source.searchQuery,
+    query:
+      eightFA_Source.query.trim(),
 
-    targets: eightFA_Source.targets.map(function (target) {
-      return {
-        ...target,
+    targets:
+      eightFA_Source.targets.map(function (target) {
+        return {
+          ...target,
 
-        invocationStatus:
-          "EVIDENCE_EVALUATION_EXECUTION_AUTHORIZATION_GATE_READY"
-      };
-    }),
+          invocationStatus:
+            "EVIDENCE_EVALUATION_EXECUTION_AUTHORIZATION_GATE_READY"
+        };
+      }),
 
     executionPolicy: {
       externalSourceAccess: false,
@@ -38877,7 +38916,14 @@ if (eightFA_Ready) {
 }
 
 
-if (typeof OODebug !== "undefined" && OODebug.log) {
+/* =========================================================
+   8FA — DEBUGGER
+   ========================================================= */
+
+if (
+  typeof OODebug !== "undefined" &&
+  OODebug.log
+) {
 
   OODebug.log(
     "8FA",
@@ -38894,7 +38940,7 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
   OODebug.log(
     "8FA",
     "QUERY",
-    evidenceEvaluationExecutionAuthorizationGate.searchQuery
+    evidenceEvaluationExecutionAuthorizationGate.query
   );
 
   OODebug.log(
@@ -38928,7 +38974,7 @@ let evidenceEvaluationExecutionAuthorizationGateHandoff = {
   layer: "LAYER_6",
   layerName: "EVIDENCE_EVALUATION_AND_VERIFICATION",
 
-  searchQuery: "",
+  query: "",
   targets: [],
 
   executionPolicy: {
@@ -38955,16 +39001,19 @@ let eightFB_Source =
 
 
 const eightFB_Ready =
-  eightFB_Source &&
+  !!eightFB_Source &&
   eightFB_Source.status === "ready" &&
   eightFB_Source.allowed === true &&
   eightFB_Source.layer === "LAYER_6" &&
   eightFB_Source.layerName ===
     "EVIDENCE_EVALUATION_AND_VERIFICATION" &&
-  typeof eightFB_Source.searchQuery === "string" &&
-  eightFB_Source.searchQuery.trim().length > 0 &&
+
+  typeof eightFB_Source.query === "string" &&
+  eightFB_Source.query.trim().length > 0 &&
+
   Array.isArray(eightFB_Source.targets) &&
   eightFB_Source.targets.length === 5 &&
+
   eightFB_Source.targets.every(function (target) {
     return (
       target &&
@@ -38976,11 +39025,13 @@ const eightFB_Ready =
       target.claimSupportStatus === "NOT_CHANGED"
     );
   }) &&
+
   eightFB_Source.executionPolicy &&
   eightFB_Source.executionPolicy.externalSourceAccess === false &&
   eightFB_Source.executionPolicy.sourceRetrieval === false &&
   eightFB_Source.executionPolicy.evidenceInsertion === false &&
   eightFB_Source.executionPolicy.claimSupportUpdate === false &&
+
   eightFB_Source.safety &&
   eightFB_Source.safety.externalSourceAccess ===
     "NOT_STARTED" &&
@@ -38993,23 +39044,28 @@ const eightFB_Ready =
 
 
 if (eightFB_Ready) {
+
   evidenceEvaluationExecutionAuthorizationGateHandoff = {
+
     status: "ready",
     allowed: true,
 
     layer: "LAYER_6",
-    layerName: "EVIDENCE_EVALUATION_AND_VERIFICATION",
+    layerName:
+      "EVIDENCE_EVALUATION_AND_VERIFICATION",
 
-    searchQuery: eightFB_Source.searchQuery,
+    query:
+      eightFB_Source.query.trim(),
 
-    targets: eightFB_Source.targets.map(function (target) {
-      return {
-        ...target,
+    targets:
+      eightFB_Source.targets.map(function (target) {
+        return {
+          ...target,
 
-        invocationStatus:
-          "EVIDENCE_EVALUATION_EXECUTION_AUTHORIZATION_GATE_HANDOFF_READY"
-      };
-    }),
+          invocationStatus:
+            "EVIDENCE_EVALUATION_EXECUTION_AUTHORIZATION_GATE_HANDOFF_READY"
+        };
+      }),
 
     executionPolicy: {
       externalSourceAccess: false,
@@ -39031,7 +39087,14 @@ if (eightFB_Ready) {
 }
 
 
-if (typeof OODebug !== "undefined" && OODebug.log) {
+/* =========================================================
+   8FB — DEBUGGER
+   ========================================================= */
+
+if (
+  typeof OODebug !== "undefined" &&
+  OODebug.log
+) {
 
   OODebug.log(
     "8FB",
@@ -39048,7 +39111,7 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
   OODebug.log(
     "8FB",
     "QUERY",
-    evidenceEvaluationExecutionAuthorizationGateHandoff.searchQuery
+    evidenceEvaluationExecutionAuthorizationGateHandoff.query
   );
 
   OODebug.log(
