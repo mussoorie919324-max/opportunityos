@@ -38418,14 +38418,62 @@ let evidenceEvaluationExecutionAuthorizationValidation = {
     "Evidence evaluation execution authorization validation is not ready."
 };
 
-
 /* =========================================================
-   8EY — SOURCE
+   8EY — SAFE 8EX HANDOFF READ
    ========================================================= */
 
-let eightEY_Source =
-  window.__OO_8EX_HANDOFF || null;
+let eightEY_Source = null;
 
+if (
+  typeof window !== "undefined" &&
+  window.__OO_8EX_HANDOFF
+) {
+  eightEY_Source =
+    window.__OO_8EX_HANDOFF;
+}
+
+
+/* =========================================================
+   8EY — HANDOFF DIAGNOSTIC
+   ========================================================= */
+
+if (
+  typeof OODebug !== "undefined" &&
+  OODebug.log
+) {
+
+  OODebug.log(
+    "8EY",
+    "HANDOFF_EXISTS",
+    !!eightEY_Source
+  );
+
+  OODebug.log(
+    "8EY",
+    "HANDOFF_QUERY",
+    eightEY_Source &&
+    typeof eightEY_Source.query === "string"
+      ? eightEY_Source.query
+      : ""
+  );
+
+  OODebug.log(
+    "8EY",
+    "HANDOFF_TARGETS",
+    eightEY_Source &&
+    Array.isArray(eightEY_Source.targets)
+      ? eightEY_Source.targets.length
+      : 0
+  );
+
+  OODebug.log(
+    "8EY",
+    "HANDOFF_STATUS",
+    eightEY_Source
+      ? eightEY_Source.status
+      : "MISSING"
+  );
+  }
 
 /* =========================================================
    8EY — VALIDATION
