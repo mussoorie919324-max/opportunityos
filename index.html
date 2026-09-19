@@ -38386,6 +38386,19 @@ if (
   );
   }
 /* =========================================================
+   STEP 8EX → 8EY SAFE HANDOFF BRIDGE
+   ========================================================= */
+
+if (
+  typeof evidenceEvaluationExecutionAuthorizationBoundaryHandoff !==
+  "undefined"
+) {
+  window.__OO_8EX_HANDOFF =
+    evidenceEvaluationExecutionAuthorizationBoundaryHandoff;
+}
+
+
+/* =========================================================
    STEP 8EY — EVIDENCE EVALUATION EXECUTION AUTHORIZATION
    VALIDATION
    ========================================================= */
@@ -38420,27 +38433,11 @@ let evidenceEvaluationExecutionAuthorizationValidation = {
 
 
 /* ---------------------------------------------------------
-   8EY SOURCE RESOLUTION
+   8EY SOURCE
    --------------------------------------------------------- */
 
-let eightEY_Source = null;
-
-if (
-  typeof evidenceEvaluationExecutionAuthorizationBoundaryHandoff !==
-    "undefined"
-) {
-  eightEY_Source =
-    evidenceEvaluationExecutionAuthorizationBoundaryHandoff;
-}
-
-if (
-  !eightEY_Source &&
-  typeof evidenceEvaluationExecutionAuthorizationBoundary !==
-    "undefined"
-) {
-  eightEY_Source =
-    evidenceEvaluationExecutionAuthorizationBoundary;
-}
+let eightEY_Source =
+  window.__OO_8EX_HANDOFF || null;
 
 
 const eightEY_Ready =
@@ -38457,12 +38454,8 @@ const eightEY_Ready =
   eightEY_Source.targets.every(function (target) {
     return (
       target &&
-      (
-        target.invocationStatus ===
-          "EVIDENCE_EVALUATION_EXECUTION_AUTHORIZATION_BOUNDARY_HANDOFF_READY" ||
-        target.invocationStatus ===
-          "EVIDENCE_EVALUATION_EXECUTION_AUTHORIZATION_BOUNDARY_READY"
-      ) &&
+      target.invocationStatus ===
+        "EVIDENCE_EVALUATION_EXECUTION_AUTHORIZATION_BOUNDARY_HANDOFF_READY" &&
       target.executionStatus === "NOT_STARTED" &&
       target.retrievalStatus === "NOT_STARTED" &&
       target.evidenceStatus === "NOT_STARTED" &&
@@ -38498,6 +38491,7 @@ if (eightEY_Ready) {
     targets: eightEY_Source.targets.map(function (target) {
       return {
         ...target,
+
         invocationStatus:
           "EVIDENCE_EVALUATION_EXECUTION_AUTHORIZATION_VALIDATION_READY"
       };
@@ -38524,6 +38518,7 @@ if (eightEY_Ready) {
 
 
 if (typeof OODebug !== "undefined" && OODebug.log) {
+
   OODebug.log(
     "8EY",
     "EVIDENCE_EVALUATION_EXECUTION_AUTHORIZATION_VALIDATION",
@@ -38553,18 +38548,21 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
     "CHECKS",
     {
       sourceReady: !!eightEY_Source,
+
       queryReady:
         !!(
           eightEY_Source &&
           typeof eightEY_Source.searchQuery === "string" &&
           eightEY_Source.searchQuery.trim().length > 0
         ),
+
       targetCountReady:
         !!(
           eightEY_Source &&
           Array.isArray(eightEY_Source.targets) &&
           eightEY_Source.targets.length === 5
         ),
+
       policySafe:
         !!(
           eightEY_Source &&
@@ -38574,14 +38572,19 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
           eightEY_Source.executionPolicy.evidenceInsertion === false &&
           eightEY_Source.executionPolicy.claimSupportUpdate === false
         ),
+
       safetySafe:
         !!(
           eightEY_Source &&
           eightEY_Source.safety &&
-          eightEY_Source.safety.externalSourceAccess === "NOT_STARTED" &&
-          eightEY_Source.safety.sourceRetrieval === "NOT_STARTED" &&
-          eightEY_Source.safety.evidenceInsertion === "NOT_STARTED" &&
-          eightEY_Source.safety.claimSupportUpdate === "NOT_CHANGED"
+          eightEY_Source.safety.externalSourceAccess ===
+            "NOT_STARTED" &&
+          eightEY_Source.safety.sourceRetrieval ===
+            "NOT_STARTED" &&
+          eightEY_Source.safety.evidenceInsertion ===
+            "NOT_STARTED" &&
+          eightEY_Source.safety.claimSupportUpdate ===
+            "NOT_CHANGED"
         )
     }
   );
@@ -38601,8 +38604,7 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
 
 
 /* =========================================================
-   STEP 8EZ — EVIDENCE EVALUATION EXECUTION AUTHORIZATION
-   VALIDATION HANDOFF
+   STEP 8EZ — VALIDATION HANDOFF
    ========================================================= */
 
 let evidenceEvaluationExecutionAuthorizationValidationHandoff = {
@@ -38634,7 +38636,7 @@ let evidenceEvaluationExecutionAuthorizationValidationHandoff = {
 };
 
 
-const eightEZ_Source =
+let eightEZ_Source =
   evidenceEvaluationExecutionAuthorizationValidation;
 
 
@@ -38666,10 +38668,14 @@ const eightEZ_Ready =
   eightEZ_Source.executionPolicy.evidenceInsertion === false &&
   eightEZ_Source.executionPolicy.claimSupportUpdate === false &&
   eightEZ_Source.safety &&
-  eightEZ_Source.safety.externalSourceAccess === "NOT_STARTED" &&
-  eightEZ_Source.safety.sourceRetrieval === "NOT_STARTED" &&
-  eightEZ_Source.safety.evidenceInsertion === "NOT_STARTED" &&
-  eightEZ_Source.safety.claimSupportUpdate === "NOT_CHANGED";
+  eightEZ_Source.safety.externalSourceAccess ===
+    "NOT_STARTED" &&
+  eightEZ_Source.safety.sourceRetrieval ===
+    "NOT_STARTED" &&
+  eightEZ_Source.safety.evidenceInsertion ===
+    "NOT_STARTED" &&
+  eightEZ_Source.safety.claimSupportUpdate ===
+    "NOT_CHANGED";
 
 
 if (eightEZ_Ready) {
@@ -38685,6 +38691,7 @@ if (eightEZ_Ready) {
     targets: eightEZ_Source.targets.map(function (target) {
       return {
         ...target,
+
         invocationStatus:
           "EVIDENCE_EVALUATION_EXECUTION_AUTHORIZATION_VALIDATION_HANDOFF_READY"
       };
@@ -38711,6 +38718,7 @@ if (eightEZ_Ready) {
 
 
 if (typeof OODebug !== "undefined" && OODebug.log) {
+
   OODebug.log(
     "8EZ",
     "EVIDENCE_EVALUATION_EXECUTION_AUTHORIZATION_VALIDATION_HANDOFF",
@@ -38756,8 +38764,7 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
 
 
 /* =========================================================
-   STEP 8FA — EVIDENCE EVALUATION EXECUTION AUTHORIZATION
-   GATE
+   STEP 8FA — EXECUTION AUTHORIZATION GATE
    ========================================================= */
 
 let evidenceEvaluationExecutionAuthorizationGate = {
@@ -38789,7 +38796,7 @@ let evidenceEvaluationExecutionAuthorizationGate = {
 };
 
 
-const eightFA_Source =
+let eightFA_Source =
   evidenceEvaluationExecutionAuthorizationValidationHandoff;
 
 
@@ -38821,10 +38828,14 @@ const eightFA_Ready =
   eightFA_Source.executionPolicy.evidenceInsertion === false &&
   eightFA_Source.executionPolicy.claimSupportUpdate === false &&
   eightFA_Source.safety &&
-  eightFA_Source.safety.externalSourceAccess === "NOT_STARTED" &&
-  eightFA_Source.safety.sourceRetrieval === "NOT_STARTED" &&
-  eightFA_Source.safety.evidenceInsertion === "NOT_STARTED" &&
-  eightFA_Source.safety.claimSupportUpdate === "NOT_CHANGED";
+  eightFA_Source.safety.externalSourceAccess ===
+    "NOT_STARTED" &&
+  eightFA_Source.safety.sourceRetrieval ===
+    "NOT_STARTED" &&
+  eightFA_Source.safety.evidenceInsertion ===
+    "NOT_STARTED" &&
+  eightFA_Source.safety.claimSupportUpdate ===
+    "NOT_CHANGED";
 
 
 if (eightFA_Ready) {
@@ -38840,6 +38851,7 @@ if (eightFA_Ready) {
     targets: eightFA_Source.targets.map(function (target) {
       return {
         ...target,
+
         invocationStatus:
           "EVIDENCE_EVALUATION_EXECUTION_AUTHORIZATION_GATE_READY"
       };
@@ -38866,6 +38878,7 @@ if (eightFA_Ready) {
 
 
 if (typeof OODebug !== "undefined" && OODebug.log) {
+
   OODebug.log(
     "8FA",
     "EVIDENCE_EVALUATION_EXECUTION_AUTHORIZATION_GATE",
@@ -38905,8 +38918,7 @@ if (typeof OODebug !== "undefined" && OODebug.log) {
 
 
 /* =========================================================
-   STEP 8FB — EVIDENCE EVALUATION EXECUTION AUTHORIZATION
-   GATE HANDOFF
+   STEP 8FB — EXECUTION AUTHORIZATION GATE HANDOFF
    ========================================================= */
 
 let evidenceEvaluationExecutionAuthorizationGateHandoff = {
@@ -38938,7 +38950,7 @@ let evidenceEvaluationExecutionAuthorizationGateHandoff = {
 };
 
 
-const eightFB_Source =
+let eightFB_Source =
   evidenceEvaluationExecutionAuthorizationGate;
 
 
@@ -38970,10 +38982,14 @@ const eightFB_Ready =
   eightFB_Source.executionPolicy.evidenceInsertion === false &&
   eightFB_Source.executionPolicy.claimSupportUpdate === false &&
   eightFB_Source.safety &&
-  eightFB_Source.safety.externalSourceAccess === "NOT_STARTED" &&
-  eightFB_Source.safety.sourceRetrieval === "NOT_STARTED" &&
-  eightFB_Source.safety.evidenceInsertion === "NOT_STARTED" &&
-  eightFB_Source.safety.claimSupportUpdate === "NOT_CHANGED";
+  eightFB_Source.safety.externalSourceAccess ===
+    "NOT_STARTED" &&
+  eightFB_Source.safety.sourceRetrieval ===
+    "NOT_STARTED" &&
+  eightFB_Source.safety.evidenceInsertion ===
+    "NOT_STARTED" &&
+  eightFB_Source.safety.claimSupportUpdate ===
+    "NOT_CHANGED";
 
 
 if (eightFB_Ready) {
@@ -38989,6 +39005,7 @@ if (eightFB_Ready) {
     targets: eightFB_Source.targets.map(function (target) {
       return {
         ...target,
+
         invocationStatus:
           "EVIDENCE_EVALUATION_EXECUTION_AUTHORIZATION_GATE_HANDOFF_READY"
       };
@@ -39015,6 +39032,7 @@ if (eightFB_Ready) {
 
 
 if (typeof OODebug !== "undefined" && OODebug.log) {
+
   OODebug.log(
     "8FB",
     "EVIDENCE_EVALUATION_EXECUTION_AUTHORIZATION_GATE_HANDOFF",
