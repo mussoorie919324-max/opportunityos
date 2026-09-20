@@ -46036,9 +46036,9 @@ if (
 
 })();
 
-
 /* =========================================================
    STEP 8GT — CRITERION ASSESSMENT RULES HANDOFF
+   FIXED DEPENDENCY CHAIN
    ========================================================= */
 
 (function () {
@@ -46048,6 +46048,10 @@ if (
     (globalThis.__OpportunityOS_HandoffRegistry = {});
 
   var eightGT_Source = registry["8GS"];
+
+  /* 8GS carries decision boundary.
+     8GR carries scoring + assessment rules. */
+  var eightGT_RulesSource = registry["8GR"];
 
   var eightGT_Query =
     eightGT_Source &&
@@ -46067,15 +46071,43 @@ if (
       ? eightGT_Source.decisions.slice()
       : [];
 
+  var eightGT_AssessmentRules =
+    eightGT_RulesSource &&
+    Array.isArray(eightGT_RulesSource.assessmentRules)
+      ? eightGT_RulesSource.assessmentRules.slice()
+      : [];
+
+  var eightGT_ScoringBoundary =
+    eightGT_RulesSource &&
+    eightGT_RulesSource.scoringBoundary
+      ? eightGT_RulesSource.scoringBoundary
+      : null;
+
+  var eightGT_DecisionBoundary =
+    eightGT_Source &&
+    eightGT_Source.decisionBoundary
+      ? eightGT_Source.decisionBoundary
+      : null;
+
   var eightGT_Status =
     (
       eightGT_Source &&
       eightGT_Source.status === "ready" &&
+
+      eightGT_RulesSource &&
+      eightGT_RulesSource.status === "ready" &&
+
       eightGT_Query &&
+
       eightGT_Targets.length === 5 &&
+
+      eightGT_AssessmentRules.length === 8 &&
+
       eightGT_Decisions.length === 5 &&
-      eightGT_Source.decisionBoundary &&
-      eightGT_Source.decisionBoundary.defaultDecision ===
+
+      eightGT_DecisionBoundary &&
+
+      eightGT_DecisionBoundary.defaultDecision ===
         "UNVERIFIED"
     )
       ? "ready"
@@ -46083,27 +46115,46 @@ if (
 
   var eightGT_Output = {
     status: eightGT_Status,
-    step: "8GT",
-    layer: "LAYER_6",
-    layerName: "EVIDENCE_EVALUATION_AND_VERIFICATION",
 
-    query: eightGT_Query,
-    targets: eightGT_Targets,
+    step: "8GT",
+
+    layer: "LAYER_6",
+
+    layerName:
+      "EVIDENCE_EVALUATION_AND_VERIFICATION",
+
+    query:
+      eightGT_Query,
+
+    targets:
+      eightGT_Targets,
 
     assessmentRules:
-      eightGT_Source.assessmentRules || [],
+      eightGT_AssessmentRules,
 
     scoringBoundary:
-      eightGT_Source.scoringBoundary || null,
+      eightGT_ScoringBoundary,
 
     decisionBoundary:
-      eightGT_Source.decisionBoundary || null,
+      eightGT_DecisionBoundary,
 
-    decisions: eightGT_Decisions,
+    decisions:
+      eightGT_Decisions,
 
-    evaluationScope: "CRITERION_LEVEL",
+    evaluationScope:
+      "CRITERION_LEVEL",
 
-    evaluationExecution: "NOT_STARTED",
+    evaluationExecution:
+      "NOT_STARTED",
+
+    evidenceAssessment:
+      "NOT_STARTED",
+
+    verificationStatus:
+      "UNVERIFIED",
+
+    claimSupportUpdate:
+      "NOT_CHANGED",
 
     executionPolicy: {
       externalSourceAccess: false,
@@ -46121,13 +46172,14 @@ if (
 
     reason:
       eightGT_Status === "ready"
-        ? "Criterion-level assessment rules handoff is ready. Controlled criterion assessment can proceed while retrieval, evidence insertion, and claim mutation remain safely blocked."
+        ? "Criterion-level assessment rules handoff is ready. Assessment rules, scoring boundaries, and decision boundaries are connected while retrieval, evidence insertion, verification, and claim mutation remain safely blocked."
         : "Criterion-level assessment rules handoff could not be prepared safely."
   };
 
   registry["8GT"] = eightGT_Output;
 
   if (typeof OODebug !== "undefined" && OODebug.log) {
+
     OODebug.log(
       "8GT",
       "CRITERION_ASSESSMENT_RULES_HANDOFF",
@@ -46144,6 +46196,12 @@ if (
       "8GT",
       "TARGETS",
       eightGT_Targets.length
+    );
+
+    OODebug.log(
+      "8GT",
+      "ASSESSMENT_RULES",
+      eightGT_AssessmentRules.length
     );
 
     OODebug.log(
@@ -46166,6 +46224,24 @@ if (
 
     OODebug.log(
       "8GT",
+      "EVIDENCE_ASSESSMENT",
+      "NOT_STARTED"
+    );
+
+    OODebug.log(
+      "8GT",
+      "VERIFICATION_STATUS",
+      "UNVERIFIED"
+    );
+
+    OODebug.log(
+      "8GT",
+      "CLAIM_SUPPORT_UPDATE",
+      "NOT_CHANGED"
+    );
+
+    OODebug.log(
+      "8GT",
       "POLICY",
       eightGT_Output.executionPolicy
     );
@@ -46181,9 +46257,11 @@ if (
       "REASON",
       eightGT_Output.reason
     );
+
   }
 
 })();
+
    /* =========================================================
    STEP 8GU — CRITERION ASSESSMENT INPUT BINDING
    ========================================================= */
