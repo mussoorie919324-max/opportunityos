@@ -48791,7 +48791,1083 @@ if (
   }
 
 })();
-    
+   /* =========================================================
+   STEP 8HG — EVIDENCE ASSESSMENT TASK CREATION
+   ========================================================= */
+
+(function () {
+
+  /* =======================================================
+     REGISTRY
+     ======================================================= */
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+
+  /* =======================================================
+     SOURCE — 8HF
+     ======================================================= */
+
+  var step8HFSource =
+    registry["8HF"] || null;
+
+
+  /* =======================================================
+     SAFE SOURCE RESOLUTION
+     ======================================================= */
+
+  var query =
+    step8HFSource &&
+    typeof step8HFSource.query === "string"
+      ? step8HFSource.query
+      : "";
+
+  var targets =
+    step8HFSource &&
+    Array.isArray(step8HFSource.targets)
+      ? step8HFSource.targets.slice()
+      : [];
+
+  var criteria =
+    step8HFSource &&
+    Array.isArray(step8HFSource.criteria)
+      ? step8HFSource.criteria.slice()
+      : [];
+
+
+  /* =======================================================
+     FIXED CRITERIA FALLBACK
+     ======================================================= */
+
+  if (criteria.length === 0) {
+    criteria = [
+      "RELEVANCE",
+      "SOURCE_RELIABILITY",
+      "FRESHNESS",
+      "DIRECT_SUPPORT",
+      "EVIDENCE_STRENGTH",
+      "CONFLICT",
+      "COVERAGE",
+      "UNCERTAINTY"
+    ];
+  }
+
+
+  /* =======================================================
+     TARGET COUNT SAFETY
+     ======================================================= */
+
+  var safeTargets = targets.slice(0, 5);
+
+
+  /* =======================================================
+     ASSESSMENT TASKS
+     ======================================================= */
+
+  var evidenceAssessmentTasks = [];
+
+
+  for (var i = 0; i < safeTargets.length; i++) {
+
+    var target = safeTargets[i];
+
+    var claimId =
+      target &&
+      (
+        target.claimId ??
+        target.id ??
+        target.claim_id ??
+        null
+      );
+
+    var claimType =
+      target &&
+      (
+        target.claimType ??
+        target.type ??
+        target.claim_type ??
+        null
+      );
+
+    var claimText =
+      target &&
+      (
+        target.claimText ??
+        target.claim ??
+        target.text ??
+        ""
+      );
+
+
+    evidenceAssessmentTasks.push({
+
+      taskId:
+        "8HG-TASK-" + (i + 1),
+
+      targetIndex:
+        i + 1,
+
+      claimId:
+        claimId,
+
+      claimType:
+        claimType,
+
+      claimText:
+        claimText,
+
+      criteria:
+        criteria.slice(),
+
+      taskType:
+        "EVIDENCE_ASSESSMENT",
+
+      scope:
+        "CLAIM_LEVEL",
+
+      assessmentMode:
+        "CONTROLLED",
+
+      executionStatus:
+        "NOT_STARTED",
+
+      evidenceAssessmentStatus:
+        "NOT_STARTED",
+
+      verificationStatus:
+        "UNVERIFIED",
+
+      claimSupportStatus:
+        "NOT_CHANGED",
+
+      externalSourceAccess:
+        false,
+
+      sourceRetrieval:
+        false,
+
+      evidenceInsertion:
+        false,
+
+      claimSupportUpdate:
+        false
+
+    });
+  }
+
+
+  /* =======================================================
+     TASK CREATION STATUS
+     ======================================================= */
+
+  var taskCreationReady =
+    query.trim().length > 0 &&
+    safeTargets.length === 5 &&
+    criteria.length === 8 &&
+    evidenceAssessmentTasks.length === 5;
+
+
+  /* =======================================================
+     8HG OUTPUT
+     ======================================================= */
+
+  var evidenceAssessmentTaskCreation = {
+
+    step:
+      "8HG",
+
+    stepName:
+      "EVIDENCE_ASSESSMENT_TASK_CREATION",
+
+    layer:
+      "LAYER_6",
+
+    layerName:
+      "EVIDENCE_EVALUATION_AND_VERIFICATION",
+
+    status:
+      taskCreationReady
+        ? "ready"
+        : "blocked",
+
+    ready:
+      taskCreationReady,
+
+    query:
+      query,
+
+    targetCount:
+      safeTargets.length,
+
+    criteriaCount:
+      criteria.length,
+
+    taskCount:
+      evidenceAssessmentTasks.length,
+
+    tasks:
+      evidenceAssessmentTasks,
+
+    taskType:
+      "EVIDENCE_ASSESSMENT",
+
+    scope:
+      "CLAIM_LEVEL",
+
+    assessmentMode:
+      "CONTROLLED",
+
+    executionStatus:
+      "NOT_STARTED",
+
+    evidenceAssessmentStatus:
+      "NOT_STARTED",
+
+    verificationStatus:
+      "UNVERIFIED",
+
+    claimSupportStatus:
+      "NOT_CHANGED",
+
+    executionPolicy: {
+
+      externalSourceAccess:
+        false,
+
+      sourceRetrieval:
+        false,
+
+      evidenceInsertion:
+        false,
+
+      claimSupportUpdate:
+        false
+
+    },
+
+    safety: {
+
+      externalSourceAccess:
+        "NOT_STARTED",
+
+      sourceRetrieval:
+        "NOT_STARTED",
+
+      evidenceInsertion:
+        "NOT_STARTED",
+
+      claimSupportUpdate:
+        "NOT_CHANGED"
+
+    },
+
+    reason:
+      taskCreationReady
+        ? "Evidence assessment tasks created and ready for criterion-wise mapping."
+        : "Evidence assessment task creation prerequisites are not satisfied."
+
+  };
+
+
+  /* =======================================================
+     REGISTRY WRITE
+     ======================================================= */
+
+  registry["8HG"] =
+    evidenceAssessmentTaskCreation;
+
+
+  /* =======================================================
+     DEBUGGER
+     ======================================================= */
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+
+    OODebug.log(
+      "8HG",
+      "STATUS",
+      evidenceAssessmentTaskCreation.status
+    );
+
+    OODebug.log(
+      "8HG",
+      "QUERY",
+      query
+    );
+
+    OODebug.log(
+      "8HG",
+      "TARGETS",
+      safeTargets.length
+    );
+
+    OODebug.log(
+      "8HG",
+      "CRITERIA",
+      criteria.length
+    );
+
+    OODebug.log(
+      "8HG",
+      "TASKS",
+      evidenceAssessmentTasks.length
+    );
+
+    OODebug.log(
+      "8HG",
+      "EXECUTION",
+      "NOT_STARTED"
+    );
+
+    OODebug.log(
+      "8HG",
+      "EVIDENCE_ASSESSMENT",
+      "NOT_STARTED"
+    );
+
+    OODebug.log(
+      "8HG",
+      "VERIFICATION",
+      "UNVERIFIED"
+    );
+
+    OODebug.log(
+      "8HG",
+      "CLAIM_SUPPORT",
+      "NOT_CHANGED"
+    );
+
+    OODebug.log(
+      "8HG",
+      "SAFETY",
+      "EXTERNAL_RETRIEVAL_BLOCKED"
+    );
+
+  }
+
+})(); 
+/* =========================================================
+   STEP 8HH — CRITERION-WISE ASSESSMENT TASK MAPPING
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source =
+    registry["8HG"] || null;
+
+  var query =
+    source &&
+    typeof source.query === "string"
+      ? source.query
+      : "";
+
+  var tasks =
+    source &&
+    Array.isArray(source.tasks)
+      ? source.tasks.slice()
+      : [];
+
+  var criteria = [
+    "RELEVANCE",
+    "SOURCE_RELIABILITY",
+    "FRESHNESS",
+    "DIRECT_SUPPORT",
+    "EVIDENCE_STRENGTH",
+    "CONFLICT",
+    "COVERAGE",
+    "UNCERTAINTY"
+  ];
+
+  var mappedTasks = [];
+
+  for (var i = 0; i < tasks.length; i++) {
+
+    var task = tasks[i] || {};
+
+    var criterionMappings = [];
+
+    for (var j = 0; j < criteria.length; j++) {
+
+      criterionMappings.push({
+        criterionIndex: j + 1,
+        criterion: criteria[j],
+        assessmentRequired: true,
+        assessmentStatus: "NOT_STARTED",
+        scoreStatus: "NOT_STARTED",
+        decisionStatus: "UNVERIFIED"
+      });
+
+    }
+
+    mappedTasks.push({
+
+      taskId:
+        task.taskId || ("8HH-TASK-" + (i + 1)),
+
+      targetIndex:
+        task.targetIndex || (i + 1),
+
+      claimId:
+        task.claimId || null,
+
+      claimType:
+        task.claimType || null,
+
+      claimText:
+        task.claimText || "",
+
+      criteria:
+        criteria.slice(),
+
+      criterionMappings:
+        criterionMappings,
+
+      criterionCount:
+        criterionMappings.length,
+
+      mappingStatus:
+        "READY",
+
+      executionStatus:
+        "NOT_STARTED",
+
+      evidenceAssessmentStatus:
+        "NOT_STARTED",
+
+      verificationStatus:
+        "UNVERIFIED",
+
+      claimSupportStatus:
+        "NOT_CHANGED"
+
+    });
+
+  }
+
+  var ready =
+    query.trim().length > 0 &&
+    mappedTasks.length === 5 &&
+    mappedTasks.every(function (item) {
+      return item.criterionCount === 8;
+    });
+
+  var output = {
+
+    step: "8HH",
+
+    stepName:
+      "CRITERION_WISE_ASSESSMENT_TASK_MAPPING",
+
+    layer: "LAYER_6",
+
+    layerName:
+      "EVIDENCE_EVALUATION_AND_VERIFICATION",
+
+    status:
+      ready ? "ready" : "blocked",
+
+    ready:
+      ready,
+
+    query:
+      query,
+
+    targetCount:
+      mappedTasks.length,
+
+    criteriaCount:
+      criteria.length,
+
+    mappedTaskCount:
+      mappedTasks.length,
+
+    tasks:
+      mappedTasks,
+
+    executionStatus:
+      "NOT_STARTED",
+
+    evidenceAssessmentStatus:
+      "NOT_STARTED",
+
+    verificationStatus:
+      "UNVERIFIED",
+
+    claimSupportStatus:
+      "NOT_CHANGED",
+
+    executionPolicy: {
+
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+
+    },
+
+    safety: {
+
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+
+    },
+
+    reason:
+      ready
+        ? "Each evidence assessment task is mapped to all eight evaluation criteria."
+        : "Criterion-wise assessment task mapping prerequisites are not satisfied."
+
+  };
+
+  registry["8HH"] = output;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+
+    OODebug.log("8HH", "STATUS", output.status);
+    OODebug.log("8HH", "QUERY", query);
+    OODebug.log("8HH", "TARGETS", mappedTasks.length);
+    OODebug.log("8HH", "CRITERIA", criteria.length);
+    OODebug.log("8HH", "MAPPED_TASKS", mappedTasks.length);
+    OODebug.log("8HH", "EXECUTION", "NOT_STARTED");
+    OODebug.log("8HH", "EVIDENCE_ASSESSMENT", "NOT_STARTED");
+    OODebug.log("8HH", "VERIFICATION", "UNVERIFIED");
+    OODebug.log("8HH", "CLAIM_SUPPORT", "NOT_CHANGED");
+    OODebug.log("8HH", "SAFETY", "EXTERNAL_RETRIEVAL_BLOCKED");
+
+  }
+
+})();
+ /* =========================================================
+   STEP 8HI — ASSESSMENT EXECUTION CONTROL
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source =
+    registry["8HH"] || null;
+
+  var query =
+    source &&
+    typeof source.query === "string"
+      ? source.query
+      : "";
+
+  var tasks =
+    source &&
+    Array.isArray(source.tasks)
+      ? source.tasks.slice()
+      : [];
+
+  var executionControls = [];
+
+  for (var i = 0; i < tasks.length; i++) {
+
+    var task = tasks[i] || {};
+
+    executionControls.push({
+
+      taskId:
+        task.taskId || ("8HI-TASK-" + (i + 1)),
+
+      targetIndex:
+        task.targetIndex || (i + 1),
+
+      executionAuthorized:
+        false,
+
+      executionStatus:
+        "NOT_STARTED",
+
+      controlledExecution:
+        true,
+
+      actualEvidenceAssessment:
+        false,
+
+      externalSourceAccess:
+        false,
+
+      sourceRetrieval:
+        false,
+
+      evidenceInsertion:
+        false,
+
+      verificationMutation:
+        false,
+
+      claimSupportUpdate:
+        false,
+
+      reason:
+        "Assessment execution remains gated until controlled evidence assessment execution is explicitly authorized."
+
+    });
+
+  }
+
+  var ready =
+    query.trim().length > 0 &&
+    executionControls.length === 5 &&
+    executionControls.every(function (item) {
+      return (
+        item.executionAuthorized === false &&
+        item.executionStatus === "NOT_STARTED" &&
+        item.actualEvidenceAssessment === false
+      );
+    });
+
+  var output = {
+
+    step: "8HI",
+
+    stepName:
+      "ASSESSMENT_EXECUTION_CONTROL",
+
+    layer: "LAYER_6",
+
+    layerName:
+      "EVIDENCE_EVALUATION_AND_VERIFICATION",
+
+    status:
+      ready ? "ready" : "blocked",
+
+    ready:
+      ready,
+
+    query:
+      query,
+
+    targetCount:
+      executionControls.length,
+
+    executionControls:
+      executionControls,
+
+    executionAuthorized:
+      false,
+
+    executionStatus:
+      "NOT_STARTED",
+
+    actualEvidenceAssessment:
+      false,
+
+    evidenceAssessmentStatus:
+      "NOT_STARTED",
+
+    verificationStatus:
+      "UNVERIFIED",
+
+    claimSupportStatus:
+      "NOT_CHANGED",
+
+    executionPolicy: {
+
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+
+    },
+
+    safety: {
+
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+
+    },
+
+    reason:
+      ready
+        ? "Assessment execution controls are prepared while actual execution remains blocked."
+        : "Assessment execution control prerequisites are not satisfied."
+
+  };
+
+  registry["8HI"] = output;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+
+    OODebug.log("8HI", "STATUS", output.status);
+    OODebug.log("8HI", "QUERY", query);
+    OODebug.log("8HI", "TARGETS", executionControls.length);
+    OODebug.log("8HI", "EXECUTION_AUTHORIZED", false);
+    OODebug.log("8HI", "EXECUTION", "NOT_STARTED");
+    OODebug.log("8HI", "ACTUAL_ASSESSMENT", false);
+    OODebug.log("8HI", "VERIFICATION", "UNVERIFIED");
+    OODebug.log("8HI", "CLAIM_SUPPORT", "NOT_CHANGED");
+    OODebug.log("8HI", "SAFETY", "EXTERNAL_RETRIEVAL_BLOCKED");
+
+  }
+
+})(); 
+/* =========================================================
+   STEP 8HJ — ASSESSMENT RESULT CAPTURE BOUNDARY
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source =
+    registry["8HI"] || null;
+
+  var query =
+    source &&
+    typeof source.query === "string"
+      ? source.query
+      : "";
+
+  var controls =
+    source &&
+    Array.isArray(source.executionControls)
+      ? source.executionControls.slice()
+      : [];
+
+  var resultCaptureBoundaries = [];
+
+  for (var i = 0; i < controls.length; i++) {
+
+    var control = controls[i] || {};
+
+    resultCaptureBoundaries.push({
+
+      taskId:
+        control.taskId || ("8HJ-TASK-" + (i + 1)),
+
+      targetIndex:
+        control.targetIndex || (i + 1),
+
+      resultCaptureAllowed:
+        false,
+
+      resultCaptureStatus:
+        "NOT_STARTED",
+
+      resultStatus:
+        "NOT_AVAILABLE",
+
+      criterionResults:
+        [],
+
+      overallEvidenceStatus:
+        "UNVERIFIED",
+
+      confidence:
+        null,
+
+      coverage:
+        null,
+
+      uncertainty:
+        null,
+
+      conflictStatus:
+        "NOT_ASSESSED",
+
+      freshnessStatus:
+        "NOT_ASSESSED",
+
+      sourceReliabilityStatus:
+        "NOT_ASSESSED",
+
+      evaluationDecision:
+        "UNVERIFIED",
+
+      verificationMutation:
+        false,
+
+      claimSupportUpdate:
+        false
+
+    });
+
+  }
+
+  var ready =
+    query.trim().length > 0 &&
+    resultCaptureBoundaries.length === 5 &&
+    resultCaptureBoundaries.every(function (item) {
+      return (
+        item.resultCaptureAllowed === false &&
+        item.resultCaptureStatus === "NOT_STARTED" &&
+        item.resultStatus === "NOT_AVAILABLE" &&
+        item.evaluationDecision === "UNVERIFIED"
+      );
+    });
+
+  var output = {
+
+    step: "8HJ",
+
+    stepName:
+      "ASSESSMENT_RESULT_CAPTURE_BOUNDARY",
+
+    layer: "LAYER_6",
+
+    layerName:
+      "EVIDENCE_EVALUATION_AND_VERIFICATION",
+
+    status:
+      ready ? "ready" : "blocked",
+
+    ready:
+      ready,
+
+    query:
+      query,
+
+    targetCount:
+      resultCaptureBoundaries.length,
+
+    resultCaptureBoundaries:
+      resultCaptureBoundaries,
+
+    resultCaptureAllowed:
+      false,
+
+    resultCaptureStatus:
+      "NOT_STARTED",
+
+    actualResultsAvailable:
+      false,
+
+    executionStatus:
+      "NOT_STARTED",
+
+    evidenceAssessmentStatus:
+      "NOT_STARTED",
+
+    verificationStatus:
+      "UNVERIFIED",
+
+    claimSupportStatus:
+      "NOT_CHANGED",
+
+    executionPolicy: {
+
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+
+    },
+
+    safety: {
+
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+
+    },
+
+    reason:
+      ready
+        ? "Assessment result capture boundary is prepared; no actual assessment results have been captured."
+        : "Assessment result capture boundary prerequisites are not satisfied."
+
+  };
+
+  registry["8HJ"] = output;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+
+    OODebug.log("8HJ", "STATUS", output.status);
+    OODebug.log("8HJ", "QUERY", query);
+    OODebug.log("8HJ", "TARGETS", resultCaptureBoundaries.length);
+    OODebug.log("8HJ", "RESULT_CAPTURE", "NOT_STARTED");
+    OODebug.log("8HJ", "RESULTS_AVAILABLE", false);
+    OODebug.log("8HJ", "EXECUTION", "NOT_STARTED");
+    OODebug.log("8HJ", "VERIFICATION", "UNVERIFIED");
+    OODebug.log("8HJ", "CLAIM_SUPPORT", "NOT_CHANGED");
+    OODebug.log("8HJ", "SAFETY", "EXTERNAL_RETRIEVAL_BLOCKED");
+
+  }
+
+})();
+    /* =========================================================
+   STEP 8HK — CONTROLLED ASSESSMENT HANDOFF
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source =
+    registry["8HJ"] || null;
+
+  var query =
+    source &&
+    typeof source.query === "string"
+      ? source.query
+      : "";
+
+  var boundaries =
+    source &&
+    Array.isArray(source.resultCaptureBoundaries)
+      ? source.resultCaptureBoundaries.slice()
+      : [];
+
+  var handoffTargets = [];
+
+  for (var i = 0; i < boundaries.length; i++) {
+
+    var boundary = boundaries[i] || {};
+
+    handoffTargets.push({
+
+      taskId:
+        boundary.taskId || ("8HK-TASK-" + (i + 1)),
+
+      targetIndex:
+        boundary.targetIndex || (i + 1),
+
+      handoffReady:
+        true,
+
+      executionStatus:
+        "NOT_STARTED",
+
+      resultCaptureStatus:
+        "NOT_STARTED",
+
+      actualEvidenceAssessment:
+        false,
+
+      verificationStatus:
+        "UNVERIFIED",
+
+      claimSupportStatus:
+        "NOT_CHANGED"
+
+    });
+
+  }
+
+  var ready =
+    query.trim().length > 0 &&
+    handoffTargets.length === 5 &&
+    handoffTargets.every(function (item) {
+      return (
+        item.handoffReady === true &&
+        item.executionStatus === "NOT_STARTED" &&
+        item.actualEvidenceAssessment === false &&
+        item.verificationStatus === "UNVERIFIED" &&
+        item.claimSupportStatus === "NOT_CHANGED"
+      );
+    });
+
+  var output = {
+
+    step: "8HK",
+
+    stepName:
+      "CONTROLLED_ASSESSMENT_HANDOFF",
+
+    layer: "LAYER_6",
+
+    layerName:
+      "EVIDENCE_EVALUATION_AND_VERIFICATION",
+
+    status:
+      ready ? "ready" : "blocked",
+
+    ready:
+      ready,
+
+    query:
+      query,
+
+    targetCount:
+      handoffTargets.length,
+
+    handoffTargets:
+      handoffTargets,
+
+    handoffReady:
+      ready,
+
+    executionStatus:
+      "NOT_STARTED",
+
+    actualEvidenceAssessment:
+      false,
+
+    evidenceAssessmentStatus:
+      "NOT_STARTED",
+
+    resultCaptureStatus:
+      "NOT_STARTED",
+
+    verificationStatus:
+      "UNVERIFIED",
+
+    claimSupportStatus:
+      "NOT_CHANGED",
+
+    executionPolicy: {
+
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+
+    },
+
+    safety: {
+
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+
+    },
+
+    reason:
+      ready
+        ? "Controlled assessment handoff is ready; actual evidence assessment remains not started."
+        : "Controlled assessment handoff prerequisites are not satisfied."
+
+  };
+
+  registry["8HK"] = output;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+
+    OODebug.log("8HK", "STATUS", output.status);
+    OODebug.log("8HK", "QUERY", query);
+    OODebug.log("8HK", "TARGETS", handoffTargets.length);
+    OODebug.log("8HK", "HANDOFF", output.handoffReady);
+    OODebug.log("8HK", "EXECUTION", "NOT_STARTED");
+    OODebug.log("8HK", "ACTUAL_ASSESSMENT", false);
+    OODebug.log("8HK", "RESULT_CAPTURE", "NOT_STARTED");
+    OODebug.log("8HK", "VERIFICATION", "UNVERIFIED");
+    OODebug.log("8HK", "CLAIM_SUPPORT", "NOT_CHANGED");
+    OODebug.log("8HK", "SAFETY", "EXTERNAL_RETRIEVAL_BLOCKED");
+
+  }
+
+})();
 /* ==========================================
    RESULT VALUES
    ========================================== */
