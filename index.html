@@ -45498,6 +45498,693 @@ if (
   }
 
 })();
+/* =========================================================
+   STEP 8GQ — CRITERION-LEVEL ASSESSMENT RULES
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var eightGQ_Source = registry["8GP"];
+
+  var eightGQ_Query =
+    eightGQ_Source &&
+    typeof eightGQ_Source.query === "string"
+      ? eightGQ_Source.query.trim()
+      : "";
+
+  var eightGQ_Targets =
+    eightGQ_Source &&
+    Array.isArray(eightGQ_Source.targets)
+      ? eightGQ_Source.targets.slice()
+      : [];
+
+  var eightGQ_Criteria =
+    eightGQ_Source &&
+    Array.isArray(eightGQ_Source.evaluationCriteria)
+      ? eightGQ_Source.evaluationCriteria.slice()
+      : [];
+
+  var eightGQ_Dimensions =
+    eightGQ_Source &&
+    Array.isArray(eightGQ_Source.evaluationDimensions)
+      ? eightGQ_Source.evaluationDimensions.slice()
+      : [];
+
+  var eightGQ_Rules = [
+    {
+      criterion: "RELEVANCE",
+      assessmentRule:
+        "Evidence must materially relate to the specific claim being evaluated.",
+      allowedStatus:
+        ["SUPPORTED", "NEEDS_REVIEW", "INSUFFICIENT_EVIDENCE", "UNVERIFIED"]
+    },
+    {
+      criterion: "SOURCE_RELIABILITY",
+      assessmentRule:
+        "Evidence reliability must be assessed from the authority and quality of its source.",
+      allowedStatus:
+        ["SUPPORTED", "NEEDS_REVIEW", "INSUFFICIENT_EVIDENCE", "UNVERIFIED"]
+    },
+    {
+      criterion: "FRESHNESS",
+      assessmentRule:
+        "Evidence must be assessed for temporal relevance to the claim and current evaluation context.",
+      allowedStatus:
+        ["SUPPORTED", "NEEDS_REVIEW", "INSUFFICIENT_EVIDENCE", "UNVERIFIED"]
+    },
+    {
+      criterion: "DIRECT_SUPPORT",
+      assessmentRule:
+        "Evidence must directly support the claim rather than only providing indirect context.",
+      allowedStatus:
+        ["SUPPORTED", "NEEDS_REVIEW", "INSUFFICIENT_EVIDENCE", "UNVERIFIED"]
+    },
+    {
+      criterion: "EVIDENCE_STRENGTH",
+      assessmentRule:
+        "Evidence strength must reflect the quality and consistency of the available support.",
+      allowedStatus:
+        ["SUPPORTED", "NEEDS_REVIEW", "INSUFFICIENT_EVIDENCE", "UNVERIFIED"]
+    },
+    {
+      criterion: "CONFLICT",
+      assessmentRule:
+        "Conflicting evidence must be identified before a claim can receive a supported outcome.",
+      allowedStatus:
+        ["SUPPORTED", "NEEDS_REVIEW", "CONFLICTED", "UNVERIFIED"]
+    },
+    {
+      criterion: "COVERAGE",
+      assessmentRule:
+        "The available evidence must sufficiently cover the claim being evaluated.",
+      allowedStatus:
+        ["SUPPORTED", "NEEDS_REVIEW", "INSUFFICIENT_EVIDENCE", "UNVERIFIED"]
+    },
+    {
+      criterion: "UNCERTAINTY",
+      assessmentRule:
+        "Material uncertainty must remain explicit and must not be converted into unsupported certainty.",
+      allowedStatus:
+        ["SUPPORTED", "NEEDS_REVIEW", "UNVERIFIED"]
+    }
+  ];
+
+  var eightGQ_Status =
+    (
+      eightGQ_Source &&
+      eightGQ_Source.reason &&
+      eightGQ_Query &&
+      eightGQ_Targets.length === 5 &&
+      eightGQ_Criteria.length === 8 &&
+      eightGQ_Dimensions.length === 8 &&
+      eightGQ_Rules.length === 8
+    )
+      ? "ready"
+      : "blocked";
+
+  var eightGQ_Output = {
+    status: eightGQ_Status,
+    step: "8GQ",
+    layer: "LAYER_6",
+    layerName: "EVIDENCE_EVALUATION_AND_VERIFICATION",
+
+    query: eightGQ_Query,
+    targets: eightGQ_Targets,
+
+    evaluationCriteria: eightGQ_Criteria,
+    evaluationDimensions: eightGQ_Dimensions,
+
+    assessmentRules: eightGQ_Rules,
+
+    evaluationExecution: "NOT_STARTED",
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    reason:
+      eightGQ_Status === "ready"
+        ? "Criterion-level assessment rules are defined. Evidence evaluation remains not started and all retrieval and mutation actions remain safely blocked."
+        : "Criterion-level assessment rules could not be prepared safely."
+  };
+
+  registry["8GQ"] = eightGQ_Output;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8GQ",
+      "CRITERION_LEVEL_ASSESSMENT_RULES",
+      eightGQ_Status
+    );
+
+    OODebug.log(
+      "8GQ",
+      "QUERY",
+      eightGQ_Query
+    );
+
+    OODebug.log(
+      "8GQ",
+      "TARGETS",
+      eightGQ_Targets.length
+    );
+
+    OODebug.log(
+      "8GQ",
+      "RULES",
+      eightGQ_Rules.length
+    );
+
+    OODebug.log(
+      "8GQ",
+      "EVALUATION_EXECUTION",
+      "NOT_STARTED"
+    );
+
+    OODebug.log(
+      "8GQ",
+      "POLICY",
+      eightGQ_Output.executionPolicy
+    );
+
+    OODebug.log(
+      "8GQ",
+      "SAFETY",
+      eightGQ_Output.safety
+    );
+
+    OODebug.log(
+      "8GQ",
+      "REASON",
+      eightGQ_Output.reason
+    );
+  }
+
+})();
+
+
+/* =========================================================
+   STEP 8GR — CRITERION SCORING BOUNDARY
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var eightGR_Source = registry["8GQ"];
+
+  var eightGR_Query =
+    eightGR_Source &&
+    typeof eightGR_Source.query === "string"
+      ? eightGR_Source.query.trim()
+      : "";
+
+  var eightGR_Targets =
+    eightGR_Source &&
+    Array.isArray(eightGR_Source.targets)
+      ? eightGR_Source.targets.slice()
+      : [];
+
+  var eightGR_Rules =
+    eightGR_Source &&
+    Array.isArray(eightGR_Source.assessmentRules)
+      ? eightGR_Source.assessmentRules.slice()
+      : [];
+
+  var eightGR_ScoringBoundary = {
+    scale: {
+      minimum: 0,
+      maximum: 1
+    },
+
+    interpretation: {
+      "0":
+        "No usable support established.",
+      "0.25":
+        "Very weak or incomplete support.",
+      "0.5":
+        "Partial or mixed support requiring review.",
+      "0.75":
+        "Strong support with limited uncertainty.",
+      "1":
+        "Strongest support boundary; still subject to conflict and freshness checks."
+    },
+
+    scorePolicy: {
+      evidenceRequired: true,
+      unsupportedClaimsCannotReceivePositiveSupport: true,
+      conflictMustRemainVisible: true,
+      uncertaintyMustRemainVisible: true,
+      scoreDoesNotEqualVerification: true
+    }
+  };
+
+  var eightGR_Status =
+    (
+      eightGR_Source &&
+      eightGR_Source.status === "ready" &&
+      eightGR_Query &&
+      eightGR_Targets.length === 5 &&
+      eightGR_Rules.length === 8 &&
+      eightGR_ScoringBoundary.scale.minimum === 0 &&
+      eightGR_ScoringBoundary.scale.maximum === 1
+    )
+      ? "ready"
+      : "blocked";
+
+  var eightGR_Output = {
+    status: eightGR_Status,
+    step: "8GR",
+    layer: "LAYER_6",
+    layerName: "EVIDENCE_EVALUATION_AND_VERIFICATION",
+
+    query: eightGR_Query,
+    targets: eightGR_Targets,
+
+    assessmentRules: eightGR_Rules,
+    scoringBoundary: eightGR_ScoringBoundary,
+
+    evaluationExecution: "NOT_STARTED",
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    reason:
+      eightGR_Status === "ready"
+        ? "Criterion scoring boundaries are defined without converting scores into verification decisions."
+        : "Criterion scoring boundaries could not be prepared safely."
+  };
+
+  registry["8GR"] = eightGR_Output;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8GR",
+      "CRITERION_SCORING_BOUNDARY",
+      eightGR_Status
+    );
+
+    OODebug.log(
+      "8GR",
+      "QUERY",
+      eightGR_Query
+    );
+
+    OODebug.log(
+      "8GR",
+      "TARGETS",
+      eightGR_Targets.length
+    );
+
+    OODebug.log(
+      "8GR",
+      "SCORE_MIN",
+      eightGR_ScoringBoundary.scale.minimum
+    );
+
+    OODebug.log(
+      "8GR",
+      "SCORE_MAX",
+      eightGR_ScoringBoundary.scale.maximum
+    );
+
+    OODebug.log(
+      "8GR",
+      "EVALUATION_EXECUTION",
+      "NOT_STARTED"
+    );
+
+    OODebug.log(
+      "8GR",
+      "POLICY",
+      eightGR_Output.executionPolicy
+    );
+
+    OODebug.log(
+      "8GR",
+      "SAFETY",
+      eightGR_Output.safety
+    );
+
+    OODebug.log(
+      "8GR",
+      "REASON",
+      eightGR_Output.reason
+    );
+  }
+
+})();
+
+
+/* =========================================================
+   STEP 8GS — CRITERION DECISION BOUNDARY
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var eightGS_Source = registry["8GR"];
+
+  var eightGS_Query =
+    eightGS_Source &&
+    typeof eightGS_Source.query === "string"
+      ? eightGS_Source.query.trim()
+      : "";
+
+  var eightGS_Targets =
+    eightGS_Source &&
+    Array.isArray(eightGS_Source.targets)
+      ? eightGS_Source.targets.slice()
+      : [];
+
+  var eightGS_Decisions = [
+    "SUPPORTED",
+    "NEEDS_REVIEW",
+    "INSUFFICIENT_EVIDENCE",
+    "CONFLICTED",
+    "UNVERIFIED"
+  ];
+
+  var eightGS_DecisionBoundary = {
+    decisionLevel: "CRITERION_LEVEL",
+
+    allowedDecisions:
+      eightGS_Decisions.slice(),
+
+    decisionRules: {
+      SUPPORTED:
+        "Only when evidence provides sufficient support for the criterion and no blocking conflict remains.",
+
+      NEEDS_REVIEW:
+        "When evidence exists but material ambiguity, weakness, or unresolved interpretation remains.",
+
+      INSUFFICIENT_EVIDENCE:
+        "When available evidence is insufficient to support the criterion.",
+
+      CONFLICTED:
+        "When materially conflicting evidence prevents a stable criterion conclusion.",
+
+      UNVERIFIED:
+        "Default state when criterion evaluation has not actually been completed."
+    },
+
+    defaultDecision: "UNVERIFIED",
+
+    verificationPolicy: {
+      supportedDoesNotAutomaticallyVerifyClaim: true,
+      allCriteriaMustBeConsidered: true,
+      conflictCannotBeHidden: true,
+      uncertaintyCannotBeSuppressed: true
+    }
+  };
+
+  var eightGS_Status =
+    (
+      eightGS_Source &&
+      eightGS_Source.status === "ready" &&
+      eightGS_Query &&
+      eightGS_Targets.length === 5 &&
+      eightGS_DecisionBoundary.allowedDecisions.length === 5 &&
+      eightGS_DecisionBoundary.defaultDecision === "UNVERIFIED"
+    )
+      ? "ready"
+      : "blocked";
+
+  var eightGS_Output = {
+    status: eightGS_Status,
+    step: "8GS",
+    layer: "LAYER_6",
+    layerName: "EVIDENCE_EVALUATION_AND_VERIFICATION",
+
+    query: eightGS_Query,
+    targets: eightGS_Targets,
+
+    decisions:
+      eightGS_DecisionBoundary.allowedDecisions.slice(),
+
+    decisionBoundary: eightGS_DecisionBoundary,
+
+    evaluationExecution: "NOT_STARTED",
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    reason:
+      eightGS_Status === "ready"
+        ? "Criterion decision boundaries are ready. No criterion has been evaluated or marked verified."
+        : "Criterion decision boundaries could not be prepared safely."
+  };
+
+  registry["8GS"] = eightGS_Output;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8GS",
+      "CRITERION_DECISION_BOUNDARY",
+      eightGS_Status
+    );
+
+    OODebug.log(
+      "8GS",
+      "QUERY",
+      eightGS_Query
+    );
+
+    OODebug.log(
+      "8GS",
+      "TARGETS",
+      eightGS_Targets.length
+    );
+
+    OODebug.log(
+      "8GS",
+      "DECISIONS",
+      eightGS_DecisionBoundary.allowedDecisions.length
+    );
+
+    OODebug.log(
+      "8GS",
+      "DEFAULT_DECISION",
+      eightGS_DecisionBoundary.defaultDecision
+    );
+
+    OODebug.log(
+      "8GS",
+      "EVALUATION_EXECUTION",
+      "NOT_STARTED"
+    );
+
+    OODebug.log(
+      "8GS",
+      "POLICY",
+      eightGS_Output.executionPolicy
+    );
+
+    OODebug.log(
+      "8GS",
+      "SAFETY",
+      eightGS_Output.safety
+    );
+
+    OODebug.log(
+      "8GS",
+      "REASON",
+      eightGS_Output.reason
+    );
+  }
+
+})();
+
+
+/* =========================================================
+   STEP 8GT — CRITERION ASSESSMENT RULES HANDOFF
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var eightGT_Source = registry["8GS"];
+
+  var eightGT_Query =
+    eightGT_Source &&
+    typeof eightGT_Source.query === "string"
+      ? eightGT_Source.query.trim()
+      : "";
+
+  var eightGT_Targets =
+    eightGT_Source &&
+    Array.isArray(eightGT_Source.targets)
+      ? eightGT_Source.targets.slice()
+      : [];
+
+  var eightGT_Decisions =
+    eightGT_Source &&
+    Array.isArray(eightGT_Source.decisions)
+      ? eightGT_Source.decisions.slice()
+      : [];
+
+  var eightGT_Status =
+    (
+      eightGT_Source &&
+      eightGT_Source.status === "ready" &&
+      eightGT_Query &&
+      eightGT_Targets.length === 5 &&
+      eightGT_Decisions.length === 5 &&
+      eightGT_Source.decisionBoundary &&
+      eightGT_Source.decisionBoundary.defaultDecision ===
+        "UNVERIFIED"
+    )
+      ? "ready"
+      : "blocked";
+
+  var eightGT_Output = {
+    status: eightGT_Status,
+    step: "8GT",
+    layer: "LAYER_6",
+    layerName: "EVIDENCE_EVALUATION_AND_VERIFICATION",
+
+    query: eightGT_Query,
+    targets: eightGT_Targets,
+
+    assessmentRules:
+      eightGT_Source.assessmentRules || [],
+
+    scoringBoundary:
+      eightGT_Source.scoringBoundary || null,
+
+    decisionBoundary:
+      eightGT_Source.decisionBoundary || null,
+
+    decisions: eightGT_Decisions,
+
+    evaluationScope: "CRITERION_LEVEL",
+
+    evaluationExecution: "NOT_STARTED",
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    reason:
+      eightGT_Status === "ready"
+        ? "Criterion-level assessment rules handoff is ready. Controlled criterion assessment can proceed while retrieval, evidence insertion, and claim mutation remain safely blocked."
+        : "Criterion-level assessment rules handoff could not be prepared safely."
+  };
+
+  registry["8GT"] = eightGT_Output;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8GT",
+      "CRITERION_ASSESSMENT_RULES_HANDOFF",
+      eightGT_Status
+    );
+
+    OODebug.log(
+      "8GT",
+      "QUERY",
+      eightGT_Query
+    );
+
+    OODebug.log(
+      "8GT",
+      "TARGETS",
+      eightGT_Targets.length
+    );
+
+    OODebug.log(
+      "8GT",
+      "DECISIONS",
+      eightGT_Decisions.length
+    );
+
+    OODebug.log(
+      "8GT",
+      "EVALUATION_SCOPE",
+      "CRITERION_LEVEL"
+    );
+
+    OODebug.log(
+      "8GT",
+      "EVALUATION_EXECUTION",
+      "NOT_STARTED"
+    );
+
+    OODebug.log(
+      "8GT",
+      "POLICY",
+      eightGT_Output.executionPolicy
+    );
+
+    OODebug.log(
+      "8GT",
+      "SAFETY",
+      eightGT_Output.safety
+    );
+
+    OODebug.log(
+      "8GT",
+      "REASON",
+      eightGT_Output.reason
+    );
+  }
+
+})();
+        
 /* ==========================================
    RESULT VALUES
    ========================================== */
