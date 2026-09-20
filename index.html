@@ -44696,16 +44696,22 @@ if (
 
                 return {
                   criterionIndex: criterionIndex,
+
                   criterion: criterion,
+
                   dimension:
                     eightGM_Source.evaluationDimensions[
                       criterionIndex
                     ] || null,
 
                   status: "NOT_STARTED",
+
                   value: null,
+
                   confidence: null,
+
                   evidenceReference: null,
+
                   evaluationNote: null
                 };
 
@@ -44713,18 +44719,28 @@ if (
             ),
 
           overallEvidenceStatus: "UNVERIFIED",
+
           confidence: null,
+
           coverage: null,
+
           uncertainty: null,
+
           conflictStatus: "NOT_ASSESSED",
+
           freshnessStatus: "NOT_ASSESSED",
-          sourceReliabilityStatus: "NOT_ASSESSED",
 
-          evaluationDecision: "UNVERIFIED",
+          sourceReliabilityStatus:
+            "NOT_ASSESSED",
 
-          evaluationExecution: "NOT_STARTED",
+          evaluationDecision:
+            "UNVERIFIED",
+
+          evaluationExecution:
+            "NOT_STARTED",
 
           mutationAllowed: false,
+
           persistenceAllowed: false
         };
 
@@ -44829,6 +44845,14 @@ if (
 
     assessmentMatrix: [],
 
+    allowedEvaluationDecisions: [
+      "SUPPORTED",
+      "NEEDS_REVIEW",
+      "INSUFFICIENT_EVIDENCE",
+      "CONFLICTED",
+      "UNVERIFIED"
+    ],
+
     evaluationExecution: "NOT_STARTED",
 
     executionPolicy: {
@@ -44859,29 +44883,48 @@ if (
   ) {
 
     eightGN_Output.query =
-      eightGN_Source.query;
+      typeof eightGN_Source.query === "string"
+        ? eightGN_Source.query
+        : "";
 
     eightGN_Output.targets =
-      eightGN_Source.targets.slice();
+      Array.isArray(eightGN_Source.targets)
+        ? eightGN_Source.targets.slice()
+        : [];
 
     eightGN_Output.evaluationCriteria =
-      eightGN_Source.evaluationCriteria.slice();
+      Array.isArray(
+        eightGN_Source.evaluationCriteria
+      )
+        ? eightGN_Source.evaluationCriteria.slice()
+        : [];
 
     eightGN_Output.evaluationDimensions =
-      eightGN_Source.evaluationDimensions.slice();
+      Array.isArray(
+        eightGN_Source.evaluationDimensions
+      )
+        ? eightGN_Source.evaluationDimensions.slice()
+        : [];
 
 
     eightGN_Output.assessmentMatrix =
       eightGN_Source.claimEvaluationRecords.map(
         function (record) {
 
-          return {
-            targetIndex: record.targetIndex,
+          var criterionResults =
+            Array.isArray(record.criterionResults)
+              ? record.criterionResults
+              : [];
 
-            target: record.target,
+          return {
+            targetIndex:
+              record.targetIndex,
+
+            target:
+              record.target,
 
             criterionAssessments:
-              record.criterionResults.map(
+              criterionResults.map(
                 function (criterionResult) {
 
                   return {
@@ -44982,6 +45025,12 @@ if (
 
     OODebug.log(
       "8GN",
+      "DECISIONS",
+      eightGN_Output.allowedEvaluationDecisions.length
+    );
+
+    OODebug.log(
+      "8GN",
       "EVALUATION_EXECUTION",
       eightGN_Output.evaluationExecution
     );
@@ -45028,17 +45077,12 @@ if (
 
     assessmentMatrix: [],
 
-    allowedEvaluationDecisions: [
-      "SUPPORTED",
-      "NEEDS_REVIEW",
-      "INSUFFICIENT_EVIDENCE",
-      "CONFLICTED",
-      "UNVERIFIED"
-    ],
+    allowedEvaluationDecisions: [],
 
     decisionFrame: null,
 
-    evaluationExecution: "NOT_STARTED",
+    evaluationExecution:
+      "NOT_STARTED",
 
     executionPolicy: {
       externalSourceAccess: false,
@@ -45068,19 +45112,49 @@ if (
   ) {
 
     eightGO_Output.query =
-      eightGO_Source.query;
+      typeof eightGO_Source.query === "string"
+        ? eightGO_Source.query
+        : "";
 
     eightGO_Output.targets =
-      eightGO_Source.targets.slice();
+      Array.isArray(eightGO_Source.targets)
+        ? eightGO_Source.targets.slice()
+        : [];
 
     eightGO_Output.evaluationCriteria =
-      eightGO_Source.evaluationCriteria.slice();
+      Array.isArray(
+        eightGO_Source.evaluationCriteria
+      )
+        ? eightGO_Source.evaluationCriteria.slice()
+        : [];
 
     eightGO_Output.evaluationDimensions =
-      eightGO_Source.evaluationDimensions.slice();
+      Array.isArray(
+        eightGO_Source.evaluationDimensions
+      )
+        ? eightGO_Source.evaluationDimensions.slice()
+        : [];
 
     eightGO_Output.assessmentMatrix =
-      eightGO_Source.assessmentMatrix.slice();
+      Array.isArray(
+        eightGO_Source.assessmentMatrix
+      )
+        ? eightGO_Source.assessmentMatrix.slice()
+        : [];
+
+
+    eightGO_Output.allowedEvaluationDecisions =
+      Array.isArray(
+        eightGO_Source.allowedEvaluationDecisions
+      )
+        ? eightGO_Source.allowedEvaluationDecisions.slice()
+        : [
+            "SUPPORTED",
+            "NEEDS_REVIEW",
+            "INSUFFICIENT_EVIDENCE",
+            "CONFLICTED",
+            "UNVERIFIED"
+          ];
 
 
     eightGO_Output.decisionFrame = {
@@ -45092,7 +45166,7 @@ if (
         "UNVERIFIED",
 
       decisions:
-        eightGO_Source.allowedEvaluationDecisions.slice(),
+        eightGO_Output.allowedEvaluationDecisions.slice(),
 
       decisionRequirements: {
 
@@ -45238,6 +45312,8 @@ if (
 
     assessmentMatrix: [],
 
+    allowedEvaluationDecisions: [],
+
     decisionFrame: null,
 
     evaluationScope:
@@ -45285,25 +45361,50 @@ if (
     eightGP_Output.allowed = true;
 
     eightGP_Output.query =
-      eightGP_Source.query;
+      typeof eightGP_Source.query === "string"
+        ? eightGP_Source.query
+        : "";
 
     eightGP_Output.targets =
-      eightGP_Source.targets.slice();
+      Array.isArray(eightGP_Source.targets)
+        ? eightGP_Source.targets.slice()
+        : [];
 
     eightGP_Output.evaluationCriteria =
-      eightGP_Source.evaluationCriteria.slice();
+      Array.isArray(
+        eightGP_Source.evaluationCriteria
+      )
+        ? eightGP_Source.evaluationCriteria.slice()
+        : [];
 
     eightGP_Output.evaluationDimensions =
-      eightGP_Source.evaluationDimensions.slice();
+      Array.isArray(
+        eightGP_Source.evaluationDimensions
+      )
+        ? eightGP_Source.evaluationDimensions.slice()
+        : [];
 
     eightGP_Output.assessmentMatrix =
-      eightGP_Source.assessmentMatrix.slice();
+      Array.isArray(
+        eightGP_Source.assessmentMatrix
+      )
+        ? eightGP_Source.assessmentMatrix.slice()
+        : [];
+
+    eightGP_Output.allowedEvaluationDecisions =
+      Array.isArray(
+        eightGP_Source.allowedEvaluationDecisions
+      )
+        ? eightGP_Source.allowedEvaluationDecisions.slice()
+        : [];
 
     eightGP_Output.decisionFrame =
-      Object.assign(
-        {},
-        eightGP_Source.decisionFrame
-      );
+      eightGP_Source.decisionFrame
+        ? Object.assign(
+            {},
+            eightGP_Source.decisionFrame
+          )
+        : null;
 
     eightGP_Output.reason =
       "Claim evaluation structure handoff is ready. Criterion-level assessment can proceed while retrieval, evidence insertion, and claim mutation remain safely blocked.";
@@ -45360,6 +45461,12 @@ if (
 
     OODebug.log(
       "8GP",
+      "DECISIONS",
+      eightGP_Output.allowedEvaluationDecisions.length
+    );
+
+    OODebug.log(
+      "8GP",
       "EVALUATION_SCOPE",
       eightGP_Output.evaluationScope
     );
@@ -45390,7 +45497,7 @@ if (
 
   }
 
-})();    
+})();
 /* ==========================================
    RESULT VALUES
    ========================================== */
