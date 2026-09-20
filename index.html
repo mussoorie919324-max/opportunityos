@@ -43041,11 +43041,31 @@ if (
   }
 
 })();
- /* =========================================================
-   STEP 8GE — CLAIM-LEVEL EVALUATION FRAMEWORK
+/* =========================================================
+   STEP 8GE — 8GH
+   CLAIM-LEVEL EVIDENCE EVALUATION FRAMEWORK
+   SAFE DEBUGGER VERSION
    ========================================================= */
 
 (function () {
+
+  /* =======================================================
+     SAFE DEBUG FUNCTION
+     ======================================================= */
+
+  let step8_Debug = function () {};
+
+  if (
+    typeof globalThis !== "undefined" &&
+    typeof globalThis.OODebug === "function"
+  ) {
+    step8_Debug = globalThis.OODebug;
+  }
+
+
+  /* =======================================================
+     STEP 8GE — CLAIM-LEVEL EVALUATION FRAMEWORK
+     ======================================================= */
 
   let step8GE_Source = null;
 
@@ -43091,7 +43111,9 @@ if (
     step8GE_Targets.length === 5 &&
     step8GE_Criteria.length === 8;
 
+
   let evidenceClaimLevelEvaluationFramework = {
+
     status:
       step8GE_Ready
         ? "ready"
@@ -43134,53 +43156,47 @@ if (
   };
 
 
-  /* =======================================================
-     STEP 8GE — DEBUG
-     ======================================================= */
+  step8_Debug(
+    "8GE",
+    "CLAIM_LEVEL_EVALUATION_FRAMEWORK",
+    evidenceClaimLevelEvaluationFramework.status
+  );
 
-  if (typeof OODebug !== "undefined") {
-    OODebug(
-      "8GE",
-      "CLAIM_LEVEL_EVALUATION_FRAMEWORK",
-      evidenceClaimLevelEvaluationFramework.status
-    );
+  step8_Debug(
+    "8GE",
+    "LAYER",
+    "LAYER_6 → EVIDENCE_EVALUATION_AND_VERIFICATION"
+  );
 
-    OODebug(
-      "8GE",
-      "LAYER",
-      "LAYER_6 → EVIDENCE_EVALUATION_AND_VERIFICATION"
-    );
+  step8_Debug(
+    "8GE",
+    "QUERY",
+    step8GE_Query
+  );
 
-    OODebug(
-      "8GE",
-      "QUERY",
-      step8GE_Query
-    );
+  step8_Debug(
+    "8GE",
+    "TARGETS",
+    step8GE_Targets.length
+  );
 
-    OODebug(
-      "8GE",
-      "TARGETS",
-      step8GE_Targets.length
-    );
+  step8_Debug(
+    "8GE",
+    "CRITERIA",
+    step8GE_Criteria.length
+  );
 
-    OODebug(
-      "8GE",
-      "CRITERIA",
-      step8GE_Criteria.length
-    );
+  step8_Debug(
+    "8GE",
+    "EVALUATION_SCOPE",
+    "CLAIM_LEVEL"
+  );
 
-    OODebug(
-      "8GE",
-      "EVALUATION_SCOPE",
-      "CLAIM_LEVEL"
-    );
-
-    OODebug(
-      "8GE",
-      "MUTATION",
-      "BLOCKED"
-    );
-  }
+  step8_Debug(
+    "8GE",
+    "MUTATION",
+    "BLOCKED"
+  );
 
 
   /* =======================================================
@@ -43192,54 +43208,63 @@ if (
   if (step8GE_Ready) {
 
     step8GF_ClaimEvaluationDimensions = [
+
       {
         key: "relevance",
         criterion: "RELEVANCE",
         appliesTo: "CLAIM",
         required: true
       },
+
       {
         key: "sourceReliability",
         criterion: "SOURCE_RELIABILITY",
         appliesTo: "CLAIM",
         required: true
       },
+
       {
         key: "freshness",
         criterion: "FRESHNESS",
         appliesTo: "CLAIM",
         required: true
       },
+
       {
         key: "directSupport",
         criterion: "DIRECT_SUPPORT",
         appliesTo: "CLAIM",
         required: true
       },
+
       {
         key: "evidenceStrength",
         criterion: "EVIDENCE_STRENGTH",
         appliesTo: "CLAIM",
         required: true
       },
+
       {
         key: "conflict",
         criterion: "CONFLICT",
         appliesTo: "CLAIM",
         required: true
       },
+
       {
         key: "coverage",
         criterion: "COVERAGE",
         appliesTo: "CLAIM",
         required: true
       },
+
       {
         key: "uncertainty",
         criterion: "UNCERTAINTY",
         appliesTo: "CLAIM",
         required: true
       }
+
     ];
   }
 
@@ -43285,41 +43310,35 @@ if (
   };
 
 
-  /* =======================================================
-     STEP 8GF — DEBUG
-     ======================================================= */
+  step8_Debug(
+    "8GF",
+    "CLAIM_EVALUATION_DIMENSION_MAPPING",
+    evidenceClaimEvaluationDimensionMapping.status
+  );
 
-  if (typeof OODebug !== "undefined") {
-    OODebug(
-      "8GF",
-      "CLAIM_EVALUATION_DIMENSION_MAPPING",
-      evidenceClaimEvaluationDimensionMapping.status
-    );
+  step8_Debug(
+    "8GF",
+    "DIMENSIONS",
+    step8GF_ClaimEvaluationDimensions.length
+  );
 
-    OODebug(
-      "8GF",
-      "DIMENSIONS",
-      step8GF_ClaimEvaluationDimensions.length
-    );
+  step8_Debug(
+    "8GF",
+    "SCOPE",
+    "CLAIM_LEVEL"
+  );
 
-    OODebug(
-      "8GF",
-      "SCOPE",
-      "CLAIM_LEVEL"
-    );
+  step8_Debug(
+    "8GF",
+    "EVIDENCE_INSERTION",
+    "BLOCKED"
+  );
 
-    OODebug(
-      "8GF",
-      "EVIDENCE_INSERTION",
-      "BLOCKED"
-    );
-
-    OODebug(
-      "8GF",
-      "CLAIM_SUPPORT_UPDATE",
-      "BLOCKED"
-    );
-  }
+  step8_Debug(
+    "8GF",
+    "CLAIM_SUPPORT_UPDATE",
+    "BLOCKED"
+  );
 
 
   /* =======================================================
@@ -43338,24 +43357,41 @@ if (
       "CLAIM_LEVEL",
 
     fields: [
+
       "claimId",
+
       "criterionResults",
+
       "overallEvidenceStatus",
+
       "confidence",
+
       "coverage",
+
       "uncertainty",
+
       "conflictStatus",
+
       "freshnessStatus",
+
       "sourceReliabilityStatus",
+
       "evaluationDecision"
+
     ],
 
     allowedEvaluationDecisions: [
+
       "SUPPORTED",
+
       "NEEDS_REVIEW",
+
       "INSUFFICIENT_EVIDENCE",
+
       "CONFLICTED",
+
       "UNVERIFIED"
+
     ],
 
     mutationAllowed:
@@ -43404,41 +43440,35 @@ if (
   };
 
 
-  /* =======================================================
-     STEP 8GG — DEBUG
-     ======================================================= */
+  step8_Debug(
+    "8GG",
+    "CLAIM_EVALUATION_RECORD_DEFINITION",
+    evidenceClaimEvaluationRecordDefinition.status
+  );
 
-  if (typeof OODebug !== "undefined") {
-    OODebug(
-      "8GG",
-      "CLAIM_EVALUATION_RECORD_DEFINITION",
-      evidenceClaimEvaluationRecordDefinition.status
-    );
+  step8_Debug(
+    "8GG",
+    "RECORD_TYPE",
+    "CLAIM_EVALUATION_RECORD"
+  );
 
-    OODebug(
-      "8GG",
-      "RECORD_TYPE",
-      "CLAIM_EVALUATION_RECORD"
-    );
+  step8_Debug(
+    "8GG",
+    "DECISIONS",
+    5
+  );
 
-    OODebug(
-      "8GG",
-      "DECISIONS",
-      "5"
-    );
+  step8_Debug(
+    "8GG",
+    "EVALUATION_EXECUTION",
+    "NOT_STARTED"
+  );
 
-    OODebug(
-      "8GG",
-      "EVALUATION_EXECUTION",
-      "NOT_STARTED"
-    );
-
-    OODebug(
-      "8GG",
-      "MUTATION",
-      "BLOCKED"
-    );
-  }
+  step8_Debug(
+    "8GG",
+    "MUTATION",
+    "BLOCKED"
+  );
 
 
   /* =======================================================
@@ -43513,71 +43543,65 @@ if (
   };
 
 
-  /* =======================================================
-     STEP 8GH — DEBUG
-     ======================================================= */
+  step8_Debug(
+    "8GH",
+    "CLAIM_LEVEL_EVALUATION_FRAMEWORK_HANDOFF",
+    evidenceClaimLevelEvaluationFrameworkHandoff.status
+  );
 
-  if (typeof OODebug !== "undefined") {
-    OODebug(
-      "8GH",
-      "CLAIM_LEVEL_EVALUATION_FRAMEWORK_HANDOFF",
-      evidenceClaimLevelEvaluationFrameworkHandoff.status
-    );
+  step8_Debug(
+    "8GH",
+    "LAYER",
+    "LAYER_6 → EVIDENCE_EVALUATION_AND_VERIFICATION"
+  );
 
-    OODebug(
-      "8GH",
-      "LAYER",
-      "LAYER_6 → EVIDENCE_EVALUATION_AND_VERIFICATION"
-    );
+  step8_Debug(
+    "8GH",
+    "QUERY",
+    step8GE_Query
+  );
 
-    OODebug(
-      "8GH",
-      "QUERY",
-      step8GE_Query
-    );
+  step8_Debug(
+    "8GH",
+    "TARGETS",
+    step8GE_Targets.length
+  );
 
-    OODebug(
-      "8GH",
-      "TARGETS",
-      step8GE_Targets.length
-    );
+  step8_Debug(
+    "8GH",
+    "CRITERIA",
+    step8GE_Criteria.length
+  );
 
-    OODebug(
-      "8GH",
-      "CRITERIA",
-      step8GE_Criteria.length
-    );
+  step8_Debug(
+    "8GH",
+    "DIMENSIONS",
+    step8GF_ClaimEvaluationDimensions.length
+  );
 
-    OODebug(
-      "8GH",
-      "DIMENSIONS",
-      step8GF_ClaimEvaluationDimensions.length
-    );
+  step8_Debug(
+    "8GH",
+    "EVALUATION_EXECUTION",
+    "NOT_STARTED"
+  );
 
-    OODebug(
-      "8GH",
-      "EVALUATION_EXECUTION",
-      "NOT_STARTED"
-    );
+  step8_Debug(
+    "8GH",
+    "EXTERNAL_ACCESS",
+    "NOT_STARTED"
+  );
 
-    OODebug(
-      "8GH",
-      "EXTERNAL_ACCESS",
-      "NOT_STARTED"
-    );
+  step8_Debug(
+    "8GH",
+    "EVIDENCE_INSERTION",
+    "NOT_STARTED"
+  );
 
-    OODebug(
-      "8GH",
-      "EVIDENCE_INSERTION",
-      "NOT_STARTED"
-    );
-
-    OODebug(
-      "8GH",
-      "CLAIM_SUPPORT",
-      "NOT_CHANGED"
-    );
-  }
+  step8_Debug(
+    "8GH",
+    "CLAIM_SUPPORT",
+    "NOT_CHANGED"
+  );
 
 
   /* =======================================================
@@ -43603,7 +43627,7 @@ if (
       evidenceClaimLevelEvaluationFrameworkHandoff;
   }
 
-})(); 
+})();
 /* ==========================================
    RESULT VALUES
    ========================================== */
