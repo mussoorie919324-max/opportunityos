@@ -47936,6 +47936,862 @@ if (
   }
 
 })();
+/* =========================================================
+   STEP 8HC → 8HF
+   LAYER 6 — EVIDENCE EVALUATION & VERIFICATION
+
+   PURPOSE:
+   Prepare controlled criterion-assessment execution inputs.
+
+   IMPORTANT:
+   - No external source access
+   - No source retrieval
+   - No evidence insertion
+   - No claim support update
+   - No verification mutation
+   - Actual evidence assessment remains NOT_STARTED
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  /* =======================================================
+     SOURCE
+     ======================================================= */
+
+  var source8HB = registry["8HB"];
+
+  var query = "";
+
+  if (
+    source8HB &&
+    typeof source8HB.query === "string" &&
+    source8HB.query.trim().length > 0
+  ) {
+    query = source8HB.query.trim();
+  }
+
+  var targets = [];
+
+  if (
+    source8HB &&
+    Array.isArray(source8HB.targets)
+  ) {
+    targets = source8HB.targets.slice();
+  }
+
+  var criteria = [];
+
+  if (
+    source8HB &&
+    Array.isArray(source8HB.criteria)
+  ) {
+    criteria = source8HB.criteria.slice();
+  }
+
+  /*
+   * Safety fallback for the already-established
+   * eight-criterion framework.
+   */
+  if (criteria.length === 0) {
+
+    criteria = [
+      "RELEVANCE",
+      "SOURCE_RELIABILITY",
+      "FRESHNESS",
+      "DIRECT_SUPPORT",
+      "EVIDENCE_STRENGTH",
+      "CONFLICT",
+      "COVERAGE",
+      "UNCERTAINTY"
+    ];
+
+  }
+
+  /* =======================================================
+     EXECUTION POLICY
+     ======================================================= */
+
+  var executionPolicy = {
+
+    externalSourceAccess: false,
+
+    sourceRetrieval: false,
+
+    evidenceInsertion: false,
+
+    claimSupportUpdate: false
+
+  };
+
+  /* =======================================================
+     SAFETY
+     ======================================================= */
+
+  var safety = {
+
+    externalSourceAccess: "NOT_STARTED",
+
+    sourceRetrieval: "NOT_STARTED",
+
+    evidenceInsertion: "NOT_STARTED",
+
+    claimSupportUpdate: "NOT_CHANGED"
+
+  };
+
+  /* =======================================================
+     8HC
+     CONTROLLED ASSESSMENT EXECUTION PREPARATION
+     ======================================================= */
+
+  var eightHC = {
+
+    step: "8HC",
+
+    status: "ready",
+
+    layer: "LAYER_6",
+
+    layerName:
+      "EVIDENCE_EVALUATION_AND_VERIFICATION",
+
+    query: query,
+
+    targets: targets,
+
+    targetCount: targets.length,
+
+    criteria: criteria,
+
+    criteriaCount: criteria.length,
+
+    evaluationScope:
+      "CRITERION_LEVEL",
+
+    assessmentPreparation: {
+
+      ready: true,
+
+      executionStatus:
+        "NOT_STARTED",
+
+      evidenceAssessment:
+        "NOT_STARTED",
+
+      verificationStatus:
+        "UNVERIFIED",
+
+      claimSupportUpdate:
+        "NOT_CHANGED"
+
+    },
+
+    executionPolicy:
+      executionPolicy,
+
+    safety:
+      safety,
+
+    reason:
+      "Controlled criterion-assessment execution preparation is ready. Actual evidence assessment remains not started."
+
+  };
+
+  registry["8HC"] = eightHC;
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug.log
+  ) {
+
+    OODebug.log(
+      "8HC",
+      "CONTROLLED_ASSESSMENT_EXECUTION_PREPARATION",
+      "ready"
+    );
+
+    OODebug.log(
+      "8HC",
+      "LAYER",
+      "LAYER_6 → EVIDENCE_EVALUATION_AND_VERIFICATION"
+    );
+
+    OODebug.log(
+      "8HC",
+      "QUERY",
+      query
+    );
+
+    OODebug.log(
+      "8HC",
+      "TARGETS",
+      targets.length
+    );
+
+    OODebug.log(
+      "8HC",
+      "CRITERIA",
+      criteria.length
+    );
+
+    OODebug.log(
+      "8HC",
+      "EXECUTION_STATUS",
+      "NOT_STARTED"
+    );
+
+    OODebug.log(
+      "8HC",
+      "EVIDENCE_ASSESSMENT",
+      "NOT_STARTED"
+    );
+
+    OODebug.log(
+      "8HC",
+      "POLICY",
+      executionPolicy
+    );
+
+    OODebug.log(
+      "8HC",
+      "SAFETY",
+      safety
+    );
+
+    OODebug.log(
+      "8HC",
+      "REASON",
+      eightHC.reason
+    );
+
+  }
+
+  /* =======================================================
+     8HD
+     CRITERION ASSESSMENT EXECUTION INPUT FRAME
+     ======================================================= */
+
+  var source8HC = registry["8HC"];
+
+  var assessmentFrames = [];
+
+  if (
+    source8HC &&
+    Array.isArray(source8HC.targets) &&
+    Array.isArray(source8HC.criteria)
+  ) {
+
+    source8HC.targets.forEach(
+      function (target, targetIndex) {
+
+        var criterionFrames =
+          source8HC.criteria.map(
+            function (criterion) {
+
+              return {
+
+                targetIndex:
+                  targetIndex,
+
+                target:
+                  target,
+
+                criterion:
+                  criterion,
+
+                evidenceInput:
+                  null,
+
+                assessmentState:
+                  "UNASSESSED",
+
+                score:
+                  null,
+
+                decision:
+                  "UNVERIFIED",
+
+                evidenceAssessment:
+                  "NOT_STARTED"
+
+              };
+
+            }
+          );
+
+        assessmentFrames.push({
+
+          targetIndex:
+            targetIndex,
+
+          target:
+            target,
+
+          criterionFrames:
+            criterionFrames,
+
+          criterionCount:
+            criterionFrames.length,
+
+          executionStatus:
+            "NOT_STARTED"
+
+        });
+
+      }
+    );
+
+  }
+
+  var eightHD = {
+
+    step: "8HD",
+
+    status: "ready",
+
+    layer: "LAYER_6",
+
+    layerName:
+      "EVIDENCE_EVALUATION_AND_VERIFICATION",
+
+    query:
+      source8HC &&
+      typeof source8HC.query === "string"
+        ? source8HC.query
+        : "",
+
+    targets:
+      source8HC &&
+      Array.isArray(source8HC.targets)
+        ? source8HC.targets.slice()
+        : [],
+
+    criteria:
+      source8HC &&
+      Array.isArray(source8HC.criteria)
+        ? source8HC.criteria.slice()
+        : [],
+
+    assessmentFrames:
+      assessmentFrames,
+
+    frameCount:
+      assessmentFrames.length,
+
+    evaluationScope:
+      "CRITERION_LEVEL",
+
+    executionStatus:
+      "NOT_STARTED",
+
+    evidenceAssessment:
+      "NOT_STARTED",
+
+    verificationStatus:
+      "UNVERIFIED",
+
+    claimSupportUpdate:
+      "NOT_CHANGED",
+
+    executionPolicy:
+      executionPolicy,
+
+    safety:
+      safety,
+
+    reason:
+      "Criterion assessment execution input frames are prepared for all targets without introducing evidence or changing claim state."
+
+  };
+
+  registry["8HD"] = eightHD;
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug.log
+  ) {
+
+    OODebug.log(
+      "8HD",
+      "CRITERION_ASSESSMENT_EXECUTION_INPUT_FRAME",
+      "ready"
+    );
+
+    OODebug.log(
+      "8HD",
+      "LAYER",
+      "LAYER_6 → EVIDENCE_EVALUATION_AND_VERIFICATION"
+    );
+
+    OODebug.log(
+      "8HD",
+      "QUERY",
+      eightHD.query
+    );
+
+    OODebug.log(
+      "8HD",
+      "TARGETS",
+      eightHD.targets.length
+    );
+
+    OODebug.log(
+      "8HD",
+      "CRITERIA",
+      eightHD.criteria.length
+    );
+
+    OODebug.log(
+      "8HD",
+      "FRAMES",
+      eightHD.frameCount
+    );
+
+    OODebug.log(
+      "8HD",
+      "EXECUTION_STATUS",
+      "NOT_STARTED"
+    );
+
+    OODebug.log(
+      "8HD",
+      "EVIDENCE_ASSESSMENT",
+      "NOT_STARTED"
+    );
+
+    OODebug.log(
+      "8HD",
+      "POLICY",
+      executionPolicy
+    );
+
+    OODebug.log(
+      "8HD",
+      "SAFETY",
+      safety
+    );
+
+    OODebug.log(
+      "8HD",
+      "REASON",
+      eightHD.reason
+    );
+
+  }
+
+  /* =======================================================
+     8HE
+     CONTROLLED ASSESSMENT INPUT VALIDATION
+     ======================================================= */
+
+  var source8HD = registry["8HD"];
+
+  var validationChecks = {
+
+    queryReady:
+      !!(
+        source8HD &&
+        typeof source8HD.query === "string" &&
+        source8HD.query.trim().length > 0
+      ),
+
+    targetCountReady:
+      !!(
+        source8HD &&
+        Array.isArray(source8HD.targets) &&
+        source8HD.targets.length === 5
+      ),
+
+    criteriaCountReady:
+      !!(
+        source8HD &&
+        Array.isArray(source8HD.criteria) &&
+        source8HD.criteria.length === 8
+      ),
+
+    frameCountReady:
+      !!(
+        source8HD &&
+        Array.isArray(source8HD.assessmentFrames) &&
+        source8HD.assessmentFrames.length === 5
+      ),
+
+    executionNotStarted:
+      !!(
+        source8HD &&
+        source8HD.executionStatus ===
+          "NOT_STARTED"
+      ),
+
+    evidenceAssessmentNotStarted:
+      !!(
+        source8HD &&
+        source8HD.evidenceAssessment ===
+          "NOT_STARTED"
+      ),
+
+    verificationUnverified:
+      !!(
+        source8HD &&
+        source8HD.verificationStatus ===
+          "UNVERIFIED"
+      ),
+
+    claimSupportUnchanged:
+      !!(
+        source8HD &&
+        source8HD.claimSupportUpdate ===
+          "NOT_CHANGED"
+      )
+
+  };
+
+  var eightHE = {
+
+    step: "8HE",
+
+    status:
+      Object.keys(validationChecks)
+        .every(function (key) {
+          return validationChecks[key] === true;
+        })
+        ? "ready"
+        : "blocked",
+
+    layer:
+      "LAYER_6",
+
+    layerName:
+      "EVIDENCE_EVALUATION_AND_VERIFICATION",
+
+    query:
+      source8HD &&
+      typeof source8HD.query === "string"
+        ? source8HD.query
+        : "",
+
+    targets:
+      source8HD &&
+      Array.isArray(source8HD.targets)
+        ? source8HD.targets.slice()
+        : [],
+
+    criteria:
+      source8HD &&
+      Array.isArray(source8HD.criteria)
+        ? source8HD.criteria.slice()
+        : [],
+
+    validationChecks:
+      validationChecks,
+
+    evaluationScope:
+      "CRITERION_LEVEL",
+
+    executionStatus:
+      "NOT_STARTED",
+
+    evidenceAssessment:
+      "NOT_STARTED",
+
+    verificationStatus:
+      "UNVERIFIED",
+
+    claimSupportUpdate:
+      "NOT_CHANGED",
+
+    executionPolicy:
+      executionPolicy,
+
+    safety:
+      safety,
+
+    reason:
+      "Controlled assessment input validation completed. Inputs are structurally ready while actual evidence assessment remains not started."
+
+  };
+
+  registry["8HE"] = eightHE;
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug.log
+  ) {
+
+    OODebug.log(
+      "8HE",
+      "CONTROLLED_ASSESSMENT_INPUT_VALIDATION",
+      eightHE.status
+    );
+
+    OODebug.log(
+      "8HE",
+      "LAYER",
+      "LAYER_6 → EVIDENCE_EVALUATION_AND_VERIFICATION"
+    );
+
+    OODebug.log(
+      "8HE",
+      "QUERY",
+      eightHE.query
+    );
+
+    OODebug.log(
+      "8HE",
+      "TARGETS",
+      eightHE.targets.length
+    );
+
+    OODebug.log(
+      "8HE",
+      "CRITERIA",
+      eightHE.criteria.length
+    );
+
+    OODebug.log(
+      "8HE",
+      "VALIDATION_CHECKS",
+      validationChecks
+    );
+
+    OODebug.log(
+      "8HE",
+      "EXECUTION_STATUS",
+      "NOT_STARTED"
+    );
+
+    OODebug.log(
+      "8HE",
+      "EVIDENCE_ASSESSMENT",
+      "NOT_STARTED"
+    );
+
+    OODebug.log(
+      "8HE",
+      "POLICY",
+      executionPolicy
+    );
+
+    OODebug.log(
+      "8HE",
+      "SAFETY",
+      safety
+    );
+
+    OODebug.log(
+      "8HE",
+      "REASON",
+      eightHE.reason
+    );
+
+  }
+
+  /* =======================================================
+     8HF
+     CONTROLLED ASSESSMENT EXECUTION INPUT HANDOFF
+     ======================================================= */
+
+  var source8HE = registry["8HE"];
+
+  var eightHF = {
+
+    step: "8HF",
+
+    status:
+      source8HE &&
+      source8HE.status === "ready"
+        ? "ready"
+        : "blocked",
+
+    layer:
+      "LAYER_6",
+
+    layerName:
+      "EVIDENCE_EVALUATION_AND_VERIFICATION",
+
+    query:
+      source8HE &&
+      typeof source8HE.query === "string"
+        ? source8HE.query
+        : "",
+
+    targets:
+      source8HE &&
+      Array.isArray(source8HE.targets)
+        ? source8HE.targets.slice()
+        : [],
+
+    criteria:
+      source8HE &&
+      Array.isArray(source8HE.criteria)
+        ? source8HE.criteria.slice()
+        : [],
+
+    targetCount:
+      source8HE &&
+      Array.isArray(source8HE.targets)
+        ? source8HE.targets.length
+        : 0,
+
+    criteriaCount:
+      source8HE &&
+      Array.isArray(source8HE.criteria)
+        ? source8HE.criteria.length
+        : 0,
+
+    evaluationScope:
+      "CRITERION_LEVEL",
+
+    inputValidation:
+      source8HE &&
+      source8HE.status === "ready"
+        ? "PASSED"
+        : "BLOCKED",
+
+    executionStatus:
+      "NOT_STARTED",
+
+    evidenceAssessment:
+      "NOT_STARTED",
+
+    verificationStatus:
+      "UNVERIFIED",
+
+    claimSupportUpdate:
+      "NOT_CHANGED",
+
+    handoff: {
+
+      ready:
+        source8HE &&
+        source8HE.status === "ready",
+
+      allowed: false,
+
+      actualEvidenceAssessment:
+        false,
+
+      externalSourceAccess:
+        false,
+
+      sourceRetrieval:
+        false,
+
+      evidenceInsertion:
+        false,
+
+      claimSupportUpdate:
+        false,
+
+      verificationMutation:
+        false
+
+    },
+
+    executionPolicy:
+      executionPolicy,
+
+    safety:
+      safety,
+
+    reason:
+      "Controlled assessment execution input handoff is ready. All five targets and eight criteria are structurally validated while actual evidence assessment, retrieval, insertion, verification, and claim mutation remain safely blocked."
+
+  };
+
+  registry["8HF"] = eightHF;
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug.log
+  ) {
+
+    OODebug.log(
+      "8HF",
+      "CONTROLLED_ASSESSMENT_EXECUTION_INPUT_HANDOFF",
+      eightHF.status
+    );
+
+    OODebug.log(
+      "8HF",
+      "LAYER",
+      "LAYER_6 → EVIDENCE_EVALUATION_AND_VERIFICATION"
+    );
+
+    OODebug.log(
+      "8HF",
+      "QUERY",
+      eightHF.query
+    );
+
+    OODebug.log(
+      "8HF",
+      "TARGETS",
+      eightHF.targetCount
+    );
+
+    OODebug.log(
+      "8HF",
+      "CRITERIA",
+      eightHF.criteriaCount
+    );
+
+    OODebug.log(
+      "8HF",
+      "INPUT_VALIDATION",
+      eightHF.inputValidation
+    );
+
+    OODebug.log(
+      "8HF",
+      "EXECUTION_STATUS",
+      "NOT_STARTED"
+    );
+
+    OODebug.log(
+      "8HF",
+      "EVIDENCE_ASSESSMENT",
+      "NOT_STARTED"
+    );
+
+    OODebug.log(
+      "8HF",
+      "VERIFICATION_STATUS",
+      "UNVERIFIED"
+    );
+
+    OODebug.log(
+      "8HF",
+      "CLAIM_SUPPORT_UPDATE",
+      "NOT_CHANGED"
+    );
+
+    OODebug.log(
+      "8HF",
+      "POLICY",
+      executionPolicy
+    );
+
+    OODebug.log(
+      "8HF",
+      "SAFETY",
+      safety
+    );
+
+    OODebug.log(
+      "8HF",
+      "REASON",
+      eightHF.reason
+    );
+
+  }
+
+})();
+    
 /* ==========================================
    RESULT VALUES
    ========================================== */
