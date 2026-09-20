@@ -43041,7 +43041,569 @@ if (
   }
 
 })();
-  
+ /* =========================================================
+   STEP 8GE — CLAIM-LEVEL EVALUATION FRAMEWORK
+   ========================================================= */
+
+(function () {
+
+  let step8GE_Source = null;
+
+  if (
+    typeof globalThis !== "undefined" &&
+    globalThis.__OpportunityOS_HandoffRegistry &&
+    globalThis.__OpportunityOS_HandoffRegistry["8GD"]
+  ) {
+    step8GE_Source =
+      globalThis.__OpportunityOS_HandoffRegistry["8GD"];
+  }
+
+  let step8GE_Query = "";
+  let step8GE_Targets = [];
+  let step8GE_Criteria = [];
+
+  if (
+    step8GE_Source &&
+    typeof step8GE_Source.query === "string"
+  ) {
+    step8GE_Query =
+      step8GE_Source.query.trim();
+  }
+
+  if (
+    step8GE_Source &&
+    Array.isArray(step8GE_Source.targets)
+  ) {
+    step8GE_Targets =
+      step8GE_Source.targets;
+  }
+
+  if (
+    step8GE_Source &&
+    Array.isArray(step8GE_Source.criteria)
+  ) {
+    step8GE_Criteria =
+      step8GE_Source.criteria;
+  }
+
+  let step8GE_Ready =
+    step8GE_Query.length > 0 &&
+    step8GE_Targets.length === 5 &&
+    step8GE_Criteria.length === 8;
+
+  let evidenceClaimLevelEvaluationFramework = {
+    status:
+      step8GE_Ready
+        ? "ready"
+        : "blocked",
+
+    allowed:
+      step8GE_Ready,
+
+    layer:
+      "LAYER_6",
+
+    layerName:
+      "EVIDENCE_EVALUATION_AND_VERIFICATION",
+
+    query:
+      step8GE_Query,
+
+    targets:
+      step8GE_Targets,
+
+    criteria:
+      step8GE_Criteria,
+
+    evaluationScope:
+      "CLAIM_LEVEL",
+
+    evaluationMutationAllowed:
+      false,
+
+    evidenceInsertionAllowed:
+      false,
+
+    claimSupportUpdateAllowed:
+      false,
+
+    reason:
+      step8GE_Ready
+        ? "Claim-level evaluation framework is ready."
+        : "Claim-level evaluation framework prerequisites are not ready."
+  };
+
+
+  /* =======================================================
+     STEP 8GE — DEBUG
+     ======================================================= */
+
+  if (typeof OODebug !== "undefined") {
+    OODebug(
+      "8GE",
+      "CLAIM_LEVEL_EVALUATION_FRAMEWORK",
+      evidenceClaimLevelEvaluationFramework.status
+    );
+
+    OODebug(
+      "8GE",
+      "LAYER",
+      "LAYER_6 → EVIDENCE_EVALUATION_AND_VERIFICATION"
+    );
+
+    OODebug(
+      "8GE",
+      "QUERY",
+      step8GE_Query
+    );
+
+    OODebug(
+      "8GE",
+      "TARGETS",
+      step8GE_Targets.length
+    );
+
+    OODebug(
+      "8GE",
+      "CRITERIA",
+      step8GE_Criteria.length
+    );
+
+    OODebug(
+      "8GE",
+      "EVALUATION_SCOPE",
+      "CLAIM_LEVEL"
+    );
+
+    OODebug(
+      "8GE",
+      "MUTATION",
+      "BLOCKED"
+    );
+  }
+
+
+  /* =======================================================
+     STEP 8GF — CLAIM EVALUATION DIMENSION MAPPING
+     ======================================================= */
+
+  let step8GF_ClaimEvaluationDimensions = [];
+
+  if (step8GE_Ready) {
+
+    step8GF_ClaimEvaluationDimensions = [
+      {
+        key: "relevance",
+        criterion: "RELEVANCE",
+        appliesTo: "CLAIM",
+        required: true
+      },
+      {
+        key: "sourceReliability",
+        criterion: "SOURCE_RELIABILITY",
+        appliesTo: "CLAIM",
+        required: true
+      },
+      {
+        key: "freshness",
+        criterion: "FRESHNESS",
+        appliesTo: "CLAIM",
+        required: true
+      },
+      {
+        key: "directSupport",
+        criterion: "DIRECT_SUPPORT",
+        appliesTo: "CLAIM",
+        required: true
+      },
+      {
+        key: "evidenceStrength",
+        criterion: "EVIDENCE_STRENGTH",
+        appliesTo: "CLAIM",
+        required: true
+      },
+      {
+        key: "conflict",
+        criterion: "CONFLICT",
+        appliesTo: "CLAIM",
+        required: true
+      },
+      {
+        key: "coverage",
+        criterion: "COVERAGE",
+        appliesTo: "CLAIM",
+        required: true
+      },
+      {
+        key: "uncertainty",
+        criterion: "UNCERTAINTY",
+        appliesTo: "CLAIM",
+        required: true
+      }
+    ];
+  }
+
+
+  let evidenceClaimEvaluationDimensionMapping = {
+
+    status:
+      step8GE_Ready &&
+      step8GF_ClaimEvaluationDimensions.length === 8
+        ? "ready"
+        : "blocked",
+
+    allowed:
+      step8GE_Ready &&
+      step8GF_ClaimEvaluationDimensions.length === 8,
+
+    layer:
+      "LAYER_6",
+
+    query:
+      step8GE_Query,
+
+    targets:
+      step8GE_Targets,
+
+    dimensions:
+      step8GF_ClaimEvaluationDimensions,
+
+    evaluationScope:
+      "CLAIM_LEVEL",
+
+    evidenceInsertionAllowed:
+      false,
+
+    claimSupportUpdateAllowed:
+      false,
+
+    reason:
+      step8GE_Ready &&
+      step8GF_ClaimEvaluationDimensions.length === 8
+        ? "All evidence evaluation criteria are mapped to claim-level evaluation dimensions."
+        : "Claim-level evaluation dimension mapping is not ready."
+  };
+
+
+  /* =======================================================
+     STEP 8GF — DEBUG
+     ======================================================= */
+
+  if (typeof OODebug !== "undefined") {
+    OODebug(
+      "8GF",
+      "CLAIM_EVALUATION_DIMENSION_MAPPING",
+      evidenceClaimEvaluationDimensionMapping.status
+    );
+
+    OODebug(
+      "8GF",
+      "DIMENSIONS",
+      step8GF_ClaimEvaluationDimensions.length
+    );
+
+    OODebug(
+      "8GF",
+      "SCOPE",
+      "CLAIM_LEVEL"
+    );
+
+    OODebug(
+      "8GF",
+      "EVIDENCE_INSERTION",
+      "BLOCKED"
+    );
+
+    OODebug(
+      "8GF",
+      "CLAIM_SUPPORT_UPDATE",
+      "BLOCKED"
+    );
+  }
+
+
+  /* =======================================================
+     STEP 8GG — CLAIM EVALUATION RECORD DEFINITION
+     ======================================================= */
+
+  let step8GG_ClaimEvaluationRecordDefinition = {
+
+    recordType:
+      "CLAIM_EVALUATION_RECORD",
+
+    version:
+      "1.0",
+
+    scope:
+      "CLAIM_LEVEL",
+
+    fields: [
+      "claimId",
+      "criterionResults",
+      "overallEvidenceStatus",
+      "confidence",
+      "coverage",
+      "uncertainty",
+      "conflictStatus",
+      "freshnessStatus",
+      "sourceReliabilityStatus",
+      "evaluationDecision"
+    ],
+
+    allowedEvaluationDecisions: [
+      "SUPPORTED",
+      "NEEDS_REVIEW",
+      "INSUFFICIENT_EVIDENCE",
+      "CONFLICTED",
+      "UNVERIFIED"
+    ],
+
+    mutationAllowed:
+      false,
+
+    persistenceAllowed:
+      false
+  };
+
+
+  let evidenceClaimEvaluationRecordDefinition = {
+
+    status:
+      evidenceClaimEvaluationDimensionMapping.status === "ready"
+        ? "ready"
+        : "blocked",
+
+    allowed:
+      evidenceClaimEvaluationDimensionMapping.status === "ready",
+
+    layer:
+      "LAYER_6",
+
+    query:
+      step8GE_Query,
+
+    targets:
+      step8GE_Targets,
+
+    recordDefinition:
+      step8GG_ClaimEvaluationRecordDefinition,
+
+    evaluationExecution:
+      "NOT_STARTED",
+
+    evidenceInsertionAllowed:
+      false,
+
+    claimSupportUpdateAllowed:
+      false,
+
+    reason:
+      evidenceClaimEvaluationDimensionMapping.status === "ready"
+        ? "Claim evaluation record definition is ready."
+        : "Claim evaluation record definition cannot proceed."
+  };
+
+
+  /* =======================================================
+     STEP 8GG — DEBUG
+     ======================================================= */
+
+  if (typeof OODebug !== "undefined") {
+    OODebug(
+      "8GG",
+      "CLAIM_EVALUATION_RECORD_DEFINITION",
+      evidenceClaimEvaluationRecordDefinition.status
+    );
+
+    OODebug(
+      "8GG",
+      "RECORD_TYPE",
+      "CLAIM_EVALUATION_RECORD"
+    );
+
+    OODebug(
+      "8GG",
+      "DECISIONS",
+      "5"
+    );
+
+    OODebug(
+      "8GG",
+      "EVALUATION_EXECUTION",
+      "NOT_STARTED"
+    );
+
+    OODebug(
+      "8GG",
+      "MUTATION",
+      "BLOCKED"
+    );
+  }
+
+
+  /* =======================================================
+     STEP 8GH — CLAIM EVALUATION FRAMEWORK HANDOFF
+     ======================================================= */
+
+  let evidenceClaimLevelEvaluationFrameworkHandoff = {
+
+    status:
+      evidenceClaimEvaluationRecordDefinition.status === "ready"
+        ? "ready"
+        : "blocked",
+
+    allowed:
+      evidenceClaimEvaluationRecordDefinition.status === "ready",
+
+    layer:
+      "LAYER_6",
+
+    layerName:
+      "EVIDENCE_EVALUATION_AND_VERIFICATION",
+
+    query:
+      step8GE_Query,
+
+    targets:
+      step8GE_Targets,
+
+    criteria:
+      step8GE_Criteria,
+
+    dimensions:
+      step8GF_ClaimEvaluationDimensions,
+
+    recordDefinition:
+      step8GG_ClaimEvaluationRecordDefinition,
+
+    evaluationScope:
+      "CLAIM_LEVEL",
+
+    evaluationExecution:
+      "NOT_STARTED",
+
+    externalSourceAccess:
+      false,
+
+    sourceRetrieval:
+      false,
+
+    evidenceInsertion:
+      false,
+
+    claimSupportUpdate:
+      false,
+
+    externalSourceAccessStatus:
+      "NOT_STARTED",
+
+    sourceRetrievalStatus:
+      "NOT_STARTED",
+
+    evidenceInsertionStatus:
+      "NOT_STARTED",
+
+    claimSupportUpdateStatus:
+      "NOT_CHANGED",
+
+    reason:
+      evidenceClaimEvaluationRecordDefinition.status === "ready"
+        ? "Claim-level evaluation framework handoff is ready. Evidence assessment can proceed while retrieval and mutation remain safely blocked."
+        : "Claim-level evaluation framework handoff is blocked."
+  };
+
+
+  /* =======================================================
+     STEP 8GH — DEBUG
+     ======================================================= */
+
+  if (typeof OODebug !== "undefined") {
+    OODebug(
+      "8GH",
+      "CLAIM_LEVEL_EVALUATION_FRAMEWORK_HANDOFF",
+      evidenceClaimLevelEvaluationFrameworkHandoff.status
+    );
+
+    OODebug(
+      "8GH",
+      "LAYER",
+      "LAYER_6 → EVIDENCE_EVALUATION_AND_VERIFICATION"
+    );
+
+    OODebug(
+      "8GH",
+      "QUERY",
+      step8GE_Query
+    );
+
+    OODebug(
+      "8GH",
+      "TARGETS",
+      step8GE_Targets.length
+    );
+
+    OODebug(
+      "8GH",
+      "CRITERIA",
+      step8GE_Criteria.length
+    );
+
+    OODebug(
+      "8GH",
+      "DIMENSIONS",
+      step8GF_ClaimEvaluationDimensions.length
+    );
+
+    OODebug(
+      "8GH",
+      "EVALUATION_EXECUTION",
+      "NOT_STARTED"
+    );
+
+    OODebug(
+      "8GH",
+      "EXTERNAL_ACCESS",
+      "NOT_STARTED"
+    );
+
+    OODebug(
+      "8GH",
+      "EVIDENCE_INSERTION",
+      "NOT_STARTED"
+    );
+
+    OODebug(
+      "8GH",
+      "CLAIM_SUPPORT",
+      "NOT_CHANGED"
+    );
+  }
+
+
+  /* =======================================================
+     REGISTRY HANDOFF
+     ======================================================= */
+
+  if (typeof globalThis !== "undefined") {
+
+    if (!globalThis.__OpportunityOS_HandoffRegistry) {
+      globalThis.__OpportunityOS_HandoffRegistry = {};
+    }
+
+    globalThis.__OpportunityOS_HandoffRegistry["8GE"] =
+      evidenceClaimLevelEvaluationFramework;
+
+    globalThis.__OpportunityOS_HandoffRegistry["8GF"] =
+      evidenceClaimEvaluationDimensionMapping;
+
+    globalThis.__OpportunityOS_HandoffRegistry["8GG"] =
+      evidenceClaimEvaluationRecordDefinition;
+
+    globalThis.__OpportunityOS_HandoffRegistry["8GH"] =
+      evidenceClaimLevelEvaluationFrameworkHandoff;
+  }
+
+})(); 
 /* ==========================================
    RESULT VALUES
    ========================================== */
