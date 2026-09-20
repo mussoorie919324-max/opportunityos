@@ -51536,8 +51536,586 @@ if (
     );
   }
 })();
+/* =========================================================
+   STEP 8HV — CONTROLLED EVIDENCE ASSESSMENT INPUT BINDING
+   LAYER 6 — EVIDENCE EVALUATION & VERIFICATION
+   ========================================================= */
 
-  
+(function () {
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8HV = registry["8HU"] || null;
+
+  var query8HV = "";
+  var targets8HV = [];
+  var criteria8HV = [];
+  var frames8HV = [];
+
+  if (source8HV && typeof source8HV === "object") {
+    query8HV =
+      typeof source8HV.query === "string"
+        ? source8HV.query
+        : "";
+
+    if (Array.isArray(source8HV.targets)) {
+      targets8HV = source8HV.targets.slice();
+    }
+
+    if (Array.isArray(source8HV.criteria)) {
+      criteria8HV = source8HV.criteria.slice();
+    }
+
+    if (Array.isArray(source8HV.assessmentInputFrames)) {
+      frames8HV =
+        source8HV.assessmentInputFrames.slice();
+    }
+  }
+
+  var boundInputs8HV = [];
+
+  for (var i8HV = 0; i8HV < frames8HV.length; i8HV++) {
+    var frame8HV = frames8HV[i8HV];
+
+    if (!frame8HV || typeof frame8HV !== "object") {
+      continue;
+    }
+
+    boundInputs8HV.push({
+      evidenceId: frame8HV.evidenceId ?? null,
+      claimId: frame8HV.claimId ?? null,
+      claimBinding:
+        frame8HV.claimBinding ?? "UNBOUND",
+      criteria: criteria8HV.slice(),
+
+      inputState:
+        frame8HV.inputState === "ASSESSMENT_INPUT_READY"
+          ? "BOUND"
+          : "BLOCKED",
+
+      assessmentExecution: "NOT_STARTED",
+      verification: "UNVERIFIED",
+      claimSupport: "NOT_CHANGED"
+    });
+  }
+
+  var output8HV = {
+    step: "8HV",
+    name: "CONTROLLED_EVIDENCE_ASSESSMENT_INPUT_BINDING",
+
+    status:
+      source8HV &&
+      query8HV.length > 0 &&
+      targets8HV.length === 5 &&
+      criteria8HV.length === 8
+        ? "READY"
+        : "BLOCKED",
+
+    layer: "LAYER_6",
+    layerName:
+      "EVIDENCE_EVALUATION_AND_VERIFICATION",
+
+    query: query8HV,
+    targets: targets8HV,
+    targetCount: targets8HV.length,
+
+    criteria: criteria8HV,
+    criterionCount: criteria8HV.length,
+
+    boundInputs: boundInputs8HV,
+    boundInputCount: boundInputs8HV.length,
+
+    execution: "NOT_STARTED",
+    actualEvidenceAssessment: false,
+
+    verification: "UNVERIFIED",
+    claimSupport: "NOT_CHANGED",
+
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false,
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    }
+  };
+
+  registry["8HV"] = output8HV;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8HV",
+      "Controlled assessment input binding ready",
+      output8HV
+    );
+  }
+})();
+ /* =========================================================
+   STEP 8HW — CRITERION ASSESSMENT TASK GENERATION
+   LAYER 6 — EVIDENCE EVALUATION & VERIFICATION
+   ========================================================= */
+
+(function () {
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8HW = registry["8HV"] || null;
+
+  var query8HW = "";
+  var targets8HW = [];
+  var criteria8HW = [];
+  var inputs8HW = [];
+
+  if (source8HW && typeof source8HW === "object") {
+    query8HW =
+      typeof source8HW.query === "string"
+        ? source8HW.query
+        : "";
+
+    if (Array.isArray(source8HW.targets)) {
+      targets8HW = source8HW.targets.slice();
+    }
+
+    if (Array.isArray(source8HW.criteria)) {
+      criteria8HW = source8HW.criteria.slice();
+    }
+
+    if (Array.isArray(source8HW.boundInputs)) {
+      inputs8HW = source8HW.boundInputs.slice();
+    }
+  }
+
+  var tasks8HW = [];
+
+  for (var i8HW = 0; i8HW < inputs8HW.length; i8HW++) {
+    var input8HW = inputs8HW[i8HW];
+
+    if (!input8HW || typeof input8HW !== "object") {
+      continue;
+    }
+
+    var criterionTasks8HW = [];
+
+    for (var j8HW = 0; j8HW < criteria8HW.length; j8HW++) {
+      criterionTasks8HW.push({
+        criterion: criteria8HW[j8HW],
+        evidenceId: input8HW.evidenceId,
+        claimId: input8HW.claimId,
+
+        taskState: "READY",
+        assessmentStarted: false,
+        assessmentCompleted: false,
+
+        decision: "UNVERIFIED",
+        confidence: null
+      });
+    }
+
+    tasks8HW.push({
+      evidenceId: input8HW.evidenceId,
+      claimId: input8HW.claimId,
+      criterionTasks: criterionTasks8HW,
+      criterionCount: criterionTasks8HW.length,
+      execution: "NOT_STARTED"
+    });
+  }
+
+  var output8HW = {
+    step: "8HW",
+    name: "CRITERION_ASSESSMENT_TASK_GENERATION",
+
+    status:
+      source8HW &&
+      query8HW.length > 0 &&
+      targets8HW.length === 5 &&
+      criteria8HW.length === 8
+        ? "READY"
+        : "BLOCKED",
+
+    layer: "LAYER_6",
+
+    query: query8HW,
+    targets: targets8HW,
+    targetCount: targets8HW.length,
+
+    criteria: criteria8HW,
+    criterionCount: criteria8HW.length,
+
+    tasks: tasks8HW,
+    taskCount: tasks8HW.length,
+
+    execution: "NOT_STARTED",
+    actualEvidenceAssessment: false,
+
+    verification: "UNVERIFIED",
+    claimSupport: "NOT_CHANGED",
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    }
+  };
+
+  registry["8HW"] = output8HW;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8HW",
+      "Criterion assessment tasks generated",
+      output8HW
+    );
+  }
+})(); 
+/* =========================================================
+   STEP 8HX — CONTROLLED CRITERION ASSESSMENT EXECUTION FRAME
+   LAYER 6 — EVIDENCE EVALUATION & VERIFICATION
+   ========================================================= */
+
+(function () {
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8HX = registry["8HW"] || null;
+
+  var query8HX = "";
+  var targets8HX = [];
+  var criteria8HX = [];
+  var tasks8HX = [];
+
+  if (source8HX && typeof source8HX === "object") {
+    query8HX =
+      typeof source8HX.query === "string"
+        ? source8HX.query
+        : "";
+
+    if (Array.isArray(source8HX.targets)) {
+      targets8HX = source8HX.targets.slice();
+    }
+
+    if (Array.isArray(source8HX.criteria)) {
+      criteria8HX = source8HX.criteria.slice();
+    }
+
+    if (Array.isArray(source8HX.tasks)) {
+      tasks8HX = source8HX.tasks.slice();
+    }
+  }
+
+  var executionFrames8HX = [];
+
+  for (var i8HX = 0; i8HX < tasks8HX.length; i8HX++) {
+    var task8HX = tasks8HX[i8HX];
+
+    if (!task8HX || typeof task8HX !== "object") {
+      continue;
+    }
+
+    executionFrames8HX.push({
+      evidenceId: task8HX.evidenceId,
+      claimId: task8HX.claimId,
+
+      criteria:
+        Array.isArray(task8HX.criterionTasks)
+          ? task8HX.criterionTasks.slice()
+          : [],
+
+      executionAuthorized: false,
+      executionAllowed: false,
+
+      execution: "NOT_STARTED",
+      assessmentStarted: false,
+      assessmentCompleted: false,
+
+      resultState: "NOT_AVAILABLE",
+
+      verification: "UNVERIFIED",
+      claimSupport: "NOT_CHANGED"
+    });
+  }
+
+  var output8HX = {
+    step: "8HX",
+    name: "CONTROLLED_CRITERION_ASSESSMENT_EXECUTION_FRAME",
+
+    status:
+      source8HX &&
+      query8HX.length > 0 &&
+      targets8HX.length === 5 &&
+      criteria8HX.length === 8
+        ? "READY"
+        : "BLOCKED",
+
+    layer: "LAYER_6",
+
+    query: query8HX,
+    targets: targets8HX,
+    targetCount: targets8HX.length,
+
+    criteria: criteria8HX,
+    criterionCount: criteria8HX.length,
+
+    executionFrames: executionFrames8HX,
+    executionFrameCount: executionFrames8HX.length,
+
+    executionAuthorized: false,
+    executionAllowed: false,
+
+    execution: "NOT_STARTED",
+    actualEvidenceAssessment: false,
+
+    resultCapture: "NOT_STARTED",
+
+    verification: "UNVERIFIED",
+    claimSupport: "NOT_CHANGED",
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    }
+  };
+
+  registry["8HX"] = output8HX;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8HX",
+      "Controlled criterion assessment execution frame ready",
+      output8HX
+    );
+  }
+})();
+  /* =========================================================
+   STEP 8HY — CRITERION ASSESSMENT RESULT BOUNDARY
+   LAYER 6 — EVIDENCE EVALUATION & VERIFICATION
+   ========================================================= */
+
+(function () {
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8HY = registry["8HX"] || null;
+
+  var query8HY = "";
+  var targets8HY = [];
+  var criteria8HY = [];
+  var frames8HY = [];
+
+  if (source8HY && typeof source8HY === "object") {
+    query8HY =
+      typeof source8HY.query === "string"
+        ? source8HY.query
+        : "";
+
+    if (Array.isArray(source8HY.targets)) {
+      targets8HY = source8HY.targets.slice();
+    }
+
+    if (Array.isArray(source8HY.criteria)) {
+      criteria8HY = source8HY.criteria.slice();
+    }
+
+    if (Array.isArray(source8HY.executionFrames)) {
+      frames8HY =
+        source8HY.executionFrames.slice();
+    }
+  }
+
+  var resultBoundaries8HY = [];
+
+  for (var i8HY = 0; i8HY < frames8HY.length; i8HY++) {
+    var frame8HY = frames8HY[i8HY];
+
+    if (!frame8HY || typeof frame8HY !== "object") {
+      continue;
+    }
+
+    resultBoundaries8HY.push({
+      evidenceId: frame8HY.evidenceId,
+      claimId: frame8HY.claimId,
+
+      expectedCriterionCount:
+        criteria8HY.length,
+
+      resultState: "NOT_AVAILABLE",
+
+      resultsAvailable: false,
+
+      execution: "NOT_STARTED",
+      assessmentCompleted: false,
+
+      verification: "UNVERIFIED",
+      claimSupport: "NOT_CHANGED"
+    });
+  }
+
+  var output8HY = {
+    step: "8HY",
+    name: "CRITERION_ASSESSMENT_RESULT_BOUNDARY",
+
+    status:
+      source8HY &&
+      query8HY.length > 0 &&
+      targets8HY.length === 5 &&
+      criteria8HY.length === 8
+        ? "READY"
+        : "BLOCKED",
+
+    layer: "LAYER_6",
+
+    query: query8HY,
+    targets: targets8HY,
+    targetCount: targets8HY.length,
+
+    criteria: criteria8HY,
+    criterionCount: criteria8HY.length,
+
+    resultBoundaries: resultBoundaries8HY,
+    resultBoundaryCount:
+      resultBoundaries8HY.length,
+
+    execution: "NOT_STARTED",
+    actualEvidenceAssessment: false,
+
+    resultsAvailable: false,
+    resultCapture: "NOT_STARTED",
+
+    verification: "UNVERIFIED",
+    claimSupport: "NOT_CHANGED",
+
+    mutationAllowed: false,
+    persistenceAllowed: false,
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    }
+  };
+
+  registry["8HY"] = output8HY;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8HY",
+      "Criterion assessment result boundary ready",
+      output8HY
+    );
+  }
+})();
+  /* =========================================================
+   STEP 8HZ — CONTROLLED ASSESSMENT EXECUTION HANDOFF
+   LAYER 6 — EVIDENCE EVALUATION & VERIFICATION
+   ========================================================= */
+
+(function () {
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8HZ = registry["8HY"] || null;
+
+  var query8HZ = "";
+  var targets8HZ = [];
+  var criteria8HZ = [];
+  var boundaries8HZ = [];
+
+  if (source8HZ && typeof source8HZ === "object") {
+    query8HZ =
+      typeof source8HZ.query === "string"
+        ? source8HZ.query
+        : "";
+
+    if (Array.isArray(source8HZ.targets)) {
+      targets8HZ = source8HZ.targets.slice();
+    }
+
+    if (Array.isArray(source8HZ.criteria)) {
+      criteria8HZ = source8HZ.criteria.slice();
+    }
+
+    if (Array.isArray(source8HZ.resultBoundaries)) {
+      boundaries8HZ =
+        source8HZ.resultBoundaries.slice();
+    }
+  }
+
+  var output8HZ = {
+    step: "8HZ",
+    name: "CONTROLLED_ASSESSMENT_EXECUTION_HANDOFF",
+
+    status:
+      source8HZ &&
+      query8HZ.length > 0 &&
+      targets8HZ.length === 5 &&
+      criteria8HZ.length === 8
+        ? "READY"
+        : "BLOCKED",
+
+    layer: "LAYER_6",
+    layerName:
+      "EVIDENCE_EVALUATION_AND_VERIFICATION",
+
+    query: query8HZ,
+
+    targets: targets8HZ,
+    targetCount: targets8HZ.length,
+
+    criteria: criteria8HZ,
+    criterionCount: criteria8HZ.length,
+
+    resultBoundaries: boundaries8HZ,
+    resultBoundaryCount: boundaries8HZ.length,
+
+    handoff: true,
+
+    executionAuthorized: false,
+    executionAllowed: false,
+
+    execution: "NOT_STARTED",
+
+    actualEvidenceAssessment: false,
+
+    resultCapture: "NOT_STARTED",
+    resultsAvailable: false,
+
+    verification: "UNVERIFIED",
+    claimSupport: "NOT_CHANGED",
+
+    evidenceInsertion: false,
+    claimSupportUpdate: false,
+    persistence: false,
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    }
+  };
+
+  registry["8HZ"] = output8HZ;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8HZ",
+      "Controlled assessment execution handoff ready",
+      output8HZ
+    );
+  }
+})();
 /* ==========================================
    RESULT VALUES
    ========================================== */
