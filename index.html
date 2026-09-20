@@ -43857,6 +43857,724 @@ if (
   }
 
 })();
+/* =========================================================
+   STEP 8GI → 8GL
+   CLAIM-LEVEL EVALUATION INPUT PREPARATION
+   LAYER 6 — EVIDENCE EVALUATION & VERIFICATION
+
+   SAFETY:
+   - No external source access
+   - No retrieval
+   - No evidence insertion
+   - No claim support mutation
+   ========================================================= */
+
+(function () {
+
+  /* =======================================================
+     SHARED HANDOFF REGISTRY
+     ======================================================= */
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+
+  /* =======================================================
+     8GI — CLAIM EVALUATION INPUT PREPARATION
+     ======================================================= */
+
+  var eightGI_Source = registry["8GH"];
+
+  var eightGI_Output = {
+    status: "blocked",
+    allowed: false,
+
+    layer: "LAYER_6",
+    layerName: "EVIDENCE_EVALUATION_AND_VERIFICATION",
+
+    searchQuery: "",
+    query: "",
+
+    targets: [],
+
+    evaluationScope: "CLAIM_LEVEL",
+
+    evaluationCriteria: [],
+    evaluationDimensions: [],
+
+    claimEvaluationInputs: [],
+
+    evaluationExecution: "NOT_STARTED",
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    reason:
+      "Claim evaluation input preparation is not ready."
+  };
+
+
+  if (
+    eightGI_Source &&
+    eightGI_Source.status === "ready" &&
+    eightGI_Source.allowed === true &&
+    typeof eightGI_Source.query === "string" &&
+    eightGI_Source.query.trim().length > 0 &&
+    Array.isArray(eightGI_Source.targets) &&
+    eightGI_Source.targets.length === 5 &&
+    Array.isArray(eightGI_Source.evaluationCriteria) &&
+    eightGI_Source.evaluationCriteria.length === 8 &&
+    Array.isArray(eightGI_Source.evaluationDimensions) &&
+    eightGI_Source.evaluationDimensions.length === 8 &&
+    eightGI_Source.executionPolicy &&
+    eightGI_Source.executionPolicy.externalSourceAccess === false &&
+    eightGI_Source.executionPolicy.sourceRetrieval === false &&
+    eightGI_Source.executionPolicy.evidenceInsertion === false &&
+    eightGI_Source.executionPolicy.claimSupportUpdate === false &&
+    eightGI_Source.safety &&
+    eightGI_Source.safety.externalSourceAccess === "NOT_STARTED" &&
+    eightGI_Source.safety.sourceRetrieval === "NOT_STARTED" &&
+    eightGI_Source.safety.evidenceInsertion === "NOT_STARTED" &&
+    eightGI_Source.safety.claimSupportUpdate === "NOT_CHANGED"
+  ) {
+
+    eightGI_Output.searchQuery =
+      eightGI_Source.query.trim();
+
+    eightGI_Output.query =
+      eightGI_Source.query.trim();
+
+    eightGI_Output.targets =
+      eightGI_Source.targets.slice();
+
+    eightGI_Output.evaluationScope =
+      eightGI_Source.evaluationScope;
+
+    eightGI_Output.evaluationCriteria =
+      eightGI_Source.evaluationCriteria.slice();
+
+    eightGI_Output.evaluationDimensions =
+      eightGI_Source.evaluationDimensions.slice();
+
+    eightGI_Output.status = "ready";
+    eightGI_Output.allowed = true;
+
+    eightGI_Output.reason =
+      "Claim evaluation input preparation is ready.";
+
+  }
+
+
+  registry["8GI"] = eightGI_Output;
+
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8GI",
+      "CLAIM_EVALUATION_INPUT_PREPARATION",
+      eightGI_Output.status
+    );
+
+    OODebug.log(
+      "8GI",
+      "LAYER",
+      "LAYER_6 → EVIDENCE_EVALUATION_AND_VERIFICATION"
+    );
+
+    OODebug.log(
+      "8GI",
+      "QUERY",
+      eightGI_Output.query
+    );
+
+    OODebug.log(
+      "8GI",
+      "TARGETS",
+      eightGI_Output.targets.length
+    );
+
+    OODebug.log(
+      "8GI",
+      "CRITERIA_COUNT",
+      eightGI_Output.evaluationCriteria.length
+    );
+
+    OODebug.log(
+      "8GI",
+      "DIMENSIONS",
+      eightGI_Output.evaluationDimensions.length
+    );
+
+    OODebug.log(
+      "8GI",
+      "EVALUATION_EXECUTION",
+      eightGI_Output.evaluationExecution
+    );
+
+    OODebug.log(
+      "8GI",
+      "POLICY",
+      eightGI_Output.executionPolicy
+    );
+
+    OODebug.log(
+      "8GI",
+      "SAFETY",
+      eightGI_Output.safety
+    );
+
+    OODebug.log(
+      "8GI",
+      "REASON",
+      eightGI_Output.reason
+    );
+  }
+
+
+  /* =======================================================
+     8GJ — CLAIM EVALUATION INPUT NORMALIZATION
+     ======================================================= */
+
+  var eightGJ_Source = registry["8GI"];
+
+  var eightGJ_Output = {
+    status: "blocked",
+    allowed: false,
+
+    layer: "LAYER_6",
+    layerName: "EVIDENCE_EVALUATION_AND_VERIFICATION",
+
+    query: "",
+    targets: [],
+
+    evaluationCriteria: [],
+    evaluationDimensions: [],
+
+    normalizedClaimEvaluationInputs: [],
+
+    evaluationExecution: "NOT_STARTED",
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    reason:
+      "Claim evaluation input normalization is not ready."
+  };
+
+
+  if (
+    eightGJ_Source &&
+    eightGJ_Source.status === "ready" &&
+    eightGJ_Source.allowed === true
+  ) {
+
+    var normalizedTargets =
+      Array.isArray(eightGJ_Source.targets)
+        ? eightGJ_Source.targets.map(function (target, index) {
+
+            return {
+              targetIndex: index,
+              target: target,
+              evaluationStatus: "NOT_STARTED",
+              evidenceAssessmentStatus: "NOT_STARTED",
+              claimSupportStatus: "NOT_CHANGED"
+            };
+
+          })
+        : [];
+
+
+    if (
+      typeof eightGJ_Source.query === "string" &&
+      eightGJ_Source.query.trim().length > 0 &&
+      normalizedTargets.length === 5
+    ) {
+
+      eightGJ_Output.status = "ready";
+      eightGJ_Output.allowed = true;
+
+      eightGJ_Output.query =
+        eightGJ_Source.query.trim();
+
+      eightGJ_Output.targets =
+        eightGJ_Source.targets.slice();
+
+      eightGJ_Output.evaluationCriteria =
+        eightGJ_Source.evaluationCriteria.slice();
+
+      eightGJ_Output.evaluationDimensions =
+        eightGJ_Source.evaluationDimensions.slice();
+
+      eightGJ_Output.normalizedClaimEvaluationInputs =
+        normalizedTargets;
+
+      eightGJ_Output.reason =
+        "Claim evaluation inputs have been normalized safely.";
+
+    }
+
+  }
+
+
+  registry["8GJ"] = eightGJ_Output;
+
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8GJ",
+      "CLAIM_EVALUATION_INPUT_NORMALIZATION",
+      eightGJ_Output.status
+    );
+
+    OODebug.log(
+      "8GJ",
+      "LAYER",
+      "LAYER_6 → EVIDENCE_EVALUATION_AND_VERIFICATION"
+    );
+
+    OODebug.log(
+      "8GJ",
+      "QUERY",
+      eightGJ_Output.query
+    );
+
+    OODebug.log(
+      "8GJ",
+      "TARGETS",
+      eightGJ_Output.targets.length
+    );
+
+    OODebug.log(
+      "8GJ",
+      "NORMALIZED_INPUTS",
+      eightGJ_Output.normalizedClaimEvaluationInputs.length
+    );
+
+    OODebug.log(
+      "8GJ",
+      "EVALUATION_EXECUTION",
+      eightGJ_Output.evaluationExecution
+    );
+
+    OODebug.log(
+      "8GJ",
+      "POLICY",
+      eightGJ_Output.executionPolicy
+    );
+
+    OODebug.log(
+      "8GJ",
+      "SAFETY",
+      eightGJ_Output.safety
+    );
+
+    OODebug.log(
+      "8GJ",
+      "REASON",
+      eightGJ_Output.reason
+    );
+  }
+
+
+  /* =======================================================
+     8GK — CLAIM EVALUATION INPUT VALIDATION
+     ======================================================= */
+
+  var eightGK_Source = registry["8GJ"];
+
+  var eightGK_Output = {
+    status: "blocked",
+    allowed: false,
+
+    layer: "LAYER_6",
+    layerName: "EVIDENCE_EVALUATION_AND_VERIFICATION",
+
+    query: "",
+    targets: [],
+
+    evaluationCriteria: [],
+    evaluationDimensions: [],
+
+    normalizedClaimEvaluationInputs: [],
+
+    validationChecks: {
+      sourceReady: false,
+      queryReady: false,
+      targetCountReady: false,
+      criteriaReady: false,
+      dimensionsReady: false,
+      normalizedInputsReady: false,
+      executionPolicySafe: false,
+      safetyStateSafe: false
+    },
+
+    evaluationExecution: "NOT_STARTED",
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    reason:
+      "Claim evaluation input validation is not ready."
+  };
+
+
+  if (
+    eightGK_Source &&
+    eightGK_Source.status === "ready" &&
+    eightGK_Source.allowed === true
+  ) {
+
+    var validationChecks = {
+      sourceReady: true,
+
+      queryReady:
+        typeof eightGK_Source.query === "string" &&
+        eightGK_Source.query.trim().length > 0,
+
+      targetCountReady:
+        Array.isArray(eightGK_Source.targets) &&
+        eightGK_Source.targets.length === 5,
+
+      criteriaReady:
+        Array.isArray(eightGK_Source.evaluationCriteria) &&
+        eightGK_Source.evaluationCriteria.length === 8,
+
+      dimensionsReady:
+        Array.isArray(eightGK_Source.evaluationDimensions) &&
+        eightGK_Source.evaluationDimensions.length === 8,
+
+      normalizedInputsReady:
+        Array.isArray(
+          eightGK_Source.normalizedClaimEvaluationInputs
+        ) &&
+        eightGK_Source.normalizedClaimEvaluationInputs.length === 5,
+
+      executionPolicySafe:
+        eightGK_Source.executionPolicy &&
+        eightGK_Source.executionPolicy.externalSourceAccess === false &&
+        eightGK_Source.executionPolicy.sourceRetrieval === false &&
+        eightGK_Source.executionPolicy.evidenceInsertion === false &&
+        eightGK_Source.executionPolicy.claimSupportUpdate === false,
+
+      safetyStateSafe:
+        eightGK_Source.safety &&
+        eightGK_Source.safety.externalSourceAccess === "NOT_STARTED" &&
+        eightGK_Source.safety.sourceRetrieval === "NOT_STARTED" &&
+        eightGK_Source.safety.evidenceInsertion === "NOT_STARTED" &&
+        eightGK_Source.safety.claimSupportUpdate === "NOT_CHANGED"
+    };
+
+
+    var allValidationChecksPassed =
+      validationChecks.sourceReady === true &&
+      validationChecks.queryReady === true &&
+      validationChecks.targetCountReady === true &&
+      validationChecks.criteriaReady === true &&
+      validationChecks.dimensionsReady === true &&
+      validationChecks.normalizedInputsReady === true &&
+      validationChecks.executionPolicySafe === true &&
+      validationChecks.safetyStateSafe === true;
+
+
+    eightGK_Output.validationChecks =
+      validationChecks;
+
+
+    if (allValidationChecksPassed) {
+
+      eightGK_Output.status = "ready";
+      eightGK_Output.allowed = true;
+
+      eightGK_Output.query =
+        eightGK_Source.query.trim();
+
+      eightGK_Output.targets =
+        eightGK_Source.targets.slice();
+
+      eightGK_Output.evaluationCriteria =
+        eightGK_Source.evaluationCriteria.slice();
+
+      eightGK_Output.evaluationDimensions =
+        eightGK_Source.evaluationDimensions.slice();
+
+      eightGK_Output.normalizedClaimEvaluationInputs =
+        eightGK_Source.normalizedClaimEvaluationInputs.slice();
+
+      eightGK_Output.reason =
+        "Claim evaluation input validation passed. Inputs are ready for controlled claim evaluation.";
+
+    }
+
+  }
+
+
+  registry["8GK"] = eightGK_Output;
+
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8GK",
+      "CLAIM_EVALUATION_INPUT_VALIDATION",
+      eightGK_Output.status
+    );
+
+    OODebug.log(
+      "8GK",
+      "LAYER",
+      "LAYER_6 → EVIDENCE_EVALUATION_AND_VERIFICATION"
+    );
+
+    OODebug.log(
+      "8GK",
+      "QUERY",
+      eightGK_Output.query
+    );
+
+    OODebug.log(
+      "8GK",
+      "TARGETS",
+      eightGK_Output.targets.length
+    );
+
+    OODebug.log(
+      "8GK",
+      "VALIDATION_CHECKS",
+      eightGK_Output.validationChecks
+    );
+
+    OODebug.log(
+      "8GK",
+      "EVALUATION_EXECUTION",
+      eightGK_Output.evaluationExecution
+    );
+
+    OODebug.log(
+      "8GK",
+      "POLICY",
+      eightGK_Output.executionPolicy
+    );
+
+    OODebug.log(
+      "8GK",
+      "SAFETY",
+      eightGK_Output.safety
+    );
+
+    OODebug.log(
+      "8GK",
+      "REASON",
+      eightGK_Output.reason
+    );
+  }
+
+
+  /* =======================================================
+     8GL — CLAIM EVALUATION INPUT HANDOFF
+     ======================================================= */
+
+  var eightGL_Source = registry["8GK"];
+
+  var eightGL_Output = {
+    status: "blocked",
+    allowed: false,
+
+    layer: "LAYER_6",
+    layerName: "EVIDENCE_EVALUATION_AND_VERIFICATION",
+
+    query: "",
+    targets: [],
+
+    evaluationCriteria: [],
+    evaluationDimensions: [],
+
+    normalizedClaimEvaluationInputs: [],
+
+    validationChecks: {},
+
+    evaluationScope: "CLAIM_LEVEL",
+
+    evaluationExecution: "NOT_STARTED",
+
+    executionPolicy: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    },
+
+    handoffType:
+      "CLAIM_EVALUATION_INPUT_HANDOFF",
+
+    reason:
+      "Claim evaluation input handoff is not ready."
+  };
+
+
+  if (
+    eightGL_Source &&
+    eightGL_Source.status === "ready" &&
+    eightGL_Source.allowed === true &&
+    eightGL_Source.validationChecks &&
+    eightGL_Source.validationChecks.sourceReady === true &&
+    eightGL_Source.validationChecks.queryReady === true &&
+    eightGL_Source.validationChecks.targetCountReady === true &&
+    eightGL_Source.validationChecks.criteriaReady === true &&
+    eightGL_Source.validationChecks.dimensionsReady === true &&
+    eightGL_Source.validationChecks.normalizedInputsReady === true &&
+    eightGL_Source.validationChecks.executionPolicySafe === true &&
+    eightGL_Source.validationChecks.safetyStateSafe === true
+  ) {
+
+    eightGL_Output.status = "ready";
+    eightGL_Output.allowed = true;
+
+    eightGL_Output.query =
+      eightGL_Source.query;
+
+    eightGL_Output.targets =
+      eightGL_Source.targets.slice();
+
+    eightGL_Output.evaluationCriteria =
+      eightGL_Source.evaluationCriteria.slice();
+
+    eightGL_Output.evaluationDimensions =
+      eightGL_Source.evaluationDimensions.slice();
+
+    eightGL_Output.normalizedClaimEvaluationInputs =
+      eightGL_Source.normalizedClaimEvaluationInputs.slice();
+
+    eightGL_Output.validationChecks =
+      Object.assign(
+        {},
+        eightGL_Source.validationChecks
+      );
+
+    eightGL_Output.reason =
+      "Claim evaluation input handoff is ready. Controlled claim-level evidence evaluation can proceed while external retrieval and mutation remain safely blocked.";
+
+  }
+
+
+  registry["8GL"] = eightGL_Output;
+
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8GL",
+      "CLAIM_EVALUATION_INPUT_HANDOFF",
+      eightGL_Output.status
+    );
+
+    OODebug.log(
+      "8GL",
+      "LAYER",
+      "LAYER_6 → EVIDENCE_EVALUATION_AND_VERIFICATION"
+    );
+
+    OODebug.log(
+      "8GL",
+      "QUERY",
+      eightGL_Output.query
+    );
+
+    OODebug.log(
+      "8GL",
+      "TARGETS",
+      eightGL_Output.targets.length
+    );
+
+    OODebug.log(
+      "8GL",
+      "CRITERIA_COUNT",
+      eightGL_Output.evaluationCriteria.length
+    );
+
+    OODebug.log(
+      "8GL",
+      "DIMENSIONS",
+      eightGL_Output.evaluationDimensions.length
+    );
+
+    OODebug.log(
+      "8GL",
+      "NORMALIZED_INPUTS",
+      eightGL_Output.normalizedClaimEvaluationInputs.length
+    );
+
+    OODebug.log(
+      "8GL",
+      "EVALUATION_SCOPE",
+      eightGL_Output.evaluationScope
+    );
+
+    OODebug.log(
+      "8GL",
+      "EVALUATION_EXECUTION",
+      eightGL_Output.evaluationExecution
+    );
+
+    OODebug.log(
+      "8GL",
+      "POLICY",
+      eightGL_Output.executionPolicy
+    );
+
+    OODebug.log(
+      "8GL",
+      "SAFETY",
+      eightGL_Output.safety
+    );
+
+    OODebug.log(
+      "8GL",
+      "REASON",
+      eightGL_Output.reason
+    );
+  }
+
+})();
+    
 /* ==========================================
    RESULT VALUES
    ========================================== */
