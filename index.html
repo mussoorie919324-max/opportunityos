@@ -53208,7 +53208,162 @@ if (
   }
 
 })();
-  
+  /* =========================================================
+   STEP 8IJ — EXISTING EVIDENCE ASSESSMENT RECORD PREPARATION
+   LAYER 6 — EVIDENCE EVALUATION & VERIFICATION
+   ========================================================= */
+
+(function () {
+  "use strict";
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8IJ = registry["8II"] || null;
+
+  var query8IJ = "";
+  var targets8IJ = [];
+  var criteria8IJ = [];
+  var evidenceRecords8IJ = [];
+
+  if (source8IJ && typeof source8IJ === "object") {
+
+    if (typeof source8IJ.query === "string") {
+      query8IJ = source8IJ.query;
+    }
+
+    if (Array.isArray(source8IJ.targets)) {
+      targets8IJ = source8IJ.targets.slice();
+    }
+
+    if (Array.isArray(source8IJ.criteria)) {
+      criteria8IJ = source8IJ.criteria.slice();
+    }
+
+    if (Array.isArray(source8IJ.evidenceRecords)) {
+      evidenceRecords8IJ =
+        source8IJ.evidenceRecords.slice();
+    }
+  }
+
+  var assessmentRecords8IJ = [];
+
+  for (
+    var i8IJ = 0;
+    i8IJ < targets8IJ.length;
+    i8IJ++
+  ) {
+
+    assessmentRecords8IJ.push({
+      targetIndex: i8IJ,
+      target:
+        targets8IJ[i8IJ],
+
+      criteria:
+        criteria8IJ.slice(),
+
+      evidenceCount:
+        evidenceRecords8IJ.length,
+
+      evidenceAssessment:
+        "NOT_STARTED",
+
+      execution:
+        "NOT_STARTED",
+
+      verification:
+        "UNVERIFIED",
+
+      claimSupport:
+        "NOT_CHANGED"
+    });
+  }
+
+  var output8IJ = {
+
+    step: "8IJ",
+
+    name:
+      "EXISTING_EVIDENCE_ASSESSMENT_RECORD_PREPARATION",
+
+    status:
+      source8IJ &&
+      query8IJ.length > 0 &&
+      targets8IJ.length === 5 &&
+      criteria8IJ.length === 8
+        ? "READY"
+        : "BLOCKED",
+
+    layer: "LAYER_6",
+
+    query: query8IJ,
+
+    targets: targets8IJ,
+
+    targetCount:
+      targets8IJ.length,
+
+    criteria: criteria8IJ,
+
+    criterionCount:
+      criteria8IJ.length,
+
+    evidenceRecords:
+      evidenceRecords8IJ,
+
+    assessmentRecords:
+      assessmentRecords8IJ,
+
+    assessmentRecordCount:
+      assessmentRecords8IJ.length,
+
+    evidenceAssessment:
+      "NOT_STARTED",
+
+    execution:
+      "NOT_STARTED",
+
+    actualEvidenceAssessment:
+      false,
+
+    verification:
+      "UNVERIFIED",
+
+    claimSupport:
+      "NOT_CHANGED",
+
+    safety: {
+
+      externalSourceAccess:
+        "NOT_STARTED",
+
+      sourceRetrieval:
+        "NOT_STARTED",
+
+      evidenceInsertion:
+        "NOT_STARTED",
+
+      claimSupportUpdate:
+        "NOT_CHANGED"
+    }
+  };
+
+  registry["8IJ"] = output8IJ;
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug &&
+    typeof OODebug.log === "function"
+  ) {
+    OODebug.log(
+      "8IJ",
+      "Existing evidence assessment records prepared",
+      output8IJ
+    );
+  }
+
+})();
   
 /* ==========================================
    RESULT VALUES
