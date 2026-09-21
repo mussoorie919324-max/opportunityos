@@ -52122,11 +52122,21 @@ if (
    ========================================================= */
 
 (function () {
+  "use strict";
+
   var registry =
     globalThis.__OpportunityOS_HandoffRegistry ||
     (globalThis.__OpportunityOS_HandoffRegistry = {});
 
+  /* ---------------------------------------------------------
+     8IA — SOURCE
+     --------------------------------------------------------- */
+
   var source8IA = registry["8HZ"] || null;
+
+  /* ---------------------------------------------------------
+     8IA — SAFE INPUTS
+     --------------------------------------------------------- */
 
   var query8IA = "";
   var targets8IA = [];
@@ -52134,10 +52144,10 @@ if (
   var boundaries8IA = [];
 
   if (source8IA && typeof source8IA === "object") {
-    query8IA =
-      typeof source8IA.query === "string"
-        ? source8IA.query
-        : "";
+
+    if (typeof source8IA.query === "string") {
+      query8IA = source8IA.query;
+    }
 
     if (Array.isArray(source8IA.targets)) {
       targets8IA = source8IA.targets.slice();
@@ -52153,21 +52163,25 @@ if (
     }
   }
 
+  /* ---------------------------------------------------------
+     8IA — AUTHORIZATION INPUT
+     --------------------------------------------------------- */
+
   var authorizationInput8IA = {
     query: query8IA,
-    targets: targets8IA,
-    criteria: criteria8IA,
-    resultBoundaries: boundaries8IA,
 
+    targets: targets8IA,
     targetCount: targets8IA.length,
+
+    criteria: criteria8IA,
     criterionCount: criteria8IA.length,
 
-    authorizationRequested: true,
+    resultBoundaries: boundaries8IA,
 
+    authorizationRequested: true,
     authorizationGranted: false,
 
     executionAllowed: false,
-
     execution: "NOT_STARTED",
 
     actualEvidenceAssessment: false,
@@ -52175,30 +52189,44 @@ if (
     resultCapture: "NOT_STARTED",
 
     verification: "UNVERIFIED",
-
     claimSupport: "NOT_CHANGED"
   };
 
-  var output8IA = {
-    step: "8IA",
-    name: "ASSESSMENT_EXECUTION_AUTHORIZATION_INPUT",
+  /* ---------------------------------------------------------
+     8IA — STATUS
+     --------------------------------------------------------- */
 
-    status:
-      source8IA &&
-      query8IA.length > 0 &&
-      targets8IA.length === 5 &&
-      criteria8IA.length === 8
-        ? "READY"
-        : "BLOCKED",
+  var status8IA =
+    source8IA &&
+    query8IA.length > 0 &&
+    targets8IA.length === 5 &&
+    criteria8IA.length === 8
+      ? "READY"
+      : "BLOCKED";
+
+  /* ---------------------------------------------------------
+     8IA — OUTPUT
+     --------------------------------------------------------- */
+
+  var output8IA = {
+
+    step: "8IA",
+
+    name:
+      "ASSESSMENT_EXECUTION_AUTHORIZATION_INPUT",
+
+    status: status8IA,
 
     layer: "LAYER_6",
 
     query: query8IA,
 
     targets: targets8IA,
+
     targetCount: targets8IA.length,
 
     criteria: criteria8IA,
+
     criterionCount: criteria8IA.length,
 
     resultBoundaries: boundaries8IA,
@@ -52207,34 +52235,61 @@ if (
       authorizationInput8IA,
 
     authorizationGranted: false,
+
     executionAllowed: false,
 
     execution: "NOT_STARTED",
+
     actualEvidenceAssessment: false,
 
     resultCapture: "NOT_STARTED",
 
     verification: "UNVERIFIED",
+
     claimSupport: "NOT_CHANGED",
 
     safety: {
-      externalSourceAccess: "NOT_STARTED",
-      sourceRetrieval: "NOT_STARTED",
-      evidenceInsertion: "NOT_STARTED",
-      claimSupportUpdate: "NOT_CHANGED"
+
+      externalSourceAccess:
+        "NOT_STARTED",
+
+      sourceRetrieval:
+        "NOT_STARTED",
+
+      evidenceInsertion:
+        "NOT_STARTED",
+
+      claimSupportUpdate:
+        "NOT_CHANGED"
     }
   };
 
+  /* ---------------------------------------------------------
+     8IA — REGISTRY HANDOFF
+     --------------------------------------------------------- */
+
   registry["8IA"] = output8IA;
 
-  if (typeof OODebug !== "undefined" && OODebug.log) {
+  /* ---------------------------------------------------------
+     8IA — DEBUG
+     --------------------------------------------------------- */
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug &&
+    typeof OODebug.log === "function"
+  ) {
+
     OODebug.log(
       "8IA",
       "Assessment execution authorization input ready",
       output8IA
     );
   }
+
 })();
+
+    
    /* =========================================================
    STEP 8IB — ASSESSMENT AUTHORIZATION DECISION BOUNDARY
    ========================================================= */
