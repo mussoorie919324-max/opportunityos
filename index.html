@@ -53364,6 +53364,798 @@ if (
   }
 
 })();
+  /* =========================================================
+   STEP 8IK — EVIDENCE TO TARGET BINDING
+   LAYER 6 — EVIDENCE EVALUATION & VERIFICATION
+   ========================================================= */
+
+(function () {
+  "use strict";
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8IK = registry["8IJ"] || null;
+
+  var query8IK = "";
+  var targets8IK = [];
+  var criteria8IK = [];
+  var evidenceRecords8IK = [];
+
+  if (source8IK && typeof source8IK === "object") {
+
+    if (typeof source8IK.query === "string") {
+      query8IK = source8IK.query;
+    }
+
+    if (Array.isArray(source8IK.targets)) {
+      targets8IK = source8IK.targets.slice();
+    }
+
+    if (Array.isArray(source8IK.criteria)) {
+      criteria8IK = source8IK.criteria.slice();
+    }
+
+    if (Array.isArray(source8IK.evidenceRecords)) {
+      evidenceRecords8IK =
+        source8IK.evidenceRecords.slice();
+    }
+  }
+
+  var targetEvidenceBindings8IK = [];
+
+  for (
+    var i8IK = 0;
+    i8IK < targets8IK.length;
+    i8IK++
+  ) {
+
+    targetEvidenceBindings8IK.push({
+      targetIndex: i8IK,
+
+      target:
+        targets8IK[i8IK],
+
+      evidenceRecords:
+        evidenceRecords8IK.slice(),
+
+      evidenceCount:
+        evidenceRecords8IK.length,
+
+      bindingStatus:
+        "PREPARED",
+
+      assessment:
+        "NOT_STARTED"
+    });
+  }
+
+  var output8IK = {
+
+    step: "8IK",
+
+    name:
+      "EVIDENCE_TO_TARGET_BINDING",
+
+    status:
+      source8IK &&
+      query8IK.length > 0 &&
+      targets8IK.length === 5 &&
+      criteria8IK.length === 8
+        ? "READY"
+        : "BLOCKED",
+
+    layer: "LAYER_6",
+
+    query: query8IK,
+
+    targets: targets8IK,
+    targetCount: targets8IK.length,
+
+    criteria: criteria8IK,
+    criterionCount: criteria8IK.length,
+
+    evidenceRecords:
+      evidenceRecords8IK,
+
+    targetEvidenceBindings:
+      targetEvidenceBindings8IK,
+
+    bindingCount:
+      targetEvidenceBindings8IK.length,
+
+    execution:
+      "NOT_STARTED",
+
+    actualEvidenceAssessment:
+      false,
+
+    verification:
+      "UNVERIFIED",
+
+    claimSupport:
+      "NOT_CHANGED",
+
+    safety: {
+      externalSourceAccess:
+        "NOT_STARTED",
+
+      sourceRetrieval:
+        "NOT_STARTED",
+
+      evidenceInsertion:
+        "NOT_STARTED",
+
+      claimSupportUpdate:
+        "NOT_CHANGED"
+    }
+  };
+
+  registry["8IK"] = output8IK;
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug &&
+    typeof OODebug.log === "function"
+  ) {
+    OODebug.log(
+      "8IK",
+      "Evidence to target binding ready",
+      output8IK
+    );
+  }
+
+})();
+/* =========================================================
+   STEP 8IL — TARGET TO CRITERION BINDING
+   LAYER 6 — EVIDENCE EVALUATION & VERIFICATION
+   ========================================================= */
+
+(function () {
+  "use strict";
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8IL = registry["8IK"] || null;
+
+  var query8IL = "";
+  var targets8IL = [];
+  var criteria8IL = [];
+  var targetEvidenceBindings8IL = [];
+
+  if (source8IL && typeof source8IL === "object") {
+
+    if (typeof source8IL.query === "string") {
+      query8IL = source8IL.query;
+    }
+
+    if (Array.isArray(source8IL.targets)) {
+      targets8IL =
+        source8IL.targets.slice();
+    }
+
+    if (Array.isArray(source8IL.criteria)) {
+      criteria8IL =
+        source8IL.criteria.slice();
+    }
+
+    if (
+      Array.isArray(
+        source8IL.targetEvidenceBindings
+      )
+    ) {
+      targetEvidenceBindings8IL =
+        source8IL.targetEvidenceBindings.slice();
+    }
+  }
+
+  var criterionBindings8IL = [];
+
+  for (
+    var i8IL = 0;
+    i8IL < targets8IL.length;
+    i8IL++
+  ) {
+
+    var targetBinding8IL =
+      targetEvidenceBindings8IL[i8IL] || null;
+
+    criterionBindings8IL.push({
+      targetIndex: i8IL,
+
+      target:
+        targets8IL[i8IL],
+
+      criteria:
+        criteria8IL.slice(),
+
+      criterionCount:
+        criteria8IL.length,
+
+      evidenceCount:
+        targetBinding8IL &&
+        typeof targetBinding8IL.evidenceCount ===
+          "number"
+          ? targetBinding8IL.evidenceCount
+          : 0,
+
+      criterionAssessment:
+        "NOT_STARTED",
+
+      bindingStatus:
+        "PREPARED"
+    });
+  }
+
+  var output8IL = {
+
+    step: "8IL",
+
+    name:
+      "TARGET_TO_CRITERION_BINDING",
+
+    status:
+      source8IL &&
+      query8IL.length > 0 &&
+      targets8IL.length === 5 &&
+      criteria8IL.length === 8 &&
+      criterionBindings8IL.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    layer: "LAYER_6",
+
+    query: query8IL,
+
+    targets: targets8IL,
+    targetCount: targets8IL.length,
+
+    criteria: criteria8IL,
+    criterionCount: criteria8IL.length,
+
+    targetEvidenceBindings:
+      targetEvidenceBindings8IL,
+
+    criterionBindings:
+      criterionBindings8IL,
+
+    bindingCount:
+      criterionBindings8IL.length,
+
+    execution:
+      "NOT_STARTED",
+
+    actualEvidenceAssessment:
+      false,
+
+    verification:
+      "UNVERIFIED",
+
+    claimSupport:
+      "NOT_CHANGED",
+
+    safety: {
+      externalSourceAccess:
+        "NOT_STARTED",
+
+      sourceRetrieval:
+        "NOT_STARTED",
+
+      evidenceInsertion:
+        "NOT_STARTED",
+
+      claimSupportUpdate:
+        "NOT_CHANGED"
+    }
+  };
+
+  registry["8IL"] = output8IL;
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug &&
+    typeof OODebug.log === "function"
+  ) {
+    OODebug.log(
+      "8IL",
+      "Target to criterion binding ready",
+      output8IL
+    );
+  }
+
+})();
+  /* =========================================================
+   STEP 8IM — CRITERION ASSESSMENT INPUT MATRIX
+   LAYER 6 — EVIDENCE EVALUATION & VERIFICATION
+   ========================================================= */
+
+(function () {
+  "use strict";
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8IM = registry["8IL"] || null;
+
+  var query8IM = "";
+  var targets8IM = [];
+  var criteria8IM = [];
+  var criterionBindings8IM = [];
+
+  if (source8IM && typeof source8IM === "object") {
+
+    if (typeof source8IM.query === "string") {
+      query8IM = source8IM.query;
+    }
+
+    if (Array.isArray(source8IM.targets)) {
+      targets8IM =
+        source8IM.targets.slice();
+    }
+
+    if (Array.isArray(source8IM.criteria)) {
+      criteria8IM =
+        source8IM.criteria.slice();
+    }
+
+    if (
+      Array.isArray(source8IM.criterionBindings)
+    ) {
+      criterionBindings8IM =
+        source8IM.criterionBindings.slice();
+    }
+  }
+
+  var assessmentMatrix8IM = [];
+
+  for (
+    var i8IM = 0;
+    i8IM < targets8IM.length;
+    i8IM++
+  ) {
+
+    var targetBinding8IM =
+      criterionBindings8IM[i8IM] || null;
+
+    var criterionRows8IM = [];
+
+    for (
+      var j8IM = 0;
+      j8IM < criteria8IM.length;
+      j8IM++
+    ) {
+
+      criterionRows8IM.push({
+
+        targetIndex: i8IM,
+
+        criterionIndex: j8IM,
+
+        criterion:
+          criteria8IM[j8IM],
+
+        evidenceCount:
+          targetBinding8IM &&
+          typeof targetBinding8IM.evidenceCount ===
+            "number"
+            ? targetBinding8IM.evidenceCount
+            : 0,
+
+        assessmentInput:
+          "READY_FOR_CONTROLLED_ASSESSMENT",
+
+        assessment:
+          "NOT_STARTED",
+
+        score:
+          null,
+
+        decision:
+          "UNVERIFIED"
+      });
+    }
+
+    assessmentMatrix8IM.push({
+      targetIndex: i8IM,
+
+      target:
+        targets8IM[i8IM],
+
+      criteria:
+        criterionRows8IM,
+
+      criterionCount:
+        criterionRows8IM.length
+    });
+  }
+
+  var output8IM = {
+
+    step: "8IM",
+
+    name:
+      "CRITERION_ASSESSMENT_INPUT_MATRIX",
+
+    status:
+      source8IM &&
+      query8IM.length > 0 &&
+      targets8IM.length === 5 &&
+      criteria8IM.length === 8 &&
+      assessmentMatrix8IM.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    layer: "LAYER_6",
+
+    query: query8IM,
+
+    targets: targets8IM,
+    targetCount: targets8IM.length,
+
+    criteria: criteria8IM,
+    criterionCount: criteria8IM.length,
+
+    criterionBindings:
+      criterionBindings8IM,
+
+    assessmentMatrix:
+      assessmentMatrix8IM,
+
+    matrixTargetCount:
+      assessmentMatrix8IM.length,
+
+    matrixCriterionCount:
+      assessmentMatrix8IM.length === 5
+        ? 8
+        : 0,
+
+    execution:
+      "NOT_STARTED",
+
+    actualEvidenceAssessment:
+      false,
+
+    verification:
+      "UNVERIFIED",
+
+    claimSupport:
+      "NOT_CHANGED",
+
+    safety: {
+      externalSourceAccess:
+        "NOT_STARTED",
+
+      sourceRetrieval:
+        "NOT_STARTED",
+
+      evidenceInsertion:
+        "NOT_STARTED",
+
+      claimSupportUpdate:
+        "NOT_CHANGED"
+    }
+  };
+
+  registry["8IM"] = output8IM;
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug &&
+    typeof OODebug.log === "function"
+  ) {
+    OODebug.log(
+      "8IM",
+      "Criterion assessment input matrix ready",
+      output8IM
+    );
+  }
+
+})();
+  /* =========================================================
+   STEP 8IN — CONTROLLED ASSESSMENT INPUT VALIDATION
+   LAYER 6 — EVIDENCE EVALUATION & VERIFICATION
+   ========================================================= */
+
+(function () {
+  "use strict";
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8IN = registry["8IM"] || null;
+
+  var query8IN = "";
+  var targets8IN = [];
+  var criteria8IN = [];
+  var assessmentMatrix8IN = [];
+
+  if (source8IN && typeof source8IN === "object") {
+
+    if (typeof source8IN.query === "string") {
+      query8IN = source8IN.query;
+    }
+
+    if (Array.isArray(source8IN.targets)) {
+      targets8IN =
+        source8IN.targets.slice();
+    }
+
+    if (Array.isArray(source8IN.criteria)) {
+      criteria8IN =
+        source8IN.criteria.slice();
+    }
+
+    if (
+      Array.isArray(source8IN.assessmentMatrix)
+    ) {
+      assessmentMatrix8IN =
+        source8IN.assessmentMatrix.slice();
+    }
+  }
+
+  var validation8IN = {
+
+    queryReady:
+      query8IN.length > 0,
+
+    targetCountReady:
+      targets8IN.length === 5,
+
+    criterionCountReady:
+      criteria8IN.length === 8,
+
+    matrixTargetCountReady:
+      assessmentMatrix8IN.length === 5,
+
+    matrixStructureReady:
+      assessmentMatrix8IN.every(
+        function (row8IN) {
+          return (
+            row8IN &&
+            Array.isArray(row8IN.criteria) &&
+            row8IN.criteria.length === 8
+          );
+        }
+      ),
+
+    executionAllowed:
+      false,
+
+    actualAssessmentAllowed:
+      false,
+
+    retrievalAllowed:
+      false,
+
+    mutationAllowed:
+      false
+  };
+
+  validation8IN.allChecksPassed =
+    validation8IN.queryReady &&
+    validation8IN.targetCountReady &&
+    validation8IN.criterionCountReady &&
+    validation8IN.matrixTargetCountReady &&
+    validation8IN.matrixStructureReady;
+
+  var output8IN = {
+
+    step: "8IN",
+
+    name:
+      "CONTROLLED_ASSESSMENT_INPUT_VALIDATION",
+
+    status:
+      validation8IN.allChecksPassed
+        ? "READY"
+        : "BLOCKED",
+
+    layer: "LAYER_6",
+
+    query: query8IN,
+
+    targets: targets8IN,
+    targetCount: targets8IN.length,
+
+    criteria: criteria8IN,
+    criterionCount: criteria8IN.length,
+
+    assessmentMatrix:
+      assessmentMatrix8IN,
+
+    validation:
+      validation8IN,
+
+    execution:
+      "NOT_STARTED",
+
+    actualEvidenceAssessment:
+      false,
+
+    verification:
+      "UNVERIFIED",
+
+    claimSupport:
+      "NOT_CHANGED",
+
+    safety: {
+      externalSourceAccess:
+        "NOT_STARTED",
+
+      sourceRetrieval:
+        "NOT_STARTED",
+
+      evidenceInsertion:
+        "NOT_STARTED",
+
+      claimSupportUpdate:
+        "NOT_CHANGED"
+    }
+  };
+
+  registry["8IN"] = output8IN;
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug &&
+    typeof OODebug.log === "function"
+  ) {
+    OODebug.log(
+      "8IN",
+      "Controlled assessment input validation ready",
+      output8IN
+    );
+  }
+
+})();
+/* =========================================================
+   STEP 8IO — CONTROLLED ASSESSMENT INPUT HANDOFF
+   LAYER 6 — EVIDENCE EVALUATION & VERIFICATION
+   ========================================================= */
+
+(function () {
+  "use strict";
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8IO = registry["8IN"] || null;
+
+  var query8IO = "";
+  var targets8IO = [];
+  var criteria8IO = [];
+  var assessmentMatrix8IO = [];
+  var validation8IO = null;
+
+  if (source8IO && typeof source8IO === "object") {
+
+    if (typeof source8IO.query === "string") {
+      query8IO = source8IO.query;
+    }
+
+    if (Array.isArray(source8IO.targets)) {
+      targets8IO =
+        source8IO.targets.slice();
+    }
+
+    if (Array.isArray(source8IO.criteria)) {
+      criteria8IO =
+        source8IO.criteria.slice();
+    }
+
+    if (
+      Array.isArray(source8IO.assessmentMatrix)
+    ) {
+      assessmentMatrix8IO =
+        source8IO.assessmentMatrix.slice();
+    }
+
+    if (
+      source8IO.validation &&
+      typeof source8IO.validation === "object"
+    ) {
+      validation8IO =
+        source8IO.validation;
+    }
+  }
+
+  var handoffReady8IO =
+    source8IO &&
+    query8IO.length > 0 &&
+    targets8IO.length === 5 &&
+    criteria8IO.length === 8 &&
+    assessmentMatrix8IO.length === 5 &&
+    validation8IO &&
+    validation8IO.allChecksPassed === true;
+
+  var output8IO = {
+
+    step: "8IO",
+
+    name:
+      "CONTROLLED_ASSESSMENT_INPUT_HANDOFF",
+
+    status:
+      handoffReady8IO
+        ? "READY"
+        : "BLOCKED",
+
+    layer: "LAYER_6",
+
+    query: query8IO,
+
+    targets: targets8IO,
+    targetCount: targets8IO.length,
+
+    criteria: criteria8IO,
+    criterionCount: criteria8IO.length,
+
+    assessmentMatrix:
+      assessmentMatrix8IO,
+
+    validation:
+      validation8IO,
+
+    handoffReady:
+      !!handoffReady8IO,
+
+    execution:
+      "NOT_STARTED",
+
+    actualEvidenceAssessment:
+      false,
+
+    resultCapture:
+      "NOT_STARTED",
+
+    verification:
+      "UNVERIFIED",
+
+    claimSupport:
+      "NOT_CHANGED",
+
+    authorizationGranted:
+      false,
+
+    executionAllowed:
+      false,
+
+    safety: {
+      externalSourceAccess:
+        "NOT_STARTED",
+
+      sourceRetrieval:
+        "NOT_STARTED",
+
+      evidenceInsertion:
+        "NOT_STARTED",
+
+      claimSupportUpdate:
+        "NOT_CHANGED"
+    }
+  };
+
+  registry["8IO"] = output8IO;
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug &&
+    typeof OODebug.log === "function"
+  ) {
+    OODebug.log(
+      "8IO",
+      "Controlled assessment input handoff ready",
+      output8IO
+    );
+  }
+
+})();
   
 /* ==========================================
    RESULT VALUES
