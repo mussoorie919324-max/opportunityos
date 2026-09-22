@@ -60139,7 +60139,726 @@ if (
   }
 
 })();
-    
+   /* =========================================================
+   OPPORTUNITYOS — DECISION INTELLIGENCE
+   STEPS 8KI → 8KM
+
+   PURPOSE:
+   Structure Decision Intelligence requirements for:
+   - Risk
+   - ROI / value
+   - Person / Business Fit
+
+   RULES:
+   - 8KH is the upstream source
+   - Dynamic user query only
+   - No hard-coded test query
+   - No invented user/business data
+   - No fake evidence
+   - No numerical score calculation
+   - No action authorization
+   - No database mutation
+   - Preserve 8JA → 8KH
+   ========================================================= */
+
+
+/* =========================================================
+   STEP 8KI
+   DECISION REQUIREMENT INPUT RESOLUTION
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8KI =
+    registry["8KH"];
+
+  var query8KI = "";
+  var targets8KI = [];
+
+  var decisionEligible8KI = false;
+  var requirements8KI = {};
+
+  if (
+    source8KI &&
+    typeof source8KI === "object"
+  ) {
+
+    if (
+      typeof source8KI.query === "string"
+    ) {
+      query8KI =
+        source8KI.query.trim();
+    }
+
+    if (
+      Array.isArray(source8KI.targets)
+    ) {
+      targets8KI =
+        source8KI.targets.slice(0, 5);
+    }
+
+    if (
+      typeof source8KI.decisionEligible ===
+      "boolean"
+    ) {
+      decisionEligible8KI =
+        source8KI.decisionEligible;
+    }
+
+    if (
+      source8KI.requirements &&
+      typeof source8KI.requirements ===
+      "object"
+    ) {
+      requirements8KI =
+        source8KI.requirements;
+    }
+  }
+
+  var ready8KI =
+    query8KI.length > 0 &&
+    targets8KI.length === 5;
+
+  var decisionRequirementInput8KI = {
+    step: "8KI",
+
+    status:
+      ready8KI
+        ? "READY"
+        : "BLOCKED",
+
+    layer:
+      "DECISION_INTELLIGENCE",
+
+    query:
+      query8KI,
+
+    targets:
+      targets8KI,
+
+    decisionEligible:
+      decisionEligible8KI,
+
+    requirements:
+      requirements8KI,
+
+    inputScope:
+      "DECISION_REQUIREMENTS",
+
+    execution:
+      "NOT_STARTED",
+
+    mutationAllowed:
+      false,
+
+    safety: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    reason:
+      ready8KI
+        ? "Decision requirement input resolution is ready."
+        : "Decision requirement input resolution is blocked because required dynamic input is missing."
+  };
+
+  registry["8KI"] =
+    decisionRequirementInput8KI;
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug.log
+  ) {
+    OODebug.log(
+      "8KI",
+      "Decision requirement input resolution ready",
+      decisionRequirementInput8KI
+    );
+  }
+
+})();
+
+
+/* =========================================================
+   STEP 8KJ
+   RISK REQUIREMENT FRAME
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8KJ =
+    registry["8KI"];
+
+  var query8KJ = "";
+  var targets8KJ = [];
+
+  var riskRequirements8KJ = {
+    evidenceRequired: true,
+    verificationRequired: true,
+
+    regulatoryRisk: true,
+    financialRisk: true,
+    marketRisk: true,
+    executionRisk: true,
+    platformRisk: true,
+    opportunityRisk: true,
+
+    uncertaintyRequired: true,
+    conflictRequired: true,
+    downsideVisibilityRequired: true,
+
+    riskScoreAllowed: false
+  };
+
+  if (
+    source8KJ &&
+    typeof source8KJ === "object"
+  ) {
+
+    if (
+      typeof source8KJ.query === "string"
+    ) {
+      query8KJ =
+        source8KJ.query.trim();
+    }
+
+    if (
+      Array.isArray(source8KJ.targets)
+    ) {
+      targets8KJ =
+        source8KJ.targets.slice(0, 5);
+    }
+  }
+
+  var ready8KJ =
+    query8KJ.length > 0 &&
+    targets8KJ.length === 5;
+
+  var riskRequirementFrame8KJ = {
+    step: "8KJ",
+
+    status:
+      ready8KJ
+        ? "READY"
+        : "BLOCKED",
+
+    query:
+      query8KJ,
+
+    targets:
+      targets8KJ,
+
+    requirementType:
+      "RISK",
+
+    requirements:
+      riskRequirements8KJ,
+
+    riskAssessment:
+      "NOT_STARTED",
+
+    riskScore:
+      null,
+
+    scoreAllowed:
+      false,
+
+    execution:
+      "NOT_STARTED",
+
+    mutationAllowed:
+      false,
+
+    safety: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    }
+  };
+
+  registry["8KJ"] =
+    riskRequirementFrame8KJ;
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug.log
+  ) {
+    OODebug.log(
+      "8KJ",
+      "Risk requirement frame ready",
+      riskRequirementFrame8KJ
+    );
+  }
+
+})();
+
+
+/* =========================================================
+   STEP 8KK
+   ROI / VALUE REQUIREMENT FRAME
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8KK =
+    registry["8KJ"];
+
+  var query8KK = "";
+  var targets8KK = [];
+
+  var roiRequirements8KK = {
+    evidenceRequired: true,
+    verificationRequired: true,
+
+    expectedValue: true,
+    potentialReturn: true,
+    requiredInvestment: true,
+    timeRequirement: true,
+    opportunityCost: true,
+
+    downsideConsideration: true,
+    uncertaintyConsideration: true,
+
+    incomeClaimsEvidenceRequired: true,
+    revenueClaimsEvidenceRequired: true,
+
+    roiCalculationAllowed: false
+  };
+
+  if (
+    source8KK &&
+    typeof source8KK === "object"
+  ) {
+
+    if (
+      typeof source8KK.query === "string"
+    ) {
+      query8KK =
+        source8KK.query.trim();
+    }
+
+    if (
+      Array.isArray(source8KK.targets)
+    ) {
+      targets8KK =
+        source8KK.targets.slice(0, 5);
+    }
+  }
+
+  var ready8KK =
+    query8KK.length > 0 &&
+    targets8KK.length === 5;
+
+  var roiRequirementFrame8KK = {
+    step: "8KK",
+
+    status:
+      ready8KK
+        ? "READY"
+        : "BLOCKED",
+
+    query:
+      query8KK,
+
+    targets:
+      targets8KK,
+
+    requirementType:
+      "ROI_VALUE",
+
+    requirements:
+      roiRequirements8KK,
+
+    roiAssessment:
+      "NOT_STARTED",
+
+    roiScore:
+      null,
+
+    scoreAllowed:
+      false,
+
+    execution:
+      "NOT_STARTED",
+
+    mutationAllowed:
+      false,
+
+    safety: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    }
+  };
+
+  registry["8KK"] =
+    roiRequirementFrame8KK;
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug.log
+  ) {
+    OODebug.log(
+      "8KK",
+      "ROI and value requirement frame ready",
+      roiRequirementFrame8KK
+    );
+  }
+
+})();
+
+
+/* =========================================================
+   STEP 8KL
+   PERSON / BUSINESS FIT REQUIREMENT FRAME
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8KL =
+    registry["8KK"];
+
+  var query8KL = "";
+  var targets8KL = [];
+
+  var fitRequirements8KL = {
+    userContextRequired: true,
+
+    skills: true,
+    experience: true,
+    availableTime: true,
+    availableResources: true,
+
+    locationRelevance: true,
+    countryRelevance: true,
+
+    financialCapacity: true,
+    riskTolerance: true,
+
+    businessStage: true,
+    businessResources: true,
+    operationalCapability: true,
+
+    constraintsRequired: true,
+
+    fitScoreAllowed: false
+  };
+
+  if (
+    source8KL &&
+    typeof source8KL === "object"
+  ) {
+
+    if (
+      typeof source8KL.query === "string"
+    ) {
+      query8KL =
+        source8KL.query.trim();
+    }
+
+    if (
+      Array.isArray(source8KL.targets)
+    ) {
+      targets8KL =
+        source8KL.targets.slice(0, 5);
+    }
+  }
+
+  var ready8KL =
+    query8KL.length > 0 &&
+    targets8KL.length === 5;
+
+  var fitRequirementFrame8KL = {
+    step: "8KL",
+
+    status:
+      ready8KL
+        ? "READY"
+        : "BLOCKED",
+
+    query:
+      query8KL,
+
+    targets:
+      targets8KL,
+
+    requirementType:
+      "PERSON_BUSINESS_FIT",
+
+    requirements:
+      fitRequirements8KL,
+
+    fitAssessment:
+      "NOT_STARTED",
+
+    fitScore:
+      null,
+
+    scoreAllowed:
+      false,
+
+    execution:
+      "NOT_STARTED",
+
+    mutationAllowed:
+      false,
+
+    safety: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    }
+  };
+
+  registry["8KL"] =
+    fitRequirementFrame8KL;
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug.log
+  ) {
+    OODebug.log(
+      "8KL",
+      "Person and business fit requirement frame ready",
+      fitRequirementFrame8KL
+    );
+  }
+
+})();
+
+
+/* =========================================================
+   STEP 8KM
+   DECISION REQUIREMENTS CONSOLIDATION
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8KI =
+    registry["8KI"];
+
+  var source8KJ =
+    registry["8KJ"];
+
+  var source8KK =
+    registry["8KK"];
+
+  var source8KL =
+    registry["8KL"];
+
+  var query8KM = "";
+  var targets8KM = [];
+
+  var riskFrame8KM = null;
+  var roiFrame8KM = null;
+  var fitFrame8KM = null;
+
+  if (
+    source8KL &&
+    typeof source8KL === "object"
+  ) {
+
+    if (
+      typeof source8KL.query === "string"
+    ) {
+      query8KM =
+        source8KL.query.trim();
+    }
+
+    if (
+      Array.isArray(source8KL.targets)
+    ) {
+      targets8KM =
+        source8KL.targets.slice(0, 5);
+    }
+  }
+
+  if (
+    source8KJ &&
+    typeof source8KJ === "object"
+  ) {
+    riskFrame8KM =
+      source8KJ;
+  }
+
+  if (
+    source8KK &&
+    typeof source8KK === "object"
+  ) {
+    roiFrame8KM =
+      source8KK;
+  }
+
+  if (
+    source8KL &&
+    typeof source8KL === "object"
+  ) {
+    fitFrame8KM =
+      source8KL;
+  }
+
+  var sourceReady8KM =
+    source8KI &&
+    typeof source8KI === "object" &&
+    source8KJ &&
+    typeof source8KJ === "object" &&
+    source8KK &&
+    typeof source8KK === "object" &&
+    source8KL &&
+    typeof source8KL === "object";
+
+  var ready8KM =
+    sourceReady8KM &&
+    query8KM.length > 0 &&
+    targets8KM.length === 5;
+
+  var decisionRequirements8KM = {
+    evidence:
+      true,
+
+    verification:
+      true,
+
+    risk:
+      true,
+
+    roiValue:
+      true,
+
+    personBusinessFit:
+      true,
+
+    uncertainty:
+      true,
+
+    conflict:
+      true,
+
+    downsideVisibility:
+      true,
+
+    userConstraints:
+      true
+  };
+
+  var decisionRequirementsConsolidation8KM = {
+    step: "8KM",
+
+    status:
+      ready8KM
+        ? "READY"
+        : "BLOCKED",
+
+    layer:
+      "DECISION_INTELLIGENCE",
+
+    query:
+      query8KM,
+
+    targets:
+      targets8KM,
+
+    requirementScope:
+      "RISK_ROI_PERSON_BUSINESS_FIT",
+
+    requirements:
+      decisionRequirements8KM,
+
+    riskFrame:
+      riskFrame8KM,
+
+    roiFrame:
+      roiFrame8KM,
+
+    fitFrame:
+      fitFrame8KM,
+
+    riskAssessment:
+      "NOT_STARTED",
+
+    roiAssessment:
+      "NOT_STARTED",
+
+    fitAssessment:
+      "NOT_STARTED",
+
+    riskScore:
+      null,
+
+    roiScore:
+      null,
+
+    fitScore:
+      null,
+
+    scoreAllowed:
+      false,
+
+    actionAllowed:
+      false,
+
+    execution:
+      "NOT_STARTED",
+
+    mutationAllowed:
+      false,
+
+    handoff:
+      ready8KM,
+
+    safety: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    reason:
+      ready8KM
+        ? "Decision requirements consolidation is ready."
+        : "Decision requirements consolidation is blocked because required dynamic inputs are missing."
+  };
+
+  registry["8KM"] =
+    decisionRequirementsConsolidation8KM;
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug.log
+  ) {
+    OODebug.log(
+      "8KM",
+      "Decision requirements consolidation ready",
+      decisionRequirementsConsolidation8KM
+    );
+  }
+
+})(); 
   
 /* ==========================================
    RESULT VALUES
