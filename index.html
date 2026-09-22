@@ -61371,6 +61371,668 @@ if (
     );
   }
 })();
+/* =========================================================
+   OPPORTUNITYOS
+   STEPS 8KS → 8KW
+   DECISION INTELLIGENCE — ASSESSMENT PREPARATION
+   ========================================================= */
+
+
+/* =========================================================
+   STEP 8KS
+   DECISION ASSESSMENT INPUT RESOLUTION
+   ========================================================= */
+
+(function () {
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8KS = registry["8KR"] || null;
+
+  var query8KS = "";
+  var targets8KS = [];
+  var matrix8KS = [];
+
+  if (source8KS && typeof source8KS === "object") {
+
+    if (typeof source8KS.query === "string") {
+      query8KS = source8KS.query.trim();
+    }
+
+    if (Array.isArray(source8KS.targets)) {
+      targets8KS = source8KS.targets.slice();
+    }
+
+    if (source8KS.evidenceVerification &&
+        source8KS.riskRoi &&
+        source8KS.personBusinessFit) {
+      matrix8KS = targets8KS.map(function (target) {
+        return {
+          target: target,
+
+          evidenceVerification:
+            "REQUIRED",
+
+          risk:
+            "REQUIRED",
+
+          roiValue:
+            "REQUIRED",
+
+          personBusinessFit:
+            "REQUIRED",
+
+          constraints:
+            "REQUIRED",
+
+          assessmentState:
+            "NOT_STARTED"
+        };
+      });
+    }
+  }
+
+  var output8KS = {
+    step: "8KS",
+    name: "DECISION_ASSESSMENT_INPUT_RESOLUTION",
+
+    status:
+      query8KS.length > 0 &&
+      targets8KS.length === 5 &&
+      matrix8KS.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    query: query8KS,
+
+    targets: targets8KS,
+
+    targetCount:
+      targets8KS.length,
+
+    assessmentInputs:
+      matrix8KS,
+
+    assessment:
+      "NOT_STARTED",
+
+    scoreAllowed:
+      false,
+
+    actionAllowed:
+      false,
+
+    mutationAllowed:
+      false
+  };
+
+  registry["8KS"] = output8KS;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8KS",
+      "Decision assessment input resolution ready",
+      output8KS
+    );
+  }
+})();
+
+
+/* =========================================================
+   STEP 8KT
+   EVIDENCE ASSESSMENT PREPARATION
+   ========================================================= */
+
+(function () {
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8KT = registry["8KS"] || null;
+
+  var evidenceInputs8KT = [];
+
+  if (
+    source8KT &&
+    Array.isArray(source8KT.assessmentInputs)
+  ) {
+    evidenceInputs8KT =
+      source8KT.assessmentInputs.map(function (item) {
+        return {
+          target: item.target,
+
+          evidenceRequired:
+            true,
+
+          verificationRequired:
+            true,
+
+          claimSupportRequired:
+            true,
+
+          sourceReliabilityRequired:
+            true,
+
+          freshnessRequired:
+            true,
+
+          conflictCheckRequired:
+            true,
+
+          coverageRequired:
+            true,
+
+          uncertaintyRequired:
+            true,
+
+          evidenceAssessment:
+            "NOT_STARTED",
+
+          verificationState:
+            "UNVERIFIED"
+        };
+      });
+  }
+
+  var output8KT = {
+    step: "8KT",
+    name: "EVIDENCE_ASSESSMENT_PREPARATION",
+
+    status:
+      evidenceInputs8KT.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    inputs:
+      evidenceInputs8KT,
+
+    evidenceAssessment:
+      "NOT_STARTED",
+
+    verificationAssessment:
+      "NOT_STARTED",
+
+    actualEvidenceRetrieval:
+      false,
+
+    evidenceInsertion:
+      false,
+
+    claimSupportUpdate:
+      false,
+
+    scoreAllowed:
+      false,
+
+    actionAllowed:
+      false
+  };
+
+  registry["8KT"] = output8KT;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8KT",
+      "Evidence assessment preparation ready",
+      output8KT
+    );
+  }
+})();
+
+
+/* =========================================================
+   STEP 8KU
+   RISK + ROI ASSESSMENT PREPARATION
+   ========================================================= */
+
+(function () {
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8KU = registry["8KS"] || null;
+
+  var riskRoiInputs8KU = [];
+
+  if (
+    source8KU &&
+    Array.isArray(source8KU.assessmentInputs)
+  ) {
+    riskRoiInputs8KU =
+      source8KU.assessmentInputs.map(function (item) {
+        return {
+          target: item.target,
+
+          risk: {
+            financialRisk:
+              "REQUIRED",
+
+            marketRisk:
+              "REQUIRED",
+
+            executionRisk:
+              "REQUIRED",
+
+            regulatoryRisk:
+              "REQUIRED",
+
+            platformRisk:
+              "REQUIRED",
+
+            opportunityRisk:
+              "REQUIRED",
+
+            uncertainty:
+              "REQUIRED",
+
+            downsideVisibility:
+              "REQUIRED"
+          },
+
+          roiValue: {
+            expectedValue:
+              "REQUIRED",
+
+            potentialReturn:
+              "REQUIRED",
+
+            requiredInvestment:
+              "REQUIRED",
+
+            timeRequirement:
+              "REQUIRED",
+
+            opportunityCost:
+              "REQUIRED",
+
+            downside:
+              "REQUIRED",
+
+            uncertainty:
+              "REQUIRED"
+          },
+
+          riskAssessment:
+            "NOT_STARTED",
+
+          roiAssessment:
+            "NOT_STARTED",
+
+          riskScore:
+            null,
+
+          roiScore:
+            null
+        };
+      });
+  }
+
+  var output8KU = {
+    step: "8KU",
+    name: "RISK_ROI_ASSESSMENT_PREPARATION",
+
+    status:
+      riskRoiInputs8KU.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    inputs:
+      riskRoiInputs8KU,
+
+    riskAssessment:
+      "NOT_STARTED",
+
+    roiAssessment:
+      "NOT_STARTED",
+
+    riskScore:
+      null,
+
+    roiScore:
+      null,
+
+    calculationAllowed:
+      false,
+
+    externalRetrieval:
+      false,
+
+    evidenceInsertion:
+      false,
+
+    scoreAllowed:
+      false,
+
+    actionAllowed:
+      false
+  };
+
+  registry["8KU"] = output8KU;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8KU",
+      "Risk and ROI assessment preparation ready",
+      output8KU
+    );
+  }
+})();
+
+
+/* =========================================================
+   STEP 8KV
+   PERSON / BUSINESS FIT + CONSTRAINT ASSESSMENT PREPARATION
+   ========================================================= */
+
+(function () {
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8KV = registry["8KS"] || null;
+
+  var fitInputs8KV = [];
+
+  if (
+    source8KV &&
+    Array.isArray(source8KV.assessmentInputs)
+  ) {
+    fitInputs8KV =
+      source8KV.assessmentInputs.map(function (item) {
+        return {
+          target: item.target,
+
+          personFit: {
+            userContext:
+              "REQUIRED",
+
+            skills:
+              "REQUIRED",
+
+            experience:
+              "REQUIRED",
+
+            availableTime:
+              "REQUIRED",
+
+            availableResources:
+              "REQUIRED",
+
+            locationRelevance:
+              "REQUIRED",
+
+            countryRelevance:
+              "REQUIRED",
+
+            financialCapacity:
+              "REQUIRED",
+
+            riskTolerance:
+              "REQUIRED"
+          },
+
+          businessFit: {
+            businessStage:
+              "OPTIONAL",
+
+            businessResources:
+              "OPTIONAL",
+
+            operationalCapability:
+              "OPTIONAL",
+
+            countryRelevance:
+              "REQUIRED"
+          },
+
+          constraints: {
+            personalConstraints:
+              "REQUIRED",
+
+            financialConstraints:
+              "REQUIRED",
+
+            timeConstraints:
+              "REQUIRED",
+
+            skillConstraints:
+              "REQUIRED",
+
+            resourceConstraints:
+              "REQUIRED",
+
+            riskConstraints:
+              "REQUIRED"
+          },
+
+          fitAssessment:
+            "NOT_STARTED",
+
+          constraintAssessment:
+            "NOT_STARTED",
+
+          fitScore:
+            null
+        };
+      });
+  }
+
+  var output8KV = {
+    step: "8KV",
+    name: "FIT_CONSTRAINT_ASSESSMENT_PREPARATION",
+
+    status:
+      fitInputs8KV.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    inputs:
+      fitInputs8KV,
+
+    fitAssessment:
+      "NOT_STARTED",
+
+    constraintAssessment:
+      "NOT_STARTED",
+
+    fitScore:
+      null,
+
+    userContextCollected:
+      false,
+
+    inventedUserData:
+      false,
+
+    inventedBusinessData:
+      false,
+
+    scoreAllowed:
+      false,
+
+    actionAllowed:
+      false,
+
+    mutationAllowed:
+      false
+  };
+
+  registry["8KV"] = output8KV;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8KV",
+      "Person/business fit and constraint assessment preparation ready",
+      output8KV
+    );
+  }
+})();
+
+
+/* =========================================================
+   STEP 8KW
+   FINAL ASSESSMENT READINESS HANDOFF
+   ========================================================= */
+
+(function () {
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8KS = registry["8KS"] || null;
+  var source8KT = registry["8KT"] || null;
+  var source8KU = registry["8KU"] || null;
+  var source8KV = registry["8KV"] || null;
+
+  var query8KW = "";
+  var targets8KW = [];
+
+  if (source8KS && typeof source8KS === "object") {
+
+    if (typeof source8KS.query === "string") {
+      query8KW = source8KS.query.trim();
+    }
+
+    if (Array.isArray(source8KS.targets)) {
+      targets8KW = source8KS.targets.slice();
+    }
+  }
+
+  var evidenceReady8KW =
+    !!source8KT &&
+    Array.isArray(source8KT.inputs) &&
+    source8KT.inputs.length === 5;
+
+  var riskRoiReady8KW =
+    !!source8KU &&
+    Array.isArray(source8KU.inputs) &&
+    source8KU.inputs.length === 5;
+
+  var fitReady8KW =
+    !!source8KV &&
+    Array.isArray(source8KV.inputs) &&
+    source8KV.inputs.length === 5;
+
+  var assessmentReady8KW =
+    query8KW.length > 0 &&
+    targets8KW.length === 5 &&
+    evidenceReady8KW &&
+    riskRoiReady8KW &&
+    fitReady8KW;
+
+  var output8KW = {
+    step: "8KW",
+    name: "FINAL_DECISION_ASSESSMENT_READINESS_HANDOFF",
+
+    status:
+      assessmentReady8KW
+        ? "READY"
+        : "BLOCKED",
+
+    query:
+      query8KW,
+
+    targets:
+      targets8KW,
+
+    targetCount:
+      targets8KW.length,
+
+    evidenceAssessment:
+      source8KT,
+
+    riskRoiAssessment:
+      source8KU,
+
+    fitConstraintAssessment:
+      source8KV,
+
+    readiness:
+      assessmentReady8KW
+        ? "READY_FOR_CONTROLLED_ASSESSMENT"
+        : "BLOCKED",
+
+    actualAssessment:
+      "NOT_STARTED",
+
+    evidenceRetrieval:
+      "NOT_STARTED",
+
+    riskCalculation:
+      "NOT_STARTED",
+
+    roiCalculation:
+      "NOT_STARTED",
+
+    fitCalculation:
+      "NOT_STARTED",
+
+    scoring:
+      "NOT_STARTED",
+
+    decision:
+      "NOT_STARTED",
+
+    riskScore:
+      null,
+
+    roiScore:
+      null,
+
+    fitScore:
+      null,
+
+    scoreAllowed:
+      false,
+
+    actionAllowed:
+      false,
+
+    execution:
+      "NOT_STARTED",
+
+    mutationAllowed:
+      false,
+
+    safety: {
+      externalSourceAccess:
+        false,
+
+      sourceRetrieval:
+        false,
+
+      evidenceInsertion:
+        false,
+
+      claimSupportUpdate:
+        false,
+
+      userDataAssumption:
+        false,
+
+      actionAuthorization:
+        false
+    },
+
+    reason:
+      assessmentReady8KW
+        ? "Decision assessment inputs are structurally ready for controlled assessment."
+        : "Decision assessment readiness is blocked because one or more required inputs are incomplete."
+  };
+
+  registry["8KW"] = output8KW;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8KW",
+      "Final Decision assessment readiness handoff ready",
+      output8KW
+    );
+  }
+})();
+        
+  
 /* ==========================================
    RESULT VALUES
    ========================================== */
