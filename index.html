@@ -58013,7 +58013,8 @@ if (
 })();
 /* =========================================================
    STEP 8JS → 8JX
-   VERIFICATION OUTCOME → DECISION HANDOFF SAFETY CHAIN
+   VERIFICATION OUTCOME → DECISION HANDOFF
+   CLEAN PRODUCTION-SAFE VERSION
    ========================================================= */
 
 
@@ -58029,19 +58030,34 @@ if (
 
   var source8JS = registry["8JR"] || {};
 
+  var query8JS =
+    typeof source8JS.query === "string"
+      ? source8JS.query.trim()
+      : "";
+
   var sourceResults8JS = [];
 
-  if (Array.isArray(registry["8JQ"] && registry["8JQ"].results)) {
-    sourceResults8JS = registry["8JQ"].results;
+  var priorHandoff8JS = registry["8JQ"];
+
+  if (
+    priorHandoff8JS &&
+    Array.isArray(priorHandoff8JS.results)
+  ) {
+    sourceResults8JS = priorHandoff8JS.results;
   }
 
   var normalizedOutcomes8JS = [];
 
-  for (var i = 0; i < sourceResults8JS.length; i++) {
+  for (
+    var i = 0;
+    i < sourceResults8JS.length;
+    i++
+  ) {
 
     var item = sourceResults8JS[i] || {};
 
     normalizedOutcomes8JS.push({
+
       targetId:
         item.targetId !== undefined
           ? item.targetId
@@ -58074,16 +58090,29 @@ if (
     });
   }
 
+  var queryReady8JS =
+    query8JS.length > 0;
+
   var output8JS = {
-    step: "8JS",
-    status: "READY",
+
+    step:
+      "8JS",
+
+    status:
+      queryReady8JS
+        ? "READY"
+        : "BLOCKED",
 
     query:
-      source8JR.query ||
-      "AI online work",
+      query8JS,
+
+    queryReady:
+      queryReady8JS,
 
     targetCount:
-      source8JR.targetCount || 5,
+      source8JS.targetCount !== undefined
+        ? source8JS.targetCount
+        : normalizedOutcomes8JS.length,
 
     outcomes:
       normalizedOutcomes8JS,
@@ -58092,7 +58121,9 @@ if (
       normalizedOutcomes8JS.length,
 
     normalization:
-      "COMPLETED",
+      queryReady8JS
+        ? "COMPLETED"
+        : "BLOCKED",
 
     verification:
       "UNVERIFIED",
@@ -58110,9 +58141,14 @@ if (
       "NOT_STARTED"
   };
 
-  registry["8JS"] = output8JS;
+  registry["8JS"] =
+    output8JS;
 
-  if (typeof OODebug !== "undefined" && OODebug.log) {
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug.log
+  ) {
+
     OODebug.log(
       "8JS",
       "Verification outcome normalization ready",
@@ -58133,38 +58169,62 @@ if (
     globalThis.__OpportunityOS_HandoffRegistry ||
     (globalThis.__OpportunityOS_HandoffRegistry = {});
 
-  var source8JT = registry["8JS"] || {};
+  var source8JT =
+    registry["8JS"] || {};
 
-  var outcomes =
+  var outcomes8JT =
     Array.isArray(source8JT.outcomes)
       ? source8JT.outcomes
       : [];
 
   var supportStates8JT = [];
 
-  for (var i = 0; i < outcomes.length; i++) {
+  for (
+    var i = 0;
+    i < outcomes8JT.length;
+    i++
+  ) {
 
-    var item = outcomes[i] || {};
+    var item =
+      outcomes8JT[i] || {};
 
     var decision =
       item.decision || "UNVERIFIED";
 
     var supportState =
-      "NOT_CHANGED";
+      "UNVERIFIED";
 
-    if (decision === "SUPPORTED") {
-      supportState = "SUPPORTED_CANDIDATE";
-    } else if (decision === "NEEDS_REVIEW") {
-      supportState = "REVIEW_REQUIRED";
-    } else if (decision === "INSUFFICIENT_EVIDENCE") {
-      supportState = "INSUFFICIENT_EVIDENCE";
-    } else if (decision === "CONFLICTED") {
-      supportState = "CONFLICTED";
-    } else {
-      supportState = "UNVERIFIED";
+    if (
+      decision === "SUPPORTED"
+    ) {
+
+      supportState =
+        "SUPPORTED_CANDIDATE";
+
+    } else if (
+      decision === "NEEDS_REVIEW"
+    ) {
+
+      supportState =
+        "REVIEW_REQUIRED";
+
+    } else if (
+      decision === "INSUFFICIENT_EVIDENCE"
+    ) {
+
+      supportState =
+        "INSUFFICIENT_EVIDENCE";
+
+    } else if (
+      decision === "CONFLICTED"
+    ) {
+
+      supportState =
+        "CONFLICTED";
     }
 
     supportStates8JT.push({
+
       targetId:
         item.targetId,
 
@@ -58188,16 +58248,31 @@ if (
     });
   }
 
+  var query8JT =
+    typeof source8JT.query === "string"
+      ? source8JT.query
+      : "";
+
   var output8JT = {
-    step: "8JT",
-    status: "READY",
+
+    step:
+      "8JT",
+
+    status:
+      query8JT.length > 0
+        ? "READY"
+        : "BLOCKED",
 
     query:
-      source8JS.query ||
-      "AI online work",
+      query8JT,
+
+    queryReady:
+      query8JT.length > 0,
 
     targetCount:
-      source8JS.targetCount || 5,
+      source8JT.targetCount !== undefined
+        ? source8JT.targetCount
+        : supportStates8JT.length,
 
     supportStates:
       supportStates8JT,
@@ -58221,9 +58296,14 @@ if (
       "NOT_STARTED"
   };
 
-  registry["8JT"] = output8JT;
+  registry["8JT"] =
+    output8JT;
 
-  if (typeof OODebug !== "undefined" && OODebug.log) {
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug.log
+  ) {
+
     OODebug.log(
       "8JT",
       "Claim support state evaluation ready",
@@ -58235,7 +58315,7 @@ if (
 
 
 /* =========================================================
-   STEP 8JU — CONFIDENCE / COVERAGE CONSISTENCY BOUNDARY
+   STEP 8JU — CONFIDENCE / COVERAGE CONSISTENCY
    ========================================================= */
 
 (function () {
@@ -58244,18 +58324,24 @@ if (
     globalThis.__OpportunityOS_HandoffRegistry ||
     (globalThis.__OpportunityOS_HandoffRegistry = {});
 
-  var source8JU = registry["8JT"] || {};
+  var source8JU =
+    registry["8JT"] || {};
 
-  var supportStates =
+  var states8JU =
     Array.isArray(source8JU.supportStates)
       ? source8JU.supportStates
       : [];
 
   var consistencyStates8JU = [];
 
-  for (var i = 0; i < supportStates.length; i++) {
+  for (
+    var i = 0;
+    i < states8JU.length;
+    i++
+  ) {
 
-    var item = supportStates[i] || {};
+    var item =
+      states8JU[i] || {};
 
     var confidence =
       typeof item.confidence === "number"
@@ -58270,6 +58356,7 @@ if (
       );
 
     consistencyStates8JU.push({
+
       targetId:
         item.targetId,
 
@@ -58299,33 +58386,53 @@ if (
     });
   }
 
-  var allConsistencySafe = true;
+  var allConsistencySafe8JU =
+    true;
 
-  for (var j = 0; j < consistencyStates8JU.length; j++) {
+  for (
+    var j = 0;
+    j < consistencyStates8JU.length;
+    j++
+  ) {
 
     if (
       consistencyStates8JU[j].confidenceSafe !== true ||
       consistencyStates8JU[j].coverageSafe !== true
     ) {
-      allConsistencySafe = false;
+
+      allConsistencySafe8JU =
+        false;
+
       break;
     }
   }
 
+  var query8JU =
+    typeof source8JU.query === "string"
+      ? source8JU.query
+      : "";
+
   var output8JU = {
-    step: "8JU",
+
+    step:
+      "8JU",
 
     status:
-      allConsistencySafe
+      query8JU.length > 0 &&
+      allConsistencySafe8JU
         ? "READY"
         : "BLOCKED",
 
     query:
-      source8JT.query ||
-      "AI online work",
+      query8JU,
+
+    queryReady:
+      query8JU.length > 0,
 
     targetCount:
-      source8JT.targetCount || 5,
+      source8JU.targetCount !== undefined
+        ? source8JU.targetCount
+        : consistencyStates8JU.length,
 
     consistencyStates:
       consistencyStates8JU,
@@ -58334,7 +58441,7 @@ if (
       consistencyStates8JU.length,
 
     consistencyBoundary:
-      allConsistencySafe
+      allConsistencySafe8JU
         ? "PASS"
         : "BLOCKED",
 
@@ -58354,9 +58461,14 @@ if (
       "NOT_STARTED"
   };
 
-  registry["8JU"] = output8JU;
+  registry["8JU"] =
+    output8JU;
 
-  if (typeof OODebug !== "undefined" && OODebug.log) {
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug.log
+  ) {
+
     OODebug.log(
       "8JU",
       "Confidence and coverage consistency boundary ready",
@@ -58368,7 +58480,7 @@ if (
 
 
 /* =========================================================
-   STEP 8JV — DECISION-LAYER VERIFICATION HANDOFF PREPARATION
+   STEP 8JV — DECISION-LAYER HANDOFF PREPARATION
    ========================================================= */
 
 (function () {
@@ -58377,20 +58489,27 @@ if (
     globalThis.__OpportunityOS_HandoffRegistry ||
     (globalThis.__OpportunityOS_HandoffRegistry = {});
 
-  var source8JV = registry["8JU"] || {};
+  var source8JV =
+    registry["8JU"] || {};
 
-  var states =
+  var states8JV =
     Array.isArray(source8JV.consistencyStates)
       ? source8JV.consistencyStates
       : [];
 
-  var decisionHandoffInputs8JV = [];
+  var decisionInputs8JV = [];
 
-  for (var i = 0; i < states.length; i++) {
+  for (
+    var i = 0;
+    i < states8JV.length;
+    i++
+  ) {
 
-    var item = states[i] || {};
+    var item =
+      states8JV[i] || {};
 
-    decisionHandoffInputs8JV.push({
+    decisionInputs8JV.push({
+
       targetId:
         item.targetId,
 
@@ -58423,22 +58542,37 @@ if (
     });
   }
 
+  var query8JV =
+    typeof source8JV.query === "string"
+      ? source8JV.query
+      : "";
+
   var output8JV = {
-    step: "8JV",
-    status: "READY",
+
+    step:
+      "8JV",
+
+    status:
+      query8JV.length > 0
+        ? "READY"
+        : "BLOCKED",
 
     query:
-      source8JU.query ||
-      "AI online work",
+      query8JV,
+
+    queryReady:
+      query8JV.length > 0,
 
     targetCount:
-      source8JU.targetCount || 5,
+      source8JV.targetCount !== undefined
+        ? source8JV.targetCount
+        : decisionInputs8JV.length,
 
     decisionHandoffInputs:
-      decisionHandoffInputs8JV,
+      decisionInputs8JV,
 
     inputCount:
-      decisionHandoffInputs8JV.length,
+      decisionInputs8JV.length,
 
     decisionLayer:
       "READY_FOR_SAFETY_GATE",
@@ -58465,9 +58599,14 @@ if (
       "NOT_STARTED"
   };
 
-  registry["8JV"] = output8JV;
+  registry["8JV"] =
+    output8JV;
 
-  if (typeof OODebug !== "undefined" && OODebug.log) {
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug.log
+  ) {
+
     OODebug.log(
       "8JV",
       "Decision-layer verification handoff preparation ready",
@@ -58479,7 +58618,7 @@ if (
 
 
 /* =========================================================
-   STEP 8JW — VERIFICATION-TO-DECISION SAFETY GATE
+   STEP 8JW — VERIFICATION → DECISION SAFETY GATE
    ========================================================= */
 
 (function () {
@@ -58488,27 +58627,34 @@ if (
     globalThis.__OpportunityOS_HandoffRegistry ||
     (globalThis.__OpportunityOS_HandoffRegistry = {});
 
-  var source8JW = registry["8JV"] || {};
+  var source8JW =
+    registry["8JV"] || {};
 
-  var inputs =
+  var inputs8JW =
     Array.isArray(source8JW.decisionHandoffInputs)
       ? source8JW.decisionHandoffInputs
       : [];
 
-  var safeInputs8JW = [];
+  var safetyResults8JW = [];
 
-  for (var i = 0; i < inputs.length; i++) {
+  for (
+    var i = 0;
+    i < inputs8JW.length;
+    i++
+  ) {
 
-    var item = inputs[i] || {};
+    var item =
+      inputs8JW[i] || {};
 
-    var safe =
+    var safe8JW =
       item.verificationState === "UNVERIFIED" &&
       item.actionAllowed === false &&
       item.scoreAllowed === false &&
       item.claimSupportUpdate === false &&
       item.mutationAllowed === false;
 
-    safeInputs8JW.push({
+    safetyResults8JW.push({
+
       targetId:
         item.targetId,
 
@@ -58516,7 +58662,7 @@ if (
         item.claimId,
 
       safe:
-        safe,
+        safe8JW,
 
       verification:
         "UNVERIFIED",
@@ -58535,39 +58681,61 @@ if (
     });
   }
 
-  var gateSafe = true;
+  var gateSafe8JW =
+    true;
 
-  for (var j = 0; j < safeInputs8JW.length; j++) {
+  for (
+    var j = 0;
+    j < safetyResults8JW.length;
+    j++
+  ) {
 
-    if (safeInputs8JW[j].safe !== true) {
-      gateSafe = false;
+    if (
+      safetyResults8JW[j].safe !== true
+    ) {
+
+      gateSafe8JW =
+        false;
+
       break;
     }
   }
 
+  var query8JW =
+    typeof source8JW.query === "string"
+      ? source8JW.query
+      : "";
+
   var output8JW = {
-    step: "8JW",
+
+    step:
+      "8JW",
 
     status:
-      gateSafe
+      query8JW.length > 0 &&
+      gateSafe8JW
         ? "READY"
         : "BLOCKED",
 
     query:
-      source8JV.query ||
-      "AI online work",
+      query8JW,
+
+    queryReady:
+      query8JW.length > 0,
 
     targetCount:
-      source8JV.targetCount || 5,
+      source8JW.targetCount !== undefined
+        ? source8JW.targetCount
+        : safetyResults8JW.length,
 
     safetyResults:
-      safeInputs8JW,
+      safetyResults8JW,
 
     safetyResultCount:
-      safeInputs8JW.length,
+      safetyResults8JW.length,
 
     gate:
-      gateSafe
+      gateSafe8JW
         ? "BLOCKED_FOR_UNVERIFIED_STATE"
         : "BLOCKED",
 
@@ -58593,9 +58761,14 @@ if (
       "NOT_STARTED"
   };
 
-  registry["8JW"] = output8JW;
+  registry["8JW"] =
+    output8JW;
 
-  if (typeof OODebug !== "undefined" && OODebug.log) {
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug.log
+  ) {
+
     OODebug.log(
       "8JW",
       "Verification-to-decision safety gate ready",
@@ -58616,20 +58789,27 @@ if (
     globalThis.__OpportunityOS_HandoffRegistry ||
     (globalThis.__OpportunityOS_HandoffRegistry = {});
 
-  var source8JX = registry["8JW"] || {};
+  var source8JX =
+    registry["8JW"] || {};
 
-  var safetyResults =
+  var safetyResults8JX =
     Array.isArray(source8JX.safetyResults)
       ? source8JX.safetyResults
       : [];
 
-  var finalHandoffResults8JX = [];
+  var finalResults8JX = [];
 
-  for (var i = 0; i < safetyResults.length; i++) {
+  for (
+    var i = 0;
+    i < safetyResults8JX.length;
+    i++
+  ) {
 
-    var item = safetyResults[i] || {};
+    var item =
+      safetyResults8JX[i] || {};
 
-    finalHandoffResults8JX.push({
+    finalResults8JX.push({
+
       targetId:
         item.targetId,
 
@@ -58661,11 +58841,17 @@ if (
     });
   }
 
-  var finalSafe = true;
+  var finalSafe8JX =
+    true;
 
-  for (var j = 0; j < finalHandoffResults8JX.length; j++) {
+  for (
+    var j = 0;
+    j < finalResults8JX.length;
+    j++
+  ) {
 
-    var result = finalHandoffResults8JX[j];
+    var result =
+      finalResults8JX[j];
 
     if (
       result.verification !== "UNVERIFIED" ||
@@ -58674,34 +58860,50 @@ if (
       result.claimSupport !== "NOT_CHANGED" ||
       result.mutationAllowed !== false
     ) {
-      finalSafe = false;
+
+      finalSafe8JX =
+        false;
+
       break;
     }
   }
 
+  var query8JX =
+    typeof source8JX.query === "string"
+      ? source8JX.query
+      : "";
+
   var output8JX = {
-    step: "8JX",
+
+    step:
+      "8JX",
 
     status:
-      finalSafe
+      query8JX.length > 0 &&
+      finalSafe8JX
         ? "READY"
         : "BLOCKED",
 
     query:
-      source8JW.query ||
-      "AI online work",
+      query8JX,
+
+    queryReady:
+      query8JX.length > 0,
 
     targetCount:
-      source8JW.targetCount || 5,
+      source8JX.targetCount !== undefined
+        ? source8JX.targetCount
+        : finalResults8JX.length,
 
     finalHandoffReady:
-      finalSafe,
+      query8JX.length > 0 &&
+      finalSafe8JX,
 
     results:
-      finalHandoffResults8JX,
+      finalResults8JX,
 
     resultCount:
-      finalHandoffResults8JX.length,
+      finalResults8JX.length,
 
     verification:
       "UNVERIFIED",
@@ -58725,14 +58927,19 @@ if (
       "NOT_STARTED",
 
     safetyGate:
-      finalSafe
+      finalSafe8JX
         ? "PASS"
         : "BLOCKED"
   };
 
-  registry["8JX"] = output8JX;
+  registry["8JX"] =
+    output8JX;
 
-  if (typeof OODebug !== "undefined" && OODebug.log) {
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug.log
+  ) {
+
     OODebug.log(
       "8JX",
       "Final verification handoff ready",
@@ -58741,7 +58948,6 @@ if (
   }
 
 })();
-  
   
 /* ==========================================
    RESULT VALUES
