@@ -60859,7 +60859,518 @@ if (
   }
 
 })(); 
-  
+  /* =========================================================
+   OPPORTUNITYOS
+   STEPS 8KN → 8KR
+   DECISION INTELLIGENCE — INPUT MATRIX
+   ========================================================= */
+
+
+/* =========================================================
+   STEP 8KN
+   DECISION INPUT MATRIX INITIALIZATION
+   ========================================================= */
+
+(function () {
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8KN = registry["8KM"] || null;
+
+  var query8KN = "";
+  var targets8KN = [];
+
+  if (source8KN && typeof source8KN === "object") {
+    if (typeof source8KN.query === "string") {
+      query8KN = source8KN.query.trim();
+    }
+
+    if (Array.isArray(source8KN.targets)) {
+      targets8KN = source8KN.targets.slice();
+    }
+  }
+
+  var matrix8KN = [];
+
+  for (var i8KN = 0; i8KN < targets8KN.length; i8KN++) {
+    matrix8KN.push({
+      target: targets8KN[i8KN],
+      evidence: "NOT_ASSESSED",
+      verification: "NOT_ASSESSED",
+      risk: "NOT_ASSESSED",
+      roiValue: "NOT_ASSESSED",
+      personBusinessFit: "NOT_ASSESSED",
+      constraints: "NOT_ASSESSED",
+      decisionState: "UNASSESSED"
+    });
+  }
+
+  var output8KN = {
+    step: "8KN",
+    name: "DECISION_INPUT_MATRIX_INITIALIZATION",
+
+    status:
+      query8KN.length > 0 &&
+      targets8KN.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    query: query8KN,
+    targets: targets8KN,
+
+    targetCount: targets8KN.length,
+
+    matrix: matrix8KN,
+
+    assessment:
+      "NOT_STARTED",
+
+    scoreAllowed: false,
+    actionAllowed: false,
+
+    mutationAllowed: false
+  };
+
+  registry["8KN"] = output8KN;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8KN",
+      "Decision input matrix initialized",
+      output8KN
+    );
+  }
+})();
+
+
+/* =========================================================
+   STEP 8KO
+   EVIDENCE + VERIFICATION INPUT BINDING
+   ========================================================= */
+
+(function () {
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8KO = registry["8KN"] || null;
+
+  var matrix8KO = [];
+
+  if (
+    source8KO &&
+    Array.isArray(source8KO.matrix)
+  ) {
+    matrix8KO = source8KO.matrix.map(function (item) {
+      return {
+        target: item.target,
+
+        evidence:
+          "REQUIRED",
+
+        verification:
+          "REQUIRED",
+
+        evidenceState:
+          "NOT_ASSESSED",
+
+        verificationState:
+          "UNVERIFIED",
+
+        supportState:
+          "NOT_CHANGED"
+      };
+    });
+  }
+
+  var output8KO = {
+    step: "8KO",
+    name: "EVIDENCE_VERIFICATION_INPUT_BINDING",
+
+    status:
+      matrix8KO.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    inputMatrix:
+      matrix8KO,
+
+    evidenceAssessment:
+      "NOT_STARTED",
+
+    verificationAssessment:
+      "NOT_STARTED",
+
+    claimSupportUpdate:
+      "NOT_CHANGED",
+
+    scoreAllowed: false,
+    actionAllowed: false,
+
+    safety: {
+      evidenceInsertion: false,
+      claimMutation: false
+    }
+  };
+
+  registry["8KO"] = output8KO;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8KO",
+      "Evidence and verification inputs bound",
+      output8KO
+    );
+  }
+})();
+
+
+/* =========================================================
+   STEP 8KP
+   RISK + ROI INPUT BINDING
+   ========================================================= */
+
+(function () {
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8KP = registry["8KO"] || null;
+
+  var matrix8KP = [];
+
+  if (
+    source8KP &&
+    Array.isArray(source8KP.inputMatrix)
+  ) {
+    matrix8KP = source8KP.inputMatrix.map(function (item) {
+      return {
+        target: item.target,
+
+        riskRequirements: {
+          financialRisk: "REQUIRED",
+          marketRisk: "REQUIRED",
+          executionRisk: "REQUIRED",
+          regulatoryRisk: "REQUIRED",
+          platformRisk: "REQUIRED",
+          uncertainty: "REQUIRED"
+        },
+
+        roiRequirements: {
+          expectedValue: "REQUIRED",
+          potentialReturn: "REQUIRED",
+          investmentRequired: "REQUIRED",
+          timeRequired: "REQUIRED",
+          opportunityCost: "REQUIRED",
+          downside: "REQUIRED"
+        },
+
+        riskAssessment:
+          "NOT_STARTED",
+
+        roiAssessment:
+          "NOT_STARTED"
+      };
+    });
+  }
+
+  var output8KP = {
+    step: "8KP",
+    name: "RISK_ROI_INPUT_BINDING",
+
+    status:
+      matrix8KP.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    inputMatrix:
+      matrix8KP,
+
+    riskAssessment:
+      "NOT_STARTED",
+
+    roiAssessment:
+      "NOT_STARTED",
+
+    riskScore:
+      null,
+
+    roiScore:
+      null,
+
+    scoreAllowed:
+      false,
+
+    actionAllowed:
+      false,
+
+    safety: {
+      externalRetrieval: false,
+      evidenceInsertion: false,
+      claimMutation: false
+    }
+  };
+
+  registry["8KP"] = output8KP;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8KP",
+      "Risk and ROI inputs bound",
+      output8KP
+    );
+  }
+})();
+
+
+/* =========================================================
+   STEP 8KQ
+   PERSON / BUSINESS FIT INPUT BINDING
+   ========================================================= */
+
+(function () {
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8KQ = registry["8KP"] || null;
+
+  var matrix8KQ = [];
+
+  if (
+    source8KQ &&
+    Array.isArray(source8KQ.inputMatrix)
+  ) {
+    matrix8KQ = source8KQ.inputMatrix.map(function (item) {
+      return {
+        target: item.target,
+
+        userContext:
+          "REQUIRED",
+
+        skills:
+          "REQUIRED",
+
+        experience:
+          "REQUIRED",
+
+        availableTime:
+          "REQUIRED",
+
+        availableResources:
+          "REQUIRED",
+
+        locationRelevance:
+          "REQUIRED",
+
+        countryRelevance:
+          "REQUIRED",
+
+        financialCapacity:
+          "REQUIRED",
+
+        riskTolerance:
+          "REQUIRED",
+
+        businessStage:
+          "OPTIONAL",
+
+        operationalCapability:
+          "OPTIONAL",
+
+        constraints:
+          "REQUIRED",
+
+        fitAssessment:
+          "NOT_STARTED",
+
+        fitScore:
+          null
+      };
+    });
+  }
+
+  var output8KQ = {
+    step: "8KQ",
+    name: "PERSON_BUSINESS_FIT_INPUT_BINDING",
+
+    status:
+      matrix8KQ.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    inputMatrix:
+      matrix8KQ,
+
+    fitAssessment:
+      "NOT_STARTED",
+
+    fitScore:
+      null,
+
+    scoreAllowed:
+      false,
+
+    actionAllowed:
+      false,
+
+    userProfileMutation:
+      false,
+
+    safety: {
+      userDataAssumption:
+        false,
+
+      inventedProfileData:
+        false,
+
+      externalRetrieval:
+        false
+    }
+  };
+
+  registry["8KQ"] = output8KQ;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8KQ",
+      "Person and business fit inputs bound",
+      output8KQ
+    );
+  }
+})();
+
+
+/* =========================================================
+   STEP 8KR
+   CONTROLLED DECISION INPUT MATRIX HANDOFF
+   ========================================================= */
+
+(function () {
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8KN = registry["8KN"] || null;
+  var source8KO = registry["8KO"] || null;
+  var source8KP = registry["8KP"] || null;
+  var source8KQ = registry["8KQ"] || null;
+
+  var query8KR = "";
+  var targets8KR = [];
+
+  if (source8KN && typeof source8KN === "object") {
+    if (typeof source8KN.query === "string") {
+      query8KR = source8KN.query.trim();
+    }
+
+    if (Array.isArray(source8KN.targets)) {
+      targets8KR = source8KN.targets.slice();
+    }
+  }
+
+  var dependenciesReady8KR =
+    !!source8KN &&
+    !!source8KO &&
+    !!source8KP &&
+    !!source8KQ;
+
+  var matrixReady8KR =
+    dependenciesReady8KR &&
+    query8KR.length > 0 &&
+    targets8KR.length === 5;
+
+  var output8KR = {
+    step: "8KR",
+    name: "CONTROLLED_DECISION_INPUT_MATRIX_HANDOFF",
+
+    status:
+      matrixReady8KR
+        ? "READY"
+        : "BLOCKED",
+
+    query:
+      query8KR,
+
+    targets:
+      targets8KR,
+
+    targetCount:
+      targets8KR.length,
+
+    evidenceVerification:
+      source8KO,
+
+    riskRoi:
+      source8KP,
+
+    personBusinessFit:
+      source8KQ,
+
+    evaluation:
+      "NOT_STARTED",
+
+    scoring:
+      "NOT_STARTED",
+
+    decision:
+      "NOT_STARTED",
+
+    scoreAllowed:
+      false,
+
+    actionAllowed:
+      false,
+
+    execution:
+      "NOT_STARTED",
+
+    claimSupportUpdate:
+      "NOT_CHANGED",
+
+    mutationAllowed:
+      false,
+
+    handoff:
+      matrixReady8KR,
+
+    safety: {
+      externalSourceAccess:
+        false,
+
+      sourceRetrieval:
+        false,
+
+      evidenceInsertion:
+        false,
+
+      verificationMutation:
+        false,
+
+      claimSupportUpdate:
+        false,
+
+      actionAuthorization:
+        false
+    },
+
+    reason:
+      matrixReady8KR
+        ? "Controlled Decision Intelligence input matrix handoff is ready."
+        : "Decision input matrix handoff is blocked because required dependencies are incomplete."
+  };
+
+  registry["8KR"] = output8KR;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8KR",
+      "Controlled Decision Intelligence input matrix handoff ready",
+      output8KR
+    );
+  }
+})();
 /* ==========================================
    RESULT VALUES
    ========================================== */
