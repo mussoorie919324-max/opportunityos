@@ -73131,7 +73131,452 @@ if (
   );
 
 })();
-  
+  /* =========================================================
+   STEP 8OA → 8OE
+   CONTROLLED ASSESSMENT INPUT READINESS
+   ========================================================= */
+
+(function () {
+  "use strict";
+
+  /* =========================================================
+     SHARED HANDOFF REGISTRY
+     ========================================================= */
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  /* =========================================================
+     SAFE DEBUGGER
+     ========================================================= */
+
+  function logStep(step, message, value) {
+    if (
+      typeof OODebug !== "undefined" &&
+      OODebug &&
+      typeof OODebug.log === "function"
+    ) {
+      OODebug.log(step, message, value);
+    }
+  }
+
+  /* =========================================================
+     SAFE TARGET RESOLUTION
+     ========================================================= */
+
+  function safeTargets(value) {
+    return Array.isArray(value)
+      ? value.slice(0, 5)
+      : [];
+  }
+
+  /* =========================================================
+     UPSTREAM INPUT — 8NZ
+     ========================================================= */
+
+  var source8NZ = registry["8NZ"] || null;
+
+  var query8OA =
+    source8NZ &&
+    typeof source8NZ.query === "string"
+      ? source8NZ.query
+      : "";
+
+  var targets8OA = safeTargets(
+    source8NZ && source8NZ.targets
+  );
+
+  var inputLockReady8OA =
+    !!(
+      source8NZ &&
+      source8NZ.unifiedInputLockReady === true
+    );
+
+  /* =========================================================
+     STEP 8OA
+     ASSESSMENT INPUT LOCK STATE RESOLUTION
+     ========================================================= */
+
+  var assessmentInputLockStateResolution = {
+    step: "8OA",
+    status: "READY",
+
+    query: query8OA,
+
+    targets: targets8OA,
+
+    targetCount: targets8OA.length,
+
+    sourceAvailable: !!source8NZ,
+
+    unifiedInputLockReady:
+      inputLockReady8OA,
+
+    inputLockState:
+      inputLockReady8OA
+        ? "READY"
+        : "LOCKED_PENDING_REQUIRED_INPUTS",
+
+    inputReadiness:
+      inputLockReady8OA
+        ? "READY"
+        : "NOT_READY",
+
+    assessmentExecution: "NOT_STARTED",
+
+    assessmentAllowed: false,
+
+    scoreAllowed: false,
+
+    actionAuthorization: false,
+
+    externalSourceAccess: false,
+
+    sourceRetrieval: false,
+
+    evidenceInsertion: false,
+
+    claimSupportUpdate: false,
+
+    userDataAssumption: false,
+
+    inventedEvidence: false,
+
+    inventedScores: false,
+
+    mutation: false
+  };
+
+  registry["8OA"] =
+    assessmentInputLockStateResolution;
+
+  logStep(
+    "8OA",
+    "Assessment input lock state resolution ready",
+    assessmentInputLockStateResolution
+  );
+
+  /* =========================================================
+     STEP 8OB
+     EVIDENCE ASSESSMENT INPUT READINESS
+     ========================================================= */
+
+  var evidenceInputReady8OB =
+    !!(
+      source8NZ &&
+      source8NZ.evidenceInputLockReady === true
+    );
+
+  var evidenceAssessmentInputReadiness = {
+    step: "8OB",
+    status: "READY",
+
+    query: query8OA,
+
+    targets: targets8OA.slice(),
+
+    targetCount: targets8OA.length,
+
+    sourceAvailable: !!source8NZ,
+
+    evidenceInputLockReady:
+      evidenceInputReady8OB,
+
+    inputReadiness:
+      evidenceInputReady8OB
+        ? "READY"
+        : "NOT_READY_PENDING_VERIFIED_EVIDENCE",
+
+    evidenceInputAccepted: false,
+
+    evidenceInputValidated: false,
+
+    assessmentExecution: "NOT_STARTED",
+
+    assessmentAllowed: false,
+
+    scoreAllowed: false,
+
+    externalSourceAccess: false,
+
+    sourceRetrieval: false,
+
+    evidenceInsertion: false,
+
+    claimSupportUpdate: false,
+
+    inventedEvidence: false,
+
+    inventedScores: false,
+
+    mutation: false
+  };
+
+  registry["8OB"] =
+    evidenceAssessmentInputReadiness;
+
+  logStep(
+    "8OB",
+    "Evidence assessment input readiness ready",
+    evidenceAssessmentInputReadiness
+  );
+
+  /* =========================================================
+     STEP 8OC
+     RISK / ROI ASSESSMENT INPUT READINESS
+     ========================================================= */
+
+  var riskInputReady8OC =
+    !!(
+      source8NZ &&
+      source8NZ.riskInputLockReady === true
+    );
+
+  var roiInputReady8OC =
+    !!(
+      source8NZ &&
+      source8NZ.roiInputLockReady === true
+    );
+
+  var riskRoiAssessmentInputReadiness = {
+    step: "8OC",
+    status: "READY",
+
+    query: query8OA,
+
+    targets: targets8OA.slice(),
+
+    targetCount: targets8OA.length,
+
+    sourceAvailable: !!source8NZ,
+
+    riskInputLockReady:
+      riskInputReady8OC,
+
+    roiInputLockReady:
+      roiInputReady8OC,
+
+    riskInputReadiness:
+      riskInputReady8OC
+        ? "READY"
+        : "NOT_READY_PENDING_REQUIRED_RISK_INPUTS",
+
+    roiInputReadiness:
+      roiInputReady8OC
+        ? "READY"
+        : "NOT_READY_PENDING_REQUIRED_ROI_INPUTS",
+
+    riskInputAccepted: false,
+
+    roiInputAccepted: false,
+
+    riskInputValidated: false,
+
+    roiInputValidated: false,
+
+    riskScore: null,
+
+    roiScore: null,
+
+    assessmentExecution: "NOT_STARTED",
+
+    assessmentAllowed: false,
+
+    scoreAllowed: false,
+
+    actionAuthorization: false,
+
+    externalSourceAccess: false,
+
+    sourceRetrieval: false,
+
+    evidenceInsertion: false,
+
+    claimSupportUpdate: false,
+
+    inventedEvidence: false,
+
+    inventedScores: false,
+
+    mutation: false
+  };
+
+  registry["8OC"] =
+    riskRoiAssessmentInputReadiness;
+
+  logStep(
+    "8OC",
+    "Risk and ROI assessment input readiness ready",
+    riskRoiAssessmentInputReadiness
+  );
+
+  /* =========================================================
+     STEP 8OD
+     PERSON / BUSINESS FIT INPUT READINESS
+     ========================================================= */
+
+  var fitInputReady8OD =
+    !!(
+      source8NZ &&
+      source8NZ.fitInputLockReady === true
+    );
+
+  var personBusinessFitInputReadiness = {
+    step: "8OD",
+    status: "READY",
+
+    query: query8OA,
+
+    targets: targets8OA.slice(),
+
+    targetCount: targets8OA.length,
+
+    sourceAvailable: !!source8NZ,
+
+    fitInputLockReady:
+      fitInputReady8OD,
+
+    inputReadiness:
+      fitInputReady8OD
+        ? "READY"
+        : "NOT_READY_PENDING_REQUIRED_USER_CONTEXT",
+
+    userContextAccepted: false,
+
+    userContextValidated: false,
+
+    userDataAssumption: false,
+
+    fitScore: null,
+
+    assessmentExecution: "NOT_STARTED",
+
+    assessmentAllowed: false,
+
+    scoreAllowed: false,
+
+    actionAuthorization: false,
+
+    externalSourceAccess: false,
+
+    sourceRetrieval: false,
+
+    evidenceInsertion: false,
+
+    claimSupportUpdate: false,
+
+    inventedEvidence: false,
+
+    inventedScores: false,
+
+    mutation: false
+  };
+
+  registry["8OD"] =
+    personBusinessFitInputReadiness;
+
+  logStep(
+    "8OD",
+    "Person and business fit input readiness ready",
+    personBusinessFitInputReadiness
+  );
+
+  /* =========================================================
+     STEP 8OE
+     UNIFIED ASSESSMENT INPUT READINESS HANDOFF
+     ========================================================= */
+
+  var unifiedInputReadiness8OE =
+    inputLockReady8OA &&
+    evidenceInputReady8OB &&
+    riskInputReady8OC &&
+    roiInputReady8OC &&
+    fitInputReady8OD;
+
+  var unifiedAssessmentInputReadinessHandoff = {
+    step: "8OE",
+    status: "READY",
+
+    query: query8OA,
+
+    targets: targets8OA.slice(),
+
+    targetCount: targets8OA.length,
+
+    sourceAvailable: !!source8NZ,
+
+    inputLockReady:
+      inputLockReady8OA,
+
+    evidenceInputReady:
+      evidenceInputReady8OB,
+
+    riskInputReady:
+      riskInputReady8OC,
+
+    roiInputReady:
+      roiInputReady8OC,
+
+    fitInputReady:
+      fitInputReady8OD,
+
+    unifiedInputReadiness:
+      unifiedInputReadiness8OE,
+
+    readinessDecision:
+      unifiedInputReadiness8OE
+        ? "READY_FOR_NEXT_CONTROLLED_STAGE"
+        : "NOT_READY_PENDING_REQUIRED_INPUTS",
+
+    assessmentExecution: "NOT_STARTED",
+
+    assessmentAllowed: false,
+
+    scoreAllowed: false,
+
+    actionAuthorization: false,
+
+    riskScore: null,
+
+    roiScore: null,
+
+    fitScore: null,
+
+    externalSourceAccess: false,
+
+    sourceRetrieval: false,
+
+    evidenceInsertion: false,
+
+    claimSupportUpdate: false,
+
+    userDataAssumption: false,
+
+    inventedEvidence: false,
+
+    inventedScores: false,
+
+    mutation: false,
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    }
+  };
+
+  registry["8OE"] =
+    unifiedAssessmentInputReadinessHandoff;
+
+  logStep(
+    "8OE",
+    "Unified assessment input readiness handoff ready",
+    unifiedAssessmentInputReadinessHandoff
+  );
+
+})();
   
   
 /* ==========================================
