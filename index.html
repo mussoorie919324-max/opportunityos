@@ -59536,6 +59536,611 @@ if (
   }
 
 })();
+/* =========================================================
+   OPPORTUNITYOS — DECISION INTELLIGENCE
+   STEPS 8KD → 8KH
+
+   IMPORTANT:
+   - 8KC is the only upstream source
+   - Dynamic user query only
+   - No hard-coded test query
+   - No fake verification
+   - No score calculation
+   - No action execution
+   - No database mutation
+   - No modification of 8JA → 8KC
+   ========================================================= */
+
+
+/* =========================================================
+   STEP 8KD
+   DECISION STATE INPUT NORMALIZATION
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8KD = registry["8KC"];
+
+  var query8KD = "";
+  var targets8KD = [];
+
+  var verification8KD = "UNVERIFIED";
+  var claimSupport8KD = "NOT_CHANGED";
+
+  var validationRequired8KD = true;
+  var scoreAllowed8KD = false;
+  var actionAllowed8KD = false;
+
+  if (source8KD && typeof source8KD === "object") {
+
+    if (typeof source8KD.query === "string") {
+      query8KD = source8KD.query.trim();
+    }
+
+    if (Array.isArray(source8KD.targets)) {
+      targets8KD = source8KD.targets.slice(0, 5);
+    }
+
+    if (typeof source8KD.verification === "string") {
+      verification8KD = source8KD.verification;
+    }
+
+    if (typeof source8KD.claimSupport === "string") {
+      claimSupport8KD = source8KD.claimSupport;
+    }
+
+    if (typeof source8KD.validationRequired === "boolean") {
+      validationRequired8KD =
+        source8KD.validationRequired;
+    }
+
+    if (typeof source8KD.scoreAllowed === "boolean") {
+      scoreAllowed8KD =
+        source8KD.scoreAllowed;
+    }
+
+    if (typeof source8KD.actionAllowed === "boolean") {
+      actionAllowed8KD =
+        source8KD.actionAllowed;
+    }
+  }
+
+  var ready8KD =
+    query8KD.length > 0 &&
+    targets8KD.length === 5;
+
+  var decisionStateInput8KD = {
+    step: "8KD",
+    status: ready8KD ? "READY" : "BLOCKED",
+
+    layer: "DECISION_INTELLIGENCE",
+
+    query: query8KD,
+    targets: targets8KD,
+
+    verification: verification8KD,
+    claimSupport: claimSupport8KD,
+
+    validationRequired:
+      validationRequired8KD,
+
+    scoreAllowed:
+      scoreAllowed8KD,
+
+    actionAllowed:
+      actionAllowed8KD,
+
+    inputScope:
+      "DECISION_STATE",
+
+    execution:
+      "NOT_STARTED",
+
+    mutationAllowed:
+      false,
+
+    safety: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    reason: ready8KD
+      ? "Decision state input normalization ready."
+      : "Decision state input normalization blocked because required dynamic input is missing."
+  };
+
+  registry["8KD"] =
+    decisionStateInput8KD;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8KD",
+      "Decision state input normalization ready",
+      decisionStateInput8KD
+    );
+  }
+
+})();
+
+
+/* =========================================================
+   STEP 8KE
+   DECISION STATE CLASSIFICATION
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8KE = registry["8KD"];
+
+  var query8KE = "";
+  var targets8KE = [];
+
+  var verification8KE = "UNVERIFIED";
+  var claimSupport8KE = "NOT_CHANGED";
+  var validationRequired8KE = true;
+
+  if (source8KE && typeof source8KE === "object") {
+
+    if (typeof source8KE.query === "string") {
+      query8KE = source8KE.query.trim();
+    }
+
+    if (Array.isArray(source8KE.targets)) {
+      targets8KE = source8KE.targets.slice(0, 5);
+    }
+
+    if (typeof source8KE.verification === "string") {
+      verification8KE =
+        source8KE.verification;
+    }
+
+    if (typeof source8KE.claimSupport === "string") {
+      claimSupport8KE =
+        source8KE.claimSupport;
+    }
+
+    if (typeof source8KE.validationRequired === "boolean") {
+      validationRequired8KE =
+        source8KE.validationRequired;
+    }
+  }
+
+  var decisionState8KE =
+    "VALIDATION_REQUIRED";
+
+  if (
+    validationRequired8KE === false &&
+    verification8KE === "VERIFIED" &&
+    claimSupport8KE === "SUPPORTED"
+  ) {
+    decisionState8KE =
+      "DECISION_ELIGIBLE";
+  }
+
+  var decisionStateClassification8KE = {
+    step: "8KE",
+
+    status:
+      query8KE.length > 0 &&
+      targets8KE.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    query: query8KE,
+    targets: targets8KE,
+
+    verification:
+      verification8KE,
+
+    claimSupport:
+      claimSupport8KE,
+
+    validationRequired:
+      validationRequired8KE,
+
+    decisionState:
+      decisionState8KE,
+
+    classification:
+      decisionState8KE,
+
+    scoreAllowed: false,
+    actionAllowed: false,
+
+    execution:
+      "NOT_STARTED",
+
+    mutationAllowed:
+      false,
+
+    safety: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    }
+  };
+
+  registry["8KE"] =
+    decisionStateClassification8KE;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8KE",
+      "Decision state classification ready",
+      decisionStateClassification8KE
+    );
+  }
+
+})();
+
+
+/* =========================================================
+   STEP 8KF
+   DECISION ELIGIBILITY BOUNDARY
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8KF = registry["8KE"];
+
+  var query8KF = "";
+  var targets8KF = [];
+
+  var verification8KF = "UNVERIFIED";
+  var claimSupport8KF = "NOT_CHANGED";
+
+  var validationRequired8KF = true;
+  var decisionState8KF =
+    "VALIDATION_REQUIRED";
+
+  if (source8KF && typeof source8KF === "object") {
+
+    if (typeof source8KF.query === "string") {
+      query8KF = source8KF.query.trim();
+    }
+
+    if (Array.isArray(source8KF.targets)) {
+      targets8KF =
+        source8KF.targets.slice(0, 5);
+    }
+
+    if (typeof source8KF.verification === "string") {
+      verification8KF =
+        source8KF.verification;
+    }
+
+    if (typeof source8KF.claimSupport === "string") {
+      claimSupport8KF =
+        source8KF.claimSupport;
+    }
+
+    if (typeof source8KF.validationRequired === "boolean") {
+      validationRequired8KF =
+        source8KF.validationRequired;
+    }
+
+    if (typeof source8KF.decisionState === "string") {
+      decisionState8KF =
+        source8KF.decisionState;
+    }
+  }
+
+  var decisionEligible8KF =
+    validationRequired8KF === false &&
+    verification8KF === "VERIFIED" &&
+    claimSupport8KF === "SUPPORTED" &&
+    decisionState8KF === "DECISION_ELIGIBLE";
+
+  var decisionEligibilityBoundary8KF = {
+    step: "8KF",
+
+    status:
+      query8KF.length > 0 &&
+      targets8KF.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    query: query8KF,
+    targets: targets8KF,
+
+    verification:
+      verification8KF,
+
+    claimSupport:
+      claimSupport8KF,
+
+    validationRequired:
+      validationRequired8KF,
+
+    decisionState:
+      decisionState8KF,
+
+    decisionEligible:
+      decisionEligible8KF,
+
+    scoreAllowed:
+      false,
+
+    actionAllowed:
+      false,
+
+    execution:
+      "NOT_STARTED",
+
+    mutationAllowed:
+      false,
+
+    safety: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    }
+  };
+
+  registry["8KF"] =
+    decisionEligibilityBoundary8KF;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8KF",
+      "Decision eligibility boundary ready",
+      decisionEligibilityBoundary8KF
+    );
+  }
+
+})();
+
+
+/* =========================================================
+   STEP 8KG
+   DECISION REQUIREMENT FRAME
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8KG = registry["8KF"];
+
+  var query8KG = "";
+  var targets8KG = [];
+
+  var decisionEligible8KG = false;
+  var validationRequired8KG = true;
+
+  if (source8KG && typeof source8KG === "object") {
+
+    if (typeof source8KG.query === "string") {
+      query8KG =
+        source8KG.query.trim();
+    }
+
+    if (Array.isArray(source8KG.targets)) {
+      targets8KG =
+        source8KG.targets.slice(0, 5);
+    }
+
+    if (typeof source8KG.decisionEligible === "boolean") {
+      decisionEligible8KG =
+        source8KG.decisionEligible;
+    }
+
+    if (typeof source8KG.validationRequired === "boolean") {
+      validationRequired8KG =
+        source8KG.validationRequired;
+    }
+  }
+
+  var decisionRequirements8KG = {
+    validationRequired:
+      validationRequired8KG,
+
+    evidenceRequired:
+      true,
+
+    verificationRequired:
+      true,
+
+    claimSupportRequired:
+      true,
+
+    riskAssessmentRequired:
+      true,
+
+    fitAssessmentRequired:
+      true,
+
+    scoreAuthorization:
+      false,
+
+    actionAuthorization:
+      false
+  };
+
+  var decisionRequirementFrame8KG = {
+    step: "8KG",
+
+    status:
+      query8KG.length > 0 &&
+      targets8KG.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    query:
+      query8KG,
+
+    targets:
+      targets8KG,
+
+    decisionEligible:
+      decisionEligible8KG,
+
+    requirements:
+      decisionRequirements8KG,
+
+    execution:
+      "NOT_STARTED",
+
+    mutationAllowed:
+      false,
+
+    safety: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    }
+  };
+
+  registry["8KG"] =
+    decisionRequirementFrame8KG;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8KG",
+      "Decision requirement frame ready",
+      decisionRequirementFrame8KG
+    );
+  }
+
+})();
+
+
+/* =========================================================
+   STEP 8KH
+   DECISION INTELLIGENCE INPUT HANDOFF
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8KH = registry["8KG"];
+
+  var query8KH = "";
+  var targets8KH = [];
+
+  var decisionEligible8KH = false;
+  var requirements8KH = {};
+
+  if (source8KH && typeof source8KH === "object") {
+
+    if (typeof source8KH.query === "string") {
+      query8KH =
+        source8KH.query.trim();
+    }
+
+    if (Array.isArray(source8KH.targets)) {
+      targets8KH =
+        source8KH.targets.slice(0, 5);
+    }
+
+    if (typeof source8KH.decisionEligible === "boolean") {
+      decisionEligible8KH =
+        source8KH.decisionEligible;
+    }
+
+    if (
+      source8KH.requirements &&
+      typeof source8KH.requirements === "object"
+    ) {
+      requirements8KH =
+        source8KH.requirements;
+    }
+  }
+
+  var ready8KH =
+    query8KH.length > 0 &&
+    targets8KH.length === 5;
+
+  var decisionIntelligenceInputHandoff8KH = {
+    step: "8KH",
+
+    status:
+      ready8KH
+        ? "READY"
+        : "BLOCKED",
+
+    layer:
+      "DECISION_INTELLIGENCE",
+
+    query:
+      query8KH,
+
+    targets:
+      targets8KH,
+
+    decisionEligible:
+      decisionEligible8KH,
+
+    requirements:
+      requirements8KH,
+
+    validationRequired:
+      true,
+
+    scoreAllowed:
+      false,
+
+    actionAllowed:
+      false,
+
+    execution:
+      "NOT_STARTED",
+
+    mutationAllowed:
+      false,
+
+    handoff:
+      ready8KH,
+
+    safety: {
+      externalSourceAccess: false,
+      sourceRetrieval: false,
+      evidenceInsertion: false,
+      claimSupportUpdate: false
+    },
+
+    reason:
+      ready8KH
+        ? "Decision Intelligence input handoff is ready."
+        : "Decision Intelligence input handoff is blocked because required dynamic input is missing."
+  };
+
+  registry["8KH"] =
+    decisionIntelligenceInputHandoff8KH;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8KH",
+      "Decision Intelligence input handoff ready",
+      decisionIntelligenceInputHandoff8KH
+    );
+  }
+
+})();
+    
+  
 /* ==========================================
    RESULT VALUES
    ========================================== */
