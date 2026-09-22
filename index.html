@@ -62031,8 +62031,655 @@ if (
     );
   }
 })();
-        
-  
+  /* =========================================================
+   OPPORTUNITYOS
+   STEPS 8KX → 8LB
+   CONTROLLED DECISION ASSESSMENT FRAMEWORK
+   ========================================================= */
+
+
+/* =========================================================
+   STEP 8KX
+   CONTROLLED ASSESSMENT INPUT GATE
+   ========================================================= */
+
+(function () {
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8KX = registry["8KW"] || null;
+
+  var query8KX = "";
+  var targets8KX = [];
+
+  if (source8KX && typeof source8KX === "object") {
+    if (typeof source8KX.query === "string") {
+      query8KX = source8KX.query.trim();
+    }
+
+    if (Array.isArray(source8KX.targets)) {
+      targets8KX = source8KX.targets.slice();
+    }
+  }
+
+  var inputGateReady8KX =
+    query8KX.length > 0 &&
+    targets8KX.length === 5 &&
+    !!source8KX &&
+    source8KX.status === "READY";
+
+  var output8KX = {
+    step: "8KX",
+    name: "CONTROLLED_ASSESSMENT_INPUT_GATE",
+
+    status:
+      inputGateReady8KX
+        ? "READY"
+        : "BLOCKED",
+
+    query:
+      query8KX,
+
+    targets:
+      targets8KX,
+
+    targetCount:
+      targets8KX.length,
+
+    assessmentAuthorization:
+      inputGateReady8KX
+        ? "STRUCTURALLY_READY"
+        : "BLOCKED",
+
+    actualAssessment:
+      "NOT_STARTED",
+
+    evidenceEvaluation:
+      "NOT_STARTED",
+
+    riskEvaluation:
+      "NOT_STARTED",
+
+    roiEvaluation:
+      "NOT_STARTED",
+
+    fitEvaluation:
+      "NOT_STARTED",
+
+    scoreAllowed:
+      false,
+
+    actionAllowed:
+      false,
+
+    mutationAllowed:
+      false
+  };
+
+  registry["8KX"] = output8KX;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8KX",
+      "Controlled assessment input gate ready",
+      output8KX
+    );
+  }
+})();
+
+
+/* =========================================================
+   STEP 8KY
+   EVIDENCE-BASED ASSESSMENT BOUNDARY
+   ========================================================= */
+
+(function () {
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8KY = registry["8KX"] || null;
+
+  var evidenceBoundary8KY = [];
+
+  if (
+    source8KY &&
+    Array.isArray(source8KY.targets)
+  ) {
+    evidenceBoundary8KY =
+      source8KY.targets.map(function (target) {
+        return {
+          target: target,
+
+          evidenceRequired:
+            true,
+
+          verificationRequired:
+            true,
+
+          evidenceAvailable:
+            false,
+
+          evidenceStatus:
+            "NOT_STARTED",
+
+          verificationStatus:
+            "UNVERIFIED",
+
+          supportStatus:
+            "NOT_CHANGED",
+
+          assessmentAllowed:
+            false
+        };
+      });
+  }
+
+  var output8KY = {
+    step: "8KY",
+    name: "EVIDENCE_BASED_ASSESSMENT_BOUNDARY",
+
+    status:
+      evidenceBoundary8KY.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    inputs:
+      evidenceBoundary8KY,
+
+    evidenceEvaluation:
+      "NOT_STARTED",
+
+    verification:
+      "UNVERIFIED",
+
+    evidenceRetrieval:
+      "NOT_STARTED",
+
+    evidenceInsertion:
+      false,
+
+    claimSupportUpdate:
+      false,
+
+    assessmentAllowed:
+      false,
+
+    scoreAllowed:
+      false,
+
+    actionAllowed:
+      false
+  };
+
+  registry["8KY"] = output8KY;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8KY",
+      "Evidence-based assessment boundary ready",
+      output8KY
+    );
+  }
+})();
+
+
+/* =========================================================
+   STEP 8KZ
+   RISK + ROI CONTROLLED ASSESSMENT BOUNDARY
+   ========================================================= */
+
+(function () {
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8KZ = registry["8KX"] || null;
+
+  var riskRoiBoundary8KZ = [];
+
+  if (
+    source8KZ &&
+    Array.isArray(source8KZ.targets)
+  ) {
+    riskRoiBoundary8KZ =
+      source8KZ.targets.map(function (target) {
+        return {
+          target: target,
+
+          riskInputs: {
+            financialRisk:
+              "REQUIRED",
+
+            marketRisk:
+              "REQUIRED",
+
+            executionRisk:
+              "REQUIRED",
+
+            regulatoryRisk:
+              "REQUIRED",
+
+            platformRisk:
+              "REQUIRED",
+
+            opportunityRisk:
+              "REQUIRED",
+
+            uncertainty:
+              "REQUIRED",
+
+            downside:
+              "REQUIRED"
+          },
+
+          roiInputs: {
+            expectedValue:
+              "REQUIRED",
+
+            potentialReturn:
+              "REQUIRED",
+
+            requiredInvestment:
+              "REQUIRED",
+
+            timeRequirement:
+              "REQUIRED",
+
+            opportunityCost:
+              "REQUIRED",
+
+            downside:
+              "REQUIRED",
+
+            uncertainty:
+              "REQUIRED"
+          },
+
+          riskAssessment:
+            "NOT_STARTED",
+
+          roiAssessment:
+            "NOT_STARTED",
+
+          riskScore:
+            null,
+
+          roiScore:
+            null,
+
+          calculationAllowed:
+            false
+        };
+      });
+  }
+
+  var output8KZ = {
+    step: "8KZ",
+    name: "RISK_ROI_CONTROLLED_ASSESSMENT_BOUNDARY",
+
+    status:
+      riskRoiBoundary8KZ.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    inputs:
+      riskRoiBoundary8KZ,
+
+    riskAssessment:
+      "NOT_STARTED",
+
+    roiAssessment:
+      "NOT_STARTED",
+
+    riskScore:
+      null,
+
+    roiScore:
+      null,
+
+    calculationAllowed:
+      false,
+
+    externalRetrieval:
+      false,
+
+    evidenceInsertion:
+      false,
+
+    scoreAllowed:
+      false,
+
+    actionAllowed:
+      false
+  };
+
+  registry["8KZ"] = output8KZ;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8KZ",
+      "Risk and ROI controlled assessment boundary ready",
+      output8KZ
+    );
+  }
+})();
+
+
+/* =========================================================
+   STEP 8LA
+   PERSON / BUSINESS FIT CONTROLLED ASSESSMENT BOUNDARY
+   ========================================================= */
+
+(function () {
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8LA = registry["8KX"] || null;
+
+  var fitBoundary8LA = [];
+
+  if (
+    source8LA &&
+    Array.isArray(source8LA.targets)
+  ) {
+    fitBoundary8LA =
+      source8LA.targets.map(function (target) {
+        return {
+          target: target,
+
+          personContext: {
+            skills:
+              "REQUIRED",
+
+            experience:
+              "REQUIRED",
+
+            availableTime:
+              "REQUIRED",
+
+            availableResources:
+              "REQUIRED",
+
+            locationRelevance:
+              "REQUIRED",
+
+            countryRelevance:
+              "REQUIRED",
+
+            financialCapacity:
+              "REQUIRED",
+
+            riskTolerance:
+              "REQUIRED"
+          },
+
+          businessContext: {
+            businessStage:
+              "OPTIONAL",
+
+            businessResources:
+              "OPTIONAL",
+
+            operationalCapability:
+              "OPTIONAL",
+
+            countryRelevance:
+              "REQUIRED"
+          },
+
+          constraints: {
+            time:
+              "REQUIRED",
+
+            financial:
+              "REQUIRED",
+
+            skills:
+              "REQUIRED",
+
+            resources:
+              "REQUIRED",
+
+            risk:
+              "REQUIRED"
+          },
+
+          fitAssessment:
+            "NOT_STARTED",
+
+          constraintAssessment:
+            "NOT_STARTED",
+
+          fitScore:
+            null,
+
+          calculationAllowed:
+            false
+        };
+      });
+  }
+
+  var output8LA = {
+    step: "8LA",
+    name: "FIT_CONTROLLED_ASSESSMENT_BOUNDARY",
+
+    status:
+      fitBoundary8LA.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    inputs:
+      fitBoundary8LA,
+
+    fitAssessment:
+      "NOT_STARTED",
+
+    constraintAssessment:
+      "NOT_STARTED",
+
+    fitScore:
+      null,
+
+    userContextCollected:
+      false,
+
+    inventedUserData:
+      false,
+
+    inventedBusinessData:
+      false,
+
+    calculationAllowed:
+      false,
+
+    scoreAllowed:
+      false,
+
+    actionAllowed:
+      false,
+
+    mutationAllowed:
+      false
+  };
+
+  registry["8LA"] = output8LA;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8LA",
+      "Person and business fit controlled assessment boundary ready",
+      output8LA
+    );
+  }
+})();
+/* =========================================================
+   STEP 8LB
+   CONTROLLED ASSESSMENT FRAMEWORK HANDOFF
+   ========================================================= */
+
+(function () {
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8KX = registry["8KX"] || null;
+  var source8KY = registry["8KY"] || null;
+  var source8KZ = registry["8KZ"] || null;
+  var source8LA = registry["8LA"] || null;
+
+  var query8LB = "";
+  var targets8LB = [];
+
+  if (source8KX && typeof source8KX === "object") {
+    if (typeof source8KX.query === "string") {
+      query8LB = source8KX.query.trim();
+    }
+
+    if (Array.isArray(source8KX.targets)) {
+      targets8LB = source8KX.targets.slice();
+    }
+  }
+
+  var evidenceReady8LB =
+    !!source8KY &&
+    Array.isArray(source8KY.inputs) &&
+    source8KY.inputs.length === 5;
+
+  var riskRoiReady8LB =
+    !!source8KZ &&
+    Array.isArray(source8KZ.inputs) &&
+    source8KZ.inputs.length === 5;
+
+  var fitReady8LB =
+    !!source8LA &&
+    Array.isArray(source8LA.inputs) &&
+    source8LA.inputs.length === 5;
+
+  var frameworkReady8LB =
+    query8LB.length > 0 &&
+    targets8LB.length === 5 &&
+    evidenceReady8LB &&
+    riskRoiReady8LB &&
+    fitReady8LB;
+
+  var output8LB = {
+    step: "8LB",
+    name: "CONTROLLED_ASSESSMENT_FRAMEWORK_HANDOFF",
+
+    status:
+      frameworkReady8LB
+        ? "READY"
+        : "BLOCKED",
+
+    query:
+      query8LB,
+
+    targets:
+      targets8LB,
+
+    targetCount:
+      targets8LB.length,
+
+    evidenceFramework:
+      source8KY,
+
+    riskRoiFramework:
+      source8KZ,
+
+    fitFramework:
+      source8LA,
+
+    framework:
+      frameworkReady8LB
+        ? "READY"
+        : "BLOCKED",
+
+    actualAssessment:
+      "NOT_STARTED",
+
+    evidenceEvaluation:
+      "NOT_STARTED",
+
+    riskEvaluation:
+      "NOT_STARTED",
+
+    roiEvaluation:
+      "NOT_STARTED",
+
+    fitEvaluation:
+      "NOT_STARTED",
+
+    constraintEvaluation:
+      "NOT_STARTED",
+
+    riskScore:
+      null,
+
+    roiScore:
+      null,
+
+    fitScore:
+      null,
+
+    scoreAllowed:
+      false,
+
+    actionAllowed:
+      false,
+
+    execution:
+      "NOT_STARTED",
+
+    mutationAllowed:
+      false,
+
+    safety: {
+      externalSourceAccess:
+        false,
+
+      sourceRetrieval:
+        false,
+
+      evidenceInsertion:
+        false,
+
+      claimSupportUpdate:
+        false,
+
+      userDataAssumption:
+        false,
+
+      inventedEvidence:
+        false,
+
+      inventedScores:
+        false,
+
+      actionAuthorization:
+        false
+    },
+
+    reason:
+      frameworkReady8LB
+        ? "Controlled assessment framework is ready for evidence-based assessment."
+        : "Controlled assessment framework is blocked because required dependencies are incomplete."
+  };
+
+  registry["8LB"] = output8LB;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8LB",
+      "Controlled assessment framework handoff ready",
+      output8LB
+    );
+  }
+})();
+
+
 /* ==========================================
    RESULT VALUES
    ========================================== */
