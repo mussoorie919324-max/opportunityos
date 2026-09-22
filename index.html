@@ -57230,8 +57230,6 @@ if (
     );
   }
 })();
-
-
 /* =========================================================
    STEP 8JL — VERIFICATION RESULT SAFETY GATE
    ========================================================= */
@@ -57262,8 +57260,113 @@ if (
     claimSupportUpdate: false,
     verificationMutation: false,
     scoreInjection: false
- 
-  
+  };
+
+  var validation8JL = {
+    queryReady:
+      query8JL.trim().length > 0,
+
+    targetCountReady:
+      decisions8JL.length === 5,
+
+    resultArrayReady:
+      Array.isArray(decisions8JL),
+
+    verificationSafe:
+      decisions8JL.every(function (item) {
+        return (
+          item &&
+          item.verification === "UNVERIFIED"
+        );
+      }),
+
+    claimSupportSafe:
+      decisions8JL.every(function (item) {
+        return (
+          item &&
+          item.claimSupport === "NOT_CHANGED"
+        );
+      }),
+
+    confidenceSafe:
+      decisions8JL.every(function (item) {
+        return (
+          item &&
+          item.confidence === null
+        );
+      }),
+
+    retrievalBlocked:
+      safety8JL.externalSourceAccess === false &&
+      safety8JL.sourceRetrieval === false,
+
+    mutationBlocked:
+      safety8JL.evidenceInsertion === false &&
+      safety8JL.claimSupportUpdate === false &&
+      safety8JL.verificationMutation === false,
+
+    scoreInjectionBlocked:
+      safety8JL.scoreInjection === false
+  };
+
+  var allChecksPass8JL =
+    Object.keys(validation8JL).every(function (key) {
+      return validation8JL[key] === true;
+    });
+
+  var handoff8JL = {
+    step: "8JL",
+    name: "VERIFICATION_RESULT_SAFETY_GATE",
+    layer: "LAYER_6",
+    layerName: "EVIDENCE_EVALUATION_AND_VERIFICATION",
+
+    status:
+      allChecksPass8JL
+        ? "PASS"
+        : "BLOCKED",
+
+    query:
+      query8JL,
+
+    targetCount:
+      decisions8JL.length,
+
+    validation:
+      validation8JL,
+
+    execution:
+      "NOT_STARTED",
+
+    actualEvidenceAssessment:
+      false,
+
+    resultCapture:
+      allChecksPass8JL
+        ? "SAFE"
+        : "BLOCKED",
+
+    verification:
+      "UNVERIFIED",
+
+    claimSupport:
+      "NOT_CHANGED",
+
+    safety:
+      safety8JL
+  };
+
+  registry["8JL"] = handoff8JL;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8JL",
+      "Verification result safety gate completed",
+      handoff8JL
+    );
+  }
+})();
+
+
   
   
 /* ==========================================
