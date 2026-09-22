@@ -72260,7 +72260,437 @@ if (
   );
 
 })();
+/* =========================================================
+   STEP 8NQ → 8NU
+   CONTROLLED ASSESSMENT PREPARATION
+   ========================================================= */
 
+(function () {
+  "use strict";
+
+  /* =========================================================
+     SHARED HANDOFF REGISTRY
+     ========================================================= */
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  /* =========================================================
+     SAFE DEBUGGER
+     ========================================================= */
+
+  function logStep(step, message, value) {
+    if (
+      typeof OODebug !== "undefined" &&
+      OODebug &&
+      typeof OODebug.log === "function"
+    ) {
+      OODebug.log(step, message, value);
+    }
+  }
+
+  /* =========================================================
+     SAFE TARGET RESOLUTION
+     ========================================================= */
+
+  function safeTargets(value) {
+    return Array.isArray(value)
+      ? value.slice(0, 5)
+      : [];
+  }
+
+  /* =========================================================
+     UPSTREAM INPUT — 8NP
+     ========================================================= */
+
+  var source8NP = registry["8NP"] || null;
+
+  var query8NQ =
+    source8NP &&
+    typeof source8NP.query === "string"
+      ? source8NP.query
+      : "";
+
+  var targets8NQ = safeTargets(
+    source8NP && source8NP.targets
+  );
+
+  var readiness8NQ =
+    !!(
+      source8NP &&
+      source8NP.unifiedAssessmentReadiness === true
+    );
+
+  /* =========================================================
+     STEP 8NQ
+     ASSESSMENT READINESS INPUT RESOLUTION
+     ========================================================= */
+
+  var assessmentReadinessInputResolution = {
+    step: "8NQ",
+    status: "READY",
+
+    query: query8NQ,
+
+    targets: targets8NQ,
+
+    targetCount: targets8NQ.length,
+
+    sourceAvailable: !!source8NP,
+
+    unifiedAssessmentEligibility:
+      !!(
+        source8NP &&
+        source8NP.unifiedAssessmentEligibility === true
+      ),
+
+    unifiedAssessmentReadiness:
+      readiness8NQ,
+
+    readinessState:
+      readiness8NQ
+        ? "READY"
+        : "NOT_READY",
+
+    assessmentExecution: "NOT_STARTED",
+
+    assessmentAllowed: false,
+
+    scoreAllowed: false,
+
+    actionAuthorization: false,
+
+    externalSourceAccess: false,
+
+    sourceRetrieval: false,
+
+    evidenceInsertion: false,
+
+    claimSupportUpdate: false,
+
+    userDataAssumption: false,
+
+    inventedEvidence: false,
+
+    inventedScores: false,
+
+    mutation: false
+  };
+
+  registry["8NQ"] =
+    assessmentReadinessInputResolution;
+
+  logStep(
+    "8NQ",
+    "Assessment readiness input resolution ready",
+    assessmentReadinessInputResolution
+  );
+
+  /* =========================================================
+     STEP 8NR
+     EVIDENCE ASSESSMENT PREPARATION BOUNDARY
+     ========================================================= */
+
+  var evidenceReady8NR =
+    !!(
+      source8NP &&
+      source8NP.evidenceAssessmentReady === true
+    );
+
+  var evidenceAssessmentPreparationBoundary = {
+    step: "8NR",
+    status: "READY",
+
+    query: query8NQ,
+
+    targets: targets8NQ.slice(),
+
+    targetCount: targets8NQ.length,
+
+    sourceAvailable: !!source8NP,
+
+    evidenceAssessmentReady:
+      evidenceReady8NR,
+
+    preparationState:
+      evidenceReady8NR
+        ? "READY"
+        : "BLOCKED_PENDING_VERIFIED_EVIDENCE",
+
+    assessmentExecution: "NOT_STARTED",
+
+    assessmentAllowed: false,
+
+    scoreAllowed: false,
+
+    externalSourceAccess: false,
+
+    sourceRetrieval: false,
+
+    evidenceInsertion: false,
+
+    claimSupportUpdate: false,
+
+    inventedEvidence: false,
+
+    inventedScores: false,
+
+    mutation: false
+  };
+
+  registry["8NR"] =
+    evidenceAssessmentPreparationBoundary;
+
+  logStep(
+    "8NR",
+    "Evidence assessment preparation boundary ready",
+    evidenceAssessmentPreparationBoundary
+  );
+
+  /* =========================================================
+     STEP 8NS
+     RISK / ROI ASSESSMENT PREPARATION BOUNDARY
+     ========================================================= */
+
+  var riskReady8NS =
+    !!(
+      source8NP &&
+      source8NP.riskAssessmentReady === true
+    );
+
+  var roiReady8NS =
+    !!(
+      source8NP &&
+      source8NP.roiAssessmentReady === true
+    );
+
+  var riskRoiAssessmentPreparationBoundary = {
+    step: "8NS",
+    status: "READY",
+
+    query: query8NQ,
+
+    targets: targets8NQ.slice(),
+
+    targetCount: targets8NQ.length,
+
+    sourceAvailable: !!source8NP,
+
+    riskAssessmentReady:
+      riskReady8NS,
+
+    roiAssessmentReady:
+      roiReady8NS,
+
+    riskPreparationState:
+      riskReady8NS
+        ? "READY"
+        : "BLOCKED_PENDING_REQUIRED_RISK_INPUTS",
+
+    roiPreparationState:
+      roiReady8NS
+        ? "READY"
+        : "BLOCKED_PENDING_REQUIRED_ROI_INPUTS",
+
+    assessmentExecution: "NOT_STARTED",
+
+    riskScore: null,
+
+    roiScore: null,
+
+    assessmentAllowed: false,
+
+    scoreAllowed: false,
+
+    actionAuthorization: false,
+
+    externalSourceAccess: false,
+
+    sourceRetrieval: false,
+
+    evidenceInsertion: false,
+
+    claimSupportUpdate: false,
+
+    inventedEvidence: false,
+
+    inventedScores: false,
+
+    mutation: false
+  };
+
+  registry["8NS"] =
+    riskRoiAssessmentPreparationBoundary;
+
+  logStep(
+    "8NS",
+    "Risk and ROI assessment preparation boundary ready",
+    riskRoiAssessmentPreparationBoundary
+  );
+
+  /* =========================================================
+     STEP 8NT
+     PERSON / BUSINESS FIT PREPARATION BOUNDARY
+     ========================================================= */
+
+  var fitReady8NT =
+    !!(
+      source8NP &&
+      source8NP.fitAssessmentReady === true
+    );
+
+  var personBusinessFitPreparationBoundary = {
+    step: "8NT",
+    status: "READY",
+
+    query: query8NQ,
+
+    targets: targets8NQ.slice(),
+
+    targetCount: targets8NQ.length,
+
+    sourceAvailable: !!source8NP,
+
+    fitAssessmentReady:
+      fitReady8NT,
+
+    preparationState:
+      fitReady8NT
+        ? "READY"
+        : "BLOCKED_PENDING_REQUIRED_USER_CONTEXT",
+
+    assessmentExecution: "NOT_STARTED",
+
+    fitScore: null,
+
+    assessmentAllowed: false,
+
+    scoreAllowed: false,
+
+    actionAuthorization: false,
+
+    userDataAssumption: false,
+
+    externalSourceAccess: false,
+
+    sourceRetrieval: false,
+
+    evidenceInsertion: false,
+
+    claimSupportUpdate: false,
+
+    inventedEvidence: false,
+
+    inventedScores: false,
+
+    mutation: false
+  };
+
+  registry["8NT"] =
+    personBusinessFitPreparationBoundary;
+
+  logStep(
+    "8NT",
+    "Person and business fit preparation boundary ready",
+    personBusinessFitPreparationBoundary
+  );
+
+  /* =========================================================
+     STEP 8NU
+     UNIFIED ASSESSMENT PREPARATION HANDOFF
+     ========================================================= */
+
+  var unifiedPreparationReady8NU =
+    readiness8NQ &&
+    evidenceReady8NR &&
+    riskReady8NS &&
+    roiReady8NS &&
+    fitReady8NT;
+
+  var unifiedAssessmentPreparationHandoff = {
+    step: "8NU",
+    status: "READY",
+
+    query: query8NQ,
+
+    targets: targets8NQ.slice(),
+
+    targetCount: targets8NQ.length,
+
+    sourceAvailable: !!source8NP,
+
+    unifiedAssessmentReadiness:
+      readiness8NQ,
+
+    evidencePreparationReady:
+      evidenceReady8NR,
+
+    riskPreparationReady:
+      riskReady8NS,
+
+    roiPreparationReady:
+      roiReady8NS,
+
+    fitPreparationReady:
+      fitReady8NT,
+
+    unifiedPreparationReady:
+      unifiedPreparationReady8NU,
+
+    preparationDecision:
+      unifiedPreparationReady8NU
+        ? "READY_FOR_NEXT_CONTROLLED_STAGE"
+        : "BLOCKED_PENDING_REQUIRED_INPUTS",
+
+    assessmentExecution: "NOT_STARTED",
+
+    assessmentAllowed: false,
+
+    scoreAllowed: false,
+
+    actionAuthorization: false,
+
+    riskScore: null,
+
+    roiScore: null,
+
+    fitScore: null,
+
+    externalSourceAccess: false,
+
+    sourceRetrieval: false,
+
+    evidenceInsertion: false,
+
+    claimSupportUpdate: false,
+
+    userDataAssumption: false,
+
+    inventedEvidence: false,
+
+    inventedScores: false,
+
+    mutation: false,
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    }
+  };
+
+  registry["8NU"] =
+    unifiedAssessmentPreparationHandoff;
+
+  logStep(
+    "8NU",
+    "Unified assessment preparation handoff ready",
+    unifiedAssessmentPreparationHandoff
+  );
+
+})();
   
   
   
