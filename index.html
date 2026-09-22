@@ -56430,7 +56430,839 @@ if (
     );
   }
 })();
-  
+  /* =========================================================
+   STEP 8JG — ACTUAL EVIDENCE ASSESSMENT AUTHORIZATION GATE
+   ========================================================= */
+
+(function () {
+  "use strict";
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8JG = registry["8JF"] || {};
+
+  var query8JG =
+    typeof source8JG.query === "string"
+      ? source8JG.query
+      : "";
+
+  var aggregateResults8JG =
+    Array.isArray(source8JG.aggregateResults)
+      ? source8JG.aggregateResults
+      : [];
+
+  var authorizationGranted8JG = false;
+
+  var executionAllowed8JG = false;
+
+  var safety8JG = {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false,
+    verificationMutation: false,
+    scoreInjection: false
+  };
+
+  var authorizationChecks8JG = {
+    queryReady:
+      query8JG.trim().length > 0,
+
+    targetCountReady:
+      aggregateResults8JG.length === 5,
+
+    priorHandoffReady:
+      source8JG.status === "PASS" ||
+      source8JG.resultCapture === "READY",
+
+    authorizationGranted:
+      authorizationGranted8JG === true,
+
+    executionAllowed:
+      executionAllowed8JG === true,
+
+    externalRetrievalBlocked:
+      safety8JG.externalSourceAccess === false &&
+      safety8JG.sourceRetrieval === false,
+
+    mutationBlocked:
+      safety8JG.evidenceInsertion === false &&
+      safety8JG.claimSupportUpdate === false &&
+      safety8JG.verificationMutation === false,
+
+    scoreInjectionBlocked:
+      safety8JG.scoreInjection === false
+  };
+
+  var handoff8JG = {
+    step: "8JG",
+    name: "ACTUAL_EVIDENCE_ASSESSMENT_AUTHORIZATION_GATE",
+    layer: "LAYER_6",
+    layerName: "EVIDENCE_EVALUATION_AND_VERIFICATION",
+    status: "READY",
+
+    query: query8JG,
+
+    targetCount:
+      aggregateResults8JG.length,
+
+    authorizationRequested: true,
+    authorizationGranted: authorizationGranted8JG,
+    executionAllowed: executionAllowed8JG,
+
+    authorizationChecks:
+      authorizationChecks8JG,
+
+    execution:
+      "NOT_STARTED",
+
+    actualEvidenceAssessment:
+      false,
+
+    verification:
+      "UNVERIFIED",
+
+    claimSupport:
+      "NOT_CHANGED",
+
+    safety:
+      safety8JG
+  };
+
+  registry["8JG"] = handoff8JG;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8JG",
+      "Actual evidence assessment authorization gate ready",
+      handoff8JG
+    );
+  }
+})();
+
+
+/* =========================================================
+   STEP 8JH — EVIDENCE ATTRIBUTE EXTRACTION
+   ========================================================= */
+
+(function () {
+  "use strict";
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8JH = registry["8JG"] || {};
+  var source8JA = registry["8JA"] || {};
+
+  var query8JH =
+    typeof source8JH.query === "string"
+      ? source8JH.query
+      : "";
+
+  var resolvedEvidence8JH =
+    Array.isArray(source8JA.resolvedEvidence)
+      ? source8JA.resolvedEvidence
+      : [];
+
+  var extractedEvidence8JH =
+    resolvedEvidence8JH.map(function (targetRecord) {
+
+      var evidence =
+        Array.isArray(targetRecord.evidence)
+          ? targetRecord.evidence
+          : [];
+
+      var attributes =
+        evidence.map(function (item) {
+
+          if (!item || typeof item !== "object") {
+            return {
+              evidenceAvailable: false
+            };
+          }
+
+          var sourceName =
+            item.sourceName ||
+            item.source ||
+            item.publisher ||
+            item.organization ||
+            null;
+
+          var sourceType =
+            item.sourceType ||
+            item.type ||
+            null;
+
+          var evidenceText =
+            item.evidenceText ||
+            item.text ||
+            item.description ||
+            item.summary ||
+            null;
+
+          var evidenceDate =
+            item.evidenceDate ||
+            item.date ||
+            item.publishedAt ||
+            item.updatedAt ||
+            null;
+
+          var reliability =
+            typeof item.reliability === "number"
+              ? item.reliability
+              : (
+                  typeof item.reliabilityScore === "number"
+                    ? item.reliabilityScore
+                    : null
+                );
+
+          var freshness =
+            typeof item.freshness === "number"
+              ? item.freshness
+              : (
+                  typeof item.freshnessScore === "number"
+                    ? item.freshnessScore
+                    : null
+                );
+
+          var explicitConflict =
+            item.conflict === true ||
+            item.conflictStatus === "CONFLICTED";
+
+          var explicitScore =
+            typeof item.score === "number"
+              ? item.score
+              : null;
+
+          var explicitConfidence =
+            typeof item.confidence === "number"
+              ? item.confidence
+              : null;
+
+          return {
+            evidenceAvailable: true,
+            sourceName: sourceName,
+            sourceType: sourceType,
+            evidenceText: evidenceText,
+            evidenceDate: evidenceDate,
+            reliability: reliability,
+            freshness: freshness,
+            conflict: explicitConflict,
+            explicitScore: explicitScore,
+            explicitConfidence: explicitConfidence
+          };
+        });
+
+      return {
+        targetId:
+          targetRecord.targetId || null,
+
+        evidenceCount:
+          attributes.length,
+
+        attributes:
+          attributes
+      };
+    });
+
+  var handoff8JH = {
+    step: "8JH",
+    name: "EVIDENCE_ATTRIBUTE_EXTRACTION",
+    layer: "LAYER_6",
+    layerName: "EVIDENCE_EVALUATION_AND_VERIFICATION",
+    status: "READY",
+
+    query:
+      query8JH,
+
+    extractedEvidence:
+      extractedEvidence8JH,
+
+    targetCount:
+      extractedEvidence8JH.length,
+
+    execution:
+      "NOT_STARTED",
+
+    actualEvidenceAssessment:
+      false,
+
+    verification:
+      "UNVERIFIED",
+
+    claimSupport:
+      "NOT_CHANGED"
+  };
+
+  registry["8JH"] = handoff8JH;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8JH",
+      "Evidence attribute extraction ready",
+      handoff8JH
+    );
+  }
+})();
+
+
+/* =========================================================
+   STEP 8JI — CRITERION EVIDENCE SCORING
+   ========================================================= */
+
+(function () {
+  "use strict";
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8JI = registry["8JH"] || {};
+  var source8JB = registry["8JB"] || {};
+
+  var query8JI =
+    typeof source8JI.query === "string"
+      ? source8JI.query
+      : "";
+
+  var criteria8JI =
+    Array.isArray(source8JB.criteria)
+      ? source8JB.criteria
+      : [];
+
+  var extractedEvidence8JI =
+    Array.isArray(source8JI.extractedEvidence)
+      ? source8JI.extractedEvidence
+      : [];
+
+  var criterionScores8JI =
+    extractedEvidence8JI.map(function (targetRecord) {
+
+      var attributes =
+        Array.isArray(targetRecord.attributes)
+          ? targetRecord.attributes
+          : [];
+
+      var criterionResults =
+        criteria8JI.map(function (criterion) {
+
+          var matchingEvidence =
+            attributes.filter(function (item) {
+
+              if (!item || typeof item !== "object") {
+                return false;
+              }
+
+              return (
+                item.criterion === criterion ||
+                (
+                  Array.isArray(item.criteria) &&
+                  item.criteria.indexOf(criterion) !== -1
+                )
+              );
+            });
+
+          /*
+             No score is invented.
+
+             If existing evidence contains an explicit numeric
+             score, preserve it as source-provided information.
+             Otherwise score remains null.
+          */
+
+          var explicitScores =
+            matchingEvidence
+              .map(function (item) {
+                return item.explicitScore;
+              })
+              .filter(function (value) {
+                return typeof value === "number";
+              });
+
+          var score =
+            explicitScores.length > 0
+              ? explicitScores[0]
+              : null;
+
+          return {
+            criterion:
+              criterion,
+
+            evidenceCount:
+              matchingEvidence.length,
+
+            score:
+              score,
+
+            scoreSource:
+              score !== null
+                ? "EXISTING_EVIDENCE"
+                : "NO_EXPLICIT_SCORE",
+
+            confidence:
+              null,
+
+            assessment:
+              matchingEvidence.length > 0
+                ? "EVIDENCE_PRESENT"
+                : "INSUFFICIENT_EVIDENCE"
+          };
+        });
+
+      return {
+        targetId:
+          targetRecord.targetId || null,
+
+        criterionResults:
+          criterionResults
+      };
+    });
+
+  var handoff8JI = {
+    step: "8JI",
+    name: "CRITERION_EVIDENCE_SCORING",
+    layer: "LAYER_6",
+    layerName: "EVIDENCE_EVALUATION_AND_VERIFICATION",
+    status: "READY",
+
+    query:
+      query8JI,
+
+    criterionScores:
+      criterionScores8JI,
+
+    targetCount:
+      criterionScores8JI.length,
+
+    execution:
+      "NOT_STARTED",
+
+    actualEvidenceAssessment:
+      false,
+
+    numericScoring:
+      "EXISTING_EVIDENCE_ONLY",
+
+    verification:
+      "UNVERIFIED",
+
+    claimSupport:
+      "NOT_CHANGED"
+  };
+
+  registry["8JI"] = handoff8JI;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8JI",
+      "Criterion evidence scoring ready",
+      handoff8JI
+    );
+  }
+})();
+
+
+/* =========================================================
+   STEP 8JJ — CONFLICT AND FRESHNESS EVALUATION
+   ========================================================= */
+
+(function () {
+  "use strict";
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8JJ = registry["8JH"] || {};
+  var source8JI = registry["8JI"] || {};
+
+  var query8JJ =
+    typeof source8JJ.query === "string"
+      ? source8JJ.query
+      : "";
+
+  var extractedEvidence8JJ =
+    Array.isArray(source8JJ.extractedEvidence)
+      ? source8JJ.extractedEvidence
+      : [];
+
+  var criterionScores8JJ =
+    Array.isArray(source8JI.criterionScores)
+      ? source8JI.criterionScores
+      : [];
+
+  var conflictFreshness8JJ =
+    extractedEvidence8JJ.map(function (targetRecord, targetIndex) {
+
+      var attributes =
+        Array.isArray(targetRecord.attributes)
+          ? targetRecord.attributes
+          : [];
+
+      var criterionResults =
+        criterionScores8JJ[targetIndex] &&
+        Array.isArray(
+          criterionScores8JJ[targetIndex].criterionResults
+        )
+          ? criterionScores8JJ[targetIndex].criterionResults
+          : [];
+
+      var results =
+        criterionResults.map(function (criterionResult) {
+
+          var criterion =
+            criterionResult.criterion || null;
+
+          var relatedEvidence =
+            attributes.filter(function (item) {
+
+              if (!item || typeof item !== "object") {
+                return false;
+              }
+
+              return (
+                item.criterion === criterion ||
+                (
+                  Array.isArray(item.criteria) &&
+                  item.criteria.indexOf(criterion) !== -1
+                )
+              );
+            });
+
+          var conflictDetected =
+            relatedEvidence.some(function (item) {
+              return item.conflict === true;
+            });
+
+          var freshnessValues =
+            relatedEvidence
+              .map(function (item) {
+                return item.freshness;
+              })
+              .filter(function (value) {
+                return typeof value === "number";
+              });
+
+          var freshness =
+            freshnessValues.length > 0
+              ? freshnessValues[0]
+              : null;
+
+          var freshnessState =
+            freshness === null
+              ? "UNKNOWN"
+              : (
+                  freshness < 0.5
+                    ? "STALE_OR_WEAK"
+                    : "FRESHNESS_AVAILABLE"
+                );
+
+          return {
+            criterion:
+              criterion,
+
+            conflict:
+              conflictDetected,
+
+            conflictStatus:
+              conflictDetected
+                ? "CONFLICTED"
+                : "NO_EXPLICIT_CONFLICT",
+
+            freshness:
+              freshness,
+
+            freshnessStatus:
+              freshnessState,
+
+            assessment:
+              conflictDetected
+                ? "CONFLICTED"
+                : (
+                    freshnessState === "STALE_OR_WEAK"
+                      ? "NEEDS_REVIEW"
+                      : "UNVERIFIED"
+                  )
+          };
+        });
+
+      return {
+        targetId:
+          targetRecord.targetId || null,
+
+        criterionResults:
+          results
+      };
+    });
+
+  var handoff8JJ = {
+    step: "8JJ",
+    name: "CONFLICT_AND_FRESHNESS_EVALUATION",
+    layer: "LAYER_6",
+    layerName: "EVIDENCE_EVALUATION_AND_VERIFICATION",
+    status: "READY",
+
+    query:
+      query8JJ,
+
+    conflictFreshnessResults:
+      conflictFreshness8JJ,
+
+    targetCount:
+      conflictFreshness8JJ.length,
+
+    execution:
+      "NOT_STARTED",
+
+    actualEvidenceAssessment:
+      false,
+
+    verification:
+      "UNVERIFIED",
+
+    claimSupport:
+      "NOT_CHANGED"
+  };
+
+  registry["8JJ"] = handoff8JJ;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8JJ",
+      "Conflict and freshness evaluation ready",
+      handoff8JJ
+    );
+  }
+})();
+
+
+/* =========================================================
+   STEP 8JK — CLAIM VERIFICATION DECISION
+   ========================================================= */
+
+(function () {
+  "use strict";
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8JK = registry["8JI"] || {};
+  var source8JJ = registry["8JJ"] || {};
+
+  var query8JK =
+    typeof source8JK.query === "string"
+      ? source8JK.query
+      : "";
+
+  var criterionScores8JK =
+    Array.isArray(source8JK.criterionScores)
+      ? source8JK.criterionScores
+      : [];
+
+  var conflictFreshness8JK =
+    Array.isArray(source8JJ.conflictFreshnessResults)
+      ? source8JJ.conflictFreshnessResults
+      : [];
+
+  var verificationDecisions8JK =
+    criterionScores8JK.map(function (targetRecord, targetIndex) {
+
+      var criterionResults =
+        Array.isArray(targetRecord.criterionResults)
+          ? targetRecord.criterionResults
+          : [];
+
+      var conflictResults =
+        conflictFreshness8JK[targetIndex] &&
+        Array.isArray(
+          conflictFreshness8JK[targetIndex].criterionResults
+        )
+          ? conflictFreshness8JK[targetIndex].criterionResults
+          : [];
+
+      var decisions =
+        criterionResults.map(function (criterionResult) {
+
+          var criterion =
+            criterionResult.criterion || null;
+
+          var conflictRecord =
+            conflictResults.find(function (item) {
+              return (
+                item &&
+                item.criterion === criterion
+              );
+            });
+
+          var decision =
+            "UNVERIFIED";
+
+          if (
+            conflictRecord &&
+            conflictRecord.conflict === true
+          ) {
+            decision = "CONFLICTED";
+          } else if (
+            criterionResult.evidenceCount === 0
+          ) {
+            decision = "INSUFFICIENT_EVIDENCE";
+          } else if (
+            conflictRecord &&
+            conflictRecord.freshnessStatus ===
+              "STALE_OR_WEAK"
+          ) {
+            decision = "NEEDS_REVIEW";
+          } else {
+            /*
+              Evidence exists, but this step does NOT
+              independently declare the claim verified.
+            */
+            decision = "NEEDS_REVIEW";
+          }
+
+          return {
+            criterion:
+              criterion,
+
+            score:
+              criterionResult.score,
+
+            decision:
+              decision,
+
+            verification:
+              "UNVERIFIED",
+
+            claimSupport:
+              "NOT_CHANGED"
+          };
+        });
+
+      var targetDecision =
+        "UNVERIFIED";
+
+      if (
+        decisions.some(function (item) {
+          return item.decision === "CONFLICTED";
+        })
+      ) {
+        targetDecision = "CONFLICTED";
+      } else if (
+        decisions.some(function (item) {
+          return item.decision === "NEEDS_REVIEW";
+        })
+      ) {
+        targetDecision = "NEEDS_REVIEW";
+      } else if (
+        decisions.length > 0 &&
+        decisions.every(function (item) {
+          return (
+            item.decision ===
+            "INSUFFICIENT_EVIDENCE"
+          );
+        })
+      ) {
+        targetDecision =
+          "INSUFFICIENT_EVIDENCE";
+      }
+
+      return {
+        targetId:
+          targetRecord.targetId || null,
+
+        criterionDecisions:
+          decisions,
+
+        targetDecision:
+          targetDecision,
+
+        verification:
+          "UNVERIFIED",
+
+        claimSupport:
+          "NOT_CHANGED",
+
+        confidence:
+          null
+      };
+    });
+
+  var handoff8JK = {
+    step: "8JK",
+    name: "CLAIM_VERIFICATION_DECISION",
+    layer: "LAYER_6",
+    layerName: "EVIDENCE_EVALUATION_AND_VERIFICATION",
+    status: "READY",
+
+    query:
+      query8JK,
+
+    verificationDecisions:
+      verificationDecisions8JK,
+
+    targetCount:
+      verificationDecisions8JK.length,
+
+    execution:
+      "NOT_STARTED",
+
+    actualEvidenceAssessment:
+      false,
+
+    verification:
+      "UNVERIFIED",
+
+    claimSupport:
+      "NOT_CHANGED"
+  };
+
+  registry["8JK"] = handoff8JK;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8JK",
+      "Claim verification decision ready",
+      handoff8JK
+    );
+  }
+})();
+
+
+/* =========================================================
+   STEP 8JL — VERIFICATION RESULT SAFETY GATE
+   ========================================================= */
+
+(function () {
+  "use strict";
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8JL = registry["8JK"] || {};
+
+  var query8JL =
+    typeof source8JL.query === "string"
+      ? source8JL.query
+      : "";
+
+  var decisions8JL =
+    Array.isArray(source8JL.verificationDecisions)
+      ? source8JL.verificationDecisions
+      : [];
+
+  var safety8JL = {
+    externalSourceAccess: false,
+    sourceRetrieval: false,
+    evidenceInsertion: false,
+    claimSupportUpdate: false,
+    verificationMutation: false,
+    scoreInjection: false
+ 
   
   
   
