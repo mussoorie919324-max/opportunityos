@@ -71825,6 +71825,446 @@ if (
   );
 
 })();
+/* =========================================================
+   STEP 8NL → 8NP
+   ASSESSMENT READINESS RESOLUTION
+   ========================================================= */
+
+(function () {
+  "use strict";
+
+  /* =========================================================
+     SHARED HANDOFF REGISTRY
+     ========================================================= */
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  /* =========================================================
+     SAFE DEBUGGER
+     ========================================================= */
+
+  function logStep(step, message, value) {
+    if (
+      typeof OODebug !== "undefined" &&
+      OODebug &&
+      typeof OODebug.log === "function"
+    ) {
+      OODebug.log(step, message, value);
+    }
+  }
+
+  /* =========================================================
+     SAFE ARRAY HELPER
+     ========================================================= */
+
+  function safeTargets(value) {
+    return Array.isArray(value)
+      ? value.slice(0, 5)
+      : [];
+  }
+
+  /* =========================================================
+     UPSTREAM INPUT — 8NK
+     ========================================================= */
+
+  var source8NK = registry["8NK"] || null;
+
+  var query8NL =
+    source8NK &&
+    typeof source8NK.query === "string"
+      ? source8NK.query
+      : "";
+
+  var targets8NL = safeTargets(
+    source8NK && source8NK.targets
+  );
+
+  var unifiedEligibility8NL =
+    !!(
+      source8NK &&
+      source8NK.unifiedAssessmentEligibility === true
+    );
+
+  /* =========================================================
+     STEP 8NL
+     ASSESSMENT ELIGIBILITY STATE RESOLUTION
+     ========================================================= */
+
+  var assessmentEligibilityStateResolution = {
+    step: "8NL",
+    status: "READY",
+
+    query: query8NL,
+
+    targets: targets8NL,
+
+    targetCount: targets8NL.length,
+
+    sourceAvailable: !!source8NK,
+
+    upstreamStatus:
+      source8NK && source8NK.status
+        ? source8NK.status
+        : "UNAVAILABLE",
+
+    unifiedAssessmentEligibility:
+      unifiedEligibility8NL,
+
+    eligibilityState:
+      unifiedEligibility8NL
+        ? "ELIGIBLE"
+        : "PENDING_REQUIRED_INPUTS",
+
+    assessmentReadiness:
+      unifiedEligibility8NL
+        ? "READY_FOR_CONTROLLED_ASSESSMENT"
+        : "NOT_READY",
+
+    assessmentExecution: "NOT_STARTED",
+
+    assessmentAllowed: false,
+
+    scoreAllowed: false,
+
+    actionAuthorization: false,
+
+    externalSourceAccess: false,
+
+    sourceRetrieval: false,
+
+    evidenceInsertion: false,
+
+    claimSupportUpdate: false,
+
+    userDataAssumption: false,
+
+    inventedEvidence: false,
+
+    inventedScores: false,
+
+    mutation: false
+  };
+
+  registry["8NL"] =
+    assessmentEligibilityStateResolution;
+
+  logStep(
+    "8NL",
+    "Assessment eligibility state resolution ready",
+    assessmentEligibilityStateResolution
+  );
+
+  /* =========================================================
+     STEP 8NM
+     EVIDENCE ASSESSMENT READINESS RESOLUTION
+     ========================================================= */
+
+  var evidenceEligible8NM =
+    !!(
+      source8NK &&
+      source8NK.evidenceAssessmentEligible === true
+    );
+
+  var evidenceAssessmentReadinessResolution = {
+    step: "8NM",
+    status: "READY",
+
+    query: query8NL,
+
+    targets: targets8NL.slice(),
+
+    targetCount: targets8NL.length,
+
+    sourceAvailable: !!source8NK,
+
+    evidenceAssessmentEligible:
+      evidenceEligible8NM,
+
+    readiness:
+      evidenceEligible8NM
+        ? "READY"
+        : "NOT_READY_PENDING_VERIFIED_EVIDENCE",
+
+    assessmentExecution: "NOT_STARTED",
+
+    assessmentAllowed: false,
+
+    scoreAllowed: false,
+
+    externalSourceAccess: false,
+
+    sourceRetrieval: false,
+
+    evidenceInsertion: false,
+
+    claimSupportUpdate: false,
+
+    inventedEvidence: false,
+
+    inventedScores: false,
+
+    mutation: false
+  };
+
+  registry["8NM"] =
+    evidenceAssessmentReadinessResolution;
+
+  logStep(
+    "8NM",
+    "Evidence assessment readiness resolution ready",
+    evidenceAssessmentReadinessResolution
+  );
+
+  /* =========================================================
+     STEP 8NN
+     RISK / ROI ASSESSMENT READINESS RESOLUTION
+     ========================================================= */
+
+  var riskEligible8NN =
+    !!(
+      source8NK &&
+      source8NK.riskAssessmentEligible === true
+    );
+
+  var roiEligible8NN =
+    !!(
+      source8NK &&
+      source8NK.roiAssessmentEligible === true
+    );
+
+  var riskRoiAssessmentReadinessResolution = {
+    step: "8NN",
+    status: "READY",
+
+    query: query8NL,
+
+    targets: targets8NL.slice(),
+
+    targetCount: targets8NL.length,
+
+    sourceAvailable: !!source8NK,
+
+    riskAssessmentEligible:
+      riskEligible8NN,
+
+    roiAssessmentEligible:
+      roiEligible8NN,
+
+    riskReadiness:
+      riskEligible8NN
+        ? "READY"
+        : "NOT_READY_PENDING_REQUIRED_RISK_INPUTS",
+
+    roiReadiness:
+      roiEligible8NN
+        ? "READY"
+        : "NOT_READY_PENDING_REQUIRED_ROI_INPUTS",
+
+    assessmentExecution: "NOT_STARTED",
+
+    riskScore: null,
+
+    roiScore: null,
+
+    assessmentAllowed: false,
+
+    scoreAllowed: false,
+
+    actionAuthorization: false,
+
+    externalSourceAccess: false,
+
+    sourceRetrieval: false,
+
+    evidenceInsertion: false,
+
+    claimSupportUpdate: false,
+
+    inventedEvidence: false,
+
+    inventedScores: false,
+
+    mutation: false
+  };
+
+  registry["8NN"] =
+    riskRoiAssessmentReadinessResolution;
+
+  logStep(
+    "8NN",
+    "Risk and ROI assessment readiness resolution ready",
+    riskRoiAssessmentReadinessResolution
+  );
+
+  /* =========================================================
+     STEP 8NO
+     PERSON / BUSINESS FIT ASSESSMENT READINESS RESOLUTION
+     ========================================================= */
+
+  var fitEligible8NO =
+    !!(
+      source8NK &&
+      source8NK.fitAssessmentEligible === true
+    );
+
+  var personBusinessFitAssessmentReadinessResolution = {
+    step: "8NO",
+    status: "READY",
+
+    query: query8NL,
+
+    targets: targets8NL.slice(),
+
+    targetCount: targets8NL.length,
+
+    sourceAvailable: !!source8NK,
+
+    fitAssessmentEligible:
+      fitEligible8NO,
+
+    readiness:
+      fitEligible8NO
+        ? "READY"
+        : "NOT_READY_PENDING_REQUIRED_USER_CONTEXT",
+
+    assessmentExecution: "NOT_STARTED",
+
+    fitScore: null,
+
+    assessmentAllowed: false,
+
+    scoreAllowed: false,
+
+    actionAuthorization: false,
+
+    userDataAssumption: false,
+
+    externalSourceAccess: false,
+
+    sourceRetrieval: false,
+
+    evidenceInsertion: false,
+
+    claimSupportUpdate: false,
+
+    inventedEvidence: false,
+
+    inventedScores: false,
+
+    mutation: false
+  };
+
+  registry["8NO"] =
+    personBusinessFitAssessmentReadinessResolution;
+
+  logStep(
+    "8NO",
+    "Person and business fit assessment readiness resolution ready",
+    personBusinessFitAssessmentReadinessResolution
+  );
+
+  /* =========================================================
+     STEP 8NP
+     UNIFIED ASSESSMENT READINESS HANDOFF
+     ========================================================= */
+
+  var unifiedAssessmentReadiness8NP =
+    unifiedEligibility8NL &&
+    evidenceEligible8NM &&
+    riskEligible8NN &&
+    roiEligible8NN &&
+    fitEligible8NO;
+
+  var unifiedAssessmentReadinessHandoff = {
+    step: "8NP",
+    status: "READY",
+
+    query: query8NL,
+
+    targets: targets8NL.slice(),
+
+    targetCount: targets8NL.length,
+
+    sourceAvailable: !!source8NK,
+
+    evidenceAssessmentReady:
+      evidenceEligible8NM,
+
+    riskAssessmentReady:
+      riskEligible8NN,
+
+    roiAssessmentReady:
+      roiEligible8NN,
+
+    fitAssessmentReady:
+      fitEligible8NO,
+
+    unifiedAssessmentEligibility:
+      unifiedEligibility8NL,
+
+    unifiedAssessmentReadiness:
+      unifiedAssessmentReadiness8NP,
+
+    readinessDecision:
+      unifiedAssessmentReadiness8NP
+        ? "READY_FOR_CONTROLLED_ASSESSMENT"
+        : "NOT_READY_PENDING_REQUIRED_INPUTS",
+
+    assessmentExecution: "NOT_STARTED",
+
+    assessmentAllowed: false,
+
+    scoreAllowed: false,
+
+    actionAuthorization: false,
+
+    riskScore: null,
+
+    roiScore: null,
+
+    fitScore: null,
+
+    externalSourceAccess: false,
+
+    sourceRetrieval: false,
+
+    evidenceInsertion: false,
+
+    claimSupportUpdate: false,
+
+    userDataAssumption: false,
+
+    inventedEvidence: false,
+
+    inventedScores: false,
+
+    mutation: false,
+
+    safety: {
+      externalSourceAccess: "NOT_STARTED",
+      sourceRetrieval: "NOT_STARTED",
+      evidenceInsertion: "NOT_STARTED",
+      claimSupportUpdate: "NOT_CHANGED"
+    }
+  };
+
+  registry["8NP"] =
+    unifiedAssessmentReadinessHandoff;
+
+  logStep(
+    "8NP",
+    "Unified assessment readiness handoff ready",
+    unifiedAssessmentReadinessHandoff
+  );
+
+})();
+
+  
+  
+  
+  
 /* ==========================================
    RESULT VALUES
    ========================================== */
