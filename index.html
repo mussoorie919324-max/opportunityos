@@ -64557,7 +64557,756 @@ if (
     );
   }
 })();
-        
+ /* =========================================================
+   OPPORTUNITYOS
+   STEPS 8LR → 8LV
+   CONTROLLED ASSESSMENT ELIGIBILITY DECISION
+   ========================================================= */
+
+
+/* =========================================================
+   STEP 8LR
+   EVIDENCE SUFFICIENCY DECISION
+   ========================================================= */
+
+(function () {
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8LR = registry["8LQ"] || null;
+
+  var query8LR = "";
+  var targets8LR = [];
+
+  if (source8LR && typeof source8LR === "object") {
+
+    if (typeof source8LR.query === "string") {
+      query8LR = source8LR.query.trim();
+    }
+
+    if (Array.isArray(source8LR.targets)) {
+      targets8LR = source8LR.targets.slice();
+    }
+  }
+
+  var evidenceDecisions8LR = [];
+
+  if (targets8LR.length === 5) {
+
+    targets8LR.forEach(function (target) {
+
+      evidenceDecisions8LR.push({
+        target: target,
+
+        evidenceRequired: true,
+
+        evidenceAvailable: false,
+
+        verifiedEvidenceAvailable: false,
+
+        evidenceSufficient: false,
+
+        evidenceDecision:
+          "BLOCKED_PENDING_VERIFIED_EVIDENCE",
+
+        assessmentAllowed: false
+      });
+
+    });
+  }
+
+  var output8LR = {
+    step: "8LR",
+    name: "EVIDENCE_SUFFICIENCY_DECISION",
+
+    status:
+      query8LR.length > 0 &&
+      evidenceDecisions8LR.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    query: query8LR,
+
+    targets: targets8LR,
+
+    targetCount: targets8LR.length,
+
+    inputs: evidenceDecisions8LR,
+
+    evidenceSufficient: false,
+
+    verifiedEvidenceAvailable: false,
+
+    decision:
+      "BLOCKED_PENDING_VERIFIED_EVIDENCE",
+
+    evidenceAssessment:
+      "NOT_STARTED",
+
+    externalSourceAccess: false,
+
+    sourceRetrieval: false,
+
+    evidenceInsertion: false,
+
+    claimSupportUpdate: false,
+
+    assessmentAllowed: false,
+
+    scoreAllowed: false,
+
+    actionAllowed: false
+  };
+
+  registry["8LR"] = output8LR;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8LR",
+      "Evidence sufficiency decision ready",
+      output8LR
+    );
+  }
+})();
+
+
+/* =========================================================
+   STEP 8LS
+   VERIFICATION SUFFICIENCY DECISION
+   ========================================================= */
+
+(function () {
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8LS = registry["8LR"] || null;
+
+  var query8LS = "";
+  var targets8LS = [];
+
+  if (source8LS && typeof source8LS === "object") {
+
+    if (typeof source8LS.query === "string") {
+      query8LS = source8LS.query.trim();
+    }
+
+    if (Array.isArray(source8LS.targets)) {
+      targets8LS = source8LS.targets.slice();
+    }
+  }
+
+  var verificationDecisions8LS = [];
+
+  if (targets8LS.length === 5) {
+
+    targets8LS.forEach(function (target) {
+
+      verificationDecisions8LS.push({
+        target: target,
+
+        verificationRequired: true,
+
+        verificationState:
+          "UNVERIFIED",
+
+        verificationAvailable: false,
+
+        verificationSufficient: false,
+
+        conflictStatus:
+          "NOT_RESOLVED",
+
+        freshnessStatus:
+          "NOT_VALIDATED",
+
+        claimSupportState:
+          "NOT_CHANGED",
+
+        verificationDecision:
+          "BLOCKED_PENDING_VERIFICATION",
+
+        assessmentAllowed: false
+      });
+
+    });
+  }
+
+  var output8LS = {
+    step: "8LS",
+    name: "VERIFICATION_SUFFICIENCY_DECISION",
+
+    status:
+      query8LS.length > 0 &&
+      verificationDecisions8LS.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    query: query8LS,
+
+    targets: targets8LS,
+
+    targetCount: targets8LS.length,
+
+    inputs: verificationDecisions8LS,
+
+    verificationState:
+      "UNVERIFIED",
+
+    verificationSufficient:
+      false,
+
+    verificationDecision:
+      "BLOCKED_PENDING_VERIFICATION",
+
+    actualVerification:
+      false,
+
+    conflictResolution:
+      "NOT_STARTED",
+
+    freshnessValidation:
+      "NOT_STARTED",
+
+    claimSupportUpdate:
+      false,
+
+    assessmentAllowed:
+      false,
+
+    scoreAllowed:
+      false,
+
+    actionAllowed:
+      false
+  };
+
+  registry["8LS"] = output8LS;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8LS",
+      "Verification sufficiency decision ready",
+      output8LS
+    );
+  }
+})();
+
+
+/* =========================================================
+   STEP 8LT
+   RISK / ROI SUFFICIENCY DECISION
+   ========================================================= */
+
+(function () {
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8LT = registry["8LS"] || null;
+
+  var query8LT = "";
+  var targets8LT = [];
+
+  if (source8LT && typeof source8LT === "object") {
+
+    if (typeof source8LT.query === "string") {
+      query8LT = source8LT.query.trim();
+    }
+
+    if (Array.isArray(source8LT.targets)) {
+      targets8LT = source8LT.targets.slice();
+    }
+  }
+
+  var riskRoiDecisions8LT = [];
+
+  if (targets8LT.length === 5) {
+
+    targets8LT.forEach(function (target) {
+
+      riskRoiDecisions8LT.push({
+        target: target,
+
+        riskEvidenceRequired: true,
+
+        riskEvidenceAvailable: false,
+
+        riskEvidenceSufficient: false,
+
+        riskVerificationState:
+          "UNVERIFIED",
+
+        roiEvidenceRequired: true,
+
+        roiEvidenceAvailable: false,
+
+        roiEvidenceSufficient: false,
+
+        roiVerificationState:
+          "UNVERIFIED",
+
+        downsideVisibility:
+          false,
+
+        uncertaintyVisibility:
+          false,
+
+        riskDecision:
+          "BLOCKED_PENDING_RISK_EVIDENCE",
+
+        roiDecision:
+          "BLOCKED_PENDING_ROI_EVIDENCE",
+
+        riskScore:
+          null,
+
+        roiScore:
+          null,
+
+        assessmentAllowed:
+          false
+      });
+
+    });
+  }
+
+  var output8LT = {
+    step: "8LT",
+    name: "RISK_ROI_SUFFICIENCY_DECISION",
+
+    status:
+      query8LT.length > 0 &&
+      riskRoiDecisions8LT.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    query: query8LT,
+
+    targets: targets8LT,
+
+    targetCount: targets8LT.length,
+
+    inputs: riskRoiDecisions8LT,
+
+    riskEvidenceSufficient:
+      false,
+
+    roiEvidenceSufficient:
+      false,
+
+    riskDecision:
+      "BLOCKED_PENDING_RISK_EVIDENCE",
+
+    roiDecision:
+      "BLOCKED_PENDING_ROI_EVIDENCE",
+
+    riskAssessment:
+      "NOT_STARTED",
+
+    roiAssessment:
+      "NOT_STARTED",
+
+    riskScore:
+      null,
+
+    roiScore:
+      null,
+
+    calculationAllowed:
+      false,
+
+    assessmentAllowed:
+      false,
+
+    scoreAllowed:
+      false,
+
+    actionAllowed:
+      false,
+
+    externalSourceAccess:
+      false,
+
+    sourceRetrieval:
+      false,
+
+    evidenceInsertion:
+      false
+  };
+
+  registry["8LT"] = output8LT;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8LT",
+      "Risk and ROI sufficiency decision ready",
+      output8LT
+    );
+  }
+})();
+
+
+/* =========================================================
+   STEP 8LU
+   FIT / CONSTRAINT SUFFICIENCY DECISION
+   ========================================================= */
+
+(function () {
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8LU = registry["8LT"] || null;
+
+  var query8LU = "";
+  var targets8LU = [];
+
+  if (source8LU && typeof source8LU === "object") {
+
+    if (typeof source8LU.query === "string") {
+      query8LU = source8LU.query.trim();
+    }
+
+    if (Array.isArray(source8LU.targets)) {
+      targets8LU = source8LU.targets.slice();
+    }
+  }
+
+  var fitDecisions8LU = [];
+
+  if (targets8LU.length === 5) {
+
+    targets8LU.forEach(function (target) {
+
+      fitDecisions8LU.push({
+        target: target,
+
+        userContextRequired:
+          true,
+
+        userContextAvailable:
+          false,
+
+        businessContextRequired:
+          false,
+
+        businessContextAvailable:
+          false,
+
+        constraintsRequired:
+          true,
+
+        constraintsAvailable:
+          false,
+
+        fitEvidenceSufficient:
+          false,
+
+        constraintSufficient:
+          false,
+
+        userDataAssumed:
+          false,
+
+        inventedUserData:
+          false,
+
+        inventedBusinessData:
+          false,
+
+        fitDecision:
+          "BLOCKED_PENDING_REQUIRED_CONTEXT",
+
+        constraintDecision:
+          "BLOCKED_PENDING_REQUIRED_CONSTRAINTS",
+
+        fitScore:
+          null,
+
+        assessmentAllowed:
+          false
+      });
+
+    });
+  }
+
+  var output8LU = {
+    step: "8LU",
+    name: "FIT_CONSTRAINT_SUFFICIENCY_DECISION",
+
+    status:
+      query8LU.length > 0 &&
+      fitDecisions8LU.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    query: query8LU,
+
+    targets: targets8LU,
+
+    targetCount: targets8LU.length,
+
+    inputs: fitDecisions8LU,
+
+    userContextAvailable:
+      false,
+
+    businessContextAvailable:
+      false,
+
+    constraintsAvailable:
+      false,
+
+    fitEvidenceSufficient:
+      false,
+
+    constraintSufficient:
+      false,
+
+    fitDecision:
+      "BLOCKED_PENDING_REQUIRED_CONTEXT",
+
+    constraintDecision:
+      "BLOCKED_PENDING_REQUIRED_CONSTRAINTS",
+
+    fitAssessment:
+      "NOT_STARTED",
+
+    constraintAssessment:
+      "NOT_STARTED",
+
+    fitScore:
+      null,
+
+    userDataAssumption:
+      false,
+
+    inventedUserData:
+      false,
+
+    inventedBusinessData:
+      false,
+
+    assessmentAllowed:
+      false,
+
+    scoreAllowed:
+      false,
+
+    actionAllowed:
+      false,
+
+    mutationAllowed:
+      false
+  };
+
+  registry["8LU"] = output8LU;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8LU",
+      "Fit and constraint sufficiency decision ready",
+      output8LU
+    );
+  }
+})();
+
+
+/* =========================================================
+   STEP 8LV
+   FINAL CONTROLLED ASSESSMENT ELIGIBILITY DECISION
+   ========================================================= */
+
+(function () {
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8LR = registry["8LR"] || null;
+  var source8LS = registry["8LS"] || null;
+  var source8LT = registry["8LT"] || null;
+  var source8LU = registry["8LU"] || null;
+
+  var query8LV = "";
+  var targets8LV = [];
+
+  if (source8LR && typeof source8LR === "object") {
+
+    if (typeof source8LR.query === "string") {
+      query8LV = source8LR.query.trim();
+    }
+
+    if (Array.isArray(source8LR.targets)) {
+      targets8LV = source8LR.targets.slice();
+    }
+  }
+
+  var evidenceDecisionReady8LV =
+    !!source8LR &&
+    source8LR.status === "READY" &&
+    source8LR.evidenceSufficient === true;
+
+  var verificationDecisionReady8LV =
+    !!source8LS &&
+    source8LS.status === "READY" &&
+    source8LS.verificationSufficient === true;
+
+  var riskRoiDecisionReady8LV =
+    !!source8LT &&
+    source8LT.status === "READY" &&
+    source8LT.riskEvidenceSufficient === true &&
+    source8LT.roiEvidenceSufficient === true;
+
+  var fitDecisionReady8LV =
+    !!source8LU &&
+    source8LU.status === "READY" &&
+    source8LU.fitEvidenceSufficient === true &&
+    source8LU.constraintSufficient === true;
+
+  var structureReady8LV =
+    query8LV.length > 0 &&
+    targets8LV.length === 5 &&
+    !!source8LR &&
+    !!source8LS &&
+    !!source8LT &&
+    !!source8LU;
+
+  var assessmentAllowed8LV =
+    structureReady8LV &&
+    evidenceDecisionReady8LV &&
+    verificationDecisionReady8LV &&
+    riskRoiDecisionReady8LV &&
+    fitDecisionReady8LV;
+
+  var output8LV = {
+    step: "8LV",
+    name: "FINAL_CONTROLLED_ASSESSMENT_ELIGIBILITY_DECISION",
+
+    status:
+      structureReady8LV
+        ? "READY"
+        : "BLOCKED",
+
+    query:
+      query8LV,
+
+    targets:
+      targets8LV,
+
+    targetCount:
+      targets8LV.length,
+
+    evidenceDecision:
+      evidenceDecisionReady8LV
+        ? "SUFFICIENT"
+        : "BLOCKED_PENDING_VERIFIED_EVIDENCE",
+
+    verificationDecision:
+      verificationDecisionReady8LV
+        ? "SUFFICIENT"
+        : "BLOCKED_PENDING_VERIFICATION",
+
+    riskRoiDecision:
+      riskRoiDecisionReady8LV
+        ? "SUFFICIENT"
+        : "BLOCKED_PENDING_RISK_ROI_EVIDENCE",
+
+    fitConstraintDecision:
+      fitDecisionReady8LV
+        ? "SUFFICIENT"
+        : "BLOCKED_PENDING_REQUIRED_CONTEXT",
+
+    assessmentEligibility:
+      assessmentAllowed8LV
+        ? "ELIGIBLE"
+        : "BLOCKED_PENDING_REQUIRED_INPUTS",
+
+    assessmentAllowed:
+      assessmentAllowed8LV,
+
+    evidenceAssessment:
+      "NOT_STARTED",
+
+    verificationAssessment:
+      "UNVERIFIED",
+
+    riskAssessment:
+      "NOT_STARTED",
+
+    roiAssessment:
+      "NOT_STARTED",
+
+    fitAssessment:
+      "NOT_STARTED",
+
+    constraintAssessment:
+      "NOT_STARTED",
+
+    riskScore:
+      null,
+
+    roiScore:
+      null,
+
+    fitScore:
+      null,
+
+    scoreAllowed:
+      false,
+
+    actionAllowed:
+      false,
+
+    execution:
+      "NOT_STARTED",
+
+    mutationAllowed:
+      false,
+
+    safety: {
+      externalSourceAccess:
+        false,
+
+      sourceRetrieval:
+        false,
+
+      evidenceInsertion:
+        false,
+
+      claimSupportUpdate:
+        false,
+
+      userDataAssumption:
+        false,
+
+      inventedEvidence:
+        false,
+
+      inventedScores:
+        false,
+
+      actionAuthorization:
+        false
+    },
+
+    reason:
+      assessmentAllowed8LV
+        ? "All assessment sufficiency requirements are satisfied."
+        : "Assessment remains blocked because one or more required evidence, verification, risk, ROI, fit, or constraint requirements are not satisfied."
+  };
+
+  registry["8LV"] = output8LV;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8LV",
+      "Final controlled assessment eligibility decision ready",
+      output8LV
+    );
+  }
+})();       
     
 /* ==========================================
    RESULT VALUES
