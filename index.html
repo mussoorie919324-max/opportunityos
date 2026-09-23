@@ -79513,6 +79513,7 @@ if (
 })();
 /* =========================================================
    STEP 8PN — CONTROLLED BROWSER → BACKEND HANDOFF
+   SCOPE-SAFE VERSION
    ========================================================= */
 
 (function () {
@@ -79520,8 +79521,14 @@ if (
   const step8PN = "8PN";
 
   /* =========================================================
-     8PN — START
+     SAFE REGISTRY RESOLUTION
+     IMPORTANT:
+     Do NOT directly reference registry before checking it.
      ========================================================= */
+
+  const registryAvailable8PN =
+    typeof registry !== "undefined" &&
+    registry !== null;
 
   if (typeof debugLog === "function") {
     debugLog(
@@ -79529,81 +79536,104 @@ if (
       "START",
       "Controlled browser-to-backend handoff started."
     );
+
+    debugLog(
+      step8PN,
+      "REGISTRY_CHECK",
+      JSON.stringify(
+        {
+          registryAvailable:
+            registryAvailable8PN
+        },
+        null,
+        2
+      )
+    );
   }
 
 
   /* =========================================================
-     READ 8PL
+     SAFE INITIAL STATE
      ========================================================= */
 
-  const source8PN =
-    registry &&
-    registry["8PL"]
-      ? registry["8PL"]
-      : null;
+  let source8PN = null;
 
+  let query8PN = "";
 
-  const query8PN =
-    source8PN &&
-    typeof source8PN.query === "string"
-      ? source8PN.query.trim()
-      : "";
+  let targets8PN = [];
 
+  let controlledTargets8PN = [];
 
-  const targets8PN =
-    source8PN &&
-    Array.isArray(source8PN.targets)
-      ? source8PN.targets
-      : [];
+  let requestReady8PN = false;
+
+  let controlledTargetContractValid8PN = false;
 
 
   /* =========================================================
-     REQUEST READINESS
+     READ 8PL ONLY IF REGISTRY EXISTS
      ========================================================= */
 
-  const requestReady8PN =
-    query8PN.length > 0 &&
-    targets8PN.length === 5 &&
-    source8PN !== null &&
-    source8PN.status === "READY";
+  if (registryAvailable8PN) {
+
+    source8PN =
+      registry["8PL"] || null;
+
+    query8PN =
+      source8PN &&
+      typeof source8PN.query === "string"
+        ? source8PN.query.trim()
+        : "";
+
+    targets8PN =
+      source8PN &&
+      Array.isArray(source8PN.targets)
+        ? source8PN.targets
+        : [];
+
+
+    requestReady8PN =
+      query8PN.length > 0 &&
+      targets8PN.length === 5 &&
+      source8PN !== null &&
+      source8PN.status === "READY";
+
+
+    controlledTargets8PN =
+      targets8PN
+        .filter(function (item) {
+
+          return (
+            item !== null &&
+            typeof item === "object" &&
+            typeof item.target === "string" &&
+            item.target.trim().length > 0
+          );
+
+        })
+        .map(function (item) {
+
+          return {
+            target:
+              item.target.trim()
+          };
+
+        });
+
+
+    controlledTargetContractValid8PN =
+      controlledTargets8PN.length === 5;
+
+  }
 
 
   /* =========================================================
-     CONTROLLED TARGET NORMALIZATION
-     ========================================================= */
-
-  const controlledTargets8PN =
-    targets8PN
-      .filter(function (item) {
-
-        return (
-          item !== null &&
-          typeof item === "object" &&
-          typeof item.target === "string" &&
-          item.target.trim().length > 0
-        );
-
-      })
-      .map(function (item) {
-
-        return {
-          target: item.target.trim()
-        };
-
-      });
-
-
-  const controlledTargetContractValid8PN =
-    controlledTargets8PN.length === 5;
-
-
-  /* =========================================================
-     INITIAL 8PN OUTPUT
+     INITIAL OUTPUT
      ========================================================= */
 
   let output8PN = {
 
-    step: step8PN,
+    step:
+      step8PN,
 
     status:
       requestReady8PN &&
@@ -79675,24 +79705,32 @@ if (
       "NOT_STARTED",
 
     reason:
-      requestReady8PN &&
-      controlledTargetContractValid8PN
-        ? "Controlled browser-to-backend handoff is ready."
-        : "Controlled handoff prerequisites are not satisfied."
+      !registryAvailable8PN
+        ? "8PN could not access the existing registry scope."
+        : (
+            requestReady8PN &&
+            controlledTargetContractValid8PN
+              ? "Controlled browser-to-backend handoff is ready."
+              : "Controlled handoff prerequisites are not satisfied."
+          )
 
   };
 
 
   /* =========================================================
-     REGISTER INITIAL STATE
+     SAFE REGISTRATION
      ========================================================= */
 
-  registry["8PN"] =
-    output8PN;
+  if (registryAvailable8PN) {
+
+    registry["8PN"] =
+      output8PN;
+
+  }
 
 
   /* =========================================================
-     8PN — DIAGNOSTIC
+     DIAGNOSTIC
      ========================================================= */
 
   if (typeof debugLog === "function") {
@@ -79702,14 +79740,8 @@ if (
       "DIAGNOSTIC",
       JSON.stringify(
         {
-          requestReady:
-            requestReady8PN,
-
-          controlledTargetContractValid:
-            controlledTargetContractValid8PN,
-
-          query:
-            query8PN,
+          registryAvailable:
+            registryAvailable8PN,
 
           source8PLExists:
             source8PN !== null,
@@ -79719,11 +79751,20 @@ if (
               ? source8PN.status
               : null,
 
+          query:
+            query8PN,
+
           targetCount:
             targets8PN.length,
 
           controlledTargetCount:
-            controlledTargets8PN.length
+            controlledTargets8PN.length,
+
+          requestReady:
+            requestReady8PN,
+
+          controlledTargetContractValid:
+            controlledTargetContractValid8PN
 
         },
         null,
@@ -79735,7 +79776,7 @@ if (
 
 
   /* =========================================================
-     8PN — HANDOFF PREPARED
+     HANDOFF PREPARED
      ========================================================= */
 
   if (typeof debugLog === "function") {
@@ -79750,7 +79791,41 @@ if (
 
 
   /* =========================================================
-     BLOCK INVALID 8PL CONTRACT
+     REGISTRY UNAVAILABLE
+     IMPORTANT:
+     Never allow this step to crash the complete search.
+     ========================================================= */
+
+  if (!registryAvailable8PN) {
+
+    output8PN.status =
+      "BLOCKED";
+
+    output8PN.handoffState =
+      "SCOPE_UNAVAILABLE";
+
+    output8PN.executionState =
+      "NOT_STARTED";
+
+    output8PN.reason =
+      "The existing registry is not available in the current execution scope.";
+
+    if (typeof debugLog === "function") {
+
+      debugLog(
+        step8PN,
+        "SCOPE_BLOCKED",
+        "8PN stopped safely because registry is not available. No backend request was made."
+      );
+
+    }
+
+    return;
+  }
+
+
+  /* =========================================================
+     REQUEST CONTRACT CHECK
      ========================================================= */
 
   if (
@@ -79809,7 +79884,7 @@ if (
 
 
   /* =========================================================
-     SUPABASE FUNCTION AVAILABILITY
+     SUPABASE FUNCTION CHECK
      ========================================================= */
 
   const supabaseFunctionAvailable8PN =
@@ -79853,7 +79928,7 @@ if (
 
 
   /* =========================================================
-     START BACKEND HANDOFF
+     START BACKEND REQUEST
      ========================================================= */
 
   output8PN.handoffState =
@@ -79878,7 +79953,7 @@ if (
 
 
   /* =========================================================
-     CONTROLLED EDGE FUNCTION INVOCATION
+     CONTROLLED EDGE FUNCTION CALL
      ========================================================= */
 
   (async function () {
@@ -79906,7 +79981,7 @@ if (
 
 
       /* =====================================================
-         BACKEND ERROR CHECK
+         BACKEND ERROR
          ===================================================== */
 
       if (
@@ -79955,7 +80030,7 @@ if (
 
 
       /* =====================================================
-         READ BACKEND RESPONSE
+         BACKEND RESPONSE
          ===================================================== */
 
       const backendData8PN =
@@ -79996,7 +80071,7 @@ if (
 
 
       /* =====================================================
-         SAFETY FLAGS — ALWAYS REMAIN FALSE IN 8PN
+         SAFETY FLAGS
          ===================================================== */
 
       output8PN.externalSourceAccess =
@@ -80028,7 +80103,7 @@ if (
 
 
       /* =====================================================
-         BACKEND RESPONSE DEBUG
+         BACKEND RESPONSE LOG
          ===================================================== */
 
       if (typeof debugLog === "function") {
@@ -80047,7 +80122,7 @@ if (
 
 
       /* =====================================================
-         VALIDATE FROZEN 8PM RESPONSE CONTRACT
+         VALIDATE FROZEN 8PM CONTRACT
          ===================================================== */
 
       const backendResponseValid8PN =
@@ -80059,10 +80134,6 @@ if (
         backendData8PN.retrievalState ===
           "NOT_STARTED";
 
-
-      /* =====================================================
-         INVALID BACKEND RESPONSE
-         ===================================================== */
 
       if (!backendResponseValid8PN) {
 
@@ -80169,65 +80240,42 @@ if (
   })();
 
 })();
-
-/* ==========================================
-   RESULT VALUES
-   ========================================== */
+ /* ==========================================
+RESULT VALUES
+========================================== */
 const demand =
-  typeof profileValue === "function"
-    ? (
-        profileValue(result.profile, "demand") ||
-        result.demand ||
-        "Needs Verification"
-      )
-    : (result.demand || "Needs Verification");
+typeof profileValue === "function"
+? (
+profileValue(result.profile, "demand") ||
+result.demand ||
+"Needs Verification"
+)
+: (result.demand || "Needs Verification");
 
 const earning =
-  typeof profileValue === "function"
-    ? (
-        profileValue(result.profile, "earning") ||
-        result.earning ||
-        "Needs Verification"
-      )
-    : (result.earning || "Needs Verification");
+typeof profileValue === "function"
+? (
+profileValue(result.profile, "earning") ||
+result.earning ||
+"Needs Verification"
+)
+: (result.earning || "Needs Verification");
 
 const competition =
-  typeof profileValue === "function"
-    ? (
-        profileValue(result.profile, "competition") ||
-        result.competition ||
-        "Needs Verification"
-      )
-    : (result.competition || "Needs Verification");
+typeof profileValue === "function"
+? (
+profileValue(result.profile, "competition") ||
+result.competition ||
+"Needs Verification"
+)
+: (result.competition || "Needs Verification");
 
 const difficulty =
-  typeof profileValue === "function"
-    ? (
-        profileValue(result.profile, "difficulty") ||
-        result.difficulty ||
-        "Needs Verification"
-      )
-    : (result.difficulty || "Needs Verification");
-
-const risk =
-  typeof profileValue === "function"
-    ? (
-        profileValue(result.profile, "risk") ||
-        result.risk ||
-        "Needs Verification"
-      )
-    : (result.risk || "Needs Verification");
-
-const trend =
-  typeof profileValue === "function"
-    ? (
-        profileValue(result.profile, "trend") ||
-        result.trend ||
-        "Needs Verification"
-      )
-    : (result.trend || "Needs Verification");
-/* ==========================================
-   VERIFICATION CONFIDENCE
+typeof profileValue === "function"
+? (
+   
+    ========================================================= */
+            VERIFICATION CONFIDENCE
    ========================================== */
 
 const verificationConfidence =
@@ -80279,7 +80327,8 @@ const verificationConfidenceHTML =
     opacity:.7;
   "
 >
-  Current evidence confidence: ${
+  
+           Current evidence confidence: ${
     verificationConfidence < 40
       ? "Limited"
       : verificationConfidence < 70
