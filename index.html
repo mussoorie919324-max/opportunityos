@@ -80273,73 +80273,96 @@ result.competition ||
 const difficulty =
 typeof profileValue === "function"
 ? (
-   
-    ========================================================= */
-            VERIFICATION CONFIDENCE
-   ========================================== */
+profileValue(result.profile, "difficulty") ||
+result.difficulty ||
+"Needs Verification"
+)
+: (result.difficulty || "Needs Verification");
+
+const risk =
+typeof profileValue === "function"
+? (
+profileValue(result.profile, "risk") ||
+result.risk ||
+"Needs Verification"
+)
+: (result.risk || "Needs Verification");
+
+const trend =
+typeof profileValue === "function"
+? (
+profileValue(result.profile, "trend") ||
+result.trend ||
+"Needs Verification"
+)
+: (result.trend || "Needs Verification");
+/* ==========================================
+VERIFICATION CONFIDENCE
+========================================== */
 
 const verificationConfidence =
-  result &&
-  result.verification &&
-  typeof result.verification.confidence === "number"
-    ? Math.round(result.verification.confidence * 100)
-    : (
-        result &&
-        typeof result.verificationConfidence === "number"
-          ? Math.round(result.verificationConfidence * 100)
-          : null
-      );
+result &&
+result.verification &&
+typeof result.verification.confidence === "number"
+? Math.round(result.verification.confidence * 100)
+: (
+result &&
+typeof result.verificationConfidence === "number"
+? Math.round(result.verificationConfidence * 100)
+: null
+);
 
 const verificationConfidenceHTML =
-  verificationConfidence !== null
-    ? `
-      <div
-        style="
-          margin-top:22px;
-          padding:18px;
-          border-radius:16px;
-          border:1px solid rgba(59,130,246,.18);
-          background:rgba(59,130,246,.05);
-        "
-      >
-        <div class="result-label">
-          🛡️ VERIFICATION CONFIDENCE
-        </div>
-
-        <h2 style="margin:8px 0 0;">
-          ${verificationConfidence}%
-        </h2>
-<p
-  style="
-    margin:8px 0 0;
-    line-height:1.5;
-    opacity:.78;
-  "
+verificationConfidence !== null
+? `
+<div  
+style="  
+margin-top:22px;  
+padding:18px;  
+border-radius:16px;  
+border:1px solid rgba(59,130,246,.18);  
+background:rgba(59,130,246,.05);  
+"  
 >
-  Verification confidence reflects how strongly the available
-  evidence supports the current opportunity profile.
-</p>
+<div class="result-label">
+🛡️ VERIFICATION CONFIDENCE
+</div>
 
-<div
-  style="
-    margin-top:10px;
-    font-size:13px;
-    opacity:.7;
-  "
->
+<h2 style="margin:8px 0 0;">  
+      ${verificationConfidence}%  
+    </h2><p
+
+style="
+margin:8px 0 0;
+line-height:1.5;
+opacity:.78;
+"
+
+> 
+
+Verification confidence reflects how strongly the available
+evidence supports the current opportunity profile.
+
+</p>  <div  
+  style="  
+    margin-top:10px;  
+    font-size:13px;  
+    opacity:.7;  
+  "  
+>  
+  Current evidence confidence: ${  
+    verificationConfidence < 40  
+      ? "Limited"  
+      : verificationConfidence < 70  
+        ? "Moderate"  
+        : verificationConfidence < 90  
+          ? "Strong"  
+          : "Very Strong"  
+    }  
+      </div>  
+    `  
+    : "";  
   
-           Current evidence confidence: ${
-    verificationConfidence < 40
-      ? "Limited"
-      : verificationConfidence < 70
-        ? "Moderate"
-        : verificationConfidence < 90
-          ? "Strong"
-          : "Very Strong"
-    }
-      </div>
-    `
-    : "";
 
 /* ==========================================
    SAFE OPTIONAL SECTIONS
