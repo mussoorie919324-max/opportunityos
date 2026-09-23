@@ -78484,7 +78484,339 @@ if (
   }
 
 })();      
-      
+/* =========================================================
+   OPPORTUNITYOS
+   STEP 8PG
+   RETRIEVAL REQUEST PREPARATION
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  /* =========================================================
+     STEP 8PG — INPUT RESOLUTION
+     ========================================================= */
+
+  var source8PG =
+    registry["8PF"] || null;
+
+  var source8AA =
+    registry["8AA"] || null;
+
+  var query8PG = "";
+  var targets8PG = [];
+  var sourcePriorities8PG = {};
+
+  if (source8PG && typeof source8PG === "object") {
+
+    if (typeof source8PG.query === "string") {
+      query8PG =
+        source8PG.query.trim();
+    }
+
+    if (Array.isArray(source8PG.targets)) {
+      targets8PG =
+        source8PG.targets.slice();
+    }
+
+  }
+
+  /* =========================================================
+     STEP 8PG — OPTIONAL SOURCE PRIORITY HANDOFF
+     Preserve previously established source priorities
+     when available. Do not invent new priorities here.
+     ========================================================= */
+
+  if (source8AA && typeof source8AA === "object") {
+
+    if (
+      source8AA.sourcePriorities &&
+      typeof source8AA.sourcePriorities === "object"
+    ) {
+
+      sourcePriorities8PG =
+        source8AA.sourcePriorities;
+
+    } else if (
+      source8AA.priorityOrders &&
+      typeof source8AA.priorityOrders === "object"
+    ) {
+
+      sourcePriorities8PG =
+        source8AA.priorityOrders;
+
+    }
+
+  }
+
+  /* =========================================================
+     STEP 8PG — TARGET VALIDATION
+     Exactly 5 authorized targets must continue.
+     ========================================================= */
+
+  var targetsValid8PG =
+    Array.isArray(targets8PG) &&
+    targets8PG.length === 5;
+
+  /* =========================================================
+     STEP 8PG — RETRIEVAL REQUEST CONTAINERS
+     ========================================================= */
+
+  var retrievalTargets8PG = [];
+
+  if (targetsValid8PG) {
+
+    retrievalTargets8PG =
+      targets8PG.map(function (target) {
+
+        return {
+
+          target:
+            target,
+
+          retrievalRequired:
+            true,
+
+          sourceSelectionRequired:
+            true,
+
+          externalSourceAccess:
+            false,
+
+          sourceRetrieval:
+            false,
+
+          evidenceInsertion:
+            false,
+
+          claimSupportUpdate:
+            false,
+
+          retrievalStatus:
+            "NOT_STARTED",
+
+          evidenceStatus:
+            "NOT_RECEIVED",
+
+          verificationState:
+            "UNVERIFIED",
+
+          authorizationState:
+            "CONTROLLED",
+
+          inventedEvidence:
+            false,
+
+          inventedScores:
+            false,
+
+          userDataAssumption:
+            false
+        };
+
+      });
+
+  }
+
+  /* =========================================================
+     STEP 8PG — CONTROLLED RETRIEVAL REQUEST
+     ========================================================= */
+
+  var retrievalRequest8PG = {
+
+    requestType:
+      "CONTROLLED_EXTERNAL_EVIDENCE_RETRIEVAL",
+
+    requestStatus:
+      "PREPARED",
+
+    query:
+      query8PG,
+
+    targets:
+      retrievalTargets8PG,
+
+    targetCount:
+      retrievalTargets8PG.length,
+
+    sourcePriorities:
+      sourcePriorities8PG,
+
+    retrievalMode:
+      "CONTROLLED",
+
+    authorizationRequired:
+      true,
+
+    verificationRequired:
+      true,
+
+    evidenceRequired:
+      true,
+
+    externalSourceAccess:
+      false,
+
+    sourceRetrieval:
+      false,
+
+    evidenceInsertion:
+      false,
+
+    claimSupportUpdate:
+      false,
+
+    mutationAllowed:
+      false,
+
+    inventedEvidence:
+      false,
+
+    inventedScores:
+      false,
+
+    userDataAssumption:
+      false,
+
+    executionState:
+      "NOT_STARTED"
+  };
+
+  /* =========================================================
+     STEP 8PG — FINAL OUTPUT
+     ========================================================= */
+
+  var output8PG = {
+
+    step:
+      "8PG",
+
+    name:
+      "RETRIEVAL_REQUEST_PREPARATION",
+
+    status:
+      query8PG.length > 0 &&
+      targetsValid8PG &&
+      retrievalTargets8PG.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    query:
+      query8PG,
+
+    targets:
+      targets8PG,
+
+    targetCount:
+      targets8PG.length,
+
+    sourcePriorities:
+      sourcePriorities8PG,
+
+    retrievalRequest:
+      retrievalRequest8PG,
+
+    retrievalMode:
+      "CONTROLLED",
+
+    authorizationRequired:
+      true,
+
+    verificationRequired:
+      true,
+
+    evidenceRequired:
+      true,
+
+    externalSourceAccess:
+      false,
+
+    sourceRetrieval:
+      false,
+
+    evidenceInsertion:
+      false,
+
+    claimSupportUpdate:
+      false,
+
+    mutationAllowed:
+      false,
+
+    inventedEvidence:
+      false,
+
+    inventedScores:
+      false,
+
+    userDataAssumption:
+      false,
+
+    executionState:
+      "NOT_STARTED",
+
+    safety: {
+
+      externalSourceAccess:
+        false,
+
+      sourceRetrieval:
+        false,
+
+      evidenceInsertion:
+        false,
+
+      claimSupportUpdate:
+        false,
+
+      userDataAssumption:
+        false,
+
+      inventedEvidence:
+        false,
+
+      inventedScores:
+        false,
+
+      actionAuthorization:
+        false
+    },
+
+    reason:
+      query8PG.length > 0 &&
+      targetsValid8PG
+        ? "Controlled retrieval request prepared. External retrieval has not started."
+        : "Retrieval request preparation blocked because the required query or exactly five targets are unavailable."
+  };
+
+  /* =========================================================
+     STEP 8PG — REGISTRY HANDOFF
+     ========================================================= */
+
+  registry["8PG"] =
+    output8PG;
+
+  /* =========================================================
+     STEP 8PG — DEBUGGER
+     ========================================================= */
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug.log
+  ) {
+
+    OODebug.log(
+      "8PG",
+      "Retrieval request preparation ready",
+      output8PG
+    );
+
+  }
+
+})();      
 /* ==========================================
    RESULT VALUES
    ========================================== */
