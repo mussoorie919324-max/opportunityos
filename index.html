@@ -78817,6 +78817,702 @@ if (
   }
 
 })();      
+/* =========================================================
+   OPPORTUNITYOS
+   STEPS 8PH → 8PL
+   CONTROLLED EVIDENCE RETRIEVAL CHAIN
+   ========================================================= */
+
+
+/* =========================================================
+   STEP 8PH
+   RETRIEVAL AUTHORIZATION CHECK
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8PH =
+    registry["8PG"] || null;
+
+  var query8PH = "";
+  var targets8PH = [];
+  var retrievalRequest8PH = null;
+
+  if (source8PH && typeof source8PH === "object") {
+
+    if (typeof source8PH.query === "string") {
+      query8PH = source8PH.query.trim();
+    }
+
+    if (Array.isArray(source8PH.targets)) {
+      targets8PH = source8PH.targets.slice();
+    }
+
+    if (
+      source8PH.retrievalRequest &&
+      typeof source8PH.retrievalRequest === "object"
+    ) {
+      retrievalRequest8PH =
+        source8PH.retrievalRequest;
+    }
+  }
+
+  var requestValid8PH =
+    query8PH.length > 0 &&
+    targets8PH.length === 5 &&
+    retrievalRequest8PH !== null;
+
+  var authorizationState8PH =
+    requestValid8PH
+      ? "READY_FOR_CONTROLLED_RETRIEVAL"
+      : "BLOCKED";
+
+  var output8PH = {
+
+    step:
+      "8PH",
+
+    name:
+      "RETRIEVAL_AUTHORIZATION_CHECK",
+
+    status:
+      requestValid8PH
+        ? "READY"
+        : "BLOCKED",
+
+    query:
+      query8PH,
+
+    targets:
+      targets8PH,
+
+    targetCount:
+      targets8PH.length,
+
+    authorizationState:
+      authorizationState8PH,
+
+    retrievalRequestAvailable:
+      retrievalRequest8PH !== null,
+
+    authorizationRequired:
+      true,
+
+    authorizationEligible:
+      requestValid8PH,
+
+    externalSourceAccess:
+      false,
+
+    sourceRetrieval:
+      false,
+
+    evidenceInsertion:
+      false,
+
+    claimSupportUpdate:
+      false,
+
+    mutationAllowed:
+      false,
+
+    inventedEvidence:
+      false,
+
+    inventedScores:
+      false,
+
+    userDataAssumption:
+      false,
+
+    executionState:
+      "NOT_STARTED",
+
+    reason:
+      requestValid8PH
+        ? "Retrieval request is structurally authorized for the next controlled execution boundary. External retrieval has not started."
+        : "Retrieval authorization blocked because the prepared retrieval request is incomplete."
+  };
+
+  registry["8PH"] =
+    output8PH;
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug.log
+  ) {
+
+    OODebug.log(
+      "8PH",
+      "Retrieval authorization check ready",
+      output8PH
+    );
+
+  }
+
+})();
+
+
+/* =========================================================
+   STEP 8PI
+   CONTROLLED RETRIEVAL EXECUTOR
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8PI =
+    registry["8PH"] || null;
+
+  var query8PI = "";
+  var targets8PI = [];
+
+  if (source8PI && typeof source8PI === "object") {
+
+    if (typeof source8PI.query === "string") {
+      query8PI = source8PI.query.trim();
+    }
+
+    if (Array.isArray(source8PI.targets)) {
+      targets8PI =
+        source8PI.targets.slice();
+    }
+  }
+
+  var executorReady8PI =
+    query8PI.length > 0 &&
+    targets8PI.length === 5 &&
+    source8PI &&
+    source8PI.authorizationEligible === true;
+
+  var output8PI = {
+
+    step:
+      "8PI",
+
+    name:
+      "CONTROLLED_RETRIEVAL_EXECUTOR",
+
+    status:
+      executorReady8PI
+        ? "READY"
+        : "BLOCKED",
+
+    query:
+      query8PI,
+
+    targets:
+      targets8PI,
+
+    targetCount:
+      targets8PI.length,
+
+    executorType:
+      "SERVER_SIDE_CONTROLLED_RETRIEVAL",
+
+    executionState:
+      "NOT_STARTED",
+
+    externalSourceAccess:
+      false,
+
+    sourceRetrieval:
+      false,
+
+    evidenceInsertion:
+      false,
+
+    claimSupportUpdate:
+      false,
+
+    mutationAllowed:
+      false,
+
+    authorizationEligible:
+      executorReady8PI,
+
+    executionAllowed:
+      false,
+
+    actualRetrievalStarted:
+      false,
+
+    actualEvidenceReceived:
+      false,
+
+    inventedEvidence:
+      false,
+
+    inventedScores:
+      false,
+
+    userDataAssumption:
+      false,
+
+    reason:
+      executorReady8PI
+        ? "Controlled retrieval executor boundary is ready. Actual external retrieval has not started."
+        : "Controlled retrieval executor blocked because retrieval authorization is unavailable."
+  };
+
+  registry["8PI"] =
+    output8PI;
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug.log
+  ) {
+
+    OODebug.log(
+      "8PI",
+      "Controlled retrieval executor ready",
+      output8PI
+    );
+
+  }
+
+})();
+
+
+/* =========================================================
+   STEP 8PJ
+   REAL EXTERNAL EVIDENCE RESPONSE
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8PJ =
+    registry["8PI"] || null;
+
+  var query8PJ = "";
+  var targets8PJ = [];
+
+  if (source8PJ && typeof source8PJ === "object") {
+
+    if (typeof source8PJ.query === "string") {
+      query8PJ =
+        source8PJ.query.trim();
+    }
+
+    if (Array.isArray(source8PJ.targets)) {
+      targets8PJ =
+        source8PJ.targets.slice();
+    }
+  }
+
+  var responseContainer8PJ = {
+
+    responseState:
+      "NOT_RECEIVED",
+
+    evidenceReceived:
+      false,
+
+    sourcesReceived:
+      [],
+
+    evidenceItems:
+      [],
+
+    retrievalErrors:
+      [],
+
+    retrievalTimestamp:
+      null,
+
+    verificationState:
+      "UNVERIFIED",
+
+    evidenceStatus:
+      "NOT_RECEIVED"
+  };
+
+  var responseReady8PJ =
+    query8PJ.length > 0 &&
+    targets8PJ.length === 5 &&
+    source8PJ &&
+    source8PJ.authorizationEligible === true;
+
+  var output8PJ = {
+
+    step:
+      "8PJ",
+
+    name:
+      "REAL_EXTERNAL_EVIDENCE_RESPONSE",
+
+    status:
+      responseReady8PJ
+        ? "READY_FOR_REAL_RESPONSE"
+        : "BLOCKED",
+
+    query:
+      query8PJ,
+
+    targets:
+      targets8PJ,
+
+    targetCount:
+      targets8PJ.length,
+
+    response:
+      responseContainer8PJ,
+
+    actualRetrievalStarted:
+      false,
+
+    actualEvidenceReceived:
+      false,
+
+    verificationState:
+      "UNVERIFIED",
+
+    evidenceInsertion:
+      false,
+
+    claimSupportUpdate:
+      false,
+
+    mutationAllowed:
+      false,
+
+    inventedEvidence:
+      false,
+
+    inventedScores:
+      false,
+
+    userDataAssumption:
+      false,
+
+    reason:
+      responseReady8PJ
+        ? "Evidence response container is ready for a genuine authorized external response. No evidence has been fabricated or inserted."
+        : "Evidence response blocked because the controlled retrieval executor is not ready."
+  };
+
+  registry["8PJ"] =
+    output8PJ;
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug.log
+  ) {
+
+    OODebug.log(
+      "8PJ",
+      "Real external evidence response boundary ready",
+      output8PJ
+    );
+
+  }
+
+})();
+
+
+/* =========================================================
+   STEP 8PK
+   EVIDENCE NORMALIZATION
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8PK =
+    registry["8PJ"] || null;
+
+  var query8PK = "";
+  var targets8PK = [];
+
+  if (source8PK && typeof source8PK === "object") {
+
+    if (typeof source8PK.query === "string") {
+      query8PK =
+        source8PK.query.trim();
+    }
+
+    if (Array.isArray(source8PK.targets)) {
+      targets8PK =
+        source8PK.targets.slice();
+    }
+  }
+
+  var rawResponseAvailable8PK =
+    source8PK &&
+    source8PK.response &&
+    typeof source8PK.response === "object" &&
+    Array.isArray(source8PK.response.evidenceItems);
+
+  var normalizedEvidence8PK = [];
+
+  if (rawResponseAvailable8PK) {
+
+    normalizedEvidence8PK =
+      source8PK.response.evidenceItems.map(
+        function (item) {
+
+          if (
+            !item ||
+            typeof item !== "object"
+          ) {
+            return null;
+          }
+
+          return {
+
+            source:
+              item.source || null,
+
+            url:
+              item.url || null,
+
+            title:
+              item.title || null,
+
+            publishedAt:
+              item.publishedAt || null,
+
+            retrievedAt:
+              item.retrievedAt || null,
+
+            content:
+              item.content || null,
+
+            target:
+              item.target || null,
+
+            evidenceStatus:
+              "UNVERIFIED",
+
+            verificationState:
+              "UNVERIFIED",
+
+            normalized:
+              true
+          };
+
+        }
+      ).filter(function (item) {
+        return item !== null;
+      });
+
+  }
+
+  var output8PK = {
+
+    step:
+      "8PK",
+
+    name:
+      "EVIDENCE_NORMALIZATION",
+
+    status:
+      query8PK.length > 0 &&
+      targets8PK.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    query:
+      query8PK,
+
+    targets:
+      targets8PK,
+
+    targetCount:
+      targets8PK.length,
+
+    rawEvidenceAvailable:
+      rawResponseAvailable8PK,
+
+    normalizedEvidence:
+      normalizedEvidence8PK,
+
+    normalizedEvidenceCount:
+      normalizedEvidence8PK.length,
+
+    normalizationState:
+      rawResponseAvailable8PK
+        ? "NORMALIZED"
+        : "WAITING_FOR_REAL_EVIDENCE",
+
+    verificationState:
+      "UNVERIFIED",
+
+    evidenceInsertion:
+      false,
+
+    claimSupportUpdate:
+      false,
+
+    mutationAllowed:
+      false,
+
+    inventedEvidence:
+      false,
+
+    inventedScores:
+      false,
+
+    reason:
+      rawResponseAvailable8PK
+        ? "Received evidence has been structurally normalized. Verification remains required."
+        : "No genuine external evidence has been received; normalization is waiting."
+  };
+
+  registry["8PK"] =
+    output8PK;
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug.log
+  ) {
+
+    OODebug.log(
+      "8PK",
+      "Evidence normalization boundary ready",
+      output8PK
+    );
+
+  }
+
+})();
+
+
+/* =========================================================
+   STEP 8PL
+   EVIDENCE PERSISTENCE / CLAIM LINK
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8PL =
+    registry["8PK"] || null;
+
+  var query8PL = "";
+  var targets8PL = [];
+
+  if (source8PL && typeof source8PL === "object") {
+
+    if (typeof source8PL.query === "string") {
+      query8PL =
+        source8PL.query.trim();
+    }
+
+    if (Array.isArray(source8PL.targets)) {
+      targets8PL =
+        source8PL.targets.slice();
+    }
+  }
+
+  var persistenceInputReady8PL =
+    query8PL.length > 0 &&
+    targets8PL.length === 5 &&
+    source8PL !== null;
+
+  var output8PL = {
+
+    step:
+      "8PL",
+
+    name:
+      "EVIDENCE_PERSISTENCE_CLAIM_LINK",
+
+    status:
+      persistenceInputReady8PL
+        ? "READY"
+        : "BLOCKED",
+
+    query:
+      query8PL,
+
+    targets:
+      targets8PL,
+
+    targetCount:
+      targets8PL.length,
+
+    persistenceState:
+      "NOT_STARTED",
+
+    evidencePersistenceAllowed:
+      false,
+
+    claimLinkAllowed:
+      false,
+
+    databaseMutationAllowed:
+      false,
+
+    evidenceInsertion:
+      false,
+
+    claimSupportUpdate:
+      false,
+
+    verificationState:
+      "UNVERIFIED",
+
+    persistedEvidenceCount:
+      0,
+
+    linkedClaimCount:
+      0,
+
+    inventedEvidence:
+      false,
+
+    inventedScores:
+      false,
+
+    userDataAssumption:
+      false,
+
+    executionState:
+      "NOT_STARTED",
+
+    reason:
+      persistenceInputReady8PL
+        ? "Persistence boundary is ready. Database evidence insertion and claim support mutation remain disabled until genuine evidence and verification authorization are available."
+        : "Persistence boundary blocked because required normalization input is unavailable."
+  };
+
+  registry["8PL"] =
+    output8PL;
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug.log
+  ) {
+
+    OODebug.log(
+      "8PL",
+      "Evidence persistence and claim link boundary ready",
+      output8PL
+    );
+
+  }
+
+})();
+
+  
 /* ==========================================
    RESULT VALUES
    ========================================== */
