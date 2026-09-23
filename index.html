@@ -79511,7 +79511,600 @@ if (
   }
 
 })();
+/* =========================================================
+   STEP 8PN
+   CONTROLLED BROWSER → SUPABASE EDGE FUNCTION HANDOFF
+   ========================================================= */
 
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8PN =
+    registry["8PL"] || null;
+
+  var query8PN = "";
+  var targets8PN = [];
+
+  /* =======================================================
+     READ 8PL CONTROLLED INPUT
+     ======================================================= */
+
+  if (
+    source8PN &&
+    typeof source8PN === "object"
+  ) {
+
+    if (
+      typeof source8PN.query === "string"
+    ) {
+
+      query8PN =
+        source8PN.query.trim();
+
+    }
+
+    if (
+      Array.isArray(source8PN.targets)
+    ) {
+
+      targets8PN =
+        source8PN.targets.slice();
+
+    }
+
+  }
+
+  /* =======================================================
+     CONTROLLED REQUEST VALIDATION
+     ======================================================= */
+
+  var requestReady8PN =
+    query8PN.length > 0 &&
+    targets8PN.length === 5 &&
+    source8PN &&
+    source8PN.status === "READY";
+
+  /* =======================================================
+     SANITIZE TARGET CONTRACT
+     ======================================================= */
+
+  var controlledTargets8PN =
+    targets8PN.map(
+      function (item) {
+
+        if (
+          item &&
+          typeof item === "object" &&
+          typeof item.target === "string"
+        ) {
+
+          return {
+            target:
+              item.target.trim()
+          };
+
+        }
+
+        return null;
+
+      }
+    ).filter(
+      function (item) {
+
+        return item !== null &&
+          item.target.length > 0;
+
+      }
+    );
+
+  var controlledTargetContractValid8PN =
+    controlledTargets8PN.length === 5;
+
+  /* =======================================================
+     INITIAL 8PN STATE
+     ======================================================= */
+
+  var output8PN = {
+
+    step:
+      "8PN",
+
+    name:
+      "CONTROLLED_BROWSER_BACKEND_HANDOFF",
+
+    status:
+      requestReady8PN &&
+      controlledTargetContractValid8PN
+        ? "READY"
+        : "BLOCKED",
+
+    query:
+      query8PN,
+
+    targets:
+      controlledTargets8PN,
+
+    targetCount:
+      controlledTargets8PN.length,
+
+    functionName:
+      "evidence-retrieval",
+
+    requestMethod:
+      "POST",
+
+    handoffState:
+      "NOT_STARTED",
+
+    backendResponseReceived:
+      false,
+
+    backendStep:
+      null,
+
+    backendStatus:
+      null,
+
+    requestAccepted:
+      false,
+
+    retrievalState:
+      "NOT_STARTED",
+
+    externalSourceAccess:
+      false,
+
+    sourceRetrieval:
+      false,
+
+    evidenceReceived:
+      false,
+
+    evidenceInsertion:
+      false,
+
+    claimSupportUpdate:
+      false,
+
+    mutationAllowed:
+      false,
+
+    inventedEvidence:
+      false,
+
+    inventedScores:
+      false,
+
+    userDataAssumption:
+      false,
+
+    error:
+      null,
+
+    executionState:
+      "NOT_STARTED",
+
+    reason:
+      requestReady8PN &&
+      controlledTargetContractValid8PN
+        ? "Controlled browser-to-backend handoff is authorized for execution. External retrieval remains disabled."
+        : "Controlled handoff blocked because the 8PL request is incomplete or does not contain exactly 5 valid targets."
+
+  };
+
+  registry["8PN"] =
+    output8PN;
+
+  /* =======================================================
+     DEBUG — REQUEST PREPARATION
+     ======================================================= */
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug.log
+  ) {
+
+    OODebug.log(
+      "8PN",
+      "Controlled browser-to-backend handoff prepared",
+      output8PN
+    );
+
+  }
+
+  /* =======================================================
+     STOP IF REQUEST IS NOT READY
+     ======================================================= */
+
+  if (
+    !requestReady8PN ||
+    !controlledTargetContractValid8PN
+  ) {
+
+    return;
+
+  }
+
+  /* =======================================================
+     SUPABASE CLIENT CHECK
+     ======================================================= */
+
+  if (
+    typeof supabase === "undefined" ||
+    !supabase ||
+    !supabase.functions ||
+    typeof supabase.functions.invoke !== "function"
+  ) {
+
+    output8PN.status =
+      "BLOCKED";
+
+    output8PN.handoffState =
+      "BLOCKED";
+
+    output8PN.executionState =
+      "BLOCKED";
+
+    output8PN.error =
+      "Supabase Functions client is unavailable.";
+
+    output8PN.reason =
+      "The browser could not access supabase.functions.invoke().";
+
+    if (
+      typeof OODebug !== "undefined" &&
+      OODebug.log
+    ) {
+
+      OODebug.log(
+        "8PN",
+        "Supabase Functions client unavailable",
+        output8PN
+      );
+
+    }
+
+    return;
+
+  }
+
+  /* =======================================================
+     CONTROLLED BACKEND INVOCATION
+     ======================================================= */
+
+  output8PN.handoffState =
+    "REQUEST_STARTED";
+
+  output8PN.executionState =
+    "RUNNING";
+
+  if (
+    typeof OODebug !== "undefined" &&
+    OODebug.log
+  ) {
+
+    OODebug.log(
+      "8PN",
+      "Calling evidence-retrieval Edge Function",
+      {
+        functionName:
+          "evidence-retrieval",
+
+        query:
+          query8PN,
+
+        targetCount:
+          controlledTargets8PN.length,
+
+        externalSourceAccess:
+          false,
+
+        sourceRetrieval:
+          false,
+
+        evidenceInsertion:
+          false,
+
+        claimSupportUpdate:
+          false,
+
+        mutationAllowed:
+          false
+      }
+    );
+
+  }
+
+  /* =======================================================
+     ASYNC EDGE FUNCTION CALL
+     ======================================================= */
+
+  (async function () {
+
+    try {
+
+      var response8PN =
+        await supabase.functions.invoke(
+          "evidence-retrieval",
+          {
+            body: {
+
+              query:
+                query8PN,
+
+              targets:
+                controlledTargets8PN,
+
+              authorizationContract:
+                "CONTROLLED_ASSESSMENT_ONLY"
+
+            }
+          }
+        );
+
+      /* ===================================================
+         RESPONSE ERROR CHECK
+         =================================================== */
+
+      if (
+        response8PN &&
+        response8PN.error
+      ) {
+
+        output8PN.status =
+          "ERROR";
+
+        output8PN.handoffState =
+          "FAILED";
+
+        output8PN.executionState =
+          "FAILED";
+
+        output8PN.error =
+          response8PN.error.message ||
+          String(response8PN.error);
+
+        output8PN.backendResponseReceived =
+          false;
+
+        output8PN.externalSourceAccess =
+          false;
+
+        output8PN.sourceRetrieval =
+          false;
+
+        output8PN.evidenceReceived =
+          false;
+
+        output8PN.evidenceInsertion =
+          false;
+
+        output8PN.claimSupportUpdate =
+          false;
+
+        output8PN.mutationAllowed =
+          false;
+
+        registry["8PN"] =
+          output8PN;
+
+        if (
+          typeof OODebug !== "undefined" &&
+          OODebug.log
+        ) {
+
+          OODebug.log(
+            "8PN",
+            "Edge Function invocation failed",
+            output8PN
+          );
+
+        }
+
+        return;
+
+      }
+
+      /* ===================================================
+         BACKEND RESPONSE
+         =================================================== */
+
+      var backendData8PN =
+        response8PN &&
+        response8PN.data
+          ? response8PN.data
+          : null;
+
+      output8PN.backendResponseReceived =
+        backendData8PN !== null;
+
+      output8PN.backendStep =
+        backendData8PN &&
+        typeof backendData8PN.step === "string"
+          ? backendData8PN.step
+          : null;
+
+      output8PN.backendStatus =
+        backendData8PN &&
+        typeof backendData8PN.status === "string"
+          ? backendData8PN.status
+          : null;
+
+      output8PN.requestAccepted =
+        backendData8PN &&
+        backendData8PN.requestAccepted === true;
+
+      output8PN.retrievalState =
+        backendData8PN &&
+        typeof backendData8PN.retrievalState === "string"
+          ? backendData8PN.retrievalState
+          : "NOT_STARTED";
+
+      /* ===================================================
+         SAFETY STATE — MUST REMAIN DISABLED IN 8PN
+         =================================================== */
+
+      output8PN.externalSourceAccess =
+        backendData8PN &&
+        backendData8PN.externalSourceAccess === true
+          ? false
+          : false;
+
+      output8PN.sourceRetrieval =
+        false;
+
+      output8PN.evidenceReceived =
+        false;
+
+      output8PN.evidenceInsertion =
+        false;
+
+      output8PN.claimSupportUpdate =
+        false;
+
+      output8PN.mutationAllowed =
+        false;
+
+      output8PN.inventedEvidence =
+        false;
+
+      output8PN.inventedScores =
+        false;
+
+      output8PN.userDataAssumption =
+        false;
+
+      /* ===================================================
+         SUCCESS CONDITION
+         =================================================== */
+
+      if (
+        backendData8PN &&
+        backendData8PN.step === "8PM" &&
+        backendData8PN.status ===
+          "READY_FOR_CONTROLLED_RETRIEVAL" &&
+        backendData8PN.requestAccepted === true &&
+        backendData8PN.retrievalState ===
+          "NOT_STARTED"
+      ) {
+
+        output8PN.status =
+          "PASS";
+
+        output8PN.handoffState =
+          "BACKEND_RESPONSE_RECEIVED";
+
+        output8PN.executionState =
+          "COMPLETED";
+
+        output8PN.reason =
+          "Browser successfully reached the controlled evidence-retrieval backend boundary. Actual external retrieval has not started.";
+
+      } else {
+
+        output8PN.status =
+          "BLOCKED";
+
+        output8PN.handoffState =
+          "BACKEND_RESPONSE_INVALID";
+
+        output8PN.executionState =
+          "BLOCKED";
+
+        output8PN.reason =
+          "Backend response did not satisfy the 8PN controlled handoff contract.";
+
+      }
+
+      registry["8PN"] =
+        output8PN;
+
+      /* ===================================================
+         DEBUG — FINAL 8PN RESULT
+         =================================================== */
+
+      if (
+        typeof OODebug !== "undefined" &&
+        OODebug.log
+      ) {
+
+        OODebug.log(
+          "8PN",
+          output8PN.status === "PASS"
+            ? "Controlled browser-to-backend handoff PASS"
+            : "Controlled browser-to-backend handoff blocked",
+          output8PN
+        );
+
+      }
+
+    } catch (error8PN) {
+
+      output8PN.status =
+        "ERROR";
+
+      output8PN.handoffState =
+        "FAILED";
+
+      output8PN.executionState =
+        "FAILED";
+
+      output8PN.error =
+        error8PN instanceof Error
+          ? error8PN.message
+          : String(error8PN);
+
+      output8PN.externalSourceAccess =
+        false;
+
+      output8PN.sourceRetrieval =
+        false;
+
+      output8PN.evidenceReceived =
+        false;
+
+      output8PN.evidenceInsertion =
+        false;
+
+      output8PN.claimSupportUpdate =
+        false;
+
+      output8PN.mutationAllowed =
+        false;
+
+      output8PN.inventedEvidence =
+        false;
+
+      output8PN.inventedScores =
+        false;
+
+      output8PN.userDataAssumption =
+        false;
+
+      registry["8PN"] =
+        output8PN;
+
+      if (
+        typeof OODebug !== "undefined" &&
+        OODebug.log
+      ) {
+
+        OODebug.log(
+          "8PN",
+          "Controlled browser-to-backend handoff error",
+          output8PN
+        );
+
+      }
+
+    }
+
+  })();
+
+})();
   
 /* ==========================================
    RESULT VALUES
