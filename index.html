@@ -77643,7 +77643,847 @@ if (
   }
 
 })();
-        
+   /* =========================================================
+    OPPORTUNITYOS
+    STEPS 8PB → 8PF
+    FINAL CONTROLLED ASSESSMENT AUTHORIZATION CONTRACT
+    ========================================================= */
+
+
+/* =========================================================
+   STEP 8PB
+   FINAL AUTHORIZATION INPUT RESOLUTION
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8PB =
+    registry["8PA"] || null;
+
+  var query8PB = "";
+  var targets8PB = [];
+
+  if (source8PB && typeof source8PB === "object") {
+
+    if (typeof source8PB.query === "string") {
+      query8PB = source8PB.query.trim();
+    }
+
+    if (Array.isArray(source8PB.targets)) {
+      targets8PB = source8PB.targets.slice();
+    }
+  }
+
+  var authorizationInput8PB = [];
+
+  if (targets8PB.length === 5) {
+
+    authorizationInput8PB =
+      targets8PB.map(function (target) {
+
+        return {
+
+          target:
+            target,
+
+          assessmentExecution:
+            "NOT_STARTED",
+
+          evidenceVerification:
+            "UNVERIFIED",
+
+          riskAssessment:
+            "NOT_STARTED",
+
+          roiAssessment:
+            "NOT_STARTED",
+
+          fitAssessment:
+            "NOT_STARTED",
+
+          authorizationEligible:
+            false,
+
+          executionAllowed:
+            false,
+
+          riskScore:
+            null,
+
+          roiScore:
+            null,
+
+          fitScore:
+            null,
+
+          inventedEvidence:
+            false,
+
+          inventedScores:
+            false,
+
+          userDataAssumption:
+            false
+        };
+
+      });
+  }
+
+  var output8PB = {
+
+    step:
+      "8PB",
+
+    name:
+      "FINAL_AUTHORIZATION_INPUT_RESOLUTION",
+
+    status:
+      query8PB.length > 0 &&
+      authorizationInput8PB.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    query:
+      query8PB,
+
+    targets:
+      targets8PB,
+
+    targetCount:
+      targets8PB.length,
+
+    authorizationInput:
+      authorizationInput8PB,
+
+    assessmentExecution:
+      "NOT_STARTED",
+
+    authorizationEligible:
+      false,
+
+    executionAllowed:
+      false,
+
+    scoreAllowed:
+      false,
+
+    actionAllowed:
+      false,
+
+    mutationAllowed:
+      false
+  };
+
+  registry["8PB"] = output8PB;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8PB",
+      "Final authorization input resolution ready",
+      output8PB
+    );
+  }
+
+})();
+
+
+/* =========================================================
+   STEP 8PC
+   EVIDENCE / VERIFICATION AUTHORIZATION BOUNDARY
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8PC =
+    registry["8PB"] || null;
+
+  var query8PC = "";
+  var targets8PC = [];
+
+  if (source8PC && typeof source8PC === "object") {
+
+    if (typeof source8PC.query === "string") {
+      query8PC = source8PC.query.trim();
+    }
+
+    if (Array.isArray(source8PC.targets)) {
+      targets8PC = source8PC.targets.slice();
+    }
+  }
+
+  var evidenceAuthorization8PC = [];
+
+  if (targets8PC.length === 5) {
+
+    evidenceAuthorization8PC =
+      targets8PC.map(function (target) {
+
+        return {
+
+          target:
+            target,
+
+          evidenceRequired:
+            true,
+
+          verifiedEvidenceRequired:
+            true,
+
+          evidenceAvailable:
+            false,
+
+          verifiedEvidenceAvailable:
+            false,
+
+          verificationState:
+            "UNVERIFIED",
+
+          authorizationEligible:
+            false,
+
+          executionAllowed:
+            false,
+
+          externalSourceAccess:
+            false,
+
+          sourceRetrieval:
+            false,
+
+          evidenceInsertion:
+            false,
+
+          claimSupportUpdate:
+            false,
+
+          inventedEvidence:
+            false
+        };
+
+      });
+  }
+
+  var output8PC = {
+
+    step:
+      "8PC",
+
+    name:
+      "EVIDENCE_VERIFICATION_AUTHORIZATION_BOUNDARY",
+
+    status:
+      query8PC.length > 0 &&
+      evidenceAuthorization8PC.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    query:
+      query8PC,
+
+    targets:
+      targets8PC,
+
+    targetCount:
+      targets8PC.length,
+
+    evidenceAuthorization:
+      evidenceAuthorization8PC,
+
+    evidenceRequired:
+      true,
+
+    verifiedEvidenceRequired:
+      true,
+
+    evidenceAvailable:
+      false,
+
+    verifiedEvidenceAvailable:
+      false,
+
+    verificationState:
+      "UNVERIFIED",
+
+    authorizationEligible:
+      false,
+
+    executionAllowed:
+      false,
+
+    externalSourceAccess:
+      false,
+
+    sourceRetrieval:
+      false,
+
+    evidenceInsertion:
+      false,
+
+    claimSupportUpdate:
+      false,
+
+    inventedEvidence:
+      false,
+
+    scoreAllowed:
+      false,
+
+    actionAllowed:
+      false,
+
+    mutationAllowed:
+      false
+  };
+
+  registry["8PC"] = output8PC;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8PC",
+      "Evidence and verification authorization boundary ready",
+      output8PC
+    );
+  }
+
+})();
+
+
+/* =========================================================
+   STEP 8PD
+   RISK / ROI AUTHORIZATION BOUNDARY
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8PD =
+    registry["8PC"] || null;
+
+  var query8PD = "";
+  var targets8PD = [];
+
+  if (source8PD && typeof source8PD === "object") {
+
+    if (typeof source8PD.query === "string") {
+      query8PD = source8PD.query.trim();
+    }
+
+    if (Array.isArray(source8PD.targets)) {
+      targets8PD = source8PD.targets.slice();
+    }
+  }
+
+  var riskRoiAuthorization8PD = [];
+
+  if (targets8PD.length === 5) {
+
+    riskRoiAuthorization8PD =
+      targets8PD.map(function (target) {
+
+        return {
+
+          target:
+            target,
+
+          riskEvidenceRequired:
+            true,
+
+          roiEvidenceRequired:
+            true,
+
+          riskEvidenceAvailable:
+            false,
+
+          roiEvidenceAvailable:
+            false,
+
+          riskVerificationState:
+            "UNVERIFIED",
+
+          roiVerificationState:
+            "UNVERIFIED",
+
+          authorizationEligible:
+            false,
+
+          executionAllowed:
+            false,
+
+          riskScore:
+            null,
+
+          roiScore:
+            null,
+
+          calculationAllowed:
+            false,
+
+          uncertaintyRequired:
+            true,
+
+          downsideVisibilityRequired:
+            true,
+
+          inventedEvidence:
+            false,
+
+          inventedScores:
+            false
+        };
+
+      });
+  }
+
+  var output8PD = {
+
+    step:
+      "8PD",
+
+    name:
+      "RISK_ROI_AUTHORIZATION_BOUNDARY",
+
+    status:
+      query8PD.length > 0 &&
+      riskRoiAuthorization8PD.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    query:
+      query8PD,
+
+    targets:
+      targets8PD,
+
+    targetCount:
+      targets8PD.length,
+
+    riskRoiAuthorization:
+      riskRoiAuthorization8PD,
+
+    riskEvidenceRequired:
+      true,
+
+    roiEvidenceRequired:
+      true,
+
+    riskEvidenceAvailable:
+      false,
+
+    roiEvidenceAvailable:
+      false,
+
+    riskVerificationState:
+      "UNVERIFIED",
+
+    roiVerificationState:
+      "UNVERIFIED",
+
+    riskScore:
+      null,
+
+    roiScore:
+      null,
+
+    calculationAllowed:
+      false,
+
+    authorizationEligible:
+      false,
+
+    executionAllowed:
+      false,
+
+    uncertaintyRequired:
+      true,
+
+    downsideVisibilityRequired:
+      true,
+
+    externalSourceAccess:
+      false,
+
+    sourceRetrieval:
+      false,
+
+    evidenceInsertion:
+      false,
+
+    claimSupportUpdate:
+      false,
+
+    inventedEvidence:
+      false,
+
+    inventedScores:
+      false,
+
+    scoreAllowed:
+      false,
+
+    actionAllowed:
+      false,
+
+    mutationAllowed:
+      false
+  };
+
+  registry["8PD"] = output8PD;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8PD",
+      "Risk and ROI authorization boundary ready",
+      output8PD
+    );
+  }
+
+})();
+
+
+/* =========================================================
+   STEP 8PE
+   PERSON / BUSINESS FIT AUTHORIZATION BOUNDARY
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8PE =
+    registry["8PD"] || null;
+
+  var query8PE = "";
+  var targets8PE = [];
+
+  if (source8PE && typeof source8PE === "object") {
+
+    if (typeof source8PE.query === "string") {
+      query8PE = source8PE.query.trim();
+    }
+
+    if (Array.isArray(source8PE.targets)) {
+      targets8PE = source8PE.targets.slice();
+    }
+  }
+
+  var fitAuthorization8PE = [];
+
+  if (targets8PE.length === 5) {
+
+    fitAuthorization8PE =
+      targets8PE.map(function (target) {
+
+        return {
+
+          target:
+            target,
+
+          userContextRequired:
+            true,
+
+          businessContextRequired:
+            true,
+
+          constraintsRequired:
+            true,
+
+          contextAvailable:
+            false,
+
+          fitEvidenceAvailable:
+            false,
+
+          authorizationEligible:
+            false,
+
+          executionAllowed:
+            false,
+
+          fitScore:
+            null,
+
+          userDataAssumption:
+            false,
+
+          inventedUserData:
+            false,
+
+          inventedBusinessData:
+            false,
+
+          inventedScores:
+            false
+        };
+
+      });
+  }
+
+  var output8PE = {
+
+    step:
+      "8PE",
+
+    name:
+      "PERSON_BUSINESS_FIT_AUTHORIZATION_BOUNDARY",
+
+    status:
+      query8PE.length > 0 &&
+      fitAuthorization8PE.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    query:
+      query8PE,
+
+    targets:
+      targets8PE,
+
+    targetCount:
+      targets8PE.length,
+
+    fitAuthorization:
+      fitAuthorization8PE,
+
+    userContextRequired:
+      true,
+
+    businessContextRequired:
+      true,
+
+    constraintsRequired:
+      true,
+
+    contextAvailable:
+      false,
+
+    fitEvidenceAvailable:
+      false,
+
+    fitScore:
+      null,
+
+    authorizationEligible:
+      false,
+
+    executionAllowed:
+      false,
+
+    userDataAssumption:
+      false,
+
+    inventedUserData:
+      false,
+
+    inventedBusinessData:
+      false,
+
+    inventedScores:
+      false,
+
+    scoreAllowed:
+      false,
+
+    actionAllowed:
+      false,
+
+    mutationAllowed:
+      false
+  };
+
+  registry["8PE"] = output8PE;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8PE",
+      "Person and business fit authorization boundary ready",
+      output8PE
+    );
+  }
+
+})();
+
+
+/* =========================================================
+   STEP 8PF
+   FINAL UNIFIED CONTROLLED AUTHORIZATION CONTRACT
+   ========================================================= */
+
+(function () {
+
+  var registry =
+    globalThis.__OpportunityOS_HandoffRegistry ||
+    (globalThis.__OpportunityOS_HandoffRegistry = {});
+
+  var source8PF =
+    registry["8PE"] || null;
+
+  var query8PF = "";
+  var targets8PF = [];
+
+  if (source8PF && typeof source8PF === "object") {
+
+    if (typeof source8PF.query === "string") {
+      query8PF = source8PF.query.trim();
+    }
+
+    if (Array.isArray(source8PF.targets)) {
+      targets8PF = source8PF.targets.slice();
+    }
+  }
+
+  var output8PF = {
+
+    step:
+      "8PF",
+
+    name:
+      "FINAL_UNIFIED_CONTROLLED_AUTHORIZATION_CONTRACT",
+
+    status:
+      query8PF.length > 0 &&
+      targets8PF.length === 5
+        ? "READY"
+        : "BLOCKED",
+
+    query:
+      query8PF,
+
+    targets:
+      targets8PF,
+
+    targetCount:
+      targets8PF.length,
+
+    authorizationContract:
+      "CONTROLLED_ASSESSMENT_ONLY",
+
+    assessmentExecution:
+      "NOT_STARTED",
+
+    authorizationEligible:
+      false,
+
+    executionAllowed:
+      false,
+
+    evidenceRequired:
+      true,
+
+    verifiedEvidenceRequired:
+      true,
+
+    evidenceAvailable:
+      false,
+
+    verifiedEvidenceAvailable:
+      false,
+
+    verificationState:
+      "UNVERIFIED",
+
+    riskEvidenceRequired:
+      true,
+
+    roiEvidenceRequired:
+      true,
+
+    riskEvidenceAvailable:
+      false,
+
+    roiEvidenceAvailable:
+      false,
+
+    riskAssessment:
+      "NOT_STARTED",
+
+    roiAssessment:
+      "NOT_STARTED",
+
+    fitAssessment:
+      "NOT_STARTED",
+
+    constraintAssessment:
+      "NOT_STARTED",
+
+    riskScore:
+      null,
+
+    roiScore:
+      null,
+
+    fitScore:
+      null,
+
+    scoreAllowed:
+      false,
+
+    actionAllowed:
+      false,
+
+    mutationAllowed:
+      false,
+
+    safety: {
+
+      externalSourceAccess:
+        false,
+
+      sourceRetrieval:
+        false,
+
+      evidenceInsertion:
+        false,
+
+      claimSupportUpdate:
+        false,
+
+      userDataAssumption:
+        false,
+
+      inventedEvidence:
+        false,
+
+      inventedScores:
+        false,
+
+      actionAuthorization:
+        false
+    },
+
+    executionBoundary:
+      "NOT_STARTED",
+
+    retrievalBoundary:
+      "NOT_STARTED",
+
+    reason:
+      "Actual assessment execution remains blocked until verified evidence and genuine required context satisfy the authorization gates."
+  };
+
+  registry["8PF"] = output8PF;
+
+  if (typeof OODebug !== "undefined" && OODebug.log) {
+    OODebug.log(
+      "8PF",
+      "Final unified controlled authorization contract ready",
+      output8PF
+    );
+  }
+
+})();      
       
 /* ==========================================
    RESULT VALUES
