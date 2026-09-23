@@ -79519,105 +79519,180 @@ if (
 
   const step8PN = "8PN";
 
-  let source8PN =
-    registry["8PL"] ||
-    null;
+  /* =========================================================
+     8PN — START
+     ========================================================= */
 
-  let query8PN =
+  if (typeof debugLog === "function") {
+    debugLog(
+      step8PN,
+      "START",
+      "Controlled browser-to-backend handoff started."
+    );
+  }
+
+
+  /* =========================================================
+     READ 8PL
+     ========================================================= */
+
+  const source8PN =
+    registry &&
+    registry["8PL"]
+      ? registry["8PL"]
+      : null;
+
+
+  const query8PN =
     source8PN &&
     typeof source8PN.query === "string"
       ? source8PN.query.trim()
       : "";
 
-  let targets8PN =
+
+  const targets8PN =
     source8PN &&
     Array.isArray(source8PN.targets)
       ? source8PN.targets
       : [];
 
-  let requestReady8PN =
+
+  /* =========================================================
+     REQUEST READINESS
+     ========================================================= */
+
+  const requestReady8PN =
     query8PN.length > 0 &&
     targets8PN.length === 5 &&
-    source8PN &&
+    source8PN !== null &&
     source8PN.status === "READY";
 
-  let controlledTargets8PN =
+
+  /* =========================================================
+     CONTROLLED TARGET NORMALIZATION
+     ========================================================= */
+
+  const controlledTargets8PN =
     targets8PN
       .filter(function (item) {
+
         return (
-          item &&
+          item !== null &&
+          typeof item === "object" &&
           typeof item.target === "string" &&
           item.target.trim().length > 0
         );
+
       })
       .map(function (item) {
+
         return {
           target: item.target.trim()
         };
+
       });
 
-  let controlledTargetContractValid8PN =
+
+  const controlledTargetContractValid8PN =
     controlledTargets8PN.length === 5;
 
+
+  /* =========================================================
+     INITIAL 8PN OUTPUT
+     ========================================================= */
+
   let output8PN = {
+
     step: step8PN,
+
     status:
       requestReady8PN &&
       controlledTargetContractValid8PN
         ? "READY"
         : "BLOCKED",
 
-    functionName: "evidence-retrieval",
-    requestMethod: "POST",
+    functionName:
+      "evidence-retrieval",
 
-    handoffState: "NOT_STARTED",
+    requestMethod:
+      "POST",
 
-    query: query8PN,
+    handoffState:
+      "NOT_STARTED",
 
-    targets: controlledTargets8PN,
+    query:
+      query8PN,
 
-    targetCount: controlledTargets8PN.length,
+    targets:
+      controlledTargets8PN,
 
-    backendResponseReceived: false,
+    targetCount:
+      controlledTargets8PN.length,
 
-    backendStep: null,
-    backendStatus: null,
+    backendResponseReceived:
+      false,
 
-    requestAccepted: false,
+    backendStep:
+      null,
 
-    retrievalState: "NOT_STARTED",
+    backendStatus:
+      null,
 
-    externalSourceAccess: false,
-    sourceRetrieval: false,
-    evidenceReceived: false,
-    evidenceInsertion: false,
-    claimSupportUpdate: false,
+    requestAccepted:
+      false,
 
-    mutationAllowed: false,
+    retrievalState:
+      "NOT_STARTED",
 
-    inventedEvidence: false,
-    inventedScores: false,
-    userDataAssumption: false,
+    externalSourceAccess:
+      false,
 
-    executionState: "NOT_STARTED",
+    sourceRetrieval:
+      false,
+
+    evidenceReceived:
+      false,
+
+    evidenceInsertion:
+      false,
+
+    claimSupportUpdate:
+      false,
+
+    mutationAllowed:
+      false,
+
+    inventedEvidence:
+      false,
+
+    inventedScores:
+      false,
+
+    userDataAssumption:
+      false,
+
+    executionState:
+      "NOT_STARTED",
 
     reason:
       requestReady8PN &&
       controlledTargetContractValid8PN
         ? "Controlled browser-to-backend handoff is ready."
         : "Controlled handoff prerequisites are not satisfied."
+
   };
 
 
   /* =========================================================
-     REGISTER 8PN
+     REGISTER INITIAL STATE
      ========================================================= */
 
-  registry["8PN"] = output8PN;
+  registry["8PN"] =
+    output8PN;
 
 
   /* =========================================================
-     8PN DEBUGGER — INPUT DIAGNOSTIC
+     8PN — DIAGNOSTIC
      ========================================================= */
 
   if (typeof debugLog === "function") {
@@ -79627,32 +79702,29 @@ if (
       "DIAGNOSTIC",
       JSON.stringify(
         {
-          requestReady: requestReady8PN,
+          requestReady:
+            requestReady8PN,
 
           controlledTargetContractValid:
             controlledTargetContractValid8PN,
 
-          query: query8PN,
+          query:
+            query8PN,
+
+          source8PLExists:
+            source8PN !== null,
 
           source8PLStatus:
             source8PN
               ? source8PN.status
               : null,
 
-          source8PLExists:
-            !!source8PN,
-
           targetCount:
             targets8PN.length,
 
           controlledTargetCount:
-            controlledTargets8PN.length,
+            controlledTargets8PN.length
 
-          functionAvailable:
-            typeof supabase !== "undefined" &&
-            !!supabase &&
-            !!supabase.functions &&
-            typeof supabase.functions.invoke === "function"
         },
         null,
         2
@@ -79663,7 +79735,7 @@ if (
 
 
   /* =========================================================
-     8PN — CONTROLLED HANDOFF PREPARED
+     8PN — HANDOFF PREPARED
      ========================================================= */
 
   if (typeof debugLog === "function") {
@@ -79678,7 +79750,7 @@ if (
 
 
   /* =========================================================
-     BLOCK INVALID HANDOFF
+     BLOCK INVALID 8PL CONTRACT
      ========================================================= */
 
   if (
@@ -79686,7 +79758,8 @@ if (
     !controlledTargetContractValid8PN
   ) {
 
-    output8PN.status = "BLOCKED";
+    output8PN.status =
+      "BLOCKED";
 
     output8PN.handoffState =
       "BLOCKED";
@@ -79697,7 +79770,8 @@ if (
     output8PN.reason =
       "8PN handoff blocked because the 8PL request contract is incomplete.";
 
-    registry["8PN"] = output8PN;
+    registry["8PN"] =
+      output8PN;
 
 
     if (typeof debugLog === "function") {
@@ -79721,6 +79795,7 @@ if (
 
             controlledTargetCount:
               controlledTargets8PN.length
+
           },
           null,
           2
@@ -79734,13 +79809,14 @@ if (
 
 
   /* =========================================================
-     SUPABASE FUNCTION AVAILABILITY CHECK
+     SUPABASE FUNCTION AVAILABILITY
      ========================================================= */
 
   const supabaseFunctionAvailable8PN =
     typeof supabase !== "undefined" &&
-    !!supabase &&
-    !!supabase.functions &&
+    supabase !== null &&
+    supabase.functions !== undefined &&
+    supabase.functions !== null &&
     typeof supabase.functions.invoke === "function";
 
 
@@ -79777,7 +79853,7 @@ if (
 
 
   /* =========================================================
-     START CONTROLLED BACKEND HANDOFF
+     START BACKEND HANDOFF
      ========================================================= */
 
   output8PN.handoffState =
@@ -79802,7 +79878,7 @@ if (
 
 
   /* =========================================================
-     8PN — EDGE FUNCTION INVOCATION
+     CONTROLLED EDGE FUNCTION INVOCATION
      ========================================================= */
 
   (async function () {
@@ -79814,6 +79890,7 @@ if (
           "evidence-retrieval",
           {
             body: {
+
               query:
                 query8PN,
 
@@ -79822,13 +79899,14 @@ if (
 
               authorizationContract:
                 "CONTROLLED_ASSESSMENT_ONLY"
+
             }
           }
         );
 
 
       /* =====================================================
-         BACKEND ERROR
+         BACKEND ERROR CHECK
          ===================================================== */
 
       if (
@@ -79863,6 +79941,7 @@ if (
                 message:
                   response8PN.error.message ||
                   "Unknown backend error."
+
               },
               null,
               2
@@ -79876,7 +79955,7 @@ if (
 
 
       /* =====================================================
-         BACKEND RESPONSE
+         READ BACKEND RESPONSE
          ===================================================== */
 
       const backendData8PN =
@@ -79887,23 +79966,27 @@ if (
 
 
       output8PN.backendResponseReceived =
-        !!backendData8PN;
+        backendData8PN !== null;
+
 
       output8PN.backendStep =
         backendData8PN &&
-        backendData8PN.step
+        typeof backendData8PN.step === "string"
           ? backendData8PN.step
           : null;
 
+
       output8PN.backendStatus =
         backendData8PN &&
-        backendData8PN.status
+        typeof backendData8PN.status === "string"
           ? backendData8PN.status
           : null;
+
 
       output8PN.requestAccepted =
         backendData8PN &&
         backendData8PN.requestAccepted === true;
+
 
       output8PN.retrievalState =
         backendData8PN &&
@@ -79913,7 +79996,7 @@ if (
 
 
       /* =====================================================
-         SAFETY FLAGS
+         SAFETY FLAGS — ALWAYS REMAIN FALSE IN 8PN
          ===================================================== */
 
       output8PN.externalSourceAccess =
@@ -79964,11 +80047,11 @@ if (
 
 
       /* =====================================================
-         VALIDATE 8PM CONTROLLED RESPONSE
+         VALIDATE FROZEN 8PM RESPONSE CONTRACT
          ===================================================== */
 
       const backendResponseValid8PN =
-        backendData8PN &&
+        backendData8PN !== null &&
         backendData8PN.step === "8PM" &&
         backendData8PN.status ===
           "READY_FOR_CONTROLLED_RETRIEVAL" &&
@@ -79976,6 +80059,10 @@ if (
         backendData8PN.retrievalState ===
           "NOT_STARTED";
 
+
+      /* =====================================================
+         INVALID BACKEND RESPONSE
+         ===================================================== */
 
       if (!backendResponseValid8PN) {
 
@@ -80041,6 +80128,10 @@ if (
 
     } catch (error8PN) {
 
+      /* =====================================================
+         8PN EXCEPTION
+         ===================================================== */
+
       output8PN.status =
         "ERROR";
 
@@ -80077,6 +80168,7 @@ if (
 
   })();
 
+})();
 
 /* ==========================================
    RESULT VALUES
