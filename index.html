@@ -80086,35 +80086,22 @@ if (
 
       registry["8PN"] =
         output8PN;
-console.log(
+  console.log(
   "8PN_DIAGNOSTIC",
   JSON.stringify(
     {
-      requestReady8PN:
-        requestReady8PN,
-
-      controlledTargetContractValid8PN:
-        controlledTargetContractValid8PN,
-
-      query8PN:
-        query8PN,
-
-      targetCount8PN:
-        targets8PN.length,
-
-      controlledTargetCount8PN:
-        controlledTargets8PN.length,
-
-      source8PLStatus:
-        source8PN
-          ? source8PN.status
-          : null
+      requestReady8PN: requestReady8PN,
+      controlledTargetContractValid8PN: controlledTargetContractValid8PN,
+      query8PN: query8PN,
+      targetCount8PN: targets8PN.length,
+      controlledTargetCount8PN: controlledTargets8PN.length,
+      source8PLStatus: source8PN ? source8PN.status : null
     },
     null,
     2
   )
-);
-      if (
+); 
+  if (
         typeof OODebug !== "undefined" &&
         OODebug.log
       ) {
