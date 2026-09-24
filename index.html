@@ -82779,6 +82779,599 @@ if (
     }
   }
 })();
+  /* =========================================================
+   STEP 8QN — CONTROLLED EVIDENCE INTAKE CONTRACT
+   ========================================================= */
+
+(() => {
+  const step8QN = "8QN";
+
+  try {
+    const prepare8QN = () => {
+      const processing8QN =
+        window.__OO_8QM_EVIDENCE_PROCESSING_READINESS ||
+        null;
+
+      if (
+        !processing8QN ||
+        processing8QN.status !== "READY" ||
+        processing8QN.evidenceProcessingReadiness !== "READY" ||
+        processing8QN.processingState !==
+          "WAITING_FOR_GENUINE_EVIDENCE" ||
+        processing8QN.retrievalState !== "NOT_STARTED"
+      ) {
+        return false;
+      }
+
+      const output8QN = {
+        step: step8QN,
+        status: "READY",
+        sourceStep: "8QM",
+        query: processing8QN.query,
+        targetCount: processing8QN.targetCount,
+        evidenceIntakeContract: "READY",
+        intakeState: "WAITING_FOR_GENUINE_EVIDENCE",
+        retrievalState: "NOT_STARTED",
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+        evidenceVerified: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        mutationAllowed: false,
+        executionAuthorized: false,
+        intakeAuthorized: false,
+        sourceAccessAuthorized: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false,
+        message:
+          "Controlled evidence intake contract is ready and waiting for genuine evidence."
+      };
+
+      window.__OO_8QN_EVIDENCE_INTAKE_CONTRACT = output8QN;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          step8QN,
+          "Controlled evidence intake contract ready",
+          output8QN
+        );
+      }
+
+      return true;
+    };
+
+    if (prepare8QN()) {
+      return;
+    }
+
+    let attempts8QN = 0;
+    const maxAttempts8QN = 250;
+
+    const wait8QN = setInterval(() => {
+      attempts8QN++;
+
+      if (
+        prepare8QN() ||
+        attempts8QN >= maxAttempts8QN
+      ) {
+        clearInterval(wait8QN);
+
+        if (
+          attempts8QN >= maxAttempts8QN &&
+          !window.__OO_8QN_EVIDENCE_INTAKE_CONTRACT
+        ) {
+          window.__OO_8QN_EVIDENCE_INTAKE_CONTRACT = {
+            step: step8QN,
+            status: "BLOCKED",
+            evidenceIntakeContract: "NOT_READY",
+            intakeState: "NOT_READY"
+          };
+
+          if (typeof OODebug !== "undefined" && OODebug.log) {
+            OODebug.log(
+              step8QN,
+              "Evidence intake contract blocked",
+              window.__OO_8QN_EVIDENCE_INTAKE_CONTRACT
+            );
+          }
+        }
+      }
+    }, 100);
+  } catch (error8QN) {
+    window.__OO_8QN_ERROR =
+      error8QN && error8QN.message
+        ? error8QN.message
+        : "Unknown 8QN error";
+
+    if (typeof OODebug !== "undefined" && OODebug.log) {
+      OODebug.log(
+        step8QN,
+        "Evidence intake contract exception",
+        window.__OO_8QN_ERROR
+      );
+    }
+  }
+})();
+ /* =========================================================
+   STEP 8QO — CONTROLLED EVIDENCE STRUCTURE VALIDATION
+   ========================================================= */
+
+(() => {
+  const step8QO = "8QO";
+
+  try {
+    const prepare8QO = () => {
+      const intake8QO =
+        window.__OO_8QN_EVIDENCE_INTAKE_CONTRACT || null;
+
+      if (
+        !intake8QO ||
+        intake8QO.status !== "READY" ||
+        intake8QO.evidenceIntakeContract !== "READY"
+      ) {
+        return false;
+      }
+
+      const validQuery8QO =
+        typeof intake8QO.query === "string" &&
+        intake8QO.query.trim().length > 0;
+
+      const validTargets8QO =
+        intake8QO.targetCount === 5;
+
+      const output8QO = {
+        step: step8QO,
+        status:
+          validQuery8QO && validTargets8QO
+            ? "READY"
+            : "BLOCKED",
+        sourceStep: "8QN",
+        query: validQuery8QO
+          ? intake8QO.query.trim()
+          : "",
+        targetCount: intake8QO.targetCount,
+        evidenceStructure: 
+          validQuery8QO && validTargets8QO
+            ? "VALID"
+            : "INVALID",
+        expectedEvidenceFields: [
+          "target",
+          "source",
+          "sourceType",
+          "sourceUrl",
+          "publishedAt",
+          "retrievedAt",
+          "claim",
+          "evidenceText"
+        ],
+        retrievalState: "NOT_STARTED",
+        evidenceReceived: false,
+        evidenceVerified: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        mutationAllowed: false,
+        executionAuthorized: false,
+        intakeAuthorized: false,
+        sourceAccessAuthorized: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false,
+        message:
+          "Evidence structure contract is validated without creating or assuming evidence."
+      };
+
+      window.__OO_8QO_EVIDENCE_STRUCTURE_VALIDATION =
+        output8QO;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          step8QO,
+          "Controlled evidence structure validated",
+          output8QO
+        );
+      }
+
+      return true;
+    };
+
+    if (prepare8QO()) {
+      return;
+    }
+
+    let attempts8QO = 0;
+    const maxAttempts8QO = 260;
+
+    const wait8QO = setInterval(() => {
+      attempts8QO++;
+
+      if (
+        prepare8QO() ||
+        attempts8QO >= maxAttempts8QO
+      ) {
+        clearInterval(wait8QO);
+
+        if (
+          attempts8QO >= maxAttempts8QO &&
+          !window.__OO_8QO_EVIDENCE_STRUCTURE_VALIDATION
+        ) {
+          window.__OO_8QO_EVIDENCE_STRUCTURE_VALIDATION = {
+            step: step8QO,
+            status: "BLOCKED",
+            evidenceStructure: "NOT_READY"
+          };
+
+          if (typeof OODebug !== "undefined" && OODebug.log) {
+            OODebug.log(
+              step8QO,
+              "Evidence structure validation blocked",
+              window.__OO_8QO_EVIDENCE_STRUCTURE_VALIDATION
+            );
+          }
+        }
+      }
+    }, 100);
+  } catch (error8QO) {
+    window.__OO_8QO_ERROR =
+      error8QO && error8QO.message
+        ? error8QO.message
+        : "Unknown 8QO error";
+
+    if (typeof OODebug !== "undefined" && OODebug.log) {
+      OODebug.log(
+        step8QO,
+        "Evidence structure validation exception",
+        window.__OO_8QO_ERROR
+      );
+    }
+  }
+})();
+  /* =========================================================
+   STEP 8QP — CONTROLLED EVIDENCE SOURCE REQUIREMENT
+   ========================================================= */
+
+(() => {
+  const step8QP = "8QP";
+
+  try {
+    const prepare8QP = () => {
+      const structure8QP =
+        window.__OO_8QO_EVIDENCE_STRUCTURE_VALIDATION ||
+        null;
+
+      if (
+        !structure8QP ||
+        structure8QP.status !== "READY" ||
+        structure8QP.evidenceStructure !== "VALID"
+      ) {
+        return false;
+      }
+
+      const output8QP = {
+        step: step8QP,
+        status: "READY",
+        sourceStep: "8QO",
+        query: structure8QP.query,
+        targetCount: structure8QP.targetCount,
+        sourceRequirement: "REQUIRED",
+        sourceIdentityRequired: true,
+        sourceUrlRequired: true,
+        retrievalTimestampRequired: true,
+        evidenceTextRequired: true,
+        publishedDateRequiredWhenAvailable: true,
+        retrievalState: "NOT_STARTED",
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+        evidenceVerified: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        mutationAllowed: false,
+        executionAuthorized: false,
+        intakeAuthorized: false,
+        sourceAccessAuthorized: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false,
+        message:
+          "Evidence source requirements are established. No source or evidence has been assumed."
+      };
+
+      window.__OO_8QP_EVIDENCE_SOURCE_REQUIREMENT =
+        output8QP;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          step8QP,
+          "Controlled evidence source requirements ready",
+          output8QP
+        );
+      }
+
+      return true;
+    };
+
+    if (prepare8QP()) {
+      return;
+    }
+
+    let attempts8QP = 0;
+    const maxAttempts8QP = 270;
+
+    const wait8QP = setInterval(() => {
+      attempts8QP++;
+
+      if (
+        prepare8QP() ||
+        attempts8QP >= maxAttempts8QP
+      ) {
+        clearInterval(wait8QP);
+
+        if (
+          attempts8QP >= maxAttempts8QP &&
+          !window.__OO_8QP_EVIDENCE_SOURCE_REQUIREMENT
+        ) {
+          window.__OO_8QP_EVIDENCE_SOURCE_REQUIREMENT = {
+            step: step8QP,
+            status: "BLOCKED",
+            sourceRequirement: "NOT_READY"
+          };
+
+          if (typeof OODebug !== "undefined" && OODebug.log) {
+            OODebug.log(
+              step8QP,
+              "Evidence source requirement blocked",
+              window.__OO_8QP_EVIDENCE_SOURCE_REQUIREMENT
+            );
+          }
+        }
+      }
+    }, 100);
+  } catch (error8QP) {
+    window.__OO_8QP_ERROR =
+      error8QP && error8QP.message
+        ? error8QP.message
+        : "Unknown 8QP error";
+
+    if (typeof OODebug !== "undefined" && OODebug.log) {
+      OODebug.log(
+        step8QP,
+        "Evidence source requirement exception",
+        window.__OO_8QP_ERROR
+      );
+    }
+  }
+})();
+  /* =========================================================
+   STEP 8QQ — CONTROLLED EVIDENCE VERIFICATION INTAKE GATE
+   ========================================================= */
+
+(() => {
+  const step8QQ = "8QQ";
+
+  try {
+    const prepare8QQ = () => {
+      const sourceRequirement8QQ =
+        window.__OO_8QP_EVIDENCE_SOURCE_REQUIREMENT ||
+        null;
+
+      if (
+        !sourceRequirement8QQ ||
+        sourceRequirement8QQ.status !== "READY" ||
+        sourceRequirement8QQ.sourceRequirement !== "REQUIRED"
+      ) {
+        return false;
+      }
+
+      const output8QQ = {
+        step: step8QQ,
+        status: "READY",
+        sourceStep: "8QP",
+        query: sourceRequirement8QQ.query,
+        targetCount: sourceRequirement8QQ.targetCount,
+        verificationIntakeGate: "READY",
+        verificationIntakeState:
+          "WAITING_FOR_GENUINE_EVIDENCE",
+        retrievalState: "NOT_STARTED",
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+        evidenceVerified: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        mutationAllowed: false,
+        executionAuthorized: false,
+        intakeAuthorized: false,
+        sourceAccessAuthorized: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false,
+        message:
+          "Verification intake gate is ready. Evidence must be genuinely received before verification can begin."
+      };
+
+      window.__OO_8QQ_VERIFICATION_INTAKE_GATE =
+        output8QQ;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          step8QQ,
+          "Controlled evidence verification intake gate ready",
+          output8QQ
+        );
+      }
+
+      return true;
+    };
+
+    if (prepare8QQ()) {
+      return;
+    }
+
+    let attempts8QQ = 0;
+    const maxAttempts8QQ = 280;
+
+    const wait8QQ = setInterval(() => {
+      attempts8QQ++;
+
+      if (
+        prepare8QQ() ||
+        attempts8QQ >= maxAttempts8QQ
+      ) {
+        clearInterval(wait8QQ);
+
+        if (
+          attempts8QQ >= maxAttempts8QQ &&
+          !window.__OO_8QQ_VERIFICATION_INTAKE_GATE
+        ) {
+          window.__OO_8QQ_VERIFICATION_INTAKE_GATE = {
+            step: step8QQ,
+            status: "BLOCKED",
+            verificationIntakeGate: "NOT_READY"
+          };
+
+          if (typeof OODebug !== "undefined" && OODebug.log) {
+            OODebug.log(
+              step8QQ,
+              "Verification intake gate blocked",
+              window.__OO_8QQ_VERIFICATION_INTAKE_GATE
+            );
+          }
+        }
+      }
+    }, 100);
+  } catch (error8QQ) {
+    window.__OO_8QQ_ERROR =
+      error8QQ && error8QQ.message
+        ? error8QQ.message
+        : "Unknown 8QQ error";
+
+    if (typeof OODebug !== "undefined" && OODebug.log) {
+      OODebug.log(
+        step8QQ,
+        "Verification intake gate exception",
+        window.__OO_8QQ_ERROR
+      );
+    }
+  }
+})();
+  /* =========================================================
+   STEP 8QR — CONTROLLED EVIDENCE PROCESSING HANDOFF
+   ========================================================= */
+
+(() => {
+  const step8QR = "8QR";
+
+  try {
+    const prepare8QR = () => {
+      const verificationGate8QR =
+        window.__OO_8QQ_VERIFICATION_INTAKE_GATE ||
+        null;
+
+      if (
+        !verificationGate8QR ||
+        verificationGate8QR.status !== "READY" ||
+        verificationGate8QR.verificationIntakeGate !==
+          "READY" ||
+        verificationGate8QR.verificationIntakeState !==
+          "WAITING_FOR_GENUINE_EVIDENCE"
+      ) {
+        return false;
+      }
+
+      const output8QR = {
+        step: step8QR,
+        status: "READY",
+        sourceStep: "8QQ",
+        query: verificationGate8QR.query,
+        targetCount: verificationGate8QR.targetCount,
+        evidenceProcessingHandoff: "READY",
+        processingState:
+          "WAITING_FOR_GENUINE_EVIDENCE",
+        retrievalState: "NOT_STARTED",
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+        evidenceVerified: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        mutationAllowed: false,
+        executionAuthorized: false,
+        intakeAuthorized: false,
+        sourceAccessAuthorized: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false,
+        message:
+          "Controlled evidence processing handoff is ready. Genuine evidence is still required before processing."
+      };
+
+      window.__OO_8QR_EVIDENCE_PROCESSING_HANDOFF =
+        output8QR;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          step8QR,
+          "Controlled evidence processing handoff ready",
+          output8QR
+        );
+      }
+
+      return true;
+    };
+
+    if (prepare8QR()) {
+      return;
+    }
+
+    let attempts8QR = 0;
+    const maxAttempts8QR = 290;
+
+    const wait8QR = setInterval(() => {
+      attempts8QR++;
+
+      if (
+        prepare8QR() ||
+        attempts8QR >= maxAttempts8QR
+      ) {
+        clearInterval(wait8QR);
+
+        if (
+          attempts8QR >= maxAttempts8QR &&
+          !window.__OO_8QR_EVIDENCE_PROCESSING_HANDOFF
+        ) {
+          window.__OO_8QR_EVIDENCE_PROCESSING_HANDOFF = {
+            step: step8QR,
+            status: "BLOCKED",
+            evidenceProcessingHandoff: "NOT_READY"
+          };
+
+          if (typeof OODebug !== "undefined" && OODebug.log) {
+            OODebug.log(
+              step8QR,
+              "Evidence processing handoff blocked",
+              window.__OO_8QR_EVIDENCE_PROCESSING_HANDOFF
+            );
+          }
+        }
+      }
+    }, 100);
+  } catch (error8QR) {
+    window.__OO_8QR_ERROR =
+      error8QR && error8QR.message
+        ? error8QR.message
+        : "Unknown 8QR error";
+
+    if (typeof OODebug !== "undefined" && OODebug.log) {
+      OODebug.log(
+        step8QR,
+        "Evidence processing handoff exception",
+        window.__OO_8QR_ERROR
+      );
+    }
+  }
+})();
   
   /* ==========================================
        RESULT VALUES
