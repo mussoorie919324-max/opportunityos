@@ -79862,7 +79862,586 @@ if (
   }
 
 })();
-  
+ /* =========================================================
+   STEP 8PO — CONTROLLED BACKEND RESPONSE VALIDATION
+   ========================================================= */
+
+(() => {
+  const step8PO = "8PO";
+
+  try {
+    const validateBackendResponse8PO = (backendData8PO) => {
+      const valid =
+        backendData8PO &&
+        backendData8PO.step === "8PM" &&
+        backendData8PO.status === "READY_FOR_CONTROLLED_RETRIEVAL" &&
+        backendData8PO.requestAccepted === true &&
+        typeof backendData8PO.query === "string" &&
+        backendData8PO.query.trim().length > 0 &&
+        Array.isArray(backendData8PO.targets) &&
+        backendData8PO.targets.length === 5 &&
+        backendData8PO.retrievalState === "NOT_STARTED" &&
+        backendData8PO.externalSourceAccess === false &&
+        backendData8PO.sourceRetrieval === false &&
+        backendData8PO.evidenceReceived === false &&
+        backendData8PO.evidenceInsertion === false &&
+        backendData8PO.claimSupportUpdate === false &&
+        backendData8PO.inventedEvidence === false &&
+        backendData8PO.inventedScores === false &&
+        backendData8PO.userDataAssumption === false &&
+        backendData8PO.mutationAllowed === false;
+
+      return valid;
+    };
+
+    const process8PO = () => {
+      const backendData8PO =
+        window.__OO_8PN_BACKEND_RESPONSE || null;
+
+      if (!backendData8PO) {
+        return false;
+      }
+
+      const valid8PO =
+        validateBackendResponse8PO(backendData8PO);
+
+      const output8PO = {
+        step: step8PO,
+        status: valid8PO ? "READY" : "BLOCKED",
+        responseReceived: true,
+        responseValid: valid8PO,
+        query: valid8PO
+          ? backendData8PO.query.trim()
+          : "",
+        targetCount: Array.isArray(backendData8PO.targets)
+          ? backendData8PO.targets.length
+          : 0,
+        retrievalState: valid8PO
+          ? backendData8PO.retrievalState
+          : "INVALID",
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        mutationAllowed: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false
+      };
+
+      window.__OO_8PO_RESPONSE_VALIDATION = output8PO;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          step8PO,
+          valid8PO
+            ? "Controlled backend response validated"
+            : "Controlled backend response validation BLOCKED",
+          output8PO
+        );
+      }
+
+      return true;
+    };
+
+    if (process8PO()) {
+      return;
+    }
+
+    let attempts8PO = 0;
+    const maxAttempts8PO = 50;
+
+    const wait8PO = setInterval(() => {
+      attempts8PO++;
+
+      if (process8PO() || attempts8PO >= maxAttempts8PO) {
+        clearInterval(wait8PO);
+
+        if (
+          attempts8PO >= maxAttempts8PO &&
+          !window.__OO_8PO_RESPONSE_VALIDATION
+        ) {
+          window.__OO_8PO_RESPONSE_VALIDATION = {
+            step: step8PO,
+            status: "BLOCKED",
+            responseReceived: false,
+            responseValid: false,
+            reason: "Backend response was not received within the controlled wait window."
+          };
+
+          if (typeof OODebug !== "undefined" && OODebug.log) {
+            OODebug.log(
+              step8PO,
+              "Backend response wait expired",
+              window.__OO_8PO_RESPONSE_VALIDATION
+            );
+          }
+        }
+      }
+    }, 100);
+  } catch (error8PO) {
+    window.__OO_8PO_ERROR =
+      error8PO && error8PO.message
+        ? error8PO.message
+        : "Unknown 8PO error";
+
+    if (typeof OODebug !== "undefined" && OODebug.log) {
+      OODebug.log(
+        step8PO,
+        "Controlled response validation exception",
+        window.__OO_8PO_ERROR
+      );
+    }
+  }
+})(); 
+ /* =========================================================
+   STEP 8PP — CONTROLLED RESPONSE NORMALIZATION
+   ========================================================= */
+
+(() => {
+  const step8PP = "8PP";
+
+  try {
+    const normalize8PP = () => {
+      const input8PP =
+        window.__OO_8PO_RESPONSE_VALIDATION || null;
+
+      if (
+        !input8PP ||
+        input8PP.status !== "READY" ||
+        input8PP.responseValid !== true
+      ) {
+        return false;
+      }
+
+      const normalized8PP = {
+        step: step8PP,
+        status: "READY",
+        sourceStep: "8PO",
+        query: input8PP.query,
+        targetCount: input8PP.targetCount,
+        retrievalState: input8PP.retrievalState,
+
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+
+        evidenceReceived: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+
+        mutationAllowed: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false,
+
+        normalizationState: "NORMALIZED"
+      };
+
+      window.__OO_8PP_NORMALIZED_RESPONSE =
+        normalized8PP;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          step8PP,
+          "Controlled backend response normalized",
+          normalized8PP
+        );
+      }
+
+      return true;
+    };
+
+    if (normalize8PP()) {
+      return;
+    }
+
+    let attempts8PP = 0;
+    const maxAttempts8PP = 60;
+
+    const wait8PP = setInterval(() => {
+      attempts8PP++;
+
+      if (
+        normalize8PP() ||
+        attempts8PP >= maxAttempts8PP
+      ) {
+        clearInterval(wait8PP);
+
+        if (
+          attempts8PP >= maxAttempts8PP &&
+          !window.__OO_8PP_NORMALIZED_RESPONSE
+        ) {
+          window.__OO_8PP_NORMALIZED_RESPONSE = {
+            step: step8PP,
+            status: "BLOCKED",
+            sourceStep: "8PO",
+            normalizationState: "NOT_READY"
+          };
+
+          if (typeof OODebug !== "undefined" && OODebug.log) {
+            OODebug.log(
+              step8PP,
+              "Normalization blocked because 8PO was not ready",
+              window.__OO_8PP_NORMALIZED_RESPONSE
+            );
+          }
+        }
+      }
+    }, 100);
+  } catch (error8PP) {
+    window.__OO_8PP_ERROR =
+      error8PP && error8PP.message
+        ? error8PP.message
+        : "Unknown 8PP error";
+
+    if (typeof OODebug !== "undefined" && OODebug.log) {
+      OODebug.log(
+        step8PP,
+        "Normalization exception",
+        window.__OO_8PP_ERROR
+      );
+    }
+  }
+})(); 
+ /* =========================================================
+   STEP 8PQ — CONTROLLED EVIDENCE RESPONSE BOUNDARY
+   ========================================================= */
+
+(() => {
+  const step8PQ = "8PQ";
+
+  try {
+    const prepare8PQ = () => {
+      const normalized8PQ =
+        window.__OO_8PP_NORMALIZED_RESPONSE || null;
+
+      if (
+        !normalized8PQ ||
+        normalized8PQ.status !== "READY" ||
+        normalized8PQ.normalizationState !== "NORMALIZED"
+      ) {
+        return false;
+      }
+
+      const output8PQ = {
+        step: step8PQ,
+        status: "READY",
+        sourceStep: "8PP",
+
+        query: normalized8PQ.query,
+        targetCount: normalized8PQ.targetCount,
+
+        evidenceResponseBoundary: "READY",
+        evidenceReceived: false,
+
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        mutationAllowed: false,
+
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false,
+
+        message:
+          "Evidence response boundary prepared. No evidence has been received or inserted."
+      };
+
+      window.__OO_8PQ_EVIDENCE_BOUNDARY = output8PQ;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          step8PQ,
+          "Controlled evidence response boundary ready",
+          output8PQ
+        );
+      }
+
+      return true;
+    };
+
+    if (prepare8PQ()) {
+      return;
+    }
+
+    let attempts8PQ = 0;
+    const maxAttempts8PQ = 70;
+
+    const wait8PQ = setInterval(() => {
+      attempts8PQ++;
+
+      if (
+        prepare8PQ() ||
+        attempts8PQ >= maxAttempts8PQ
+      ) {
+        clearInterval(wait8PQ);
+
+        if (
+          attempts8PQ >= maxAttempts8PQ &&
+          !window.__OO_8PQ_EVIDENCE_BOUNDARY
+        ) {
+          window.__OO_8PQ_EVIDENCE_BOUNDARY = {
+            step: step8PQ,
+            status: "BLOCKED",
+            evidenceResponseBoundary: "NOT_READY"
+          };
+
+          if (typeof OODebug !== "undefined" && OODebug.log) {
+            OODebug.log(
+              step8PQ,
+              "Evidence response boundary blocked",
+              window.__OO_8PQ_EVIDENCE_BOUNDARY
+            );
+          }
+        }
+      }
+    }, 100);
+  } catch (error8PQ) {
+    window.__OO_8PQ_ERROR =
+      error8PQ && error8PQ.message
+        ? error8PQ.message
+        : "Unknown 8PQ error";
+
+    if (typeof OODebug !== "undefined" && OODebug.log) {
+      OODebug.log(
+        step8PQ,
+        "Evidence boundary exception",
+        window.__OO_8PQ_ERROR
+      );
+    }
+  }
+})();
+  /* =========================================================
+   STEP 8PR — CONTROLLED VERIFICATION PREPARATION
+   ========================================================= */
+
+(() => {
+  const step8PR = "8PR";
+
+  try {
+    const prepare8PR = () => {
+      const evidenceBoundary8PR =
+        window.__OO_8PQ_EVIDENCE_BOUNDARY || null;
+
+      if (
+        !evidenceBoundary8PR ||
+        evidenceBoundary8PR.status !== "READY" ||
+        evidenceBoundary8PR.evidenceResponseBoundary !== "READY"
+      ) {
+        return false;
+      }
+
+      const output8PR = {
+        step: step8PR,
+        status: "READY",
+        sourceStep: "8PQ",
+
+        query: evidenceBoundary8PR.query,
+        targetCount: evidenceBoundary8PR.targetCount,
+
+        verificationPreparation: "READY",
+        verificationState: "NOT_STARTED",
+
+        evidenceReceived: false,
+        evidenceVerified: false,
+
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+
+        mutationAllowed: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false,
+
+        message:
+          "Verification preparation is ready. Verification has not started."
+      };
+
+      window.__OO_8PR_VERIFICATION_PREPARATION =
+        output8PR;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          step8PR,
+          "Controlled verification preparation ready",
+          output8PR
+        );
+      }
+
+      return true;
+    };
+
+    if (prepare8PR()) {
+      return;
+    }
+
+    let attempts8PR = 0;
+    const maxAttempts8PR = 80;
+
+    const wait8PR = setInterval(() => {
+      attempts8PR++;
+
+      if (
+        prepare8PR() ||
+        attempts8PR >= maxAttempts8PR
+      ) {
+        clearInterval(wait8PR);
+
+        if (
+          attempts8PR >= maxAttempts8PR &&
+          !window.__OO_8PR_VERIFICATION_PREPARATION
+        ) {
+          window.__OO_8PR_VERIFICATION_PREPARATION = {
+            step: step8PR,
+            status: "BLOCKED",
+            verificationPreparation: "NOT_READY"
+          };
+
+          if (typeof OODebug !== "undefined" && OODebug.log) {
+            OODebug.log(
+              step8PR,
+              "Verification preparation blocked",
+              window.__OO_8PR_VERIFICATION_PREPARATION
+            );
+          }
+        }
+      }
+    }, 100);
+  } catch (error8PR) {
+    window.__OO_8PR_ERROR =
+      error8PR && error8PR.message
+        ? error8PR.message
+        : "Unknown 8PR error";
+
+    if (typeof OODebug !== "undefined" && OODebug.log) {
+      OODebug.log(
+        step8PR,
+        "Verification preparation exception",
+        window.__OO_8PR_ERROR
+      );
+    }
+  }
+})();
+ /* =========================================================
+   STEP 8PS — CONTROLLED SOURCE-RETRIEVAL READINESS HANDOFF
+   ========================================================= */
+
+(() => {
+  const step8PS = "8PS";
+
+  try {
+    const prepare8PS = () => {
+      const verification8PS =
+        window.__OO_8PR_VERIFICATION_PREPARATION || null;
+
+      if (
+        !verification8PS ||
+        verification8PS.status !== "READY" ||
+        verification8PS.verificationPreparation !== "READY"
+      ) {
+        return false;
+      }
+
+      const output8PS = {
+        step: step8PS,
+        status: "READY",
+        sourceStep: "8PR",
+
+        query: verification8PS.query,
+        targetCount: verification8PS.targetCount,
+
+        sourceRetrievalReadiness: "READY",
+        retrievalState: "NOT_STARTED",
+
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+
+        evidenceReceived: false,
+        evidenceVerified: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+
+        mutationAllowed: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false,
+
+        executionAuthorized: false,
+
+        message:
+          "Controlled source-retrieval readiness prepared. Actual external retrieval remains NOT_STARTED."
+      };
+
+      window.__OO_8PS_RETRIEVAL_READINESS =
+        output8PS;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          step8PS,
+          "Controlled source-retrieval readiness handoff ready",
+          output8PS
+        );
+      }
+
+      return true;
+    };
+
+    if (prepare8PS()) {
+      return;
+    }
+
+    let attempts8PS = 0;
+    const maxAttempts8PS = 90;
+
+    const wait8PS = setInterval(() => {
+      attempts8PS++;
+
+      if (
+        prepare8PS() ||
+        attempts8PS >= maxAttempts8PS
+      ) {
+        clearInterval(wait8PS);
+
+        if (
+          attempts8PS >= maxAttempts8PS &&
+          !window.__OO_8PS_RETRIEVAL_READINESS
+        ) {
+          window.__OO_8PS_RETRIEVAL_READINESS = {
+            step: step8PS,
+            status: "BLOCKED",
+            sourceRetrievalReadiness: "NOT_READY"
+          };
+
+          if (typeof OODebug !== "undefined" && OODebug.log) {
+            OODebug.log(
+              step8PS,
+              "Source-retrieval readiness blocked",
+              window.__OO_8PS_RETRIEVAL_READINESS
+            );
+          }
+        }
+      }
+    }, 100);
+  } catch (error8PS) {
+    window.__OO_8PS_ERROR =
+      error8PS && error8PS.message
+        ? error8PS.message
+        : "Unknown 8PS error";
+
+    if (typeof OODebug !== "undefined" && OODebug.log) {
+      OODebug.log(
+        step8PS,
+        "Source-retrieval readiness exception",
+        window.__OO_8PS_ERROR
+      );
+    }
+  }
+})();
   
   /* ==========================================
        RESULT VALUES
