@@ -84609,6 +84609,633 @@ if (
     }
   }
 })();
+  /* =========================================================
+   STEP 8RC — CONTROLLED EVIDENCE INTAKE STATE LOCK
+   ========================================================= */
+
+(() => {
+  const step8RC = "8RC";
+
+  try {
+    const prepare8RC = () => {
+      const handoff8RC =
+        window.__OO_8RB_EVIDENCE_VERIFICATION_INTAKE_HANDOFF ||
+        null;
+
+      if (
+        !handoff8RC ||
+        handoff8RC.status !== "READY" ||
+        handoff8RC.evidenceVerificationIntakeHandoff !==
+          "READY" ||
+        handoff8RC.handoffState !==
+          "PENDING_GENUINE_EVIDENCE" ||
+        handoff8RC.verificationState !==
+          "WAITING_FOR_GENUINE_EVIDENCE"
+      ) {
+        return false;
+      }
+
+      const validQuery8RC =
+        typeof handoff8RC.query === "string" &&
+        handoff8RC.query.trim().length > 0;
+
+      const validTargetCount8RC =
+        handoff8RC.targetCount === 5;
+
+      const output8RC = {
+        step: step8RC,
+        status:
+          validQuery8RC && validTargetCount8RC
+            ? "READY"
+            : "BLOCKED",
+        sourceStep: "8RB",
+        query: validQuery8RC
+          ? handoff8RC.query.trim()
+          : "",
+        targetCount: handoff8RC.targetCount,
+        evidenceIntakeStateLock:
+          validQuery8RC && validTargetCount8RC
+            ? "LOCKED"
+            : "BLOCKED",
+        intakeState:
+          validQuery8RC && validTargetCount8RC
+            ? "WAITING_FOR_GENUINE_EVIDENCE"
+            : "NOT_READY",
+        retrievalState: "NOT_STARTED",
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+        evidenceVerified: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        mutationAllowed: false,
+        executionAuthorized: false,
+        intakeAuthorized: false,
+        sourceAccessAuthorized: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false,
+        message:
+          "Evidence intake state is locked while waiting for genuine evidence."
+      };
+
+      window.__OO_8RC_EVIDENCE_INTAKE_STATE_LOCK =
+        output8RC;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          step8RC,
+          "Controlled evidence intake state locked",
+          output8RC
+        );
+      }
+
+      return true;
+    };
+
+    if (prepare8RC()) {
+      return;
+    }
+
+    let attempts8RC = 0;
+    const maxAttempts8RC = 400;
+
+    const wait8RC = setInterval(() => {
+      attempts8RC++;
+
+      if (
+        prepare8RC() ||
+        attempts8RC >= maxAttempts8RC
+      ) {
+        clearInterval(wait8RC);
+
+        if (
+          attempts8RC >= maxAttempts8RC &&
+          !window.__OO_8RC_EVIDENCE_INTAKE_STATE_LOCK
+        ) {
+          window.__OO_8RC_EVIDENCE_INTAKE_STATE_LOCK = {
+            step: step8RC,
+            status: "BLOCKED",
+            evidenceIntakeStateLock: "NOT_READY"
+          };
+
+          if (typeof OODebug !== "undefined" && OODebug.log) {
+            OODebug.log(
+              step8RC,
+              "Evidence intake state lock blocked",
+              window.__OO_8RC_EVIDENCE_INTAKE_STATE_LOCK
+            );
+          }
+        }
+      }
+    }, 100);
+  } catch (error8RC) {
+    window.__OO_8RC_ERROR =
+      error8RC && error8RC.message
+        ? error8RC.message
+        : "Unknown 8RC error";
+
+    if (typeof OODebug !== "undefined" && OODebug.log) {
+      OODebug.log(
+        step8RC,
+        "Evidence intake state lock exception",
+        window.__OO_8RC_ERROR
+      );
+    }
+  }
+})();
+ /* =========================================================
+   STEP 8RD — CONTROLLED EVIDENCE SOURCE VALIDATION CONTRACT
+   ========================================================= */
+
+(() => {
+  const step8RD = "8RD";
+
+  try {
+    const prepare8RD = () => {
+      const lock8RD =
+        window.__OO_8RC_EVIDENCE_INTAKE_STATE_LOCK ||
+        null;
+
+      if (
+        !lock8RD ||
+        lock8RD.status !== "READY" ||
+        lock8RD.evidenceIntakeStateLock !== "LOCKED" ||
+        lock8RD.intakeState !==
+          "WAITING_FOR_GENUINE_EVIDENCE"
+      ) {
+        return false;
+      }
+
+      const output8RD = {
+        step: step8RD,
+        status: "READY",
+        sourceStep: "8RC",
+        query: lock8RD.query,
+        targetCount: lock8RD.targetCount,
+        evidenceSourceValidationContract:
+          "READY",
+        validationState:
+          "WAITING_FOR_GENUINE_EVIDENCE",
+        sourceIdentityRequired: true,
+        sourceTypeRequired: true,
+        sourceUrlRequired: true,
+        sourceTimestampRequired: true,
+        sourceMustBeTraceable: true,
+        unsupportedSourceRejected: true,
+        retrievalState: "NOT_STARTED",
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+        evidenceVerified: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        mutationAllowed: false,
+        executionAuthorized: false,
+        intakeAuthorized: false,
+        sourceAccessAuthorized: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false,
+        message:
+          "Evidence source validation contract is ready; no source has been accepted or assumed."
+      };
+
+      window.__OO_8RD_EVIDENCE_SOURCE_VALIDATION_CONTRACT =
+        output8RD;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          step8RD,
+          "Controlled evidence source validation contract ready",
+          output8RD
+        );
+      }
+
+      return true;
+    };
+
+    if (prepare8RD()) {
+      return;
+    }
+
+    let attempts8RD = 0;
+    const maxAttempts8RD = 410;
+
+    const wait8RD = setInterval(() => {
+      attempts8RD++;
+
+      if (
+        prepare8RD() ||
+        attempts8RD >= maxAttempts8RD
+      ) {
+        clearInterval(wait8RD);
+
+        if (
+          attempts8RD >= maxAttempts8RD &&
+          !window.__OO_8RD_EVIDENCE_SOURCE_VALIDATION_CONTRACT
+        ) {
+          window.__OO_8RD_EVIDENCE_SOURCE_VALIDATION_CONTRACT = {
+            step: step8RD,
+            status: "BLOCKED",
+            evidenceSourceValidationContract:
+              "NOT_READY"
+          };
+
+          if (typeof OODebug !== "undefined" && OODebug.log) {
+            OODebug.log(
+              step8RD,
+              "Evidence source validation contract blocked",
+              window.__OO_8RD_EVIDENCE_SOURCE_VALIDATION_CONTRACT
+            );
+          }
+        }
+      }
+    }, 100);
+  } catch (error8RD) {
+    window.__OO_8RD_ERROR =
+      error8RD && error8RD.message
+        ? error8RD.message
+        : "Unknown 8RD error";
+
+    if (typeof OODebug !== "undefined" && OODebug.log) {
+      OODebug.log(
+        step8RD,
+        "Evidence source validation contract exception",
+        window.__OO_8RD_ERROR
+      );
+    }
+  }
+})();
+  /* =========================================================
+   STEP 8RE — CONTROLLED EVIDENCE FRESHNESS VALIDATION BOUNDARY
+   ========================================================= */
+
+(() => {
+  const step8RE = "8RE";
+
+  try {
+    const prepare8RE = () => {
+      const sourceContract8RE =
+        window.__OO_8RD_EVIDENCE_SOURCE_VALIDATION_CONTRACT ||
+        null;
+
+      if (
+        !sourceContract8RE ||
+        sourceContract8RE.status !== "READY" ||
+        sourceContract8RE.evidenceSourceValidationContract !==
+          "READY" ||
+        sourceContract8RE.validationState !==
+          "WAITING_FOR_GENUINE_EVIDENCE"
+      ) {
+        return false;
+      }
+
+      const output8RE = {
+        step: step8RE,
+        status: "READY",
+        sourceStep: "8RD",
+        query: sourceContract8RE.query,
+        targetCount: sourceContract8RE.targetCount,
+        evidenceFreshnessValidationBoundary:
+          "READY",
+        freshnessState:
+          "WAITING_FOR_GENUINE_EVIDENCE",
+        publishedAtRequiredWhenAvailable: true,
+        retrievedAtRequired: true,
+        freshnessMustBeCalculatedFromEvidence:
+          true,
+        staleEvidenceMustNotBeMarkedVerified:
+          true,
+        retrievalState: "NOT_STARTED",
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+        evidenceVerified: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        mutationAllowed: false,
+        executionAuthorized: false,
+        intakeAuthorized: false,
+        sourceAccessAuthorized: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false,
+        message:
+          "Evidence freshness validation boundary is ready. Freshness will only be assessed from genuine evidence timestamps."
+      };
+
+      window.__OO_8RE_EVIDENCE_FRESHNESS_VALIDATION_BOUNDARY =
+        output8RE;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          step8RE,
+          "Controlled evidence freshness validation boundary ready",
+          output8RE
+        );
+      }
+
+      return true;
+    };
+
+    if (prepare8RE()) {
+      return;
+    }
+
+    let attempts8RE = 0;
+    const maxAttempts8RE = 420;
+
+    const wait8RE = setInterval(() => {
+      attempts8RE++;
+
+      if (
+        prepare8RE() ||
+        attempts8RE >= maxAttempts8RE
+      ) {
+        clearInterval(wait8RE);
+
+        if (
+          attempts8RE >= maxAttempts8RE &&
+          !window.__OO_8RE_EVIDENCE_FRESHNESS_VALIDATION_BOUNDARY
+        ) {
+          window.__OO_8RE_EVIDENCE_FRESHNESS_VALIDATION_BOUNDARY = {
+            step: step8RE,
+            status: "BLOCKED",
+            evidenceFreshnessValidationBoundary:
+              "NOT_READY"
+          };
+
+          if (typeof OODebug !== "undefined" && OODebug.log) {
+            OODebug.log(
+              step8RE,
+              "Evidence freshness validation boundary blocked",
+              window.__OO_8RE_EVIDENCE_FRESHNESS_VALIDATION_BOUNDARY
+            );
+          }
+        }
+      }
+    }, 100);
+  } catch (error8RE) {
+    window.__OO_8RE_ERROR =
+      error8RE && error8RE.message
+        ? error8RE.message
+        : "Unknown 8RE error";
+
+    if (typeof OODebug !== "undefined" && OODebug.log) {
+      OODebug.log(
+        step8RE,
+        "Evidence freshness validation boundary exception",
+        window.__OO_8RE_ERROR
+      );
+    }
+  }
+})();
+ /* =========================================================
+   STEP 8RF — CONTROLLED EVIDENCE CONFLICT DETECTION BOUNDARY
+   ========================================================= */
+
+(() => {
+  const step8RF = "8RF";
+
+  try {
+    const prepare8RF = () => {
+      const freshness8RF =
+        window.__OO_8RE_EVIDENCE_FRESHNESS_VALIDATION_BOUNDARY ||
+        null;
+
+      if (
+        !freshness8RF ||
+        freshness8RF.status !== "READY" ||
+        freshness8RF.evidenceFreshnessValidationBoundary !==
+          "READY" ||
+        freshness8RF.freshnessState !==
+          "WAITING_FOR_GENUINE_EVIDENCE"
+      ) {
+        return false;
+      }
+
+      const output8RF = {
+        step: step8RF,
+        status: "READY",
+        sourceStep: "8RE",
+        query: freshness8RF.query,
+        targetCount: freshness8RF.targetCount,
+        evidenceConflictDetectionBoundary:
+          "READY",
+        conflictState:
+          "WAITING_FOR_GENUINE_EVIDENCE",
+        conflictingEvidenceMustBeDetected:
+          true,
+        unresolvedConflictMustNotBeMarkedVerified:
+          true,
+        sourceComparisonRequiredWhenMultipleSources:
+          true,
+        retrievalState: "NOT_STARTED",
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+        evidenceVerified: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        mutationAllowed: false,
+        executionAuthorized: false,
+        intakeAuthorized: false,
+        sourceAccessAuthorized: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false,
+        message:
+          "Evidence conflict detection boundary is ready. Conflicting evidence will remain unresolved until genuine source-backed comparison occurs."
+      };
+
+      window.__OO_8RF_EVIDENCE_CONFLICT_DETECTION_BOUNDARY =
+        output8RF;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          step8RF,
+          "Controlled evidence conflict detection boundary ready",
+          output8RF
+        );
+      }
+
+      return true;
+    };
+
+    if (prepare8RF()) {
+      return;
+    }
+
+    let attempts8RF = 0;
+    const maxAttempts8RF = 430;
+
+    const wait8RF = setInterval(() => {
+      attempts8RF++;
+
+      if (
+        prepare8RF() ||
+        attempts8RF >= maxAttempts8RF
+      ) {
+        clearInterval(wait8RF);
+
+        if (
+          attempts8RF >= maxAttempts8RF &&
+          !window.__OO_8RF_EVIDENCE_CONFLICT_DETECTION_BOUNDARY
+        ) {
+          window.__OO_8RF_EVIDENCE_CONFLICT_DETECTION_BOUNDARY = {
+            step: step8RF,
+            status: "BLOCKED",
+            evidenceConflictDetectionBoundary:
+              "NOT_READY"
+          };
+
+          if (typeof OODebug !== "undefined" && OODebug.log) {
+            OODebug.log(
+              step8RF,
+              "Evidence conflict detection boundary blocked",
+              window.__OO_8RF_EVIDENCE_CONFLICT_DETECTION_BOUNDARY
+            );
+          }
+        }
+      }
+    }, 100);
+  } catch (error8RF) {
+    window.__OO_8RF_ERROR =
+      error8RF && error8RF.message
+        ? error8RF.message
+        : "Unknown 8RF error";
+
+    if (typeof OODebug !== "undefined" && OODebug.log) {
+      OODebug.log(
+        step8RF,
+        "Evidence conflict detection boundary exception",
+        window.__OO_8RF_ERROR
+      );
+    }
+  }
+})(); 
+ /* =========================================================
+   STEP 8RG — CONTROLLED EVIDENCE VERIFICATION PREPARATION HANDOFF
+   ========================================================= */
+
+(() => {
+  const step8RG = "8RG";
+
+  try {
+    const prepare8RG = () => {
+      const conflict8RG =
+        window.__OO_8RF_EVIDENCE_CONFLICT_DETECTION_BOUNDARY ||
+        null;
+
+      if (
+        !conflict8RG ||
+        conflict8RG.status !== "READY" ||
+        conflict8RG.evidenceConflictDetectionBoundary !==
+          "READY" ||
+        conflict8RG.conflictState !==
+          "WAITING_FOR_GENUINE_EVIDENCE"
+      ) {
+        return false;
+      }
+
+      const output8RG = {
+        step: step8RG,
+        status: "READY",
+        sourceStep: "8RF",
+        query: conflict8RG.query,
+        targetCount: conflict8RG.targetCount,
+        evidenceVerificationPreparationHandoff:
+          "READY",
+        preparationState:
+          "WAITING_FOR_GENUINE_EVIDENCE",
+        freshnessValidationRequired: true,
+        conflictDetectionRequired: true,
+        sourceValidationRequired: true,
+        retrievalState: "NOT_STARTED",
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+        evidenceVerified: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        mutationAllowed: false,
+        executionAuthorized: false,
+        intakeAuthorized: false,
+        sourceAccessAuthorized: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false,
+        message:
+          "Evidence verification preparation is ready. Verification remains pending until genuine evidence passes source, freshness, and conflict checks."
+      };
+
+      window.__OO_8RG_EVIDENCE_VERIFICATION_PREPARATION_HANDOFF =
+        output8RG;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          step8RG,
+          "Controlled evidence verification preparation handoff ready",
+          output8RG
+        );
+      }
+
+      return true;
+    };
+
+    if (prepare8RG()) {
+      return;
+    }
+
+    let attempts8RG = 0;
+    const maxAttempts8RG = 440;
+
+    const wait8RG = setInterval(() => {
+      attempts8RG++;
+
+      if (
+        prepare8RG() ||
+        attempts8RG >= maxAttempts8RG
+      ) {
+        clearInterval(wait8RG);
+
+        if (
+          attempts8RG >= maxAttempts8RG &&
+          !window.__OO_8RG_EVIDENCE_VERIFICATION_PREPARATION_HANDOFF
+        ) {
+          window.__OO_8RG_EVIDENCE_VERIFICATION_PREPARATION_HANDOFF = {
+            step: step8RG,
+            status: "BLOCKED",
+            evidenceVerificationPreparationHandoff:
+              "NOT_READY"
+          };
+
+          if (typeof OODebug !== "undefined" && OODebug.log) {
+            OODebug.log(
+              step8RG,
+              "Evidence verification preparation handoff blocked",
+              window.__OO_8RG_EVIDENCE_VERIFICATION_PREPARATION_HANDOFF
+            );
+          }
+        }
+      }
+    }, 100);
+  } catch (error8RG) {
+    window.__OO_8RG_ERROR =
+      error8RG && error8RG.message
+        ? error8RG.message
+        : "Unknown 8RG error";
+
+    if (typeof OODebug !== "undefined" && OODebug.log) {
+      OODebug.log(
+        step8RG,
+        "Evidence verification preparation handoff exception",
+        window.__OO_8RG_ERROR
+      );
+    }
+  }
+})(); 
   
   /* ==========================================
        RESULT VALUES
