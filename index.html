@@ -79513,735 +79513,6 @@ if (
 })();
 /* =========================================================
    STEP 8PN — CONTROLLED BROWSER → BACKEND HANDOFF
-   SCOPE-SAFE VERSION
-   ========================================================= */
-
-(function () {
-
-  const step8PN = "8PN";
-
-  /* =========================================================
-     SAFE REGISTRY RESOLUTION
-     IMPORTANT:
-     Do NOT directly reference registry before checking it.
-     ========================================================= */
-
-  const registryAvailable8PN =
-    typeof registry !== "undefined" &&
-    registry !== null;
-
-  if (typeof debugLog === "function") {
-    debugLog(
-      step8PN,
-      "START",
-      "Controlled browser-to-backend handoff started."
-    );
-
-    debugLog(
-      step8PN,
-      "REGISTRY_CHECK",
-      JSON.stringify(
-        {
-          registryAvailable:
-            registryAvailable8PN
-        },
-        null,
-        2
-      )
-    );
-  }
-
-
-  /* =========================================================
-     SAFE INITIAL STATE
-     ========================================================= */
-
-  let source8PN = null;
-
-  let query8PN = "";
-
-  let targets8PN = [];
-
-  let controlledTargets8PN = [];
-
-  let requestReady8PN = false;
-
-  let controlledTargetContractValid8PN = false;
-
-
-  /* =========================================================
-     READ 8PL ONLY IF REGISTRY EXISTS
-     ========================================================= */
-
-  if (registryAvailable8PN) {
-
-    source8PN =
-      registry["8PL"] || null;
-
-    query8PN =
-      source8PN &&
-      typeof source8PN.query === "string"
-        ? source8PN.query.trim()
-        : "";
-
-    targets8PN =
-      source8PN &&
-      Array.isArray(source8PN.targets)
-        ? source8PN.targets
-        : [];
-
-
-    requestReady8PN =
-      query8PN.length > 0 &&
-      targets8PN.length === 5 &&
-      source8PN !== null &&
-      source8PN.status === "READY";
-
-
-    controlledTargets8PN =
-      targets8PN
-        .filter(function (item) {
-
-          return (
-            item !== null &&
-            typeof item === "object" &&
-            typeof item.target === "string" &&
-            item.target.trim().length > 0
-          );
-
-        })
-        .map(function (item) {
-
-          return {
-            target:
-              item.target.trim()
-          };
-
-        });
-
-
-    controlledTargetContractValid8PN =
-      controlledTargets8PN.length === 5;
-
-  }
-
-
-  /* =========================================================
-     INITIAL OUTPUT
-     ========================================================= */
-
-  let output8PN = {
-
-    step:
-      step8PN,
-
-    status:
-      requestReady8PN &&
-      controlledTargetContractValid8PN
-        ? "READY"
-        : "BLOCKED",
-
-    functionName:
-      "evidence-retrieval",
-
-    requestMethod:
-      "POST",
-
-    handoffState:
-      "NOT_STARTED",
-
-    query:
-      query8PN,
-
-    targets:
-      controlledTargets8PN,
-
-    targetCount:
-      controlledTargets8PN.length,
-
-    backendResponseReceived:
-      false,
-
-    backendStep:
-      null,
-
-    backendStatus:
-      null,
-
-    requestAccepted:
-      false,
-
-    retrievalState:
-      "NOT_STARTED",
-
-    externalSourceAccess:
-      false,
-
-    sourceRetrieval:
-      false,
-
-    evidenceReceived:
-      false,
-
-    evidenceInsertion:
-      false,
-
-    claimSupportUpdate:
-      false,
-
-    mutationAllowed:
-      false,
-
-    inventedEvidence:
-      false,
-
-    inventedScores:
-      false,
-
-    userDataAssumption:
-      false,
-
-    executionState:
-      "NOT_STARTED",
-
-    reason:
-      !registryAvailable8PN
-        ? "8PN could not access the existing registry scope."
-        : (
-            requestReady8PN &&
-            controlledTargetContractValid8PN
-              ? "Controlled browser-to-backend handoff is ready."
-              : "Controlled handoff prerequisites are not satisfied."
-          )
-
-  };
-
-
-  /* =========================================================
-     SAFE REGISTRATION
-     ========================================================= */
-
-  if (registryAvailable8PN) {
-
-    registry["8PN"] =
-      output8PN;
-
-  }
-
-
-  /* =========================================================
-     DIAGNOSTIC
-     ========================================================= */
-
-  if (typeof debugLog === "function") {
-
-    debugLog(
-      step8PN,
-      "DIAGNOSTIC",
-      JSON.stringify(
-        {
-          registryAvailable:
-            registryAvailable8PN,
-
-          source8PLExists:
-            source8PN !== null,
-
-          source8PLStatus:
-            source8PN
-              ? source8PN.status
-              : null,
-
-          query:
-            query8PN,
-
-          targetCount:
-            targets8PN.length,
-
-          controlledTargetCount:
-            controlledTargets8PN.length,
-
-          requestReady:
-            requestReady8PN,
-
-          controlledTargetContractValid:
-            controlledTargetContractValid8PN
-
-        },
-        null,
-        2
-      )
-    );
-
-  }
-
-
-  /* =========================================================
-     HANDOFF PREPARED
-     ========================================================= */
-
-  if (typeof debugLog === "function") {
-
-    debugLog(
-      step8PN,
-      "HANDOFF_PREPARED",
-      "Controlled browser-to-backend handoff prepared."
-    );
-
-  }
-
-
-  /* =========================================================
-     REGISTRY UNAVAILABLE
-     IMPORTANT:
-     Never allow this step to crash the complete search.
-     ========================================================= */
-
-  if (!registryAvailable8PN) {
-
-    output8PN.status =
-      "BLOCKED";
-
-    output8PN.handoffState =
-      "SCOPE_UNAVAILABLE";
-
-    output8PN.executionState =
-      "NOT_STARTED";
-
-    output8PN.reason =
-      "The existing registry is not available in the current execution scope.";
-
-    if (typeof debugLog === "function") {
-
-      debugLog(
-        step8PN,
-        "SCOPE_BLOCKED",
-        "8PN stopped safely because registry is not available. No backend request was made."
-      );
-
-    }
-
-    return;
-  }
-
-
-  /* =========================================================
-     REQUEST CONTRACT CHECK
-     ========================================================= */
-
-  if (
-    !requestReady8PN ||
-    !controlledTargetContractValid8PN
-  ) {
-
-    output8PN.status =
-      "BLOCKED";
-
-    output8PN.handoffState =
-      "BLOCKED";
-
-    output8PN.executionState =
-      "NOT_STARTED";
-
-    output8PN.reason =
-      "8PN handoff blocked because the 8PL request contract is incomplete.";
-
-    registry["8PN"] =
-      output8PN;
-
-
-    if (typeof debugLog === "function") {
-
-      debugLog(
-        step8PN,
-        "BLOCKED",
-        JSON.stringify(
-          {
-            requestReady:
-              requestReady8PN,
-
-            controlledTargetContractValid:
-              controlledTargetContractValid8PN,
-
-            query:
-              query8PN,
-
-            targetCount:
-              targets8PN.length,
-
-            controlledTargetCount:
-              controlledTargets8PN.length
-
-          },
-          null,
-          2
-        )
-      );
-
-    }
-
-    return;
-  }
-
-
-  /* =========================================================
-     SUPABASE FUNCTION CHECK
-     ========================================================= */
-
-  const supabaseFunctionAvailable8PN =
-    typeof supabase !== "undefined" &&
-    supabase !== null &&
-    supabase.functions !== undefined &&
-    supabase.functions !== null &&
-    typeof supabase.functions.invoke === "function";
-
-
-  if (!supabaseFunctionAvailable8PN) {
-
-    output8PN.status =
-      "BLOCKED";
-
-    output8PN.handoffState =
-      "FAILED";
-
-    output8PN.executionState =
-      "NOT_STARTED";
-
-    output8PN.reason =
-      "Supabase Functions invoke interface is not available.";
-
-    registry["8PN"] =
-      output8PN;
-
-
-    if (typeof debugLog === "function") {
-
-      debugLog(
-        step8PN,
-        "SUPABASE_FUNCTION_UNAVAILABLE",
-        "supabase.functions.invoke is not available."
-      );
-
-    }
-
-    return;
-  }
-
-
-  /* =========================================================
-     START BACKEND REQUEST
-     ========================================================= */
-
-  output8PN.handoffState =
-    "REQUEST_STARTED";
-
-  output8PN.executionState =
-    "RUNNING";
-
-  registry["8PN"] =
-    output8PN;
-
-
-  if (typeof debugLog === "function") {
-
-    debugLog(
-      step8PN,
-      "BACKEND_REQUEST_START",
-      "Calling evidence-retrieval Edge Function."
-    );
-
-  }
-
-
-  /* =========================================================
-     CONTROLLED EDGE FUNCTION CALL
-     ========================================================= */
-
-  (async function () {
-
-    try {
-
-      const response8PN =
-        await supabase.functions.invoke(
-          "evidence-retrieval",
-          {
-            body: {
-
-              query:
-                query8PN,
-
-              targets:
-                controlledTargets8PN,
-
-              authorizationContract:
-                "CONTROLLED_ASSESSMENT_ONLY"
-
-            }
-          }
-        );
-
-
-      /* =====================================================
-         BACKEND ERROR
-         ===================================================== */
-
-      if (
-        response8PN &&
-        response8PN.error
-      ) {
-
-        output8PN.status =
-          "ERROR";
-
-        output8PN.handoffState =
-          "BACKEND_ERROR";
-
-        output8PN.executionState =
-          "FAILED";
-
-        output8PN.reason =
-          response8PN.error.message ||
-          "evidence-retrieval Edge Function returned an error.";
-
-        registry["8PN"] =
-          output8PN;
-
-
-        if (typeof debugLog === "function") {
-
-          debugLog(
-            step8PN,
-            "BACKEND_ERROR",
-            JSON.stringify(
-              {
-                message:
-                  response8PN.error.message ||
-                  "Unknown backend error."
-
-              },
-              null,
-              2
-            )
-          );
-
-        }
-
-        return;
-      }
-
-
-      /* =====================================================
-         BACKEND RESPONSE
-         ===================================================== */
-
-      const backendData8PN =
-        response8PN &&
-        response8PN.data
-          ? response8PN.data
-          : null;
-
-
-      output8PN.backendResponseReceived =
-        backendData8PN !== null;
-
-
-      output8PN.backendStep =
-        backendData8PN &&
-        typeof backendData8PN.step === "string"
-          ? backendData8PN.step
-          : null;
-
-
-      output8PN.backendStatus =
-        backendData8PN &&
-        typeof backendData8PN.status === "string"
-          ? backendData8PN.status
-          : null;
-
-
-      output8PN.requestAccepted =
-        backendData8PN &&
-        backendData8PN.requestAccepted === true;
-
-
-      output8PN.retrievalState =
-        backendData8PN &&
-        typeof backendData8PN.retrievalState === "string"
-          ? backendData8PN.retrievalState
-          : "NOT_STARTED";
-
-
-      /* =====================================================
-         SAFETY FLAGS
-         ===================================================== */
-
-      output8PN.externalSourceAccess =
-        false;
-
-      output8PN.sourceRetrieval =
-        false;
-
-      output8PN.evidenceReceived =
-        false;
-
-      output8PN.evidenceInsertion =
-        false;
-
-      output8PN.claimSupportUpdate =
-        false;
-
-      output8PN.mutationAllowed =
-        false;
-
-      output8PN.inventedEvidence =
-        false;
-
-      output8PN.inventedScores =
-        false;
-
-      output8PN.userDataAssumption =
-        false;
-
-
-      /* =====================================================
-         BACKEND RESPONSE LOG
-         ===================================================== */
-
-      if (typeof debugLog === "function") {
-
-        debugLog(
-          step8PN,
-          "BACKEND_RESPONSE",
-          JSON.stringify(
-            backendData8PN,
-            null,
-            2
-          )
-        );
-
-      }
-
-
-      /* =====================================================
-         VALIDATE FROZEN 8PM CONTRACT
-         ===================================================== */
-
-      const backendResponseValid8PN =
-        backendData8PN !== null &&
-        backendData8PN.step === "8PM" &&
-        backendData8PN.status ===
-          "READY_FOR_CONTROLLED_RETRIEVAL" &&
-        backendData8PN.requestAccepted === true &&
-        backendData8PN.retrievalState ===
-          "NOT_STARTED";
-
-
-      if (!backendResponseValid8PN) {
-
-        output8PN.status =
-          "BLOCKED";
-
-        output8PN.handoffState =
-          "BACKEND_RESPONSE_INVALID";
-
-        output8PN.executionState =
-          "FAILED";
-
-        output8PN.reason =
-          "Backend response did not match the frozen 8PM controlled retrieval contract.";
-
-        registry["8PN"] =
-          output8PN;
-
-
-        if (typeof debugLog === "function") {
-
-          debugLog(
-            step8PN,
-            "BACKEND_RESPONSE_INVALID",
-            "8PM controlled backend response contract was not satisfied."
-          );
-
-        }
-
-        return;
-      }
-
-
-      /* =====================================================
-         8PN PASS
-         ===================================================== */
-
-      output8PN.status =
-        "PASS";
-
-      output8PN.handoffState =
-        "BACKEND_RESPONSE_RECEIVED";
-
-      output8PN.executionState =
-        "COMPLETED";
-
-      output8PN.reason =
-        "Controlled browser-to-backend handoff completed successfully. Actual external retrieval has not started.";
-
-      registry["8PN"] =
-        output8PN;
-
-
-      if (typeof debugLog === "function") {
-
-        debugLog(
-          step8PN,
-          "PASS",
-          "Controlled backend handoff completed. Actual external retrieval remains NOT_STARTED."
-        );
-
-      }
-
-    } catch (error8PN) {
-
-      /* =====================================================
-         8PN EXCEPTION
-         ===================================================== */
-
-      output8PN.status =
-        "ERROR";
-
-      output8PN.handoffState =
-        "EXCEPTION";
-
-      output8PN.executionState =
-        "FAILED";
-
-      output8PN.reason =
-        error8PN &&
-        error8PN.message
-          ? error8PN.message
-          : "Unknown 8PN exception.";
-
-      registry["8PN"] =
-        output8PN;
-
-
-      if (typeof debugLog === "function") {
-
-        debugLog(
-          step8PN,
-          "EXCEPTION",
-          error8PN &&
-          error8PN.message
-            ? error8PN.message
-            : "Unknown 8PN exception."
-        );
-
-      }
-
-    }
-
-  })();
-
-})();
- /* =========================================================
-   STEP 8PN — CONTROLLED BROWSER → BACKEND HANDOFF
    ========================================================= */
 
 (() => {
@@ -80370,12 +79641,7 @@ if (
 
 
     /* ==========================================
-       8PN — SAFE GLOBAL HANDOFF
-       ==========================================
-       IMPORTANT:
-       Do NOT use `registry` here.
-       A dedicated window namespace prevents
-       scope errors from breaking RESULT VALUES.
+       8PN — SAFE HANDOFF STATE
        ========================================== */
 
     window.__OO_8PN_HANDOFF =
@@ -80386,10 +79652,28 @@ if (
        8PN — BACKEND INVOCATION ELIGIBILITY
        ========================================== */
 
+    const supabaseClientAvailable8PN =
+      typeof supabaseClient !== "undefined" &&
+      supabaseClient !== null;
+
+
+    const functionsAvailable8PN =
+      supabaseClientAvailable8PN &&
+      typeof supabaseClient.functions !== "undefined" &&
+      supabaseClient.functions !== null;
+
+
+    const invokeAvailable8PN =
+      functionsAvailable8PN &&
+      typeof supabaseClient.functions.invoke ===
+        "function";
+
+
     const backendInvocationAllowed8PN =
       output8PN.status === "READY" &&
       output8PN.requestAccepted === true &&
-      output8PN.targetCount === 5;
+      output8PN.targetCount === 5 &&
+      invokeAvailable8PN === true;
 
 
     if (
@@ -80413,12 +79697,7 @@ if (
        ========================================== */
 
     if (
-      backendInvocationAllowed8PN === true &&
-      typeof supabase !== "undefined" &&
-      supabase &&
-      typeof supabase.functions !== "undefined" &&
-      supabase.functions &&
-      typeof supabase.functions.invoke === "function"
+      backendInvocationAllowed8PN === true
     ) {
 
       if (
@@ -80440,9 +79719,9 @@ if (
 
 
       /*
-       * Fire-and-observe only.
+       * CONTROLLED HANDOFF ONLY
        *
-       * This handoff does NOT:
+       * This call does NOT:
        * - insert evidence
        * - update claims
        * - calculate scores
@@ -80450,7 +79729,7 @@ if (
        * - mutate opportunity data
        */
 
-      supabase.functions
+      supabaseClient.functions
         .invoke(
           "evidence-retrieval",
           {
@@ -80490,11 +79769,15 @@ if (
         .catch(
           function(error8PN) {
 
-            window.__OO_8PN_BACKEND_ERROR =
+            const backendErrorMessage8PN =
               error8PN &&
               error8PN.message
                 ? error8PN.message
                 : "Unknown backend error";
+
+
+            window.__OO_8PN_BACKEND_ERROR =
+              backendErrorMessage8PN;
 
 
             if (
@@ -80505,7 +79788,7 @@ if (
               OODebug.log(
                 "8PN",
                 "Backend handoff error",
-                window.__OO_8PN_BACKEND_ERROR
+                backendErrorMessage8PN
               );
 
             }
@@ -80528,19 +79811,14 @@ if (
             requestReady:
               output8PN.requestAccepted,
 
-            supabaseAvailable:
-              typeof supabase !== "undefined",
+            supabaseClientAvailable:
+              supabaseClientAvailable8PN,
 
             functionsAvailable:
-              typeof supabase !== "undefined" &&
-              supabase &&
-              typeof supabase.functions !== "undefined",
+              functionsAvailable8PN,
 
             invokeAvailable:
-              typeof supabase !== "undefined" &&
-              supabase &&
-              supabase.functions &&
-              typeof supabase.functions.invoke === "function"
+              invokeAvailable8PN
           }
         );
 
@@ -80553,16 +79831,19 @@ if (
   catch (error8PN) {
 
     /*
-     * IMPORTANT:
-     * 8PN failure must NOT break the main
-     * OpportunityOS result-rendering pipeline.
+     * 8PN failure must never break
+     * the main result-rendering pipeline.
      */
 
-    window.__OO_8PN_ERROR =
+    const errorMessage8PN =
       error8PN &&
       error8PN.message
         ? error8PN.message
         : "Unknown 8PN error";
+
+
+    window.__OO_8PN_ERROR =
+      errorMessage8PN;
 
 
     if (
@@ -80573,7 +79854,7 @@ if (
       OODebug.log(
         "8PN",
         "Controlled handoff exception",
-        window.__OO_8PN_ERROR
+        errorMessage8PN
       );
 
     }
@@ -80581,7 +79862,6 @@ if (
   }
 
 })();
-  
   
   
   /* ==========================================
