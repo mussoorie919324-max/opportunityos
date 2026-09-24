@@ -80240,9 +80240,353 @@ if (
   })();
 
 })();
- /* ==========================================
-RESULT VALUES
-========================================== */
+ /* =========================================================
+   STEP 8PN — CONTROLLED BROWSER → BACKEND HANDOFF
+   ========================================================= */
+
+(() => {
+
+  try {
+
+    /* ==========================================
+       8PN — SAFE INPUT RESOLUTION
+       ========================================== */
+
+    const query8PN =
+      typeof value !== "undefined" &&
+      typeof value === "string"
+        ? value.trim()
+        : (
+            result &&
+            typeof result.query === "string"
+              ? result.query.trim()
+              : ""
+          );
+
+
+    /* ==========================================
+       8PN — CONTROLLED TARGETS
+       ========================================== */
+
+    const controlledTargets8PN = [
+      { target: "earning" },
+      { target: "competition" },
+      { target: "difficulty" },
+      { target: "risk" },
+      { target: "trend" }
+    ];
+
+
+    /* ==========================================
+       8PN — REQUEST CONTRACT
+       ========================================== */
+
+    const retrievalRequest8PN = {
+
+      query: query8PN,
+
+      targets: controlledTargets8PN,
+
+      authorizationContract:
+        "CONTROLLED_ASSESSMENT_ONLY"
+
+    };
+
+
+    /* ==========================================
+       8PN — HANDOFF BOUNDARY
+       ========================================== */
+
+    const output8PN = {
+
+      step: "8PN",
+
+      status:
+        query8PN &&
+        controlledTargets8PN.length === 5
+          ? "READY"
+          : "BLOCKED",
+
+      handoffState:
+        query8PN &&
+        controlledTargets8PN.length === 5
+          ? "READY_FOR_BACKEND"
+          : "BLOCKED",
+
+      query: query8PN,
+
+      targets: controlledTargets8PN,
+
+      targetCount:
+        controlledTargets8PN.length,
+
+      retrievalRequest:
+        retrievalRequest8PN,
+
+      backendFunction:
+        "evidence-retrieval",
+
+      requestAccepted:
+        Boolean(
+          query8PN &&
+          controlledTargets8PN.length === 5
+        ),
+
+      actualRetrievalStarted: false,
+
+      evidenceReceived: false,
+
+      evidenceInsertion: false,
+
+      claimSupportUpdate: false,
+
+      mutationAllowed: false,
+
+      inventedEvidence: false,
+
+      inventedScores: false,
+
+      userDataAssumption: false
+
+    };
+
+
+    /* ==========================================
+       8PN — DEBUG LOG
+       ========================================== */
+
+    if (
+      typeof OODebug !== "undefined" &&
+      OODebug.log
+    ) {
+
+      OODebug.log(
+        "8PN",
+        "Controlled browser-to-backend handoff prepared",
+        output8PN
+      );
+
+    }
+
+
+    /* ==========================================
+       8PN — SAFE GLOBAL HANDOFF
+       ==========================================
+       IMPORTANT:
+       Do NOT use `registry` here.
+       A dedicated window namespace prevents
+       scope errors from breaking RESULT VALUES.
+       ========================================== */
+
+    window.__OO_8PN_HANDOFF =
+      output8PN;
+
+
+    /* ==========================================
+       8PN — BACKEND INVOCATION ELIGIBILITY
+       ========================================== */
+
+    const backendInvocationAllowed8PN =
+      output8PN.status === "READY" &&
+      output8PN.requestAccepted === true &&
+      output8PN.targetCount === 5;
+
+
+    if (
+      typeof OODebug !== "undefined" &&
+      OODebug.log
+    ) {
+
+      OODebug.log(
+        "8PN",
+        "Backend invocation eligibility",
+        backendInvocationAllowed8PN
+          ? "AUTHORIZED_BOUNDARY_READY"
+          : "BLOCKED"
+      );
+
+    }
+
+
+    /* ==========================================
+       8PN — CONTROLLED BACKEND HANDOFF
+       ========================================== */
+
+    if (
+      backendInvocationAllowed8PN === true &&
+      typeof supabase !== "undefined" &&
+      supabase &&
+      typeof supabase.functions !== "undefined" &&
+      supabase.functions &&
+      typeof supabase.functions.invoke === "function"
+    ) {
+
+      if (
+        typeof OODebug !== "undefined" &&
+        OODebug.log
+      ) {
+
+        OODebug.log(
+          "8PN",
+          "Calling evidence-retrieval Edge Function",
+          {
+            query: query8PN,
+            targetCount:
+              controlledTargets8PN.length
+          }
+        );
+
+      }
+
+
+      /*
+       * Fire-and-observe only.
+       *
+       * This handoff does NOT:
+       * - insert evidence
+       * - update claims
+       * - calculate scores
+       * - authorize user actions
+       * - mutate opportunity data
+       */
+
+      supabase.functions
+        .invoke(
+          "evidence-retrieval",
+          {
+            body:
+              retrievalRequest8PN
+          }
+        )
+        .then(
+          function(response8PN) {
+
+            const backendData8PN =
+              response8PN &&
+              response8PN.data
+                ? response8PN.data
+                : null;
+
+
+            window.__OO_8PN_BACKEND_RESPONSE =
+              backendData8PN;
+
+
+            if (
+              typeof OODebug !== "undefined" &&
+              OODebug.log
+            ) {
+
+              OODebug.log(
+                "8PN",
+                "Backend response received",
+                backendData8PN
+              );
+
+            }
+
+          }
+        )
+        .catch(
+          function(error8PN) {
+
+            window.__OO_8PN_BACKEND_ERROR =
+              error8PN &&
+              error8PN.message
+                ? error8PN.message
+                : "Unknown backend error";
+
+
+            if (
+              typeof OODebug !== "undefined" &&
+              OODebug.log
+            ) {
+
+              OODebug.log(
+                "8PN",
+                "Backend handoff error",
+                window.__OO_8PN_BACKEND_ERROR
+              );
+
+            }
+
+          }
+        );
+
+    }
+    else {
+
+      if (
+        typeof OODebug !== "undefined" &&
+        OODebug.log
+      ) {
+
+        OODebug.log(
+          "8PN",
+          "Backend invocation skipped",
+          {
+            requestReady:
+              output8PN.requestAccepted,
+
+            supabaseAvailable:
+              typeof supabase !== "undefined",
+
+            functionsAvailable:
+              typeof supabase !== "undefined" &&
+              supabase &&
+              typeof supabase.functions !== "undefined",
+
+            invokeAvailable:
+              typeof supabase !== "undefined" &&
+              supabase &&
+              supabase.functions &&
+              typeof supabase.functions.invoke === "function"
+          }
+        );
+
+      }
+
+    }
+
+
+  }
+  catch (error8PN) {
+
+    /*
+     * IMPORTANT:
+     * 8PN failure must NOT break the main
+     * OpportunityOS result-rendering pipeline.
+     */
+
+    window.__OO_8PN_ERROR =
+      error8PN &&
+      error8PN.message
+        ? error8PN.message
+        : "Unknown 8PN error";
+
+
+    if (
+      typeof OODebug !== "undefined" &&
+      OODebug.log
+    ) {
+
+      OODebug.log(
+        "8PN",
+        "Controlled handoff exception",
+        window.__OO_8PN_ERROR
+      );
+
+    }
+
+  }
+
+})();
+  
+  
+  
+  /* ==========================================
+       RESULT VALUES
+     ========================================== */
 const demand =
 typeof profileValue === "function"
 ? (
@@ -80296,9 +80640,11 @@ result.trend ||
 "Needs Verification"
 )
 : (result.trend || "Needs Verification");
-/* ==========================================
-VERIFICATION CONFIDENCE
-========================================== */
+
+  
+   /* ==========================================
+       VERIFICATION CONFIDENCE
+      ========================================== */
 
 const verificationConfidence =
 result &&
