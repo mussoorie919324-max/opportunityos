@@ -88054,7 +88054,606 @@ STEP 8SF — CONTROLLED VALIDATION RESULT → VERIFICATION
     }, 100);
   }
 })();
+/* =========================================================
+STEP 8SG — CONTROLLED VERIFICATION INPUT CONTRACT
+========================================================= */
 
+(() => {
+  const run8SG = () => {
+    try {
+      const upstream8SG =
+        window.__OO_8SF_VALIDATION_TO_VERIFICATION_EXECUTION_HANDOFF;
+
+      const query8SG =
+        upstream8SG &&
+        typeof upstream8SG.query === "string"
+          ? upstream8SG.query.trim()
+          : "";
+
+      const targetCount8SG =
+        upstream8SG &&
+        Number.isInteger(upstream8SG.targetCount)
+          ? upstream8SG.targetCount
+          : 0;
+
+      const handoffReady8SG =
+        upstream8SG &&
+        upstream8SG.validationToVerificationExecutionHandoff ===
+          "READY" &&
+        upstream8SG.handoffState ===
+          "WAITING_FOR_GENUINE_VALIDATION_RESULT" &&
+        upstream8SG.nextRequiredInput ===
+          "GENUINE_VALIDATION_RESULT" &&
+        upstream8SG.verificationExecutionAllowed === false &&
+        upstream8SG.validationResultReceived === false &&
+        upstream8SG.verificationStarted === false &&
+        upstream8SG.verifiedClaimAllowed === false &&
+        upstream8SG.mutationAllowed === false;
+
+      const output8SG = {
+        step: "8SG",
+        verificationInputContract:
+          handoffReady8SG &&
+          query8SG &&
+          targetCount8SG === 5
+            ? "READY"
+            : "BLOCKED",
+        contractState:
+          handoffReady8SG &&
+          query8SG &&
+          targetCount8SG === 5
+            ? "WAITING_FOR_GENUINE_VALIDATION_RESULT"
+            : "BLOCKED",
+        query: query8SG,
+        targetCount: targetCount8SG,
+        requiredInput: "GENUINE_VALIDATION_RESULT",
+        requiredValidationFields: [
+          "target",
+          "validationState",
+          "validationReason",
+          "sourceTrace",
+          "freshnessState",
+          "conflictState"
+        ],
+        permittedValidationStates: [
+          "VALID",
+          "NEEDS_REVIEW",
+          "REJECTED"
+        ],
+        validationResultReceived: false,
+        validationResultAccepted: false,
+        verificationInputResolved: false,
+        verificationStarted: false,
+        verificationDecisionIssued: false,
+        verifiedClaimAllowed: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        scoreCalculation: false,
+        mutationAllowed: false,
+        userActionAuthorization: false,
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false
+      };
+
+      window.__OO_8SG_VERIFICATION_INPUT_CONTRACT =
+        output8SG;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          "8SG",
+          "Controlled verification input contract ready",
+          output8SG
+        );
+      }
+    }
+    catch (error8SG) {
+      window.__OO_8SG_ERROR =
+        error8SG && error8SG.message
+          ? error8SG.message
+          : "Unknown 8SG error";
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          "8SG",
+          "Controlled verification input contract error",
+          window.__OO_8SG_ERROR
+        );
+      }
+    }
+  };
+
+  if (
+    window.__OO_8SF_VALIDATION_TO_VERIFICATION_EXECUTION_HANDOFF
+  ) {
+    run8SG();
+  } else {
+    let attempts8SG = 0;
+
+    const wait8SG = setInterval(() => {
+      attempts8SG++;
+
+      if (
+        window.__OO_8SF_VALIDATION_TO_VERIFICATION_EXECUTION_HANDOFF ||
+        attempts8SG >= 100
+      ) {
+        clearInterval(wait8SG);
+        run8SG();
+      }
+    }, 100);
+  }
+})();
+
+
+/* =========================================================
+STEP 8SH — CONTROLLED VERIFICATION INPUT STRUCTURE GATE
+========================================================= */
+
+(() => {
+  const run8SH = () => {
+    try {
+      const upstream8SH =
+        window.__OO_8SG_VERIFICATION_INPUT_CONTRACT;
+
+      const query8SH =
+        upstream8SH &&
+        typeof upstream8SH.query === "string"
+          ? upstream8SH.query.trim()
+          : "";
+
+      const contractReady8SH =
+        upstream8SH &&
+        upstream8SH.verificationInputContract ===
+          "READY" &&
+        upstream8SH.contractState ===
+          "WAITING_FOR_GENUINE_VALIDATION_RESULT" &&
+        upstream8SH.requiredInput ===
+          "GENUINE_VALIDATION_RESULT";
+
+      const output8SH = {
+        step: "8SH",
+        verificationInputStructureGate:
+          contractReady8SH
+            ? "READY"
+            : "BLOCKED",
+        structureState:
+          contractReady8SH
+            ? "WAITING_FOR_GENUINE_VALIDATION_RESULT"
+            : "BLOCKED",
+        query: query8SH,
+        targetCount:
+          upstream8SH &&
+          Number.isInteger(upstream8SH.targetCount)
+            ? upstream8SH.targetCount
+            : 0,
+        requiredFields:
+          upstream8SH &&
+          Array.isArray(upstream8SH.requiredValidationFields)
+            ? upstream8SH.requiredValidationFields.slice()
+            : [],
+        permittedValidationStates:
+          upstream8SH &&
+          Array.isArray(upstream8SH.permittedValidationStates)
+            ? upstream8SH.permittedValidationStates.slice()
+            : [],
+        genuineResultRequired: true,
+        structureValidated: false,
+        validationResultReceived: false,
+        verificationInputAccepted: false,
+        verificationStarted: false,
+        verificationDecisionIssued: false,
+        verifiedClaimAllowed: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        scoreCalculation: false,
+        mutationAllowed: false,
+        userActionAuthorization: false,
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false
+      };
+
+      window.__OO_8SH_VERIFICATION_INPUT_STRUCTURE_GATE =
+        output8SH;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          "8SH",
+          "Controlled verification input structure gate ready",
+          output8SH
+        );
+      }
+    }
+    catch (error8SH) {
+      window.__OO_8SH_ERROR =
+        error8SH && error8SH.message
+          ? error8SH.message
+          : "Unknown 8SH error";
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          "8SH",
+          "Controlled verification input structure gate error",
+          window.__OO_8SH_ERROR
+        );
+      }
+    }
+  };
+
+  if (
+    window.__OO_8SG_VERIFICATION_INPUT_CONTRACT
+  ) {
+    run8SH();
+  } else {
+    let attempts8SH = 0;
+
+    const wait8SH = setInterval(() => {
+      attempts8SH++;
+
+      if (
+        window.__OO_8SG_VERIFICATION_INPUT_CONTRACT ||
+        attempts8SH >= 100
+      ) {
+        clearInterval(wait8SH);
+        run8SH();
+      }
+    }, 100);
+  }
+})();
+
+
+/* =========================================================
+STEP 8SI — CONTROLLED VERIFICATION SOURCE TRACE GATE
+========================================================= */
+
+(() => {
+  const run8SI = () => {
+    try {
+      const upstream8SI =
+        window.__OO_8SH_VERIFICATION_INPUT_STRUCTURE_GATE;
+
+      const query8SI =
+        upstream8SI &&
+        typeof upstream8SI.query === "string"
+          ? upstream8SI.query.trim()
+          : "";
+
+      const structureReady8SI =
+        upstream8SI &&
+        upstream8SI.verificationInputStructureGate ===
+          "READY" &&
+        upstream8SI.structureState ===
+          "WAITING_FOR_GENUINE_VALIDATION_RESULT" &&
+        upstream8SI.genuineResultRequired === true;
+
+      const output8SI = {
+        step: "8SI",
+        verificationSourceTraceGate:
+          structureReady8SI
+            ? "READY"
+            : "BLOCKED",
+        traceState:
+          structureReady8SI
+            ? "WAITING_FOR_GENUINE_VALIDATION_RESULT"
+            : "BLOCKED",
+        query: query8SI,
+        targetCount:
+          upstream8SI &&
+          Number.isInteger(upstream8SI.targetCount)
+            ? upstream8SI.targetCount
+            : 0,
+        sourceTraceRequired: true,
+        freshnessStateRequired: true,
+        conflictStateRequired: true,
+        sourceTraceValidated: false,
+        freshnessValidated: false,
+        conflictValidated: false,
+        validationResultReceived: false,
+        verificationStarted: false,
+        verificationDecisionIssued: false,
+        verifiedClaimAllowed: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        scoreCalculation: false,
+        mutationAllowed: false,
+        userActionAuthorization: false,
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false
+      };
+
+      window.__OO_8SI_VERIFICATION_SOURCE_TRACE_GATE =
+        output8SI;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          "8SI",
+          "Controlled verification source trace gate ready",
+          output8SI
+        );
+      }
+    }
+    catch (error8SI) {
+      window.__OO_8SI_ERROR =
+        error8SI && error8SI.message
+          ? error8SI.message
+          : "Unknown 8SI error";
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          "8SI",
+          "Controlled verification source trace gate error",
+          window.__OO_8SI_ERROR
+        );
+      }
+    }
+  };
+
+  if (
+    window.__OO_8SH_VERIFICATION_INPUT_STRUCTURE_GATE
+  ) {
+    run8SI();
+  } else {
+    let attempts8SI = 0;
+
+    const wait8SI = setInterval(() => {
+      attempts8SI++;
+
+      if (
+        window.__OO_8SH_VERIFICATION_INPUT_STRUCTURE_GATE ||
+        attempts8SI >= 100
+      ) {
+        clearInterval(wait8SI);
+        run8SI();
+      }
+    }, 100);
+  }
+})();
+
+
+/* =========================================================
+STEP 8SJ — CONTROLLED VERIFICATION FRESHNESS + CONFLICT
+           PRECONDITION LOCK
+========================================================= */
+
+(() => {
+  const run8SJ = () => {
+    try {
+      const upstream8SJ =
+        window.__OO_8SI_VERIFICATION_SOURCE_TRACE_GATE;
+
+      const query8SJ =
+        upstream8SJ &&
+        typeof upstream8SJ.query === "string"
+          ? upstream8SJ.query.trim()
+          : "";
+
+      const traceReady8SJ =
+        upstream8SJ &&
+        upstream8SJ.verificationSourceTraceGate ===
+          "READY" &&
+        upstream8SJ.traceState ===
+          "WAITING_FOR_GENUINE_VALIDATION_RESULT" &&
+        upstream8SJ.sourceTraceRequired === true &&
+        upstream8SJ.freshnessStateRequired === true &&
+        upstream8SJ.conflictStateRequired === true;
+
+      const output8SJ = {
+        step: "8SJ",
+        verificationFreshnessConflictPreconditionLock:
+          traceReady8SJ
+            ? "LOCKED"
+            : "BLOCKED",
+        preconditionState:
+          traceReady8SJ
+            ? "WAITING_FOR_GENUINE_VALIDATION_RESULT"
+            : "BLOCKED",
+        query: query8SJ,
+        targetCount:
+          upstream8SJ &&
+          Number.isInteger(upstream8SJ.targetCount)
+            ? upstream8SJ.targetCount
+            : 0,
+        prerequisites: {
+          genuineValidationResult: true,
+          sourceTrace: true,
+          freshnessValidation: true,
+          conflictValidation: true
+        },
+        freshnessValidated: false,
+        conflictValidated: false,
+        validationResultReceived: false,
+        verificationStarted: false,
+        verificationDecisionIssued: false,
+        verifiedClaimAllowed: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        scoreCalculation: false,
+        mutationAllowed: false,
+        userActionAuthorization: false,
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false
+      };
+
+      window.__OO_8SJ_VERIFICATION_FRESHNESS_CONFLICT_PRECONDITION_LOCK =
+        output8SJ;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          "8SJ",
+          "Controlled verification freshness conflict precondition lock ready",
+          output8SJ
+        );
+      }
+    }
+    catch (error8SJ) {
+      window.__OO_8SJ_ERROR =
+        error8SJ && error8SJ.message
+          ? error8SJ.message
+          : "Unknown 8SJ error";
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          "8SJ",
+          "Controlled verification freshness conflict precondition lock error",
+          window.__OO_8SJ_ERROR
+        );
+      }
+    }
+  };
+
+  if (
+    window.__OO_8SI_VERIFICATION_SOURCE_TRACE_GATE
+  ) {
+    run8SJ();
+  } else {
+    let attempts8SJ = 0;
+
+    const wait8SJ = setInterval(() => {
+      attempts8SJ++;
+
+      if (
+        window.__OO_8SI_VERIFICATION_SOURCE_TRACE_GATE ||
+        attempts8SJ >= 100
+      ) {
+        clearInterval(wait8SJ);
+        run8SJ();
+      }
+    }, 100);
+  }
+})();
+
+
+/* =========================================================
+STEP 8SK — CONTROLLED VERIFICATION EXECUTION SAFETY HANDOFF
+========================================================= */
+
+(() => {
+  const run8SK = () => {
+    try {
+      const upstream8SK =
+        window.__OO_8SJ_VERIFICATION_FRESHNESS_CONFLICT_PRECONDITION_LOCK;
+
+      const query8SK =
+        upstream8SK &&
+        typeof upstream8SK.query === "string"
+          ? upstream8SK.query.trim()
+          : "";
+
+      const preconditionReady8SK =
+        upstream8SK &&
+        upstream8SK.verificationFreshnessConflictPreconditionLock ===
+          "LOCKED" &&
+        upstream8SK.preconditionState ===
+          "WAITING_FOR_GENUINE_VALIDATION_RESULT" &&
+        upstream8SK.freshnessValidated === false &&
+        upstream8SK.conflictValidated === false &&
+        upstream8SK.validationResultReceived === false &&
+        upstream8SK.verificationStarted === false &&
+        upstream8SK.verifiedClaimAllowed === false &&
+        upstream8SK.mutationAllowed === false;
+
+      const output8SK = {
+        step: "8SK",
+        verificationExecutionSafetyHandoff:
+          preconditionReady8SK
+            ? "READY"
+            : "BLOCKED",
+        handoffState:
+          preconditionReady8SK
+            ? "WAITING_FOR_GENUINE_VALIDATION_RESULT"
+            : "BLOCKED",
+        query: query8SK,
+        targetCount:
+          upstream8SK &&
+          Number.isInteger(upstream8SK.targetCount)
+            ? upstream8SK.targetCount
+            : 0,
+        nextRequiredInput:
+          "GENUINE_VALIDATION_RESULT_WITH_VALID_SOURCE_TRACE_FRESHNESS_AND_CONFLICT_STATE",
+        executionRule:
+          "Verification execution remains blocked until the genuine validation result is received and all applicable source, freshness, and conflict requirements are independently satisfied.",
+        verificationExecutionAllowed: false,
+        validationResultReceived: false,
+        sourceTraceValidated: false,
+        freshnessValidated: false,
+        conflictValidated: false,
+        verificationStarted: false,
+        verificationDecisionIssued: false,
+        verifiedClaimAllowed: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        scoreCalculation: false,
+        mutationAllowed: false,
+        userActionAuthorization: false,
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false
+      };
+
+      window.__OO_8SK_VERIFICATION_EXECUTION_SAFETY_HANDOFF =
+        output8SK;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          "8SK",
+          "Controlled verification execution safety handoff ready",
+          output8SK
+        );
+      }
+    }
+    catch (error8SK) {
+      window.__OO_8SK_ERROR =
+        error8SK && error8SK.message
+          ? error8SK.message
+          : "Unknown 8SK error";
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          "8SK",
+          "Controlled verification execution safety handoff error",
+          window.__OO_8SK_ERROR
+        );
+      }
+    }
+  };
+
+  if (
+    window.__OO_8SJ_VERIFICATION_FRESHNESS_CONFLICT_PRECONDITION_LOCK
+  ) {
+    run8SK();
+  } else {
+    let attempts8SK = 0;
+
+    const wait8SK = setInterval(() => {
+      attempts8SK++;
+
+      if (
+        window.__OO_8SJ_VERIFICATION_FRESHNESS_CONFLICT_PRECONDITION_LOCK ||
+        attempts8SK >= 100
+      ) {
+        clearInterval(wait8SK);
+        run8SK();
+      }
+    }, 100);
+  }
+})();
   /* ==========================================
        RESULT VALUES
      ========================================== */
