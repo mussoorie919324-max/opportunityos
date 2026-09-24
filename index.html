@@ -81054,7 +81054,572 @@ if (
     }
   }
 })(); 
-  
+  /* =========================================================
+   STEP 8PY — CONTROLLED RETRIEVAL AUTHORIZATION VALIDATION
+   ========================================================= */
+
+(() => {
+  const step8PY = "8PY";
+
+  try {
+    const validate8PY = () => {
+      const input8PY =
+        window.__OO_8PX_FINAL_RETRIEVAL_READINESS || null;
+
+      if (
+        !input8PY ||
+        input8PY.status !== "READY" ||
+        input8PY.finalReadiness !== "READY" ||
+        input8PY.retrievalState !== "NOT_STARTED" ||
+        input8PY.executionAuthorized !== false ||
+        input8PY.intakeAuthorized !== false
+      ) {
+        return false;
+      }
+
+      const output8PY = {
+        step: step8PY,
+        status: "READY",
+        sourceStep: "8PX",
+        query:
+          typeof input8PY.query === "string"
+            ? input8PY.query
+            : "",
+        targetCount:
+          typeof input8PY.targetCount === "number"
+            ? input8PY.targetCount
+            : 0,
+        authorizationValidation: "READY",
+        retrievalState: "NOT_STARTED",
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+        evidenceVerified: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        mutationAllowed: false,
+        executionAuthorized: false,
+        intakeAuthorized: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false,
+        message:
+          "Retrieval authorization contract validated. Actual retrieval remains NOT_STARTED."
+      };
+
+      window.__OO_8PY_RETRIEVAL_AUTHORIZATION_VALIDATION =
+        output8PY;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          step8PY,
+          "Controlled retrieval authorization validated",
+          output8PY
+        );
+      }
+
+      return true;
+    };
+
+    if (validate8PY()) {
+      return;
+    }
+
+    let attempts8PY = 0;
+    const maxAttempts8PY = 100;
+
+    const wait8PY = setInterval(() => {
+      attempts8PY++;
+
+      if (
+        validate8PY() ||
+        attempts8PY >= maxAttempts8PY
+      ) {
+        clearInterval(wait8PY);
+
+        if (
+          attempts8PY >= maxAttempts8PY &&
+          !window.__OO_8PY_RETRIEVAL_AUTHORIZATION_VALIDATION
+        ) {
+          window.__OO_8PY_RETRIEVAL_AUTHORIZATION_VALIDATION = {
+            step: step8PY,
+            status: "BLOCKED",
+            authorizationValidation: "NOT_READY",
+            retrievalState: "NOT_STARTED"
+          };
+
+          if (typeof OODebug !== "undefined" && OODebug.log) {
+            OODebug.log(
+              step8PY,
+              "Retrieval authorization validation blocked",
+              window.__OO_8PY_RETRIEVAL_AUTHORIZATION_VALIDATION
+            );
+          }
+        }
+      }
+    }, 100);
+  } catch (error8PY) {
+    window.__OO_8PY_ERROR =
+      error8PY && error8PY.message
+        ? error8PY.message
+        : "Unknown 8PY error";
+
+    if (typeof OODebug !== "undefined" && OODebug.log) {
+      OODebug.log(
+        step8PY,
+        "Retrieval authorization validation exception",
+        window.__OO_8PY_ERROR
+      );
+    }
+  }
+})();
+/* =========================================================
+   STEP 8PZ — CONTROLLED EVIDENCE INTAKE AUTHORIZATION
+   ========================================================= */
+
+(() => {
+  const step8PZ = "8PZ";
+
+  try {
+    const prepare8PZ = () => {
+      const authorization8PZ =
+        window.__OO_8PY_RETRIEVAL_AUTHORIZATION_VALIDATION ||
+        null;
+
+      if (
+        !authorization8PZ ||
+        authorization8PZ.status !== "READY" ||
+        authorization8PZ.authorizationValidation !== "READY"
+      ) {
+        return false;
+      }
+
+      const output8PZ = {
+        step: step8PZ,
+        status: "READY",
+        sourceStep: "8PY",
+        query: authorization8PZ.query,
+        targetCount: authorization8PZ.targetCount,
+        evidenceIntakeAuthorization: "READY",
+        intakeState: "NOT_STARTED",
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+        evidenceVerified: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        mutationAllowed: false,
+        executionAuthorized: false,
+        intakeAuthorized: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false,
+        message:
+          "Evidence intake authorization prepared. No evidence is authorized for insertion yet."
+      };
+
+      window.__OO_8PZ_EVIDENCE_INTAKE_AUTHORIZATION =
+        output8PZ;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          step8PZ,
+          "Controlled evidence intake authorization ready",
+          output8PZ
+        );
+      }
+
+      return true;
+    };
+
+    if (prepare8PZ()) {
+      return;
+    }
+
+    let attempts8PZ = 0;
+    const maxAttempts8PZ = 110;
+
+    const wait8PZ = setInterval(() => {
+      attempts8PZ++;
+
+      if (
+        prepare8PZ() ||
+        attempts8PZ >= maxAttempts8PZ
+      ) {
+        clearInterval(wait8PZ);
+
+        if (
+          attempts8PZ >= maxAttempts8PZ &&
+          !window.__OO_8PZ_EVIDENCE_INTAKE_AUTHORIZATION
+        ) {
+          window.__OO_8PZ_EVIDENCE_INTAKE_AUTHORIZATION = {
+            step: step8PZ,
+            status: "BLOCKED",
+            evidenceIntakeAuthorization: "NOT_READY",
+            intakeState: "NOT_STARTED"
+          };
+
+          if (typeof OODebug !== "undefined" && OODebug.log) {
+            OODebug.log(
+              step8PZ,
+              "Evidence intake authorization blocked",
+              window.__OO_8PZ_EVIDENCE_INTAKE_AUTHORIZATION
+            );
+          }
+        }
+      }
+    }, 100);
+  } catch (error8PZ) {
+    window.__OO_8PZ_ERROR =
+      error8PZ && error8PZ.message
+        ? error8PZ.message
+        : "Unknown 8PZ error";
+
+    if (typeof OODebug !== "undefined" && OODebug.log) {
+      OODebug.log(
+        step8PZ,
+        "Evidence intake authorization exception",
+        window.__OO_8PZ_ERROR
+      );
+    }
+  }
+})();
+  /* =========================================================
+   STEP 8QA — CONTROLLED EVIDENCE EXECUTION BOUNDARY
+   ========================================================= */
+
+(() => {
+  const step8QA = "8QA";
+
+  try {
+    const prepare8QA = () => {
+      const intake8QA =
+        window.__OO_8PZ_EVIDENCE_INTAKE_AUTHORIZATION ||
+        null;
+
+      if (
+        !intake8QA ||
+        intake8QA.status !== "READY" ||
+        intake8QA.evidenceIntakeAuthorization !== "READY" ||
+        intake8QA.intakeState !== "NOT_STARTED"
+      ) {
+        return false;
+      }
+
+      const output8QA = {
+        step: step8QA,
+        status: "READY",
+        sourceStep: "8PZ",
+        query: intake8QA.query,
+        targetCount: intake8QA.targetCount,
+        executionBoundary: "READY",
+        executionState: "NOT_STARTED",
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+        evidenceVerified: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        mutationAllowed: false,
+        executionAuthorized: false,
+        intakeAuthorized: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false,
+        message:
+          "Controlled evidence execution boundary ready. Execution remains unauthorized until a later explicit gate."
+      };
+
+      window.__OO_8QA_EVIDENCE_EXECUTION_BOUNDARY =
+        output8QA;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          step8QA,
+          "Controlled evidence execution boundary ready",
+          output8QA
+        );
+      }
+
+      return true;
+    };
+
+    if (prepare8QA()) {
+      return;
+    }
+
+    let attempts8QA = 0;
+    const maxAttempts8QA = 120;
+
+    const wait8QA = setInterval(() => {
+      attempts8QA++;
+
+      if (
+        prepare8QA() ||
+        attempts8QA >= maxAttempts8QA
+      ) {
+        clearInterval(wait8QA);
+
+        if (
+          attempts8QA >= maxAttempts8QA &&
+          !window.__OO_8QA_EVIDENCE_EXECUTION_BOUNDARY
+        ) {
+          window.__OO_8QA_EVIDENCE_EXECUTION_BOUNDARY = {
+            step: step8QA,
+            status: "BLOCKED",
+            executionBoundary: "NOT_READY",
+            executionState: "NOT_STARTED"
+          };
+
+          if (typeof OODebug !== "undefined" && OODebug.log) {
+            OODebug.log(
+              step8QA,
+              "Evidence execution boundary blocked",
+              window.__OO_8QA_EVIDENCE_EXECUTION_BOUNDARY
+            );
+          }
+        }
+      }
+    }, 100);
+  } catch (error8QA) {
+    window.__OO_8QA_ERROR =
+      error8QA && error8QA.message
+        ? error8QA.message
+        : "Unknown 8QA error";
+
+    if (typeof OODebug !== "undefined" && OODebug.log) {
+      OODebug.log(
+        step8QA,
+        "Evidence execution boundary exception",
+        window.__OO_8QA_ERROR
+      );
+    }
+  }
+})();
+  /* =========================================================
+   STEP 8QB — CONTROLLED SOURCE ACCESS GATE
+   ========================================================= */
+
+(() => {
+  const step8QB = "8QB";
+
+  try {
+    const prepare8QB = () => {
+      const execution8QB =
+        window.__OO_8QA_EVIDENCE_EXECUTION_BOUNDARY ||
+        null;
+
+      if (
+        !execution8QB ||
+        execution8QB.status !== "READY" ||
+        execution8QB.executionBoundary !== "READY" ||
+        execution8QB.executionState !== "NOT_STARTED"
+      ) {
+        return false;
+      }
+
+      const output8QB = {
+        step: step8QB,
+        status: "READY",
+        sourceStep: "8QA",
+        query: execution8QB.query,
+        targetCount: execution8QB.targetCount,
+        sourceAccessGate: "READY",
+        sourceAccessState: "NOT_STARTED",
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+        evidenceVerified: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        mutationAllowed: false,
+        executionAuthorized: false,
+        intakeAuthorized: false,
+        sourceAccessAuthorized: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false,
+        message:
+          "Controlled source-access gate prepared. External source access has not started."
+      };
+
+      window.__OO_8QB_SOURCE_ACCESS_GATE = output8QB;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          step8QB,
+          "Controlled source-access gate ready",
+          output8QB
+        );
+      }
+
+      return true;
+    };
+
+    if (prepare8QB()) {
+      return;
+    }
+
+    let attempts8QB = 0;
+    const maxAttempts8QB = 130;
+
+    const wait8QB = setInterval(() => {
+      attempts8QB++;
+
+      if (
+        prepare8QB() ||
+        attempts8QB >= maxAttempts8QB
+      ) {
+        clearInterval(wait8QB);
+
+        if (
+          attempts8QB >= maxAttempts8QB &&
+          !window.__OO_8QB_SOURCE_ACCESS_GATE
+        ) {
+          window.__OO_8QB_SOURCE_ACCESS_GATE = {
+            step: step8QB,
+            status: "BLOCKED",
+            sourceAccessGate: "NOT_READY",
+            sourceAccessState: "NOT_STARTED"
+          };
+
+          if (typeof OODebug !== "undefined" && OODebug.log) {
+            OODebug.log(
+              step8QB,
+              "Source-access gate blocked",
+              window.__OO_8QB_SOURCE_ACCESS_GATE
+            );
+          }
+        }
+      }
+    }, 100);
+  } catch (error8QB) {
+    window.__OO_8QB_ERROR =
+      error8QB && error8QB.message
+        ? error8QB.message
+        : "Unknown 8QB error";
+
+    if (typeof OODebug !== "undefined" && OODebug.log) {
+      OODebug.log(
+        step8QB,
+        "Source-access gate exception",
+        window.__OO_8QB_ERROR
+      );
+    }
+  }
+})();
+  /* =========================================================
+   STEP 8QC — CONTROLLED RETRIEVAL FINAL AUTHORIZATION HANDOFF
+   ========================================================= */
+
+(() => {
+  const step8QC = "8QC";
+
+  try {
+    const prepare8QC = () => {
+      const sourceGate8QC =
+        window.__OO_8QB_SOURCE_ACCESS_GATE || null;
+
+      if (
+        !sourceGate8QC ||
+        sourceGate8QC.status !== "READY" ||
+        sourceGate8QC.sourceAccessGate !== "READY" ||
+        sourceGate8QC.sourceAccessState !== "NOT_STARTED"
+      ) {
+        return false;
+      }
+
+      const output8QC = {
+        step: step8QC,
+        status: "READY",
+        sourceStep: "8QB",
+        query: sourceGate8QC.query,
+        targetCount: sourceGate8QC.targetCount,
+        finalAuthorizationHandoff: "READY",
+        retrievalState: "NOT_STARTED",
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+        evidenceVerified: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        mutationAllowed: false,
+        executionAuthorized: false,
+        intakeAuthorized: false,
+        sourceAccessAuthorized: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false,
+        message:
+          "Final controlled retrieval authorization handoff is ready. No external retrieval or evidence mutation has been authorized."
+      };
+
+      window.__OO_8QC_FINAL_AUTHORIZATION_HANDOFF =
+        output8QC;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          step8QC,
+          "Controlled retrieval final authorization handoff ready",
+          output8QC
+        );
+      }
+
+      return true;
+    };
+
+    if (prepare8QC()) {
+      return;
+    }
+
+    let attempts8QC = 0;
+    const maxAttempts8QC = 140;
+
+    const wait8QC = setInterval(() => {
+      attempts8QC++;
+
+      if (
+        prepare8QC() ||
+        attempts8QC >= maxAttempts8QC
+      ) {
+        clearInterval(wait8QC);
+
+        if (
+          attempts8QC >= maxAttempts8QC &&
+          !window.__OO_8QC_FINAL_AUTHORIZATION_HANDOFF
+        ) {
+          window.__OO_8QC_FINAL_AUTHORIZATION_HANDOFF = {
+            step: step8QC,
+            status: "BLOCKED",
+            finalAuthorizationHandoff: "NOT_READY",
+            retrievalState: "NOT_STARTED"
+          };
+
+          if (typeof OODebug !== "undefined" && OODebug.log) {
+            OODebug.log(
+              step8QC,
+              "Final retrieval authorization handoff blocked",
+              window.__OO_8QC_FINAL_AUTHORIZATION_HANDOFF
+            );
+          }
+        }
+      }
+    }, 100);
+  } catch (error8QC) {
+    window.__OO_8QC_ERROR =
+      error8QC && error8QC.message
+        ? error8QC.message
+        : "Unknown 8QC error";
+
+    if (typeof OODebug !== "undefined" && OODebug.log) {
+      OODebug.log(
+        step8QC,
+        "Final retrieval authorization handoff exception",
+        window.__OO_8QC_ERROR
+      );
+    }
+  }
+})();
   /* ==========================================
        RESULT VALUES
      ========================================== */
