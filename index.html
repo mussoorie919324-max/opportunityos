@@ -81620,6 +81620,592 @@ if (
     }
   }
 })();
+/* =========================================================
+   STEP 8QD — CONTROLLED RETRIEVAL CONTRACT REVALIDATION
+   ========================================================= */
+
+(() => {
+  const step8QD = "8QD";
+
+  try {
+    const prepare8QD = () => {
+      const input8QD =
+        window.__OO_8QC_FINAL_AUTHORIZATION_HANDOFF || null;
+
+      if (
+        !input8QD ||
+        input8QD.status !== "READY" ||
+        input8QD.finalAuthorizationHandoff !== "READY" ||
+        input8QD.retrievalState !== "NOT_STARTED" ||
+        input8QD.externalSourceAccess !== false ||
+        input8QD.sourceRetrieval !== false ||
+        input8QD.evidenceReceived !== false ||
+        input8QD.evidenceInsertion !== false ||
+        input8QD.claimSupportUpdate !== false ||
+        input8QD.mutationAllowed !== false ||
+        input8QD.executionAuthorized !== false ||
+        input8QD.intakeAuthorized !== false ||
+        input8QD.sourceAccessAuthorized !== false
+      ) {
+        return false;
+      }
+
+      const output8QD = {
+        step: step8QD,
+        status: "READY",
+        sourceStep: "8QC",
+        query: input8QD.query,
+        targetCount: input8QD.targetCount,
+        retrievalContract: "VALIDATED",
+        retrievalState: "NOT_STARTED",
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+        evidenceVerified: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        mutationAllowed: false,
+        executionAuthorized: false,
+        intakeAuthorized: false,
+        sourceAccessAuthorized: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false,
+        message:
+          "Controlled retrieval contract revalidated. No external retrieval has started."
+      };
+
+      window.__OO_8QD_RETRIEVAL_CONTRACT_REVALIDATION =
+        output8QD;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          step8QD,
+          "Controlled retrieval contract revalidated",
+          output8QD
+        );
+      }
+
+      return true;
+    };
+
+    if (prepare8QD()) {
+      return;
+    }
+
+    let attempts8QD = 0;
+    const maxAttempts8QD = 150;
+
+    const wait8QD = setInterval(() => {
+      attempts8QD++;
+
+      if (
+        prepare8QD() ||
+        attempts8QD >= maxAttempts8QD
+      ) {
+        clearInterval(wait8QD);
+
+        if (
+          attempts8QD >= maxAttempts8QD &&
+          !window.__OO_8QD_RETRIEVAL_CONTRACT_REVALIDATION
+        ) {
+          window.__OO_8QD_RETRIEVAL_CONTRACT_REVALIDATION = {
+            step: step8QD,
+            status: "BLOCKED",
+            retrievalContract: "NOT_READY",
+            retrievalState: "NOT_STARTED"
+          };
+
+          if (typeof OODebug !== "undefined" && OODebug.log) {
+            OODebug.log(
+              step8QD,
+              "Retrieval contract revalidation blocked",
+              window.__OO_8QD_RETRIEVAL_CONTRACT_REVALIDATION
+            );
+          }
+        }
+      }
+    }, 100);
+  } catch (error8QD) {
+    window.__OO_8QD_ERROR =
+      error8QD && error8QD.message
+        ? error8QD.message
+        : "Unknown 8QD error";
+
+    if (typeof OODebug !== "undefined" && OODebug.log) {
+      OODebug.log(
+        step8QD,
+        "Retrieval contract revalidation exception",
+        window.__OO_8QD_ERROR
+      );
+    }
+  }
+})();
+  /* =========================================================
+   STEP 8QE — CONTROLLED TARGET INTEGRITY CHECK
+   ========================================================= */
+
+(() => {
+  const step8QE = "8QE";
+
+  try {
+    const prepare8QE = () => {
+      const contract8QE =
+        window.__OO_8QD_RETRIEVAL_CONTRACT_REVALIDATION ||
+        null;
+
+      if (
+        !contract8QE ||
+        contract8QE.status !== "READY" ||
+        contract8QE.retrievalContract !== "VALIDATED"
+      ) {
+        return false;
+      }
+
+      const validTargetCount8QE =
+        contract8QE.targetCount === 5;
+
+      const output8QE = {
+        step: step8QE,
+        status: validTargetCount8QE ? "READY" : "BLOCKED",
+        sourceStep: "8QD",
+        query: contract8QE.query,
+        targetCount: contract8QE.targetCount,
+        targetIntegrity:
+          validTargetCount8QE ? "VALID" : "INVALID",
+        retrievalState: "NOT_STARTED",
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+        evidenceVerified: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        mutationAllowed: false,
+        executionAuthorized: false,
+        intakeAuthorized: false,
+        sourceAccessAuthorized: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false,
+        message:
+          validTargetCount8QE
+            ? "Controlled target set integrity verified. Five assessment targets remain required."
+            : "Controlled target set integrity failed."
+      };
+
+      window.__OO_8QE_TARGET_INTEGRITY_CHECK =
+        output8QE;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          step8QE,
+          validTargetCount8QE
+            ? "Controlled target integrity verified"
+            : "Controlled target integrity BLOCKED",
+          output8QE
+        );
+      }
+
+      return true;
+    };
+
+    if (prepare8QE()) {
+      return;
+    }
+
+    let attempts8QE = 0;
+    const maxAttempts8QE = 160;
+
+    const wait8QE = setInterval(() => {
+      attempts8QE++;
+
+      if (
+        prepare8QE() ||
+        attempts8QE >= maxAttempts8QE
+      ) {
+        clearInterval(wait8QE);
+
+        if (
+          attempts8QE >= maxAttempts8QE &&
+          !window.__OO_8QE_TARGET_INTEGRITY_CHECK
+        ) {
+          window.__OO_8QE_TARGET_INTEGRITY_CHECK = {
+            step: step8QE,
+            status: "BLOCKED",
+            targetIntegrity: "NOT_READY"
+          };
+
+          if (typeof OODebug !== "undefined" && OODebug.log) {
+            OODebug.log(
+              step8QE,
+              "Target integrity check blocked",
+              window.__OO_8QE_TARGET_INTEGRITY_CHECK
+            );
+          }
+        }
+      }
+    }, 100);
+  } catch (error8QE) {
+    window.__OO_8QE_ERROR =
+      error8QE && error8QE.message
+        ? error8QE.message
+        : "Unknown 8QE error";
+
+    if (typeof OODebug !== "undefined" && OODebug.log) {
+      OODebug.log(
+        step8QE,
+        "Target integrity check exception",
+        window.__OO_8QE_ERROR
+      );
+    }
+  }
+})();
+  /* =========================================================
+   STEP 8QF — CONTROLLED QUERY INTEGRITY CHECK
+   ========================================================= */
+
+(() => {
+  const step8QF = "8QF";
+
+  try {
+    const prepare8QF = () => {
+      const targetCheck8QF =
+        window.__OO_8QE_TARGET_INTEGRITY_CHECK || null;
+
+      if (
+        !targetCheck8QF ||
+        targetCheck8QF.status !== "READY" ||
+        targetCheck8QF.targetIntegrity !== "VALID"
+      ) {
+        return false;
+      }
+
+      const validQuery8QF =
+        typeof targetCheck8QF.query === "string" &&
+        targetCheck8QF.query.trim().length > 0;
+
+      const output8QF = {
+        step: step8QF,
+        status: validQuery8QF ? "READY" : "BLOCKED",
+        sourceStep: "8QE",
+        query: validQuery8QF
+          ? targetCheck8QF.query.trim()
+          : "",
+        targetCount: targetCheck8QF.targetCount,
+        queryIntegrity:
+          validQuery8QF ? "VALID" : "INVALID",
+        retrievalState: "NOT_STARTED",
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+        evidenceVerified: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        mutationAllowed: false,
+        executionAuthorized: false,
+        intakeAuthorized: false,
+        sourceAccessAuthorized: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false,
+        message:
+          validQuery8QF
+            ? "Controlled query integrity verified from the live request context."
+            : "Controlled query integrity failed."
+      };
+
+      window.__OO_8QF_QUERY_INTEGRITY_CHECK =
+        output8QF;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          step8QF,
+          validQuery8QF
+            ? "Controlled query integrity verified"
+            : "Controlled query integrity BLOCKED",
+          output8QF
+        );
+      }
+
+      return true;
+    };
+
+    if (prepare8QF()) {
+      return;
+    }
+
+    let attempts8QF = 0;
+    const maxAttempts8QF = 170;
+
+    const wait8QF = setInterval(() => {
+      attempts8QF++;
+
+      if (
+        prepare8QF() ||
+        attempts8QF >= maxAttempts8QF
+      ) {
+        clearInterval(wait8QF);
+
+        if (
+          attempts8QF >= maxAttempts8QF &&
+          !window.__OO_8QF_QUERY_INTEGRITY_CHECK
+        ) {
+          window.__OO_8QF_QUERY_INTEGRITY_CHECK = {
+            step: step8QF,
+            status: "BLOCKED",
+            queryIntegrity: "NOT_READY"
+          };
+
+          if (typeof OODebug !== "undefined" && OODebug.log) {
+            OODebug.log(
+              step8QF,
+              "Query integrity check blocked",
+              window.__OO_8QF_QUERY_INTEGRITY_CHECK
+            );
+          }
+        }
+      }
+    }, 100);
+  } catch (error8QF) {
+    window.__OO_8QF_ERROR =
+      error8QF && error8QF.message
+        ? error8QF.message
+        : "Unknown 8QF error";
+
+    if (typeof OODebug !== "undefined" && OODebug.log) {
+      OODebug.log(
+        step8QF,
+        "Query integrity check exception",
+        window.__OO_8QF_ERROR
+      );
+    }
+  }
+})();
+  /* =========================================================
+   STEP 8QG — CONTROLLED RETRIEVAL SCOPE LOCK
+   ========================================================= */
+
+(() => {
+  const step8QG = "8QG";
+
+  try {
+    const prepare8QG = () => {
+      const queryCheck8QG =
+        window.__OO_8QF_QUERY_INTEGRITY_CHECK || null;
+
+      if (
+        !queryCheck8QG ||
+        queryCheck8QG.status !== "READY" ||
+        queryCheck8QG.queryIntegrity !== "VALID"
+      ) {
+        return false;
+      }
+
+      const output8QG = {
+        step: step8QG,
+        status: "READY",
+        sourceStep: "8QF",
+        query: queryCheck8QG.query,
+        targetCount: queryCheck8QG.targetCount,
+        retrievalScope: "CONTROLLED",
+        scopeState: "LOCKED",
+        retrievalState: "NOT_STARTED",
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+        evidenceVerified: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        mutationAllowed: false,
+        executionAuthorized: false,
+        intakeAuthorized: false,
+        sourceAccessAuthorized: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false,
+        message:
+          "Retrieval scope locked to the validated live query and five controlled targets."
+      };
+
+      window.__OO_8QG_RETRIEVAL_SCOPE_LOCK =
+        output8QG;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          step8QG,
+          "Controlled retrieval scope locked",
+          output8QG
+        );
+      }
+
+      return true;
+    };
+
+    if (prepare8QG()) {
+      return;
+    }
+
+    let attempts8QG = 0;
+    const maxAttempts8QG = 180;
+
+    const wait8QG = setInterval(() => {
+      attempts8QG++;
+
+      if (
+        prepare8QG() ||
+        attempts8QG >= maxAttempts8QG
+      ) {
+        clearInterval(wait8QG);
+
+        if (
+          attempts8QG >= maxAttempts8QG &&
+          !window.__OO_8QG_RETRIEVAL_SCOPE_LOCK
+        ) {
+          window.__OO_8QG_RETRIEVAL_SCOPE_LOCK = {
+            step: step8QG,
+            status: "BLOCKED",
+            retrievalScope: "NOT_READY"
+          };
+
+          if (typeof OODebug !== "undefined" && OODebug.log) {
+            OODebug.log(
+              step8QG,
+              "Retrieval scope lock blocked",
+              window.__OO_8QG_RETRIEVAL_SCOPE_LOCK
+            );
+          }
+        }
+      }
+    }, 100);
+  } catch (error8QG) {
+    window.__OO_8QG_ERROR =
+      error8QG && error8QG.message
+        ? error8QG.message
+        : "Unknown 8QG error";
+
+    if (typeof OODebug !== "undefined" && OODebug.log) {
+      OODebug.log(
+        step8QG,
+        "Retrieval scope lock exception",
+        window.__OO_8QG_ERROR
+      );
+    }
+  }
+})();
+  /* =========================================================
+   STEP 8QH — CONTROLLED RETRIEVAL EXECUTION READINESS HANDOFF
+   ========================================================= */
+
+(() => {
+  const step8QH = "8QH";
+
+  try {
+    const prepare8QH = () => {
+      const scope8QH =
+        window.__OO_8QG_RETRIEVAL_SCOPE_LOCK || null;
+
+      if (
+        !scope8QH ||
+        scope8QH.status !== "READY" ||
+        scope8QH.retrievalScope !== "CONTROLLED" ||
+        scope8QH.scopeState !== "LOCKED"
+      ) {
+        return false;
+      }
+
+      const output8QH = {
+        step: step8QH,
+        status: "READY",
+        sourceStep: "8QG",
+        query: scope8QH.query,
+        targetCount: scope8QH.targetCount,
+        executionReadiness: "READY",
+        retrievalScope: "CONTROLLED",
+        scopeState: "LOCKED",
+        retrievalState: "NOT_STARTED",
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+        evidenceVerified: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        mutationAllowed: false,
+        executionAuthorized: false,
+        intakeAuthorized: false,
+        sourceAccessAuthorized: false,
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false,
+        message:
+          "Controlled retrieval execution readiness is ready. Actual external execution remains NOT_STARTED."
+      };
+
+      window.__OO_8QH_RETRIEVAL_EXECUTION_READINESS =
+        output8QH;
+
+      if (typeof OODebug !== "undefined" && OODebug.log) {
+        OODebug.log(
+          step8QH,
+          "Controlled retrieval execution readiness ready",
+          output8QH
+        );
+      }
+
+      return true;
+    };
+
+    if (prepare8QH()) {
+      return;
+    }
+
+    let attempts8QH = 0;
+    const maxAttempts8QH = 190;
+
+    const wait8QH = setInterval(() => {
+      attempts8QH++;
+
+      if (
+        prepare8QH() ||
+        attempts8QH >= maxAttempts8QH
+      ) {
+        clearInterval(wait8QH);
+
+        if (
+          attempts8QH >= maxAttempts8QH &&
+          !window.__OO_8QH_RETRIEVAL_EXECUTION_READINESS
+        ) {
+          window.__OO_8QH_RETRIEVAL_EXECUTION_READINESS = {
+            step: step8QH,
+            status: "BLOCKED",
+            executionReadiness: "NOT_READY",
+            retrievalState: "NOT_STARTED"
+          };
+
+          if (typeof OODebug !== "undefined" && OODebug.log) {
+            OODebug.log(
+              step8QH,
+              "Retrieval execution readiness blocked",
+              window.__OO_8QH_RETRIEVAL_EXECUTION_READINESS
+            );
+          }
+        }
+      }
+    }, 100);
+  } catch (error8QH) {
+    window.__OO_8QH_ERROR =
+      error8QH && error8QH.message
+        ? error8QH.message
+        : "Unknown 8QH error";
+
+    if (typeof OODebug !== "undefined" && OODebug.log) {
+      OODebug.log(
+        step8QH,
+        "Retrieval execution readiness exception",
+        window.__OO_8QH_ERROR
+      );
+    }
+  }
+})();
   /* ==========================================
        RESULT VALUES
      ========================================== */
