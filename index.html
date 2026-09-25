@@ -91442,7 +91442,167 @@ AUTHORIZATION STATE CONTINUATION
   }, 100);
 
 })();
-          
+    /* =========================================================
+STEP 8TP — CONTROLLED VERIFICATION EXECUTION
+AUTHORIZATION INPUT RESOLUTION
+========================================================= */
+
+(() => {
+  "use strict";
+
+  const run8TP = () => {
+    try {
+      const upstream8TP =
+        window.__OO_8TO_VERIFICATION_EXECUTION_AUTHORIZATION_FINAL_STATE_HANDOFF;
+
+      const query8TP =
+        upstream8TP &&
+        typeof upstream8TP.query === "string"
+          ? upstream8TP.query.trim()
+          : "";
+
+      const targetCount8TP =
+        upstream8TP &&
+        Number.isInteger(upstream8TP.targetCount)
+          ? upstream8TP.targetCount
+          : 0;
+
+      /*
+       * 8TO is a readiness handoff only.
+       * No authorization is inherited or granted here.
+       */
+
+      const output8TP = {
+        step: "8TP",
+
+        verificationExecutionAuthorizationInputResolution:
+          "READY",
+
+        query: query8TP,
+
+        targetCount: targetCount8TP,
+
+        genuineValidationResultRequired: true,
+
+        genuineValidationResultReceived:
+          upstream8TP &&
+          upstream8TP.genuineValidationResultReceived === true,
+
+        validationResultAccepted:
+          upstream8TP &&
+          upstream8TP.validationResultAccepted === true,
+
+        executionAuthorizationGranted: false,
+
+        verificationExecutionEligible: false,
+
+        verificationStarted: false,
+
+        verificationDecisionIssued: false,
+
+        verifiedClaimAllowed: false,
+
+        evidenceInsertion: false,
+
+        claimSupportUpdate: false,
+
+        scoreCalculation: false,
+
+        mutationAllowed: false,
+
+        userActionAuthorization: false,
+
+        externalSourceAccess: false,
+
+        sourceRetrieval: false,
+
+        evidenceReceived: false,
+
+        inventedEvidence: false,
+
+        inventedScores: false,
+
+        userDataAssumption: false
+      };
+
+      window.__OO_8TP_VERIFICATION_EXECUTION_AUTHORIZATION_INPUT_RESOLUTION =
+        output8TP;
+
+      OODebug.log(
+        "8TP",
+        "Controlled verification execution authorization input resolution ready",
+        output8TP
+      );
+
+    } catch (error8TP) {
+
+      window.__OO_8TP_ERROR =
+        error8TP &&
+        error8TP.message
+          ? error8TP.message
+          : "Unknown 8TP error";
+
+      if (
+        typeof OODebug !== "undefined" &&
+        OODebug &&
+        typeof OODebug.log === "function"
+      ) {
+        OODebug.log(
+          "8TP",
+          "Controlled verification execution authorization input resolution error",
+          window.__OO_8TP_ERROR
+        );
+      } else {
+        console.error(
+          "OpportunityOS 8TP error:",
+          window.__OO_8TP_ERROR
+        );
+      }
+    }
+  };
+
+
+  /* =========================================================
+     DEPENDENCY WAIT
+     Wait for frozen 8TO + debugger.
+  ========================================================= */
+
+  let attempts8TP = 0;
+
+  const wait8TP = setInterval(() => {
+
+    attempts8TP++;
+
+    const upstreamReady8TP =
+      !!window.__OO_8TO_VERIFICATION_EXECUTION_AUTHORIZATION_FINAL_STATE_HANDOFF;
+
+    const debuggerReady8TP =
+      typeof OODebug !== "undefined" &&
+      OODebug &&
+      typeof OODebug.log === "function";
+
+    if (
+      upstreamReady8TP &&
+      debuggerReady8TP
+    ) {
+      clearInterval(wait8TP);
+
+      run8TP();
+
+      return;
+    }
+
+    if (attempts8TP >= 100) {
+      clearInterval(wait8TP);
+
+      console.error(
+        "OpportunityOS 8TP dependency wait timeout."
+      );
+    }
+
+  }, 100);
+
+})();      
   /* ==========================================
        RESULT VALUES
      ========================================== */
