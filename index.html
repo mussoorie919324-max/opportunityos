@@ -90827,7 +90827,397 @@ FINAL INPUT / READINESS BOUNDARY
   }, 100);
 
 })();
+/* =========================================================
+STEP 8TF → 8TJ
+CONTROLLED VERIFICATION EXECUTION
+AUTHORIZATION / EXECUTION SEPARATION BOUNDARY
+========================================================= */
 
+(() => {
+  "use strict";
+
+  /* =======================================================
+     SAFE OODebug ACCESS
+  ======================================================= */
+
+  const log8TF_8TJ = (step, message, data) => {
+    try {
+      if (
+        typeof OODebug !== "undefined" &&
+        OODebug &&
+        typeof OODebug.log === "function"
+      ) {
+        OODebug.log(step, message, data);
+      }
+    } catch (debugError8TF_8TJ) {
+      console.debug(
+        "OpportunityOS debugger error",
+        step,
+        debugError8TF_8TJ
+      );
+    }
+  };
+
+  /* =======================================================
+     STEP 8TF
+     CONTROLLED VERIFICATION EXECUTION AUTHORIZATION
+     INPUT SEPARATION
+  ======================================================= */
+
+  const run8TF = () => {
+    try {
+      const upstream8TF =
+        window.__OO_8TE_VERIFICATION_EXECUTION_FINAL_READINESS;
+
+      const query8TF =
+        upstream8TF &&
+        typeof upstream8TF.query === "string"
+          ? upstream8TF.query.trim()
+          : "";
+
+      const targetCount8TF =
+        upstream8TF &&
+        Number.isInteger(upstream8TF.targetCount)
+          ? upstream8TF.targetCount
+          : 0;
+
+      const output8TF = {
+        step: "8TF",
+
+        verificationExecutionAuthorizationInputSeparation:
+          "READY",
+
+        query: query8TF,
+        targetCount: targetCount8TF,
+
+        genuineValidationResultReceived: false,
+
+        authorizationInputPresent: false,
+        executionAuthorizationGranted: false,
+
+        verificationExecutionEligible: false,
+        verificationStarted: false,
+
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        scoreCalculation: false,
+        mutationAllowed: false,
+        userActionAuthorization: false
+      };
+
+      window.__OO_8TF_VERIFICATION_EXECUTION_AUTHORIZATION_INPUT_SEPARATION =
+        output8TF;
+
+      log8TF_8TJ(
+        "8TF",
+        "Controlled verification execution authorization input separation ready",
+        output8TF
+      );
+    } catch (error8TF) {
+      window.__OO_8TF_ERROR =
+        error8TF && error8TF.message
+          ? error8TF.message
+          : "Unknown 8TF error";
+
+      log8TF_8TJ(
+        "8TF",
+        "Controlled verification execution authorization input separation error",
+        window.__OO_8TF_ERROR
+      );
+    }
+  };
+
+  /* =======================================================
+     STEP 8TG
+     CONTROLLED VERIFICATION EXECUTION AUTHORIZATION
+     STATE RESOLUTION
+  ======================================================= */
+
+  const run8TG = () => {
+    try {
+      const upstream8TG =
+        window.__OO_8TF_VERIFICATION_EXECUTION_AUTHORIZATION_INPUT_SEPARATION;
+
+      const output8TG = {
+        step: "8TG",
+
+        verificationExecutionAuthorizationState:
+          "WAITING_FOR_GENUINE_VALIDATION_RESULT",
+
+        inputReady:
+          upstream8TG &&
+          typeof upstream8TG.query === "string" &&
+          upstream8TG.query.length > 0,
+
+        genuineValidationResultReceived: false,
+
+        authorizationState:
+          "NOT_GRANTED",
+
+        executionAuthorizationGranted: false,
+        verificationExecutionEligible: false,
+
+        verificationStarted: false,
+
+        mutationAllowed: false
+      };
+
+      window.__OO_8TG_VERIFICATION_EXECUTION_AUTHORIZATION_STATE =
+        output8TG;
+
+      log8TF_8TJ(
+        "8TG",
+        "Controlled verification execution authorization state ready",
+        output8TG
+      );
+    } catch (error8TG) {
+      window.__OO_8TG_ERROR =
+        error8TG && error8TG.message
+          ? error8TG.message
+          : "Unknown 8TG error";
+
+      log8TF_8TJ(
+        "8TG",
+        "Controlled verification execution authorization state error",
+        window.__OO_8TG_ERROR
+      );
+    }
+  };
+
+  /* =======================================================
+     STEP 8TH
+     CONTROLLED VERIFICATION EXECUTION AUTHORIZATION
+     PRECONDITION LOCK
+  ======================================================= */
+
+  const run8TH = () => {
+    try {
+      const upstream8TH =
+        window.__OO_8TG_VERIFICATION_EXECUTION_AUTHORIZATION_STATE;
+
+      const inputReady8TH =
+        upstream8TH &&
+        upstream8TH.inputReady === true;
+
+      const genuineValidationResultReceived8TH =
+        upstream8TH &&
+        upstream8TH.genuineValidationResultReceived === true;
+
+      const authorizationGranted8TH = false;
+
+      const preconditionSatisfied8TH =
+        inputReady8TH &&
+        genuineValidationResultReceived8TH &&
+        authorizationGranted8TH;
+
+      const output8TH = {
+        step: "8TH",
+
+        verificationExecutionAuthorizationPrecondition:
+          preconditionSatisfied8TH
+            ? "SATISFIED"
+            : "WAITING_FOR_GENUINE_VALIDATION_RESULT",
+
+        inputReady: inputReady8TH,
+
+        genuineValidationResultReceived:
+          genuineValidationResultReceived8TH,
+
+        authorizationGranted:
+          authorizationGranted8TH,
+
+        executionEligible:
+          preconditionSatisfied8TH,
+
+        verificationStarted: false,
+        mutationAllowed: false
+      };
+
+      window.__OO_8TH_VERIFICATION_EXECUTION_AUTHORIZATION_PRECONDITION =
+        output8TH;
+
+      log8TF_8TJ(
+        "8TH",
+        "Controlled verification execution authorization precondition lock ready",
+        output8TH
+      );
+    } catch (error8TH) {
+      window.__OO_8TH_ERROR =
+        error8TH && error8TH.message
+          ? error8TH.message
+          : "Unknown 8TH error";
+
+      log8TF_8TJ(
+        "8TH",
+        "Controlled verification execution authorization precondition lock error",
+        window.__OO_8TH_ERROR
+      );
+    }
+  };
+
+  /* =======================================================
+     STEP 8TI
+     CONTROLLED VERIFICATION EXECUTION AUTHORIZATION
+     SAFETY SEPARATION
+  ======================================================= */
+
+  const run8TI = () => {
+    try {
+      const upstream8TI =
+        window.__OO_8TH_VERIFICATION_EXECUTION_AUTHORIZATION_PRECONDITION;
+
+      const output8TI = {
+        step: "8TI",
+
+        verificationExecutionAuthorizationSafetySeparation:
+          "READY",
+
+        executionEligible:
+          upstream8TI &&
+          upstream8TI.executionEligible === true,
+
+        executionAuthorizationGranted: false,
+
+        verificationStarted: false,
+
+        evidenceInsertionAllowed: false,
+        claimSupportUpdateAllowed: false,
+        scoreCalculationAllowed: false,
+
+        mutationAllowed: false,
+        userActionAuthorizationAllowed: false,
+
+        safetyState:
+          "WAITING_FOR_GENUINE_VALIDATION_RESULT"
+      };
+
+      window.__OO_8TI_VERIFICATION_EXECUTION_AUTHORIZATION_SAFETY_SEPARATION =
+        output8TI;
+
+      log8TF_8TJ(
+        "8TI",
+        "Controlled verification execution authorization safety separation ready",
+        output8TI
+      );
+    } catch (error8TI) {
+      window.__OO_8TI_ERROR =
+        error8TI && error8TI.message
+          ? error8TI.message
+          : "Unknown 8TI error";
+
+      log8TF_8TJ(
+        "8TI",
+        "Controlled verification execution authorization safety separation error",
+        window.__OO_8TI_ERROR
+      );
+    }
+  };
+
+  /* =======================================================
+     STEP 8TJ
+     CONTROLLED VERIFICATION EXECUTION AUTHORIZATION
+     FINAL SEPARATION HANDOFF
+  ======================================================= */
+
+  const run8TJ = () => {
+    try {
+      const input8TJ =
+        window.__OO_8TF_VERIFICATION_EXECUTION_AUTHORIZATION_INPUT_SEPARATION;
+
+      const state8TJ =
+        window.__OO_8TG_VERIFICATION_EXECUTION_AUTHORIZATION_STATE;
+
+      const precondition8TJ =
+        window.__OO_8TH_VERIFICATION_EXECUTION_AUTHORIZATION_PRECONDITION;
+
+      const safety8TJ =
+        window.__OO_8TI_VERIFICATION_EXECUTION_AUTHORIZATION_SAFETY_SEPARATION;
+
+      const output8TJ = {
+        step: "8TJ",
+
+        verificationExecutionAuthorizationFinalSeparation:
+          "READY",
+
+        handoffState:
+          "WAITING_FOR_GENUINE_VALIDATION_RESULT",
+
+        query:
+          input8TJ &&
+          typeof input8TJ.query === "string"
+            ? input8TJ.query
+            : "",
+
+        targetCount:
+          input8TJ &&
+          Number.isInteger(input8TJ.targetCount)
+            ? input8TJ.targetCount
+            : 0,
+
+        genuineValidationResultReceived:
+          state8TJ &&
+          state8TJ.genuineValidationResultReceived === true,
+
+        executionAuthorizationGranted: false,
+
+        verificationExecutionEligible:
+          precondition8TJ &&
+          precondition8TJ.executionEligible === true &&
+          safety8TJ &&
+          safety8TJ.executionAuthorizationGranted === true,
+
+        verificationStarted: false,
+        verificationDecisionIssued: false,
+        verifiedClaimAllowed: false,
+
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        scoreCalculation: false,
+        mutationAllowed: false,
+        userActionAuthorization: false
+      };
+
+      /*
+        Final safety invariant:
+        This handoff NEVER grants authorization by itself.
+      */
+
+      output8TJ.executionAuthorizationGranted = false;
+      output8TJ.verificationExecutionEligible = false;
+
+      window.__OO_8TJ_VERIFICATION_EXECUTION_AUTHORIZATION_FINAL_SEPARATION =
+        output8TJ;
+
+      log8TF_8TJ(
+        "8TJ",
+        "Controlled verification execution authorization final separation handoff ready",
+        output8TJ
+      );
+    } catch (error8TJ) {
+      window.__OO_8TJ_ERROR =
+        error8TJ && error8TJ.message
+          ? error8TJ.message
+          : "Unknown 8TJ error";
+
+      log8TF_8TJ(
+        "8TJ",
+        "Controlled verification execution authorization final separation handoff error",
+        window.__OO_8TJ_ERROR
+      );
+    }
+  };
+
+  /* =======================================================
+     SEQUENTIAL EXECUTION
+  ======================================================= */
+
+  run8TF();
+  run8TG();
+  run8TH();
+  run8TI();
+  run8TJ();
+
+})();
   
   /* ==========================================
        RESULT VALUES
