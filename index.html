@@ -91105,6 +91105,344 @@ FINAL READINESS CONTINUATION
   }, 100);
 
 })();
+ /* =========================================================
+STEP 8TK → 8TO
+CONTROLLED VERIFICATION EXECUTION
+AUTHORIZATION STATE CONTINUATION
+========================================================= */
+
+(() => {
+  "use strict";
+
+  /* =======================================================
+     STEP 8TK
+     CONTROLLED VERIFICATION EXECUTION
+     AUTHORIZATION INPUT INTEGRITY
+  ======================================================= */
+
+  const run8TK_8TO = () => {
+    try {
+
+      /* =====================================================
+         READ FROZEN 8TJ HANDOFF
+      ===================================================== */
+
+      const upstream8TK =
+        window.__OO_8TJ_VERIFICATION_EXECUTION_AUTHORIZATION_FINAL_SEPARATION;
+
+      const query8TK =
+        upstream8TK &&
+        typeof upstream8TK.query === "string"
+          ? upstream8TK.query.trim()
+          : "";
+
+      const targetCount8TK =
+        upstream8TK &&
+        Number.isInteger(upstream8TK.targetCount)
+          ? upstream8TK.targetCount
+          : 0;
+
+      /* =====================================================
+         STEP 8TK
+      ===================================================== */
+
+      const output8TK = {
+        step: "8TK",
+
+        verificationExecutionAuthorizationInputIntegrity:
+          "READY",
+
+        query: query8TK,
+        targetCount: targetCount8TK,
+
+        genuineValidationResultReceived:
+          upstream8TK &&
+          upstream8TK.genuineValidationResultReceived === true,
+
+        executionAuthorizationGranted: false,
+        verificationExecutionEligible: false,
+        verificationStarted: false,
+
+        verificationDecisionIssued: false,
+        verifiedClaimAllowed: false,
+
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        scoreCalculation: false,
+        mutationAllowed: false,
+        userActionAuthorization: false
+      };
+
+      window.__OO_8TK_VERIFICATION_EXECUTION_AUTHORIZATION_INPUT_INTEGRITY =
+        output8TK;
+
+      OODebug.log(
+        "8TK",
+        "Controlled verification execution authorization input integrity ready",
+        output8TK
+      );
+
+
+      /* =====================================================
+         STEP 8TL
+         AUTHORIZATION STATE LOCK
+      ===================================================== */
+
+      const output8TL = {
+        step: "8TL",
+
+        verificationExecutionAuthorizationStateLock:
+          "READY",
+
+        query: query8TK,
+        targetCount: targetCount8TK,
+
+        genuineValidationResultRequired: true,
+
+        genuineValidationResultReceived: false,
+
+        authorizationState:
+          "NOT_GRANTED",
+
+        executionAuthorizationGranted: false,
+        verificationExecutionEligible: false,
+
+        verificationStarted: false,
+
+        mutationAllowed: false,
+        userActionAuthorization: false
+      };
+
+      window.__OO_8TL_VERIFICATION_EXECUTION_AUTHORIZATION_STATE_LOCK =
+        output8TL;
+
+      OODebug.log(
+        "8TL",
+        "Controlled verification execution authorization state lock ready",
+        output8TL
+      );
+
+
+      /* =====================================================
+         STEP 8TM
+         AUTHORIZATION PRECONDITION SEPARATION
+      ===================================================== */
+
+      const output8TM = {
+        step: "8TM",
+
+        verificationExecutionAuthorizationPreconditionSeparation:
+          "READY",
+
+        query: query8TK,
+        targetCount: targetCount8TK,
+
+        genuineValidationResultReceived: false,
+
+        validationResultAccepted: false,
+
+        authorizationPreconditionSatisfied: false,
+
+        executionAuthorizationGranted: false,
+        verificationExecutionEligible: false,
+
+        verificationStarted: false,
+
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        scoreCalculation: false,
+        mutationAllowed: false,
+        userActionAuthorization: false
+      };
+
+      window.__OO_8TM_VERIFICATION_EXECUTION_AUTHORIZATION_PRECONDITION_SEPARATION =
+        output8TM;
+
+      OODebug.log(
+        "8TM",
+        "Controlled verification execution authorization precondition separation ready",
+        output8TM
+      );
+
+
+      /* =====================================================
+         STEP 8TN
+         SAFETY AUTHORIZATION BOUNDARY
+      ===================================================== */
+
+      const output8TN = {
+        step: "8TN",
+
+        verificationExecutionAuthorizationSafetyBoundary:
+          "READY",
+
+        query: query8TK,
+        targetCount: targetCount8TK,
+
+        safetyState:
+          "WAITING_FOR_GENUINE_VALIDATION_RESULT",
+
+        genuineValidationResultReceived: false,
+        validationResultAccepted: false,
+
+        executionAuthorizationGranted: false,
+        verificationExecutionEligible: false,
+
+        verificationStarted: false,
+        verificationDecisionIssued: false,
+
+        evidenceInsertionAllowed: false,
+        claimSupportUpdateAllowed: false,
+        scoreCalculationAllowed: false,
+
+        mutationAllowed: false,
+        userActionAuthorizationAllowed: false
+      };
+
+      window.__OO_8TN_VERIFICATION_EXECUTION_AUTHORIZATION_SAFETY_BOUNDARY =
+        output8TN;
+
+      OODebug.log(
+        "8TN",
+        "Controlled verification execution authorization safety boundary ready",
+        output8TN
+      );
+
+
+      /* =====================================================
+         STEP 8TO
+         FINAL AUTHORIZATION STATE HANDOFF
+      ===================================================== */
+
+      const output8TO = {
+        step: "8TO",
+
+        verificationExecutionAuthorizationFinalStateHandoff:
+          "READY",
+
+        handoffState:
+          "WAITING_FOR_GENUINE_VALIDATION_RESULT",
+
+        query: query8TK,
+        targetCount: targetCount8TK,
+
+        genuineValidationResultRequired: true,
+        genuineValidationResultReceived: false,
+        validationResultAccepted: false,
+
+        executionAuthorizationGranted: false,
+        verificationExecutionEligible: false,
+
+        verificationStarted: false,
+        verificationDecisionIssued: false,
+        verifiedClaimAllowed: false,
+
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        scoreCalculation: false,
+        mutationAllowed: false,
+        userActionAuthorization: false,
+
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false
+      };
+
+      /*
+       * FINAL SAFETY INVARIANT
+       *
+       * This step only prepares the handoff.
+       * It MUST NOT grant execution authorization.
+       */
+
+      output8TO.executionAuthorizationGranted = false;
+      output8TO.verificationExecutionEligible = false;
+      output8TO.verificationStarted = false;
+      output8TO.mutationAllowed = false;
+
+      window.__OO_8TO_VERIFICATION_EXECUTION_AUTHORIZATION_FINAL_STATE_HANDOFF =
+        output8TO;
+
+      OODebug.log(
+        "8TO",
+        "Controlled verification execution authorization final state handoff ready",
+        output8TO
+      );
+
+    } catch (error8TK_8TO) {
+
+      window.__OO_8TK_8TO_ERROR =
+        error8TK_8TO &&
+        error8TK_8TO.message
+          ? error8TK_8TO.message
+          : "Unknown 8TK–8TO error";
+
+      if (
+        typeof OODebug !== "undefined" &&
+        OODebug &&
+        typeof OODebug.log === "function"
+      ) {
+        OODebug.log(
+          "8TK–8TO",
+          "Controlled verification execution authorization continuation error",
+          window.__OO_8TK_8TO_ERROR
+        );
+      } else {
+        console.error(
+          "OpportunityOS 8TK–8TO error:",
+          window.__OO_8TK_8TO_ERROR
+        );
+      }
+    }
+  };
+
+
+  /* =========================================================
+     DEPENDENCY WAIT
+     WAIT FOR FROZEN 8TJ + DEBUGGER
+  ========================================================= */
+
+  let attempts8TK_8TO = 0;
+
+  const wait8TK_8TO = setInterval(() => {
+
+    attempts8TK_8TO++;
+
+    const tjReady8TK_8TO =
+      !!window.__OO_8TJ_VERIFICATION_EXECUTION_AUTHORIZATION_FINAL_SEPARATION;
+
+    const debuggerReady8TK_8TO =
+      typeof OODebug !== "undefined" &&
+      OODebug &&
+      typeof OODebug.log === "function";
+
+    if (
+      tjReady8TK_8TO &&
+      debuggerReady8TK_8TO
+    ) {
+      clearInterval(wait8TK_8TO);
+
+      run8TK_8TO();
+
+      return;
+    }
+
+    if (attempts8TK_8TO >= 100) {
+      clearInterval(wait8TK_8TO);
+
+      console.error(
+        "OpportunityOS 8TK–8TO dependency wait timeout."
+      );
+    }
+
+  }, 100);
+
+})();
+          
   /* ==========================================
        RESULT VALUES
      ========================================== */
