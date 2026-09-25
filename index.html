@@ -91603,6 +91603,194 @@ AUTHORIZATION INPUT RESOLUTION
   }, 100);
 
 })();      
+/* =========================================================
+STEP 8TQ — CONTROLLED VERIFICATION EXECUTION
+AUTHORIZATION DECISION GATE
+========================================================= */
+
+(() => {
+  "use strict";
+
+  const run8TQ = () => {
+    try {
+      const upstream8TQ =
+        window.__OO_8TP_VERIFICATION_EXECUTION_AUTHORIZATION_INPUT_RESOLUTION;
+
+      const query8TQ =
+        upstream8TQ &&
+        typeof upstream8TQ.query === "string"
+          ? upstream8TQ.query.trim()
+          : "";
+
+      const targetCount8TQ =
+        upstream8TQ &&
+        Number.isInteger(upstream8TQ.targetCount)
+          ? upstream8TQ.targetCount
+          : 0;
+
+      const genuineValidationResultReceived8TQ =
+        upstream8TQ &&
+        upstream8TQ.genuineValidationResultReceived === true;
+
+      const validationResultAccepted8TQ =
+        upstream8TQ &&
+        upstream8TQ.validationResultAccepted === true;
+
+      /*
+       * Authorization is granted ONLY when a genuine
+       * validation result has actually been received
+       * and accepted.
+       *
+       * Current controlled state must therefore remain
+       * NOT_AUTHORIZED.
+       */
+
+      const authorizationEligible8TQ =
+        genuineValidationResultReceived8TQ === true &&
+        validationResultAccepted8TQ === true;
+
+      const output8TQ = {
+        step: "8TQ",
+
+        verificationExecutionAuthorizationDecision:
+          authorizationEligible8TQ
+            ? "ELIGIBLE_FOR_AUTHORIZATION_CHECK"
+            : "WAITING_FOR_GENUINE_VALIDATION_RESULT",
+
+        query: query8TQ,
+        targetCount: targetCount8TQ,
+
+        genuineValidationResultReceived:
+          genuineValidationResultReceived8TQ,
+
+        validationResultAccepted:
+          validationResultAccepted8TQ,
+
+        authorizationEligible:
+          authorizationEligible8TQ,
+
+        executionAuthorizationGranted: false,
+
+        verificationExecutionEligible: false,
+
+        verificationStarted: false,
+
+        verificationDecisionIssued: false,
+
+        verifiedClaimAllowed: false,
+
+        evidenceInsertion: false,
+
+        claimSupportUpdate: false,
+
+        scoreCalculation: false,
+
+        mutationAllowed: false,
+
+        userActionAuthorization: false,
+
+        externalSourceAccess: false,
+
+        sourceRetrieval: false,
+
+        evidenceReceived: false,
+
+        inventedEvidence: false,
+
+        inventedScores: false,
+
+        userDataAssumption: false
+      };
+
+      /*
+       * Safety invariant:
+       * This gate NEVER grants execution authorization.
+       */
+
+      output8TQ.executionAuthorizationGranted = false;
+      output8TQ.verificationExecutionEligible = false;
+      output8TQ.verificationStarted = false;
+      output8TQ.mutationAllowed = false;
+
+      window.__OO_8TQ_VERIFICATION_EXECUTION_AUTHORIZATION_DECISION =
+        output8TQ;
+
+      OODebug.log(
+        "8TQ",
+        "Controlled verification execution authorization decision gate ready",
+        output8TQ
+      );
+
+    } catch (error8TQ) {
+
+      window.__OO_8TQ_ERROR =
+        error8TQ &&
+        error8TQ.message
+          ? error8TQ.message
+          : "Unknown 8TQ error";
+
+      if (
+        typeof OODebug !== "undefined" &&
+        OODebug &&
+        typeof OODebug.log === "function"
+      ) {
+        OODebug.log(
+          "8TQ",
+          "Controlled verification execution authorization decision gate error",
+          window.__OO_8TQ_ERROR
+        );
+      } else {
+        console.error(
+          "OpportunityOS 8TQ error:",
+          window.__OO_8TQ_ERROR
+        );
+      }
+    }
+  };
+
+
+  /* =========================================================
+     DEPENDENCY WAIT
+     Wait for frozen 8TP + debugger.
+  ========================================================= */
+
+  let attempts8TQ = 0;
+
+  const wait8TQ = setInterval(() => {
+
+    attempts8TQ++;
+
+    const upstreamReady8TQ =
+      !!window.__OO_8TP_VERIFICATION_EXECUTION_AUTHORIZATION_INPUT_RESOLUTION;
+
+    const debuggerReady8TQ =
+      typeof OODebug !== "undefined" &&
+      OODebug &&
+      typeof OODebug.log === "function";
+
+    if (
+      upstreamReady8TQ &&
+      debuggerReady8TQ
+    ) {
+      clearInterval(wait8TQ);
+
+      run8TQ();
+
+      return;
+    }
+
+    if (attempts8TQ >= 100) {
+      clearInterval(wait8TQ);
+
+      console.error(
+        "OpportunityOS 8TQ dependency wait timeout."
+      );
+    }
+
+  }, 100);
+
+})();
+      
   /* ==========================================
        RESULT VALUES
      ========================================== */
