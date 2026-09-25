@@ -91790,7 +91790,366 @@ AUTHORIZATION DECISION GATE
   }, 100);
 
 })();
-      
+   /* =========================================================
+STEP 8TR → 8TV
+CONTROLLED VERIFICATION EXECUTION
+AUTHORIZATION SAFETY + ELIGIBILITY HANDOFF
+========================================================= */
+
+(() => {
+  "use strict";
+
+  const run8TR_8TV = () => {
+    try {
+
+      /* =====================================================
+         FROZEN 8TQ INPUT
+      ===================================================== */
+
+      const upstream8TR =
+        window.__OO_8TQ_VERIFICATION_EXECUTION_AUTHORIZATION_DECISION;
+
+      const query8TR =
+        upstream8TR &&
+        typeof upstream8TR.query === "string"
+          ? upstream8TR.query.trim()
+          : "";
+
+      const targetCount8TR =
+        upstream8TR &&
+        Number.isInteger(upstream8TR.targetCount)
+          ? upstream8TR.targetCount
+          : 0;
+
+      const genuineValidationResultReceived8TR =
+        upstream8TR &&
+        upstream8TR.genuineValidationResultReceived === true;
+
+      const validationResultAccepted8TR =
+        upstream8TR &&
+        upstream8TR.validationResultAccepted === true;
+
+      const authorizationEligible8TR =
+        upstream8TR &&
+        upstream8TR.authorizationEligible === true;
+
+
+      /* =====================================================
+         STEP 8TR
+         AUTHORIZATION STATE RESOLUTION
+      ===================================================== */
+
+      const output8TR = {
+        step: "8TR",
+
+        verificationExecutionAuthorizationState:
+          authorizationEligible8TR
+            ? "ELIGIBLE_FOR_SAFETY_CHECK"
+            : "WAITING_FOR_GENUINE_VALIDATION_RESULT",
+
+        query: query8TR,
+        targetCount: targetCount8TR,
+
+        genuineValidationResultReceived:
+          genuineValidationResultReceived8TR,
+
+        validationResultAccepted:
+          validationResultAccepted8TR,
+
+        authorizationEligible:
+          authorizationEligible8TR,
+
+        executionAuthorizationGranted: false,
+        verificationExecutionEligible: false,
+        verificationStarted: false,
+
+        mutationAllowed: false,
+        userActionAuthorization: false
+      };
+
+      window.__OO_8TR_VERIFICATION_EXECUTION_AUTHORIZATION_STATE =
+        output8TR;
+
+      OODebug.log(
+        "8TR",
+        "Controlled verification execution authorization state ready",
+        output8TR
+      );
+
+
+      /* =====================================================
+         STEP 8TS
+         AUTHORIZATION SAFETY PRECONDITION
+      ===================================================== */
+
+      const output8TS = {
+        step: "8TS",
+
+        verificationExecutionAuthorizationSafetyPrecondition:
+          "READY",
+
+        query: query8TR,
+        targetCount: targetCount8TR,
+
+        genuineValidationResultRequired: true,
+
+        genuineValidationResultReceived:
+          genuineValidationResultReceived8TR,
+
+        validationResultAccepted:
+          validationResultAccepted8TR,
+
+        safetyPreconditionSatisfied: false,
+
+        executionAuthorizationGranted: false,
+        verificationExecutionEligible: false,
+
+        verificationStarted: false,
+
+        evidenceInsertionAllowed: false,
+        claimSupportUpdateAllowed: false,
+        scoreCalculationAllowed: false,
+
+        mutationAllowed: false,
+        userActionAuthorizationAllowed: false
+      };
+
+      window.__OO_8TS_VERIFICATION_EXECUTION_AUTHORIZATION_SAFETY_PRECONDITION =
+        output8TS;
+
+      OODebug.log(
+        "8TS",
+        "Controlled verification execution authorization safety precondition ready",
+        output8TS
+      );
+
+
+      /* =====================================================
+         STEP 8TT
+         FINAL AUTHORIZATION SEPARATION
+      ===================================================== */
+
+      const output8TT = {
+        step: "8TT",
+
+        verificationExecutionAuthorizationSeparation:
+          "READY",
+
+        query: query8TR,
+        targetCount: targetCount8TR,
+
+        genuineValidationResultReceived:
+          genuineValidationResultReceived8TR,
+
+        validationResultAccepted:
+          validationResultAccepted8TR,
+
+        authorizationEligible:
+          authorizationEligible8TR,
+
+        executionAuthorizationGranted: false,
+
+        authorizationSeparatedFromExecution: true,
+
+        verificationExecutionEligible: false,
+        verificationStarted: false,
+
+        verificationDecisionIssued: false,
+        verifiedClaimAllowed: false,
+
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        scoreCalculation: false,
+        mutationAllowed: false,
+        userActionAuthorization: false
+      };
+
+      window.__OO_8TT_VERIFICATION_EXECUTION_AUTHORIZATION_SEPARATION =
+        output8TT;
+
+      OODebug.log(
+        "8TT",
+        "Controlled verification execution authorization separation ready",
+        output8TT
+      );
+
+
+      /* =====================================================
+         STEP 8TU
+         EXECUTION ELIGIBILITY GATE
+      ===================================================== */
+
+      const output8TU = {
+        step: "8TU",
+
+        verificationExecutionEligibility:
+          "WAITING_FOR_GENUINE_VALIDATION_RESULT",
+
+        query: query8TR,
+        targetCount: targetCount8TR,
+
+        genuineValidationResultReceived: false,
+        validationResultAccepted: false,
+
+        authorizationEligible: false,
+
+        executionAuthorizationGranted: false,
+        verificationExecutionEligible: false,
+
+        verificationStarted: false,
+
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        scoreCalculation: false,
+        mutationAllowed: false,
+        userActionAuthorization: false
+      };
+
+      window.__OO_8TU_VERIFICATION_EXECUTION_ELIGIBILITY =
+        output8TU;
+
+      OODebug.log(
+        "8TU",
+        "Controlled verification execution eligibility gate ready",
+        output8TU
+      );
+
+
+      /* =====================================================
+         STEP 8TV
+         FINAL CONTROLLED EXECUTION HANDOFF
+      ===================================================== */
+
+      const output8TV = {
+        step: "8TV",
+
+        verificationExecutionFinalHandoff:
+          "READY",
+
+        handoffState:
+          "WAITING_FOR_GENUINE_VALIDATION_RESULT",
+
+        query: query8TR,
+        targetCount: targetCount8TR,
+
+        genuineValidationResultRequired: true,
+        genuineValidationResultReceived: false,
+        validationResultAccepted: false,
+
+        executionAuthorizationGranted: false,
+        verificationExecutionEligible: false,
+
+        verificationStarted: false,
+        verificationDecisionIssued: false,
+        verifiedClaimAllowed: false,
+
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        scoreCalculation: false,
+        mutationAllowed: false,
+        userActionAuthorization: false,
+
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false
+      };
+
+      /*
+       * FINAL SAFETY INVARIANTS
+       *
+       * This batch prepares the controlled handoff only.
+       * It does NOT start verification.
+       * It does NOT grant authorization.
+       * It does NOT mutate database state.
+       */
+
+      output8TV.executionAuthorizationGranted = false;
+      output8TV.verificationExecutionEligible = false;
+      output8TV.verificationStarted = false;
+      output8TV.mutationAllowed = false;
+
+      window.__OO_8TV_VERIFICATION_EXECUTION_FINAL_HANDOFF =
+        output8TV;
+
+      OODebug.log(
+        "8TV",
+        "Controlled verification execution final handoff ready",
+        output8TV
+      );
+
+    } catch (error8TR_8TV) {
+
+      window.__OO_8TR_8TV_ERROR =
+        error8TR_8TV &&
+        error8TR_8TV.message
+          ? error8TR_8TV.message
+          : "Unknown 8TR–8TV error";
+
+      if (
+        typeof OODebug !== "undefined" &&
+        OODebug &&
+        typeof OODebug.log === "function"
+      ) {
+        OODebug.log(
+          "8TR–8TV",
+          "Controlled verification execution authorization chain error",
+          window.__OO_8TR_8TV_ERROR
+        );
+      } else {
+        console.error(
+          "OpportunityOS 8TR–8TV error:",
+          window.__OO_8TR_8TV_ERROR
+        );
+      }
+    }
+  };
+
+
+  /* =========================================================
+     DEPENDENCY WAIT
+     WAIT FOR FROZEN 8TQ + DEBUGGER
+  ========================================================= */
+
+  let attempts8TR_8TV = 0;
+
+  const wait8TR_8TV = setInterval(() => {
+
+    attempts8TR_8TV++;
+
+    const tqReady8TR_8TV =
+      !!window.__OO_8TQ_VERIFICATION_EXECUTION_AUTHORIZATION_DECISION;
+
+    const debuggerReady8TR_8TV =
+      typeof OODebug !== "undefined" &&
+      OODebug &&
+      typeof OODebug.log === "function";
+
+    if (
+      tqReady8TR_8TV &&
+      debuggerReady8TR_8TV
+    ) {
+      clearInterval(wait8TR_8TV);
+
+      run8TR_8TV();
+
+      return;
+    }
+
+    if (attempts8TR_8TV >= 100) {
+      clearInterval(wait8TR_8TV);
+
+      console.error(
+        "OpportunityOS 8TR–8TV dependency wait timeout."
+      );
+    }
+
+  }, 100);
+
+})();   
   /* ==========================================
        RESULT VALUES
      ========================================== */
