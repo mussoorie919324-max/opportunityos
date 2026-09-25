@@ -92373,7 +92373,284 @@ AUTHORIZATION SAFETY + ELIGIBILITY HANDOFF
   }, 100);
 
 })();
-  
+/* =========================================================
+   STEP 8TX — CONTROLLED BACKEND RESPONSE INSPECTION
+========================================================= */
+
+(() => {
+  "use strict";
+
+  const step8TX = "8TX";
+
+  const run8TX = () => {
+    try {
+
+      /* =====================================================
+         READ-ONLY BACKEND RESPONSE INPUT
+      ===================================================== */
+
+      const backendResponse8TX =
+        window.__OO_8PN_BACKEND_RESPONSE || null;
+
+      if (!backendResponse8TX) {
+        return false;
+      }
+
+
+      /* =====================================================
+         SAFE JSON SERIALIZATION
+      ===================================================== */
+
+      let serializedResponse8TX = "";
+
+      try {
+        serializedResponse8TX =
+          JSON.stringify(
+            backendResponse8TX,
+            null,
+            2
+          );
+      } catch (serializationError8TX) {
+
+        serializedResponse8TX =
+          "BACKEND_RESPONSE_SERIALIZATION_FAILED: " +
+          (
+            serializationError8TX &&
+            serializationError8TX.message
+              ? serializationError8TX.message
+              : "Unknown serialization error"
+          );
+      }
+
+
+      /* =====================================================
+         RESPONSE SHAPE OBSERVATION
+      ===================================================== */
+
+      const responseKeys8TX =
+        backendResponse8TX &&
+        typeof backendResponse8TX === "object"
+          ? Object.keys(backendResponse8TX)
+          : [];
+
+
+      const output8TX = {
+
+        step: step8TX,
+
+        status: "READY",
+
+        sourceStep: "8PN",
+
+        responseReceived: true,
+
+        responseType:
+          Array.isArray(backendResponse8TX)
+            ? "ARRAY"
+            : typeof backendResponse8TX,
+
+        responseKeys:
+          responseKeys8TX,
+
+        serializedResponse:
+          serializedResponse8TX,
+
+        inspectionOnly: true,
+
+        evidencePayloadDetected: false,
+
+        externalSourceAccess: false,
+        sourceRetrieval: false,
+        evidenceReceived: false,
+
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        scoreCalculation: false,
+
+        mutationAllowed: false,
+
+        inventedEvidence: false,
+        inventedScores: false,
+        userDataAssumption: false,
+
+        message:
+          "Backend response inspected without interpreting, modifying, or inventing evidence."
+      };
+
+
+      /* =====================================================
+         REGISTRY HANDOFF
+      ===================================================== */
+
+      window.__OO_8TX_BACKEND_RESPONSE_INSPECTION =
+        output8TX;
+
+
+      /* =====================================================
+         READABLE DEBUG OUTPUT
+      ===================================================== */
+
+      if (
+        typeof OODebug !== "undefined" &&
+        OODebug &&
+        typeof OODebug.log === "function"
+      ) {
+
+        OODebug.log(
+          step8TX,
+          "Controlled backend response inspection complete",
+          serializedResponse8TX
+        );
+
+        OODebug.log(
+          step8TX,
+          "Backend response keys detected",
+          responseKeys8TX
+        );
+      }
+
+
+      /* =====================================================
+         CONSOLE READ-ONLY OUTPUT
+      ===================================================== */
+
+      console.log(
+        "OpportunityOS 8TX — BACKEND RESPONSE:",
+        backendResponse8TX
+      );
+
+      console.log(
+        "OpportunityOS 8TX — RESPONSE JSON:",
+        serializedResponse8TX
+      );
+
+
+      return true;
+
+    } catch (error8TX) {
+
+      window.__OO_8TX_ERROR =
+        error8TX &&
+        error8TX.message
+          ? error8TX.message
+          : "Unknown 8TX error";
+
+
+      if (
+        typeof OODebug !== "undefined" &&
+        OODebug &&
+        typeof OODebug.log === "function"
+      ) {
+
+        OODebug.log(
+          step8TX,
+          "Backend response inspection exception",
+          window.__OO_8TX_ERROR
+        );
+
+      } else {
+
+        console.error(
+          "OpportunityOS 8TX error:",
+          window.__OO_8TX_ERROR
+        );
+      }
+    }
+  };
+
+
+  /* =========================================================
+     DEPENDENCY WAIT
+     WAIT FOR 8PN BACKEND RESPONSE + DEBUGGER
+  ========================================================= */
+
+  let attempts8TX = 0;
+
+  const maxAttempts8TX = 150;
+
+  const wait8TX = setInterval(() => {
+
+    attempts8TX++;
+
+    const backendReady8TX =
+      !!window.__OO_8PN_BACKEND_RESPONSE;
+
+    const debuggerReady8TX =
+      typeof OODebug !== "undefined" &&
+      OODebug &&
+      typeof OODebug.log === "function";
+
+
+    if (
+      backendReady8TX &&
+      debuggerReady8TX
+    ) {
+
+      clearInterval(wait8TX);
+
+      run8TX();
+
+      return;
+    }
+
+
+    if (attempts8TX >= maxAttempts8TX) {
+
+      clearInterval(wait8TX);
+
+      if (!window.__OO_8TX_BACKEND_RESPONSE_INSPECTION) {
+
+        window.__OO_8TX_BACKEND_RESPONSE_INSPECTION = {
+
+          step: step8TX,
+
+          status: "BLOCKED",
+
+          sourceStep: "8PN",
+
+          responseReceived: false,
+
+          inspectionOnly: true,
+
+          evidencePayloadDetected: false,
+
+          externalSourceAccess: false,
+          sourceRetrieval: false,
+          evidenceReceived: false,
+
+          evidenceInsertion: false,
+          claimSupportUpdate: false,
+          scoreCalculation: false,
+
+          mutationAllowed: false,
+
+          inventedEvidence: false,
+          inventedScores: false,
+          userDataAssumption: false,
+
+          reason:
+            "No backend response was available within the controlled inspection window."
+        };
+
+
+        if (
+          typeof OODebug !== "undefined" &&
+          OODebug &&
+          typeof OODebug.log === "function"
+        ) {
+
+          OODebug.log(
+            step8TX,
+            "Backend response inspection blocked",
+            window.__OO_8TX_BACKEND_RESPONSE_INSPECTION
+          );
+        }
+      }
+    }
+
+  }, 100);
+
+})();  
   /* ==========================================
        RESULT VALUES
      ========================================== */
