@@ -90830,42 +90830,19 @@ FINAL INPUT / READINESS BOUNDARY
 /* =========================================================
 STEP 8TF → 8TJ
 CONTROLLED VERIFICATION EXECUTION
-AUTHORIZATION / EXECUTION SEPARATION BOUNDARY
+FINAL READINESS CONTINUATION
 ========================================================= */
 
 (() => {
   "use strict";
 
-  /* =======================================================
-     SAFE OODebug ACCESS
-  ======================================================= */
-
-  const log8TF_8TJ = (step, message, data) => {
+  const run8TF_8TJ = () => {
     try {
-      if (
-        typeof OODebug !== "undefined" &&
-        OODebug &&
-        typeof OODebug.log === "function"
-      ) {
-        OODebug.log(step, message, data);
-      }
-    } catch (debugError8TF_8TJ) {
-      console.debug(
-        "OpportunityOS debugger error",
-        step,
-        debugError8TF_8TJ
-      );
-    }
-  };
 
-  /* =======================================================
-     STEP 8TF
-     CONTROLLED VERIFICATION EXECUTION AUTHORIZATION
-     INPUT SEPARATION
-  ======================================================= */
+      /* =====================================================
+         STEP 8TF
+      ===================================================== */
 
-  const run8TF = () => {
-    try {
       const upstream8TF =
         window.__OO_8TE_VERIFICATION_EXECUTION_FINAL_READINESS;
 
@@ -90884,7 +90861,7 @@ AUTHORIZATION / EXECUTION SEPARATION BOUNDARY
       const output8TF = {
         step: "8TF",
 
-        verificationExecutionAuthorizationInputSeparation:
+        verificationExecutionAuthorizationInputResolution:
           "READY",
 
         query: query8TF,
@@ -90892,9 +90869,7 @@ AUTHORIZATION / EXECUTION SEPARATION BOUNDARY
 
         genuineValidationResultReceived: false,
 
-        authorizationInputPresent: false,
         executionAuthorizationGranted: false,
-
         verificationExecutionEligible: false,
         verificationStarted: false,
 
@@ -90905,38 +90880,19 @@ AUTHORIZATION / EXECUTION SEPARATION BOUNDARY
         userActionAuthorization: false
       };
 
-      window.__OO_8TF_VERIFICATION_EXECUTION_AUTHORIZATION_INPUT_SEPARATION =
+      window.__OO_8TF_VERIFICATION_EXECUTION_AUTHORIZATION_INPUT_RESOLUTION =
         output8TF;
 
-      log8TF_8TJ(
+      OODebug.log(
         "8TF",
-        "Controlled verification execution authorization input separation ready",
+        "Controlled verification execution authorization input resolution ready",
         output8TF
       );
-    } catch (error8TF) {
-      window.__OO_8TF_ERROR =
-        error8TF && error8TF.message
-          ? error8TF.message
-          : "Unknown 8TF error";
 
-      log8TF_8TJ(
-        "8TF",
-        "Controlled verification execution authorization input separation error",
-        window.__OO_8TF_ERROR
-      );
-    }
-  };
 
-  /* =======================================================
-     STEP 8TG
-     CONTROLLED VERIFICATION EXECUTION AUTHORIZATION
-     STATE RESOLUTION
-  ======================================================= */
-
-  const run8TG = () => {
-    try {
-      const upstream8TG =
-        window.__OO_8TF_VERIFICATION_EXECUTION_AUTHORIZATION_INPUT_SEPARATION;
+      /* =====================================================
+         STEP 8TG
+      ===================================================== */
 
       const output8TG = {
         step: "8TG",
@@ -90944,19 +90900,13 @@ AUTHORIZATION / EXECUTION SEPARATION BOUNDARY
         verificationExecutionAuthorizationState:
           "WAITING_FOR_GENUINE_VALIDATION_RESULT",
 
-        inputReady:
-          upstream8TG &&
-          typeof upstream8TG.query === "string" &&
-          upstream8TG.query.length > 0,
+        query: query8TF,
+        targetCount: targetCount8TF,
 
         genuineValidationResultReceived: false,
 
-        authorizationState:
-          "NOT_GRANTED",
-
         executionAuthorizationGranted: false,
         verificationExecutionEligible: false,
-
         verificationStarted: false,
 
         mutationAllowed: false
@@ -90965,69 +90915,32 @@ AUTHORIZATION / EXECUTION SEPARATION BOUNDARY
       window.__OO_8TG_VERIFICATION_EXECUTION_AUTHORIZATION_STATE =
         output8TG;
 
-      log8TF_8TJ(
+      OODebug.log(
         "8TG",
         "Controlled verification execution authorization state ready",
         output8TG
       );
-    } catch (error8TG) {
-      window.__OO_8TG_ERROR =
-        error8TG && error8TG.message
-          ? error8TG.message
-          : "Unknown 8TG error";
 
-      log8TF_8TJ(
-        "8TG",
-        "Controlled verification execution authorization state error",
-        window.__OO_8TG_ERROR
-      );
-    }
-  };
 
-  /* =======================================================
-     STEP 8TH
-     CONTROLLED VERIFICATION EXECUTION AUTHORIZATION
-     PRECONDITION LOCK
-  ======================================================= */
-
-  const run8TH = () => {
-    try {
-      const upstream8TH =
-        window.__OO_8TG_VERIFICATION_EXECUTION_AUTHORIZATION_STATE;
-
-      const inputReady8TH =
-        upstream8TH &&
-        upstream8TH.inputReady === true;
-
-      const genuineValidationResultReceived8TH =
-        upstream8TH &&
-        upstream8TH.genuineValidationResultReceived === true;
-
-      const authorizationGranted8TH = false;
-
-      const preconditionSatisfied8TH =
-        inputReady8TH &&
-        genuineValidationResultReceived8TH &&
-        authorizationGranted8TH;
+      /* =====================================================
+         STEP 8TH
+      ===================================================== */
 
       const output8TH = {
         step: "8TH",
 
         verificationExecutionAuthorizationPrecondition:
-          preconditionSatisfied8TH
-            ? "SATISFIED"
-            : "WAITING_FOR_GENUINE_VALIDATION_RESULT",
+          "WAITING_FOR_GENUINE_VALIDATION_RESULT",
 
-        inputReady: inputReady8TH,
+        query: query8TF,
+        targetCount: targetCount8TF,
 
-        genuineValidationResultReceived:
-          genuineValidationResultReceived8TH,
+        inputReady: query8TF.length > 0,
 
-        authorizationGranted:
-          authorizationGranted8TH,
+        genuineValidationResultReceived: false,
 
-        executionEligible:
-          preconditionSatisfied8TH,
+        authorizationGranted: false,
+        executionEligible: false,
 
         verificationStarted: false,
         mutationAllowed: false
@@ -91036,35 +90949,16 @@ AUTHORIZATION / EXECUTION SEPARATION BOUNDARY
       window.__OO_8TH_VERIFICATION_EXECUTION_AUTHORIZATION_PRECONDITION =
         output8TH;
 
-      log8TF_8TJ(
+      OODebug.log(
         "8TH",
         "Controlled verification execution authorization precondition lock ready",
         output8TH
       );
-    } catch (error8TH) {
-      window.__OO_8TH_ERROR =
-        error8TH && error8TH.message
-          ? error8TH.message
-          : "Unknown 8TH error";
 
-      log8TF_8TJ(
-        "8TH",
-        "Controlled verification execution authorization precondition lock error",
-        window.__OO_8TH_ERROR
-      );
-    }
-  };
 
-  /* =======================================================
-     STEP 8TI
-     CONTROLLED VERIFICATION EXECUTION AUTHORIZATION
-     SAFETY SEPARATION
-  ======================================================= */
-
-  const run8TI = () => {
-    try {
-      const upstream8TI =
-        window.__OO_8TH_VERIFICATION_EXECUTION_AUTHORIZATION_PRECONDITION;
+      /* =====================================================
+         STEP 8TI
+      ===================================================== */
 
       const output8TI = {
         step: "8TI",
@@ -91072,10 +90966,10 @@ AUTHORIZATION / EXECUTION SEPARATION BOUNDARY
         verificationExecutionAuthorizationSafetySeparation:
           "READY",
 
-        executionEligible:
-          upstream8TI &&
-          upstream8TI.executionEligible === true,
+        query: query8TF,
+        targetCount: targetCount8TF,
 
+        executionEligible: false,
         executionAuthorizationGranted: false,
 
         verificationStarted: false,
@@ -91094,44 +90988,16 @@ AUTHORIZATION / EXECUTION SEPARATION BOUNDARY
       window.__OO_8TI_VERIFICATION_EXECUTION_AUTHORIZATION_SAFETY_SEPARATION =
         output8TI;
 
-      log8TF_8TJ(
+      OODebug.log(
         "8TI",
         "Controlled verification execution authorization safety separation ready",
         output8TI
       );
-    } catch (error8TI) {
-      window.__OO_8TI_ERROR =
-        error8TI && error8TI.message
-          ? error8TI.message
-          : "Unknown 8TI error";
 
-      log8TF_8TJ(
-        "8TI",
-        "Controlled verification execution authorization safety separation error",
-        window.__OO_8TI_ERROR
-      );
-    }
-  };
 
-  /* =======================================================
-     STEP 8TJ
-     CONTROLLED VERIFICATION EXECUTION AUTHORIZATION
-     FINAL SEPARATION HANDOFF
-  ======================================================= */
-
-  const run8TJ = () => {
-    try {
-      const input8TJ =
-        window.__OO_8TF_VERIFICATION_EXECUTION_AUTHORIZATION_INPUT_SEPARATION;
-
-      const state8TJ =
-        window.__OO_8TG_VERIFICATION_EXECUTION_AUTHORIZATION_STATE;
-
-      const precondition8TJ =
-        window.__OO_8TH_VERIFICATION_EXECUTION_AUTHORIZATION_PRECONDITION;
-
-      const safety8TJ =
-        window.__OO_8TI_VERIFICATION_EXECUTION_AUTHORIZATION_SAFETY_SEPARATION;
+      /* =====================================================
+         STEP 8TJ
+      ===================================================== */
 
       const output8TJ = {
         step: "8TJ",
@@ -91142,29 +91008,13 @@ AUTHORIZATION / EXECUTION SEPARATION BOUNDARY
         handoffState:
           "WAITING_FOR_GENUINE_VALIDATION_RESULT",
 
-        query:
-          input8TJ &&
-          typeof input8TJ.query === "string"
-            ? input8TJ.query
-            : "",
+        query: query8TF,
+        targetCount: targetCount8TF,
 
-        targetCount:
-          input8TJ &&
-          Number.isInteger(input8TJ.targetCount)
-            ? input8TJ.targetCount
-            : 0,
-
-        genuineValidationResultReceived:
-          state8TJ &&
-          state8TJ.genuineValidationResultReceived === true,
+        genuineValidationResultReceived: false,
 
         executionAuthorizationGranted: false,
-
-        verificationExecutionEligible:
-          precondition8TJ &&
-          precondition8TJ.executionEligible === true &&
-          safety8TJ &&
-          safety8TJ.executionAuthorizationGranted === true,
+        verificationExecutionEligible: false,
 
         verificationStarted: false,
         verificationDecisionIssued: false,
@@ -91177,48 +91027,84 @@ AUTHORIZATION / EXECUTION SEPARATION BOUNDARY
         userActionAuthorization: false
       };
 
-      /*
-        Final safety invariant:
-        This handoff NEVER grants authorization by itself.
-      */
-
-      output8TJ.executionAuthorizationGranted = false;
-      output8TJ.verificationExecutionEligible = false;
-
       window.__OO_8TJ_VERIFICATION_EXECUTION_AUTHORIZATION_FINAL_SEPARATION =
         output8TJ;
 
-      log8TF_8TJ(
+      OODebug.log(
         "8TJ",
         "Controlled verification execution authorization final separation handoff ready",
         output8TJ
       );
-    } catch (error8TJ) {
-      window.__OO_8TJ_ERROR =
-        error8TJ && error8TJ.message
-          ? error8TJ.message
-          : "Unknown 8TJ error";
 
-      log8TF_8TJ(
-        "8TJ",
-        "Controlled verification execution authorization final separation handoff error",
-        window.__OO_8TJ_ERROR
-      );
+    } catch (error8TF_8TJ) {
+
+      window.__OO_8TF_8TJ_ERROR =
+        error8TF_8TJ &&
+        error8TF_8TJ.message
+          ? error8TF_8TJ.message
+          : "Unknown 8TF–8TJ error";
+
+      if (
+        typeof OODebug !== "undefined" &&
+        OODebug &&
+        typeof OODebug.log === "function"
+      ) {
+        OODebug.log(
+          "8TF–8TJ",
+          "Controlled verification execution continuation error",
+          window.__OO_8TF_8TJ_ERROR
+        );
+      } else {
+        console.error(
+          "OpportunityOS 8TF–8TJ error:",
+          window.__OO_8TF_8TJ_ERROR
+        );
+      }
     }
   };
 
-  /* =======================================================
-     SEQUENTIAL EXECUTION
-  ======================================================= */
 
-  run8TF();
-  run8TG();
-  run8TH();
-  run8TI();
-  run8TJ();
+  /* =========================================================
+     DEPENDENCY WAIT
+     8TE + OODebug MUST EXIST BEFORE RUNNING
+  ========================================================= */
+
+  let attempts8TF_8TJ = 0;
+
+  const wait8TF_8TJ = setInterval(() => {
+
+    attempts8TF_8TJ++;
+
+    const teReady8TF_8TJ =
+      !!window.__OO_8TE_VERIFICATION_EXECUTION_FINAL_READINESS;
+
+    const debuggerReady8TF_8TJ =
+      typeof OODebug !== "undefined" &&
+      OODebug &&
+      typeof OODebug.log === "function";
+
+    if (
+      teReady8TF_8TJ &&
+      debuggerReady8TF_8TJ
+    ) {
+      clearInterval(wait8TF_8TJ);
+
+      run8TF_8TJ();
+
+      return;
+    }
+
+    if (attempts8TF_8TJ >= 100) {
+      clearInterval(wait8TF_8TJ);
+
+      console.error(
+        "OpportunityOS 8TF–8TJ dependency wait timeout."
+      );
+    }
+
+  }, 100);
 
 })();
-  
   /* ==========================================
        RESULT VALUES
      ========================================== */
