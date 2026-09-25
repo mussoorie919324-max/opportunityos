@@ -92151,364 +92151,106 @@ AUTHORIZATION SAFETY + ELIGIBILITY HANDOFF
 
 })();   
 /* =========================================================
-   STEP 8TW — BACKEND EVIDENCE → VERIFICATION INTEGRATION
-   CONTROLLED ASYNC HANDOFF
-   ========================================================= */
+   STEP 8TW — CONTROLLED VERIFICATION EXECUTION
+              FINAL STATE OBSERVATION BOUNDARY
+========================================================= */
 
 (() => {
   "use strict";
 
-  const step8TW = "8TW";
-
-  /* ==========================================
-     8TW — SAFE DEBUG HELPER
-     ========================================== */
-
-  const log8TW = (operation8TW, data8TW) => {
-
-    if (
-      typeof OODebug !== "undefined" &&
-      OODebug &&
-      typeof OODebug.log === "function"
-    ) {
-
-      OODebug.log(
-        step8TW,
-        operation8TW,
-        data8TW
-      );
-
-    } else {
-
-      console.log(
-        "OpportunityOS",
-        step8TW,
-        operation8TW,
-        data8TW
-      );
-
-    }
-
-  };
-
-
-  /* ==========================================
-     8TW — INIT
-     ========================================== */
-
-  log8TW(
-    "START",
-    "Backend evidence integration watcher started."
-  );
-
-
-  try {
-
-    /* ==========================================
-       8TW — PROCESS
-       ========================================== */
-
-    const process8TW = () => {
-
-      const handoff8TW =
-        window.__OO_8TV_VERIFICATION_EXECUTION_FINAL_HANDOFF ||
-        null;
-
-      if (!handoff8TW) {
-
-        return {
-          done: false,
-          reason: "8TV_HANDOFF_NOT_AVAILABLE"
-        };
-
-      }
-
-
-      const backendResponse8TW =
-        window.__OO_8PN_BACKEND_RESPONSE ||
-        null;
-
-
-      if (!backendResponse8TW) {
-
-        return {
-          done: false,
-          reason: "BACKEND_RESPONSE_NOT_AVAILABLE"
-        };
-
-      }
-
-
-      log8TW(
-        "BACKEND_RESPONSE_DETECTED",
-        {
-          query:
-            typeof backendResponse8TW.query === "string"
-              ? backendResponse8TW.query
-              : "",
-
-          responseStep:
-            backendResponse8TW.step || "UNKNOWN"
-        }
-      );
-
-
-      /* ==========================================
-         EVIDENCE PAYLOAD DETECTION
-         ========================================== */
-
-      let evidence8TW = null;
-
-
-      if (
-        Array.isArray(
-          backendResponse8TW.evidence
-        )
-      ) {
-
-        evidence8TW =
-          backendResponse8TW.evidence;
-
-      }
-      else if (
-        Array.isArray(
-          backendResponse8TW.evidenceItems
-        )
-      ) {
-
-        evidence8TW =
-          backendResponse8TW.evidenceItems;
-
-      }
-      else if (
-        Array.isArray(
-          backendResponse8TW.results
-        )
-      ) {
-
-        evidence8TW =
-          backendResponse8TW.results;
-
-      }
-
-
-      if (!evidence8TW) {
-
-        const blocked8TW = {
-
-          step: step8TW,
-
-          status: "BLOCKED",
-
-          sourceStep: "8TV",
-
-          query:
-            typeof handoff8TW.query === "string"
-              ? handoff8TW.query
-              : "",
-
-          evidenceReceived: false,
-
-          evidenceValidated: false,
-
-          verificationStarted: false,
-
-          verificationCompleted: false,
-
-          claimSupportUpdate: false,
-
-          scoreCalculation: false,
-
-          mutationAllowed: false,
-
-          inventedEvidence: false,
-
-          inventedScores: false,
-
-          userDataAssumption: false,
-
-          reason:
-            "Backend response received, but no supported evidence array was found."
-
-        };
-
-
-        window.__OO_8TW_EVIDENCE_VERIFICATION_INTEGRATION =
-          blocked8TW;
-
-
-        log8TW(
-          "BLOCKED",
-          blocked8TW
-        );
-
-
-        return {
-          done: true,
-          reason: "NO_SUPPORTED_EVIDENCE_PAYLOAD"
-        };
-
-      }
-
-
-      /* ==========================================
-         EVIDENCE STRUCTURE VALIDATION
-         ========================================== */
-
-      if (
-        evidence8TW.length === 0
-      ) {
-
-        const empty8TW = {
-
-          step: step8TW,
-
-          status: "BLOCKED",
-
-          sourceStep: "8TV",
-
-          evidenceReceived: false,
-
-          evidenceValidated: false,
-
-          verificationStarted: false,
-
-          verificationCompleted: false,
-
-          claimSupportUpdate: false,
-
-          scoreCalculation: false,
-
-          mutationAllowed: false,
-
-          inventedEvidence: false,
-
-          inventedScores: false,
-
-          userDataAssumption: false,
-
-          reason:
-            "Backend evidence array is empty."
-
-        };
-
-
-        window.__OO_8TW_EVIDENCE_VERIFICATION_INTEGRATION =
-          empty8TW;
-
-
-        log8TW(
-          "BLOCKED",
-          empty8TW
-        );
-
-
-        return {
-          done: true,
-          reason: "EMPTY_EVIDENCE"
-        };
-
-      }
-
-
-      for (
-        const item8TW of evidence8TW
-      ) {
-
-        if (
-          !item8TW ||
-          typeof item8TW !== "object" ||
-          Array.isArray(item8TW)
-        ) {
-
-          const invalid8TW = {
-
-            step: step8TW,
-
-            status: "BLOCKED",
-
-            sourceStep: "8TV",
-
-            evidenceReceived: true,
-
-            evidenceValidated: false,
-
-            verificationStarted: false,
-
-            verificationCompleted: false,
-
-            claimSupportUpdate: false,
-
-            scoreCalculation: false,
-
-            mutationAllowed: false,
-
-            inventedEvidence: false,
-
-            inventedScores: false,
-
-            userDataAssumption: false,
-
-            reason:
-              "Backend returned an invalid evidence item."
-
-          };
-
-
-          window.__OO_8TW_EVIDENCE_VERIFICATION_INTEGRATION =
-            invalid8TW;
-
-
-          log8TW(
-            "BLOCKED",
-            invalid8TW
-          );
-
-
-          return {
-            done: true,
-            reason: "INVALID_EVIDENCE_ITEM"
-          };
-
-        }
-
-      }
-
-
-      /* ==========================================
-         SAFE VERIFICATION HANDOFF
-         ========================================== */
+  const run8TW = () => {
+    try {
+
+      /* =====================================================
+         FROZEN 8TV INPUT
+      ===================================================== */
+
+      const upstream8TW =
+        window.__OO_8TV_VERIFICATION_EXECUTION_FINAL_HANDOFF;
+
+      const query8TW =
+        upstream8TW &&
+        typeof upstream8TW.query === "string"
+          ? upstream8TW.query.trim()
+          : "";
+
+      const targetCount8TW =
+        upstream8TW &&
+        Number.isInteger(upstream8TW.targetCount)
+          ? upstream8TW.targetCount
+          : 0;
+
+
+      /* =====================================================
+         8TW — STATE INTEGRITY CHECK
+      ===================================================== */
+
+      const stateReady8TW =
+        upstream8TW &&
+        upstream8TW.verificationExecutionFinalHandoff ===
+          "READY" &&
+        upstream8TW.handoffState ===
+          "WAITING_FOR_GENUINE_VALIDATION_RESULT" &&
+        upstream8TW.genuineValidationResultRequired === true &&
+        upstream8TW.genuineValidationResultReceived === false &&
+        upstream8TW.validationResultAccepted === false &&
+        upstream8TW.executionAuthorizationGranted === false &&
+        upstream8TW.verificationExecutionEligible === false &&
+        upstream8TW.verificationStarted === false &&
+        upstream8TW.verificationDecisionIssued === false &&
+        upstream8TW.verifiedClaimAllowed === false &&
+        upstream8TW.evidenceInsertion === false &&
+        upstream8TW.claimSupportUpdate === false &&
+        upstream8TW.scoreCalculation === false &&
+        upstream8TW.mutationAllowed === false &&
+        upstream8TW.userActionAuthorization === false &&
+        upstream8TW.externalSourceAccess === false &&
+        upstream8TW.sourceRetrieval === false &&
+        upstream8TW.evidenceReceived === false &&
+        upstream8TW.inventedEvidence === false &&
+        upstream8TW.inventedScores === false &&
+        upstream8TW.userDataAssumption === false;
+
+
+      /* =====================================================
+         8TW — OBSERVATION OUTPUT
+      ===================================================== */
 
       const output8TW = {
 
-        step: step8TW,
+        step: "8TW",
 
-        status: "READY",
+        verificationExecutionStateObservation:
+          stateReady8TW
+            ? "READY"
+            : "BLOCKED",
 
-        sourceStep: "8TV",
+        observationState:
+          stateReady8TW
+            ? "WAITING_FOR_GENUINE_VALIDATION_RESULT"
+            : "BLOCKED",
 
-        query:
-          typeof handoff8TW.query === "string"
-            ? handoff8TW.query
-            : "",
+        query: query8TW,
 
-        targetCount:
-          Number.isInteger(
-            handoff8TW.targetCount
-          )
-            ? handoff8TW.targetCount
-            : 0,
+        targetCount: targetCount8TW,
 
-        evidenceReceived: true,
+        genuineValidationResultRequired: true,
 
-        evidenceValidated: true,
+        genuineValidationResultReceived: false,
 
-        evidenceCount:
-          evidence8TW.length,
+        validationResultAccepted: false,
+
+        executionAuthorizationGranted: false,
+
+        verificationExecutionEligible: false,
 
         verificationStarted: false,
 
-        verificationCompleted: false,
+        verificationDecisionIssued: false,
+
+        verifiedClaimAllowed: false,
+
+        evidenceInsertion: false,
 
         claimSupportUpdate: false,
 
@@ -92518,148 +92260,117 @@ AUTHORIZATION SAFETY + ELIGIBILITY HANDOFF
 
         userActionAuthorization: false,
 
+        externalSourceAccess: false,
+
+        sourceRetrieval: false,
+
+        evidenceReceived: false,
+
         inventedEvidence: false,
 
         inventedScores: false,
 
-        userDataAssumption: false,
-
-        evidencePayload:
-          evidence8TW
-
+        userDataAssumption: false
       };
 
 
-      window.__OO_8TW_EVIDENCE_VERIFICATION_INTEGRATION =
+      /* =====================================================
+         8TW — SAFETY INVARIANTS
+      ===================================================== */
+
+      output8TW.verificationStarted = false;
+      output8TW.executionAuthorizationGranted = false;
+      output8TW.verificationExecutionEligible = false;
+      output8TW.mutationAllowed = false;
+
+
+      /* =====================================================
+         8TW — REGISTRY HANDOFF
+      ===================================================== */
+
+      window.__OO_8TW_VERIFICATION_EXECUTION_STATE_OBSERVATION =
         output8TW;
 
 
-      log8TW(
-        "READY",
+      /* =====================================================
+         8TW — DEBUGGER
+      ===================================================== */
+
+      OODebug.log(
+        "8TW",
+        "Controlled verification execution state observation ready",
         output8TW
       );
 
+    } catch (error8TW) {
 
-      return {
-        done: true,
-        reason: "EVIDENCE_HANDOFF_READY"
-      };
+      window.__OO_8TW_ERROR =
+        error8TW &&
+        error8TW.message
+          ? error8TW.message
+          : "Unknown 8TW error";
 
-    };
-
-
-    /* ==========================================
-       8TW — ASYNC WATCHER
-       ========================================== */
-
-    let attempts8TW = 0;
-
-    const maxAttempts8TW = 300;
-
-
-    const timer8TW = setInterval(
-      () => {
-
-        attempts8TW++;
-
-
-        const result8TW =
-          process8TW();
-
-
-        if (
-          result8TW.done
-        ) {
-
-          clearInterval(timer8TW);
-
-          log8TW(
-            "COMPLETE",
-            result8TW.reason
-          );
-
-          return;
-
-        }
+      if (
+        typeof OODebug !== "undefined" &&
+        OODebug &&
+        typeof OODebug.log === "function"
+      ) {
+        OODebug.log(
+          "8TW",
+          "Controlled verification execution state observation error",
+          window.__OO_8TW_ERROR
+        );
+      } else {
+        console.error(
+          "OpportunityOS 8TW error:",
+          window.__OO_8TW_ERROR
+        );
+      }
+    }
+  };
 
 
-        if (
-          attempts8TW >= maxAttempts8TW
-        ) {
+  /* =========================================================
+     DEPENDENCY WAIT
+     WAIT FOR FROZEN 8TV + DEBUGGER
+  ========================================================= */
 
-          clearInterval(timer8TW);
+  let attempts8TW = 0;
 
+  const wait8TW = setInterval(() => {
 
-          const timeout8TW = {
+    attempts8TW++;
 
-            step: step8TW,
+    const upstreamReady8TW =
+      !!window.__OO_8TV_VERIFICATION_EXECUTION_FINAL_HANDOFF;
 
-            status: "BLOCKED",
-
-            sourceStep: "8TV",
-
-            evidenceReceived: false,
-
-            evidenceValidated: false,
-
-            verificationStarted: false,
-
-            verificationCompleted: false,
-
-            claimSupportUpdate: false,
-
-            scoreCalculation: false,
-
-            mutationAllowed: false,
-
-            inventedEvidence: false,
-
-            inventedScores: false,
-
-            userDataAssumption: false,
-
-            reason:
-              result8TW.reason ||
-              "Controlled integration wait expired."
-
-          };
+    const debuggerReady8TW =
+      typeof OODebug !== "undefined" &&
+      OODebug &&
+      typeof OODebug.log === "function";
 
 
-          window.__OO_8TW_EVIDENCE_VERIFICATION_INTEGRATION =
-            timeout8TW;
+    if (
+      upstreamReady8TW &&
+      debuggerReady8TW
+    ) {
+      clearInterval(wait8TW);
+
+      run8TW();
+
+      return;
+    }
 
 
-          log8TW(
-            "TIMEOUT",
-            timeout8TW
-          );
+    if (attempts8TW >= 100) {
+      clearInterval(wait8TW);
 
-        }
+      console.error(
+        "OpportunityOS 8TW dependency wait timeout."
+      );
+    }
 
-      },
-      100
-    );
-
-
-  } catch (error8TW) {
-
-    const message8TW =
-      error8TW &&
-      error8TW.message
-        ? error8TW.message
-        : "Unknown 8TW error";
-
-
-    window.__OO_8TW_ERROR =
-      message8TW;
-
-
-    log8TW(
-      "ERROR",
-      message8TW
-    );
-
-  }
+  }, 100);
 
 })();
   
