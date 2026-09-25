@@ -90478,62 +90478,46 @@ FINAL INPUT / READINESS BOUNDARY
   "use strict";
 
   /* =======================================================
-     SAFE OPPORTUNITYOS DEBUGGER
-     Uses the same OODebug contract as frozen 8SZ.
+     CONTROLLED WAIT FOR 8SZ + OODebug
   ======================================================= */
 
-  const log8TA_8TE = (step, message, data) => {
+  const start8TA_8TE = () => {
     try {
-      if (
-        typeof OODebug !== "undefined" &&
-        OODebug &&
-        typeof OODebug.log === "function"
-      ) {
-        OODebug.log(step, message, data);
-      }
-    } catch (debugError8TA_8TE) {
-      console.debug(
-        "OpportunityOS debugger error",
-        step,
-        debugError8TA_8TE
-      );
-    }
-  };
+      /* =====================================================
+         SAFE DEBUGGER
+      ===================================================== */
 
-  /* =======================================================
-     STEP 8TA
-     CONTROLLED VERIFICATION EXECUTION INPUT RESOLUTION
-  ======================================================= */
+      const log8TA_8TE = (step, message, data) => {
+        try {
+          if (
+            typeof OODebug !== "undefined" &&
+            OODebug &&
+            typeof OODebug.log === "function"
+          ) {
+            OODebug.log(step, message, data);
+          }
+        } catch (debugError8TA_8TE) {
+          console.debug(
+            "OpportunityOS debugger error",
+            step,
+            debugError8TA_8TE
+          );
+        }
+      };
 
-  const run8TA = () => {
-    try {
-      let query8TA = "";
+      /* =====================================================
+         8TA
+         CONTROLLED VERIFICATION EXECUTION INPUT RESOLUTION
+      ===================================================== */
 
-      /*
-        Resolve only from existing live runtime state.
-        No hard-coded query.
-      */
+      const upstream8TA =
+        window.__OO_8SZ_VERIFICATION_EXECUTION_AUTHORIZATION_FINAL_HANDOFF;
 
-      if (
-        typeof value === "string" &&
-        value.trim().length > 0
-      ) {
-        query8TA = value.trim();
-      } else if (
-        typeof input !== "undefined" &&
-        input &&
-        typeof input.value === "string" &&
-        input.value.trim().length > 0
-      ) {
-        query8TA = input.value.trim();
-      } else if (
-        typeof result !== "undefined" &&
-        result &&
-        typeof result.query === "string" &&
-        result.query.trim().length > 0
-      ) {
-        query8TA = result.query.trim();
-      }
+      const query8TA =
+        upstream8TA &&
+        typeof upstream8TA.query === "string"
+          ? upstream8TA.query.trim()
+          : "";
 
       const targets8TA = [
         "earning",
@@ -90549,7 +90533,7 @@ FINAL INPUT / READINESS BOUNDARY
         verificationExecutionInputResolution:
           query8TA.length > 0
             ? "READY"
-            : "WAITING_FOR_LIVE_QUERY",
+            : "WAITING_FOR_GENUINE_VALIDATION_RESULT",
 
         query: query8TA,
 
@@ -90557,13 +90541,16 @@ FINAL INPUT / READINESS BOUNDARY
         targetCount: targets8TA.length,
 
         genuineValidationResultReceived: false,
+
         executionAuthorizationGranted: false,
         verificationExecutionEligible: false,
 
         verificationStarted: false,
+
         evidenceInsertion: false,
         claimSupportUpdate: false,
         scoreCalculation: false,
+
         mutationAllowed: false,
         userActionAuthorization: false
       };
@@ -90576,40 +90563,20 @@ FINAL INPUT / READINESS BOUNDARY
         "Controlled verification execution input resolution ready",
         output8TA
       );
-    } catch (error8TA) {
-      window.__OO_8TA_ERROR =
-        error8TA && error8TA.message
-          ? error8TA.message
-          : "Unknown 8TA error";
 
-      log8TA_8TE(
-        "8TA",
-        "Controlled verification execution input resolution error",
-        window.__OO_8TA_ERROR
-      );
-    }
-  };
-
-  /* =======================================================
-     STEP 8TB
-     CONTROLLED VERIFICATION EXECUTION INPUT READINESS
-  ======================================================= */
-
-  const run8TB = () => {
-    try {
-      const upstream8TB =
-        window.__OO_8TA_VERIFICATION_EXECUTION_INPUT_RESOLUTION;
+      /* =====================================================
+         8TB
+         CONTROLLED VERIFICATION EXECUTION INPUT READINESS
+      ===================================================== */
 
       const queryReady8TB =
-        upstream8TB &&
-        typeof upstream8TB.query === "string" &&
-        upstream8TB.query.trim().length > 0;
+        typeof output8TA.query === "string" &&
+        output8TA.query.trim().length > 0;
 
       const targetSetReady8TB =
-        upstream8TB &&
-        Array.isArray(upstream8TB.targets) &&
-        upstream8TB.targets.length === 5 &&
-        upstream8TB.targetCount === 5;
+        Array.isArray(output8TA.targets) &&
+        output8TA.targets.length === 5 &&
+        output8TA.targetCount === 5;
 
       const output8TB = {
         step: "8TB",
@@ -90622,17 +90589,11 @@ FINAL INPUT / READINESS BOUNDARY
         queryReady: queryReady8TB,
         targetSetReady: targetSetReady8TB,
 
-        query:
-          queryReady8TB
-            ? upstream8TB.query
-            : "",
-
-        targetCount:
-          targetSetReady8TB
-            ? upstream8TB.targetCount
-            : 0,
+        query: output8TA.query,
+        targetCount: output8TA.targetCount,
 
         genuineValidationResultReceived: false,
+
         executionAuthorizationGranted: false,
         verificationExecutionEligible: false,
 
@@ -90647,38 +90608,19 @@ FINAL INPUT / READINESS BOUNDARY
         "Controlled verification execution input readiness ready",
         output8TB
       );
-    } catch (error8TB) {
-      window.__OO_8TB_ERROR =
-        error8TB && error8TB.message
-          ? error8TB.message
-          : "Unknown 8TB error";
 
-      log8TA_8TE(
-        "8TB",
-        "Controlled verification execution input readiness error",
-        window.__OO_8TB_ERROR
-      );
-    }
-  };
-
-  /* =======================================================
-     STEP 8TC
-     CONTROLLED VERIFICATION EXECUTION PRECONDITION
-  ======================================================= */
-
-  const run8TC = () => {
-    try {
-      const upstream8TC =
-        window.__OO_8TB_VERIFICATION_EXECUTION_INPUT_READINESS;
+      /* =====================================================
+         8TC
+         CONTROLLED VERIFICATION EXECUTION PRECONDITION
+      ===================================================== */
 
       const inputReady8TC =
-        upstream8TC &&
-        upstream8TC.verificationExecutionInputReadiness ===
-          "READY";
+        output8TB.verificationExecutionInputReadiness ===
+        "READY";
 
       /*
-        Genuine validation result is intentionally absent.
-        Therefore execution authorization stays false.
+        Genuine validation result has NOT been received.
+        Execution therefore remains unauthorized.
       */
 
       const genuineValidationResultReceived8TC = false;
@@ -90709,6 +90651,7 @@ FINAL INPUT / READINESS BOUNDARY
           executionEligible8TC,
 
         verificationStarted: false,
+
         mutationAllowed: false
       };
 
@@ -90720,29 +90663,11 @@ FINAL INPUT / READINESS BOUNDARY
         "Controlled verification execution precondition ready",
         output8TC
       );
-    } catch (error8TC) {
-      window.__OO_8TC_ERROR =
-        error8TC && error8TC.message
-          ? error8TC.message
-          : "Unknown 8TC error";
 
-      log8TA_8TE(
-        "8TC",
-        "Controlled verification execution precondition error",
-        window.__OO_8TC_ERROR
-      );
-    }
-  };
-
-  /* =======================================================
-     STEP 8TD
-     CONTROLLED VERIFICATION EXECUTION SAFETY LOCK
-  ======================================================= */
-
-  const run8TD = () => {
-    try {
-      const upstream8TD =
-        window.__OO_8TC_VERIFICATION_EXECUTION_PRECONDITION;
+      /* =====================================================
+         8TD
+         CONTROLLED VERIFICATION EXECUTION SAFETY LOCK
+      ===================================================== */
 
       const output8TD = {
         step: "8TD",
@@ -90751,8 +90676,7 @@ FINAL INPUT / READINESS BOUNDARY
           "READY",
 
         executionEligible:
-          upstream8TD &&
-          upstream8TD.verificationExecutionEligible === true,
+          output8TC.verificationExecutionEligible === true,
 
         executionStarted: false,
 
@@ -90775,49 +90699,20 @@ FINAL INPUT / READINESS BOUNDARY
         "Controlled verification execution safety lock ready",
         output8TD
       );
-    } catch (error8TD) {
-      window.__OO_8TD_ERROR =
-        error8TD && error8TD.message
-          ? error8TD.message
-          : "Unknown 8TD error";
 
-      log8TA_8TE(
-        "8TD",
-        "Controlled verification execution safety lock error",
-        window.__OO_8TD_ERROR
-      );
-    }
-  };
-
-  /* =======================================================
-     STEP 8TE
-     CONTROLLED VERIFICATION EXECUTION FINAL READINESS
-     HANDOFF
-  ======================================================= */
-
-  const run8TE = () => {
-    try {
-      const input8TE =
-        window.__OO_8TA_VERIFICATION_EXECUTION_INPUT_RESOLUTION;
-
-      const readiness8TE =
-        window.__OO_8TB_VERIFICATION_EXECUTION_INPUT_READINESS;
-
-      const precondition8TE =
-        window.__OO_8TC_VERIFICATION_EXECUTION_PRECONDITION;
-
-      const safety8TE =
-        window.__OO_8TD_VERIFICATION_EXECUTION_SAFETY_LOCK;
+      /* =====================================================
+         8TE
+         CONTROLLED VERIFICATION EXECUTION FINAL READINESS
+         HANDOFF
+      ===================================================== */
 
       const output8TE = {
         step: "8TE",
 
         verificationExecutionFinalReadiness:
-          readiness8TE &&
-          readiness8TE.verificationExecutionInputReadiness ===
+          output8TB.verificationExecutionInputReadiness ===
             "READY" &&
-          safety8TE &&
-          safety8TE.verificationExecutionSafetyLock ===
+          output8TD.verificationExecutionSafetyLock ===
             "READY"
             ? "READY"
             : "BLOCKED",
@@ -90825,22 +90720,10 @@ FINAL INPUT / READINESS BOUNDARY
         handoffState:
           "WAITING_FOR_GENUINE_VALIDATION_RESULT",
 
-        query:
-          input8TE &&
-          typeof input8TE.query === "string"
-            ? input8TE.query
-            : "",
+        query: output8TA.query,
+        targetCount: output8TA.targetCount,
 
-        targetCount:
-          input8TE &&
-          Number.isInteger(input8TE.targetCount)
-            ? input8TE.targetCount
-            : 0,
-
-        genuineValidationResultReceived:
-          precondition8TE &&
-          precondition8TE.genuineValidationResultReceived ===
-            true,
+        genuineValidationResultReceived: false,
 
         executionAuthorizationGranted: false,
         verificationExecutionEligible: false,
@@ -90852,6 +90735,7 @@ FINAL INPUT / READINESS BOUNDARY
         evidenceInsertion: false,
         claimSupportUpdate: false,
         scoreCalculation: false,
+
         mutationAllowed: false,
         userActionAuthorization: false
       };
@@ -90864,29 +90748,83 @@ FINAL INPUT / READINESS BOUNDARY
         "Controlled verification execution final readiness handoff ready",
         output8TE
       );
-    } catch (error8TE) {
-      window.__OO_8TE_ERROR =
-        error8TE && error8TE.message
-          ? error8TE.message
-          : "Unknown 8TE error";
 
-      log8TA_8TE(
-        "8TE",
-        "Controlled verification execution final readiness handoff error",
-        window.__OO_8TE_ERROR
-      );
+      /* =====================================================
+         FINAL CONTROLLED HANDOFF
+      ===================================================== */
+
+      window.__OO_8TA_8TE_COMPLETE = true;
+
+    } catch (error8TA_8TE) {
+      try {
+        if (
+          typeof OODebug !== "undefined" &&
+          OODebug &&
+          typeof OODebug.log === "function"
+        ) {
+          OODebug.log(
+            "8TA",
+            "Controlled 8TA-8TE execution error",
+            error8TA_8TE &&
+            error8TA_8TE.message
+              ? error8TA_8TE.message
+              : "Unknown 8TA-8TE error"
+          );
+        }
+      } catch (ignored8TA_8TE) {
+        console.debug(
+          "OpportunityOS 8TA-8TE error",
+          error8TA_8TE
+        );
+      }
     }
   };
 
   /* =======================================================
-     CONTROLLED SEQUENTIAL EXECUTION
+     WAIT FOR FROZEN 8SZ HANDOFF
+     AND OODebug TO BE AVAILABLE
   ======================================================= */
 
-  run8TA();
-  run8TB();
-  run8TC();
-  run8TD();
-  run8TE();
+  let attempts8TA_8TE = 0;
+
+  const wait8TA_8TE = setInterval(() => {
+    attempts8TA_8TE++;
+
+    const szReady8TA_8TE =
+      !!window.__OO_8SZ_VERIFICATION_EXECUTION_AUTHORIZATION_FINAL_HANDOFF;
+
+    const debugReady8TA_8TE =
+      typeof OODebug !== "undefined" &&
+      OODebug &&
+      typeof OODebug.log === "function";
+
+    if (
+      szReady8TA_8TE &&
+      debugReady8TA_8TE
+    ) {
+      clearInterval(wait8TA_8TE);
+      start8TA_8TE();
+      return;
+    }
+
+    /*
+      Safety timeout:
+      Do not run the chain without the frozen 8SZ
+      handoff and debugger.
+    */
+
+    if (attempts8TA_8TE >= 100) {
+      clearInterval(wait8TA_8TE);
+
+      console.debug(
+        "OpportunityOS 8TA-8TE waiting boundary not satisfied",
+        {
+          szReady: szReady8TA_8TE,
+          debugReady: debugReady8TA_8TE
+        }
+      );
+    }
+  }, 100);
 
 })();
 
