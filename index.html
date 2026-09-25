@@ -90474,266 +90474,320 @@ CONTROLLED VERIFICATION EXECUTION
 FINAL INPUT / READINESS BOUNDARY
 ========================================================= */
 
-(function () {
+(() => {
   "use strict";
 
   /* =======================================================
-     SAFE DEBUG LOG
+     SAFE OPPORTUNITYOS DEBUGGER
+     Uses the same OODebug contract as frozen 8SZ.
   ======================================================= */
 
-  function ooLog_8TA_8TE(step, message, data) {
+  const log8TA_8TE = (step, message, data) => {
     try {
       if (
-        typeof window !== "undefined" &&
-        typeof window.debugLog === "function"
+        typeof OODebug !== "undefined" &&
+        OODebug &&
+        typeof OODebug.log === "function"
       ) {
-        window.debugLog(step, message, data);
-        return;
+        OODebug.log(step, message, data);
       }
-
-      if (typeof debugLog === "function") {
-        debugLog(step, message, data);
-        return;
-      }
-
+    } catch (debugError8TA_8TE) {
       console.debug(
-        "OpportunityOS",
+        "OpportunityOS debugger error",
         step,
-        message,
-        data
-      );
-    } catch (error) {
-      console.debug(
-        "OpportunityOS Debugger fallback",
-        step,
-        message
+        debugError8TA_8TE
       );
     }
-  }
+  };
 
   /* =======================================================
      STEP 8TA
      CONTROLLED VERIFICATION EXECUTION INPUT RESOLUTION
   ======================================================= */
 
-  let verificationExecutionInputResolution_8TA = {
-    status: "ready",
-    ready: false,
-    query: null,
-    targets: [
-      "earning",
-      "competition",
-      "difficulty",
-      "risk",
-      "trend"
-    ],
-    genuineValidationResultReceived: false,
-    verificationExecutionAllowed: false
-  };
+  const run8TA = () => {
+    try {
+      let query8TA = "";
 
-  try {
-    let resolvedQuery = null;
+      /*
+        Resolve only from existing live runtime state.
+        No hard-coded query.
+      */
 
-    /*
-      Use the current live query when available.
-      Never hard-code a production/test query.
-    */
-
-    if (
-      typeof value === "string" &&
-      value.trim().length > 0
-    ) {
-      resolvedQuery = value.trim();
-    } else if (
-      typeof input !== "undefined" &&
-      input &&
-      typeof input.value === "string" &&
-      input.value.trim().length > 0
-    ) {
-      resolvedQuery = input.value.trim();
-    } else if (
-      typeof result !== "undefined" &&
-      result &&
-      typeof result.query === "string" &&
-      result.query.trim().length > 0
-    ) {
-      resolvedQuery = result.query.trim();
-    }
-
-    verificationExecutionInputResolution_8TA.query =
-      resolvedQuery;
-
-    verificationExecutionInputResolution_8TA.ready =
-      typeof resolvedQuery === "string" &&
-      resolvedQuery.length > 0;
-
-    ooLog_8TA_8TE(
-      "8TA",
-      "Controlled verification execution input resolution ready",
-      verificationExecutionInputResolution_8TA
-    );
-  } catch (error) {
-    ooLog_8TA_8TE(
-      "8TA",
-      "Controlled verification execution input resolution blocked",
-      {
-        status: "blocked",
-        ready: false,
-        error: error.message || "Unknown error"
+      if (
+        typeof value === "string" &&
+        value.trim().length > 0
+      ) {
+        query8TA = value.trim();
+      } else if (
+        typeof input !== "undefined" &&
+        input &&
+        typeof input.value === "string" &&
+        input.value.trim().length > 0
+      ) {
+        query8TA = input.value.trim();
+      } else if (
+        typeof result !== "undefined" &&
+        result &&
+        typeof result.query === "string" &&
+        result.query.trim().length > 0
+      ) {
+        query8TA = result.query.trim();
       }
-    );
-  }
+
+      const targets8TA = [
+        "earning",
+        "competition",
+        "difficulty",
+        "risk",
+        "trend"
+      ];
+
+      const output8TA = {
+        step: "8TA",
+
+        verificationExecutionInputResolution:
+          query8TA.length > 0
+            ? "READY"
+            : "WAITING_FOR_LIVE_QUERY",
+
+        query: query8TA,
+
+        targets: targets8TA,
+        targetCount: targets8TA.length,
+
+        genuineValidationResultReceived: false,
+        executionAuthorizationGranted: false,
+        verificationExecutionEligible: false,
+
+        verificationStarted: false,
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        scoreCalculation: false,
+        mutationAllowed: false,
+        userActionAuthorization: false
+      };
+
+      window.__OO_8TA_VERIFICATION_EXECUTION_INPUT_RESOLUTION =
+        output8TA;
+
+      log8TA_8TE(
+        "8TA",
+        "Controlled verification execution input resolution ready",
+        output8TA
+      );
+    } catch (error8TA) {
+      window.__OO_8TA_ERROR =
+        error8TA && error8TA.message
+          ? error8TA.message
+          : "Unknown 8TA error";
+
+      log8TA_8TE(
+        "8TA",
+        "Controlled verification execution input resolution error",
+        window.__OO_8TA_ERROR
+      );
+    }
+  };
 
   /* =======================================================
      STEP 8TB
      CONTROLLED VERIFICATION EXECUTION INPUT READINESS
   ======================================================= */
 
-  let verificationExecutionInputReadiness_8TB = {
-    status: "ready",
-    ready: false,
-    queryReady: false,
-    targetSetReady: false,
-    genuineValidationResultReceived: false,
-    verificationExecutionAllowed: false
+  const run8TB = () => {
+    try {
+      const upstream8TB =
+        window.__OO_8TA_VERIFICATION_EXECUTION_INPUT_RESOLUTION;
+
+      const queryReady8TB =
+        upstream8TB &&
+        typeof upstream8TB.query === "string" &&
+        upstream8TB.query.trim().length > 0;
+
+      const targetSetReady8TB =
+        upstream8TB &&
+        Array.isArray(upstream8TB.targets) &&
+        upstream8TB.targets.length === 5 &&
+        upstream8TB.targetCount === 5;
+
+      const output8TB = {
+        step: "8TB",
+
+        verificationExecutionInputReadiness:
+          queryReady8TB && targetSetReady8TB
+            ? "READY"
+            : "BLOCKED",
+
+        queryReady: queryReady8TB,
+        targetSetReady: targetSetReady8TB,
+
+        query:
+          queryReady8TB
+            ? upstream8TB.query
+            : "",
+
+        targetCount:
+          targetSetReady8TB
+            ? upstream8TB.targetCount
+            : 0,
+
+        genuineValidationResultReceived: false,
+        executionAuthorizationGranted: false,
+        verificationExecutionEligible: false,
+
+        mutationAllowed: false
+      };
+
+      window.__OO_8TB_VERIFICATION_EXECUTION_INPUT_READINESS =
+        output8TB;
+
+      log8TA_8TE(
+        "8TB",
+        "Controlled verification execution input readiness ready",
+        output8TB
+      );
+    } catch (error8TB) {
+      window.__OO_8TB_ERROR =
+        error8TB && error8TB.message
+          ? error8TB.message
+          : "Unknown 8TB error";
+
+      log8TA_8TE(
+        "8TB",
+        "Controlled verification execution input readiness error",
+        window.__OO_8TB_ERROR
+      );
+    }
   };
-
-  try {
-    const queryReady =
-      typeof verificationExecutionInputResolution_8TA.query ===
-        "string" &&
-      verificationExecutionInputResolution_8TA.query.trim()
-        .length > 0;
-
-    const targetSetReady =
-      Array.isArray(
-        verificationExecutionInputResolution_8TA.targets
-      ) &&
-      verificationExecutionInputResolution_8TA.targets.length ===
-        5;
-
-    verificationExecutionInputReadiness_8TB.queryReady =
-      queryReady;
-
-    verificationExecutionInputReadiness_8TB.targetSetReady =
-      targetSetReady;
-
-    verificationExecutionInputReadiness_8TB.ready =
-      queryReady && targetSetReady;
-
-    ooLog_8TA_8TE(
-      "8TB",
-      "Controlled verification execution input readiness ready",
-      verificationExecutionInputReadiness_8TB
-    );
-  } catch (error) {
-    ooLog_8TA_8TE(
-      "8TB",
-      "Controlled verification execution input readiness blocked",
-      {
-        status: "blocked",
-        ready: false,
-        error: error.message || "Unknown error"
-      }
-    );
-  }
 
   /* =======================================================
      STEP 8TC
      CONTROLLED VERIFICATION EXECUTION PRECONDITION
   ======================================================= */
 
-  let verificationExecutionPrecondition_8TC = {
-    status: "ready",
-    ready: false,
-    inputReady: false,
-    genuineValidationResultReceived: false,
-    authorizationGranted: false,
-    executionEligible: false
+  const run8TC = () => {
+    try {
+      const upstream8TC =
+        window.__OO_8TB_VERIFICATION_EXECUTION_INPUT_READINESS;
+
+      const inputReady8TC =
+        upstream8TC &&
+        upstream8TC.verificationExecutionInputReadiness ===
+          "READY";
+
+      /*
+        Genuine validation result is intentionally absent.
+        Therefore execution authorization stays false.
+      */
+
+      const genuineValidationResultReceived8TC = false;
+      const executionAuthorizationGranted8TC = false;
+
+      const executionEligible8TC =
+        inputReady8TC &&
+        genuineValidationResultReceived8TC &&
+        executionAuthorizationGranted8TC;
+
+      const output8TC = {
+        step: "8TC",
+
+        verificationExecutionPrecondition:
+          inputReady8TC
+            ? "READY"
+            : "BLOCKED",
+
+        inputReady: inputReady8TC,
+
+        genuineValidationResultReceived:
+          genuineValidationResultReceived8TC,
+
+        executionAuthorizationGranted:
+          executionAuthorizationGranted8TC,
+
+        verificationExecutionEligible:
+          executionEligible8TC,
+
+        verificationStarted: false,
+        mutationAllowed: false
+      };
+
+      window.__OO_8TC_VERIFICATION_EXECUTION_PRECONDITION =
+        output8TC;
+
+      log8TA_8TE(
+        "8TC",
+        "Controlled verification execution precondition ready",
+        output8TC
+      );
+    } catch (error8TC) {
+      window.__OO_8TC_ERROR =
+        error8TC && error8TC.message
+          ? error8TC.message
+          : "Unknown 8TC error";
+
+      log8TA_8TE(
+        "8TC",
+        "Controlled verification execution precondition error",
+        window.__OO_8TC_ERROR
+      );
+    }
   };
-
-  try {
-    const inputReady =
-      verificationExecutionInputReadiness_8TB.ready === true;
-
-    /*
-      Genuine validation result has NOT been received.
-      Therefore execution authorization remains false.
-    */
-
-    const genuineValidationResultReceived = false;
-    const authorizationGranted = false;
-
-    verificationExecutionPrecondition_8TC.inputReady =
-      inputReady;
-
-    verificationExecutionPrecondition_8TC.executionEligible =
-      inputReady &&
-      genuineValidationResultReceived &&
-      authorizationGranted;
-
-    ooLog_8TA_8TE(
-      "8TC",
-      "Controlled verification execution precondition ready",
-      verificationExecutionPrecondition_8TC
-    );
-  } catch (error) {
-    ooLog_8TA_8TE(
-      "8TC",
-      "Controlled verification execution precondition blocked",
-      {
-        status: "blocked",
-        ready: false,
-        error: error.message || "Unknown error"
-      }
-    );
-  }
 
   /* =======================================================
      STEP 8TD
      CONTROLLED VERIFICATION EXECUTION SAFETY LOCK
   ======================================================= */
 
-  let verificationExecutionSafetyLock_8TD = {
-    status: "ready",
-    ready: true,
-    executionEligible: false,
-    executionStarted: false,
-    evidenceInsertionAllowed: false,
-    claimSupportUpdateAllowed: false,
-    scoreCalculationAllowed: false,
-    mutationAllowed: false,
-    userActionAuthorizationAllowed: false
+  const run8TD = () => {
+    try {
+      const upstream8TD =
+        window.__OO_8TC_VERIFICATION_EXECUTION_PRECONDITION;
+
+      const output8TD = {
+        step: "8TD",
+
+        verificationExecutionSafetyLock:
+          "READY",
+
+        executionEligible:
+          upstream8TD &&
+          upstream8TD.verificationExecutionEligible === true,
+
+        executionStarted: false,
+
+        evidenceInsertionAllowed: false,
+        claimSupportUpdateAllowed: false,
+        scoreCalculationAllowed: false,
+
+        mutationAllowed: false,
+        userActionAuthorizationAllowed: false,
+
+        safetyState:
+          "WAITING_FOR_GENUINE_VALIDATION_RESULT"
+      };
+
+      window.__OO_8TD_VERIFICATION_EXECUTION_SAFETY_LOCK =
+        output8TD;
+
+      log8TA_8TE(
+        "8TD",
+        "Controlled verification execution safety lock ready",
+        output8TD
+      );
+    } catch (error8TD) {
+      window.__OO_8TD_ERROR =
+        error8TD && error8TD.message
+          ? error8TD.message
+          : "Unknown 8TD error";
+
+      log8TA_8TE(
+        "8TD",
+        "Controlled verification execution safety lock error",
+        window.__OO_8TD_ERROR
+      );
+    }
   };
-
-  try {
-    /*
-      Safety invariant:
-      No genuine validation result.
-      No verification execution.
-      No mutation.
-    */
-
-    verificationExecutionSafetyLock_8TD.executionEligible =
-      verificationExecutionPrecondition_8TC
-        .executionEligible === true;
-
-    ooLog_8TA_8TE(
-      "8TD",
-      "Controlled verification execution safety lock ready",
-      verificationExecutionSafetyLock_8TD
-    );
-  } catch (error) {
-    ooLog_8TA_8TE(
-      "8TD",
-      "Controlled verification execution safety lock blocked",
-      {
-        status: "blocked",
-        ready: false,
-        error: error.message || "Unknown error"
-      }
-    );
-  }
 
   /* =======================================================
      STEP 8TE
@@ -90741,81 +90795,98 @@ FINAL INPUT / READINESS BOUNDARY
      HANDOFF
   ======================================================= */
 
-  let verificationExecutionFinalReadiness_8TE = {
-    status: "ready",
-    ready: false,
-    query: null,
-    targets: [],
-    genuineValidationResultReceived: false,
-    executionEligible: false,
-    executionStarted: false,
-    evidenceInsertion: false,
-    claimSupportUpdate: false,
-    scoreCalculation: false,
-    mutation: false,
-    userActionAuthorization: false
+  const run8TE = () => {
+    try {
+      const input8TE =
+        window.__OO_8TA_VERIFICATION_EXECUTION_INPUT_RESOLUTION;
+
+      const readiness8TE =
+        window.__OO_8TB_VERIFICATION_EXECUTION_INPUT_READINESS;
+
+      const precondition8TE =
+        window.__OO_8TC_VERIFICATION_EXECUTION_PRECONDITION;
+
+      const safety8TE =
+        window.__OO_8TD_VERIFICATION_EXECUTION_SAFETY_LOCK;
+
+      const output8TE = {
+        step: "8TE",
+
+        verificationExecutionFinalReadiness:
+          readiness8TE &&
+          readiness8TE.verificationExecutionInputReadiness ===
+            "READY" &&
+          safety8TE &&
+          safety8TE.verificationExecutionSafetyLock ===
+            "READY"
+            ? "READY"
+            : "BLOCKED",
+
+        handoffState:
+          "WAITING_FOR_GENUINE_VALIDATION_RESULT",
+
+        query:
+          input8TE &&
+          typeof input8TE.query === "string"
+            ? input8TE.query
+            : "",
+
+        targetCount:
+          input8TE &&
+          Number.isInteger(input8TE.targetCount)
+            ? input8TE.targetCount
+            : 0,
+
+        genuineValidationResultReceived:
+          precondition8TE &&
+          precondition8TE.genuineValidationResultReceived ===
+            true,
+
+        executionAuthorizationGranted: false,
+        verificationExecutionEligible: false,
+
+        verificationStarted: false,
+        verificationDecisionIssued: false,
+        verifiedClaimAllowed: false,
+
+        evidenceInsertion: false,
+        claimSupportUpdate: false,
+        scoreCalculation: false,
+        mutationAllowed: false,
+        userActionAuthorization: false
+      };
+
+      window.__OO_8TE_VERIFICATION_EXECUTION_FINAL_READINESS =
+        output8TE;
+
+      log8TA_8TE(
+        "8TE",
+        "Controlled verification execution final readiness handoff ready",
+        output8TE
+      );
+    } catch (error8TE) {
+      window.__OO_8TE_ERROR =
+        error8TE && error8TE.message
+          ? error8TE.message
+          : "Unknown 8TE error";
+
+      log8TA_8TE(
+        "8TE",
+        "Controlled verification execution final readiness handoff error",
+        window.__OO_8TE_ERROR
+      );
+    }
   };
 
-  try {
-    verificationExecutionFinalReadiness_8TE.query =
-      verificationExecutionInputResolution_8TA.query;
+  /* =======================================================
+     CONTROLLED SEQUENTIAL EXECUTION
+  ======================================================= */
 
-    verificationExecutionFinalReadiness_8TE.targets =
-      verificationExecutionInputResolution_8TA.targets;
-
-    verificationExecutionFinalReadiness_8TE.ready =
-      verificationExecutionInputReadiness_8TB.ready === true;
-
-    verificationExecutionFinalReadiness_8TE.genuineValidationResultReceived =
-      false;
-
-    verificationExecutionFinalReadiness_8TE.executionEligible =
-      false;
-
-    verificationExecutionFinalReadiness_8TE.executionStarted =
-      false;
-
-    verificationExecutionFinalReadiness_8TE.evidenceInsertion =
-      false;
-
-    verificationExecutionFinalReadiness_8TE.claimSupportUpdate =
-      false;
-
-    verificationExecutionFinalReadiness_8TE.scoreCalculation =
-      false;
-
-    verificationExecutionFinalReadiness_8TE.mutation =
-      false;
-
-    verificationExecutionFinalReadiness_8TE.userActionAuthorization =
-      false;
-
-    /*
-      Readiness-only handoff.
-      This does NOT start verification execution.
-    */
-
-    if (typeof window !== "undefined") {
-      window.__OO_8TE_HANDOFF =
-        verificationExecutionFinalReadiness_8TE;
-    }
-
-    ooLog_8TA_8TE(
-      "8TE",
-      "Controlled verification execution final readiness handoff ready",
-      verificationExecutionFinalReadiness_8TE
-    );
-  } catch (error) {
-    ooLog_8TA_8TE(
-      "8TE",
-      "Controlled verification execution final readiness handoff blocked",
-      {
-        status: "blocked",
-        ready: false,
-        error: error.message || "Unknown error"
-      }
-    );
-  }
+  run8TA();
+  run8TB();
+  run8TC();
+  run8TD();
+  run8TE();
 
 })();
 
