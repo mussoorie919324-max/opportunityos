@@ -92152,7 +92152,7 @@ AUTHORIZATION SAFETY + ELIGIBILITY HANDOFF
 })();   
 /* =========================================================
    STEP 8TW — BACKEND EVIDENCE → VERIFICATION INTEGRATION
-   CONTROLLED EVIDENCE PAYLOAD BOUNDARY
+   CONTROLLED ASYNC HANDOFF
    ========================================================= */
 
 (() => {
@@ -92160,116 +92160,52 @@ AUTHORIZATION SAFETY + ELIGIBILITY HANDOFF
 
   const step8TW = "8TW";
 
+  /* ==========================================
+     8TW — SAFE DEBUG HELPER
+     ========================================== */
+
+  const log8TW = (operation8TW, data8TW) => {
+
+    if (
+      typeof OODebug !== "undefined" &&
+      OODebug &&
+      typeof OODebug.log === "function"
+    ) {
+
+      OODebug.log(
+        step8TW,
+        operation8TW,
+        data8TW
+      );
+
+    } else {
+
+      console.log(
+        "OpportunityOS",
+        step8TW,
+        operation8TW,
+        data8TW
+      );
+
+    }
+
+  };
+
+
+  /* ==========================================
+     8TW — INIT
+     ========================================== */
+
+  log8TW(
+    "START",
+    "Backend evidence integration watcher started."
+  );
+
+
   try {
 
     /* ==========================================
-       8TW — SAFE BACKEND RESPONSE READ
-       ========================================== */
-
-    const readBackendEvidence8TW = () => {
-
-      const backendResponse8TW =
-        window.__OO_8PN_BACKEND_RESPONSE || null;
-
-      if (!backendResponse8TW) {
-        return {
-          ready: false,
-          reason: "BACKEND_RESPONSE_NOT_RECEIVED"
-        };
-      }
-
-      /*
-       * Evidence must come from the backend response.
-       * This step never creates evidence itself.
-       */
-
-      const evidenceCandidates8TW = [
-        backendResponse8TW.evidence,
-        backendResponse8TW.evidenceItems,
-        backendResponse8TW.results
-      ];
-
-      let evidencePayload8TW = null;
-
-      for (
-        const candidate8TW
-        of evidenceCandidates8TW
-      ) {
-
-        if (
-          Array.isArray(candidate8TW) &&
-          candidate8TW.length > 0
-        ) {
-          evidencePayload8TW = candidate8TW;
-          break;
-        }
-
-      }
-
-      if (!evidencePayload8TW) {
-        return {
-          ready: false,
-          reason: "NO_SUPPORTED_EVIDENCE_PAYLOAD"
-        };
-      }
-
-      return {
-        ready: true,
-        evidence: evidencePayload8TW
-      };
-    };
-
-
-    /* ==========================================
-       8TW — CONTROLLED EVIDENCE VALIDATION
-       ========================================== */
-
-    const validateEvidence8TW = (
-      evidence8TW
-    ) => {
-
-      if (
-        !Array.isArray(evidence8TW) ||
-        evidence8TW.length === 0
-      ) {
-        return {
-          valid: false,
-          reason: "EVIDENCE_ARRAY_EMPTY"
-        };
-      }
-
-      /*
-       * Every evidence item must be an object.
-       * We do NOT manufacture missing fields.
-       */
-
-      for (
-        const item8TW
-        of evidence8TW
-      ) {
-
-        if (
-          !item8TW ||
-          typeof item8TW !== "object" ||
-          Array.isArray(item8TW)
-        ) {
-          return {
-            valid: false,
-            reason: "INVALID_EVIDENCE_ITEM"
-          };
-        }
-
-      }
-
-      return {
-        valid: true,
-        count: evidence8TW.length
-      };
-    };
-
-
-    /* ==========================================
-       8TW — INTEGRATION STATE
+       8TW — PROCESS
        ========================================== */
 
     const process8TW = () => {
@@ -92279,67 +92215,86 @@ AUTHORIZATION SAFETY + ELIGIBILITY HANDOFF
         null;
 
       if (!handoff8TW) {
-        return false;
-      }
 
-      const backendRead8TW =
-        readBackendEvidence8TW();
-
-      if (!backendRead8TW.ready) {
-
-        window.__OO_8TW_EVIDENCE_VERIFICATION_INTEGRATION = {
-
-          step: step8TW,
-
-          status: "WAITING",
-
-          sourceStep: "8TV",
-
-          query:
-            typeof handoff8TW.query === "string"
-              ? handoff8TW.query
-              : "",
-
-          targetCount:
-            Number.isInteger(handoff8TW.targetCount)
-              ? handoff8TW.targetCount
-              : 0,
-
-          evidenceReceived: false,
-          evidenceValidated: false,
-
-          verificationStarted: false,
-          verificationCompleted: false,
-
-          claimSupportUpdate: false,
-          scoreCalculation: false,
-          mutationAllowed: false,
-
-          inventedEvidence: false,
-          inventedScores: false,
-          userDataAssumption: false,
-
-          reason:
-            backendRead8TW.reason
+        return {
+          done: false,
+          reason: "8TV_HANDOFF_NOT_AVAILABLE"
         };
 
-        return false;
       }
+
+
+      const backendResponse8TW =
+        window.__OO_8PN_BACKEND_RESPONSE ||
+        null;
+
+
+      if (!backendResponse8TW) {
+
+        return {
+          done: false,
+          reason: "BACKEND_RESPONSE_NOT_AVAILABLE"
+        };
+
+      }
+
+
+      log8TW(
+        "BACKEND_RESPONSE_DETECTED",
+        {
+          query:
+            typeof backendResponse8TW.query === "string"
+              ? backendResponse8TW.query
+              : "",
+
+          responseStep:
+            backendResponse8TW.step || "UNKNOWN"
+        }
+      );
 
 
       /* ==========================================
-         8TW — VALIDATE REAL BACKEND EVIDENCE
+         EVIDENCE PAYLOAD DETECTION
          ========================================== */
 
-      const evidenceValidation8TW =
-        validateEvidence8TW(
-          backendRead8TW.evidence
-        );
+      let evidence8TW = null;
 
 
-      if (!evidenceValidation8TW.valid) {
+      if (
+        Array.isArray(
+          backendResponse8TW.evidence
+        )
+      ) {
 
-        window.__OO_8TW_EVIDENCE_VERIFICATION_INTEGRATION = {
+        evidence8TW =
+          backendResponse8TW.evidence;
+
+      }
+      else if (
+        Array.isArray(
+          backendResponse8TW.evidenceItems
+        )
+      ) {
+
+        evidence8TW =
+          backendResponse8TW.evidenceItems;
+
+      }
+      else if (
+        Array.isArray(
+          backendResponse8TW.results
+        )
+      ) {
+
+        evidence8TW =
+          backendResponse8TW.results;
+
+      }
+
+
+      if (!evidence8TW) {
+
+        const blocked8TW = {
 
           step: step8TW,
 
@@ -92352,48 +92307,176 @@ AUTHORIZATION SAFETY + ELIGIBILITY HANDOFF
               ? handoff8TW.query
               : "",
 
-          targetCount:
-            Number.isInteger(handoff8TW.targetCount)
-              ? handoff8TW.targetCount
-              : 0,
+          evidenceReceived: false,
 
-          evidenceReceived: true,
           evidenceValidated: false,
 
           verificationStarted: false,
+
           verificationCompleted: false,
 
           claimSupportUpdate: false,
+
           scoreCalculation: false,
+
           mutationAllowed: false,
 
           inventedEvidence: false,
+
           inventedScores: false,
+
           userDataAssumption: false,
 
           reason:
-            evidenceValidation8TW.reason
+            "Backend response received, but no supported evidence array was found."
+
         };
 
-        if (
-          typeof OODebug !== "undefined" &&
-          OODebug.log
-        ) {
 
-          OODebug.log(
-            step8TW,
-            "Backend evidence payload validation BLOCKED",
-            window.__OO_8TW_EVIDENCE_VERIFICATION_INTEGRATION
-          );
+        window.__OO_8TW_EVIDENCE_VERIFICATION_INTEGRATION =
+          blocked8TW;
 
-        }
 
-        return true;
+        log8TW(
+          "BLOCKED",
+          blocked8TW
+        );
+
+
+        return {
+          done: true,
+          reason: "NO_SUPPORTED_EVIDENCE_PAYLOAD"
+        };
+
       }
 
 
       /* ==========================================
-         8TW — SAFE VERIFICATION HANDOFF
+         EVIDENCE STRUCTURE VALIDATION
+         ========================================== */
+
+      if (
+        evidence8TW.length === 0
+      ) {
+
+        const empty8TW = {
+
+          step: step8TW,
+
+          status: "BLOCKED",
+
+          sourceStep: "8TV",
+
+          evidenceReceived: false,
+
+          evidenceValidated: false,
+
+          verificationStarted: false,
+
+          verificationCompleted: false,
+
+          claimSupportUpdate: false,
+
+          scoreCalculation: false,
+
+          mutationAllowed: false,
+
+          inventedEvidence: false,
+
+          inventedScores: false,
+
+          userDataAssumption: false,
+
+          reason:
+            "Backend evidence array is empty."
+
+        };
+
+
+        window.__OO_8TW_EVIDENCE_VERIFICATION_INTEGRATION =
+          empty8TW;
+
+
+        log8TW(
+          "BLOCKED",
+          empty8TW
+        );
+
+
+        return {
+          done: true,
+          reason: "EMPTY_EVIDENCE"
+        };
+
+      }
+
+
+      for (
+        const item8TW of evidence8TW
+      ) {
+
+        if (
+          !item8TW ||
+          typeof item8TW !== "object" ||
+          Array.isArray(item8TW)
+        ) {
+
+          const invalid8TW = {
+
+            step: step8TW,
+
+            status: "BLOCKED",
+
+            sourceStep: "8TV",
+
+            evidenceReceived: true,
+
+            evidenceValidated: false,
+
+            verificationStarted: false,
+
+            verificationCompleted: false,
+
+            claimSupportUpdate: false,
+
+            scoreCalculation: false,
+
+            mutationAllowed: false,
+
+            inventedEvidence: false,
+
+            inventedScores: false,
+
+            userDataAssumption: false,
+
+            reason:
+              "Backend returned an invalid evidence item."
+
+          };
+
+
+          window.__OO_8TW_EVIDENCE_VERIFICATION_INTEGRATION =
+            invalid8TW;
+
+
+          log8TW(
+            "BLOCKED",
+            invalid8TW
+          );
+
+
+          return {
+            done: true,
+            reason: "INVALID_EVIDENCE_ITEM"
+          };
+
+        }
+
+      }
+
+
+      /* ==========================================
+         SAFE VERIFICATION HANDOFF
          ========================================== */
 
       const output8TW = {
@@ -92410,7 +92493,9 @@ AUTHORIZATION SAFETY + ELIGIBILITY HANDOFF
             : "",
 
         targetCount:
-          Number.isInteger(handoff8TW.targetCount)
+          Number.isInteger(
+            handoff8TW.targetCount
+          )
             ? handoff8TW.targetCount
             : 0,
 
@@ -92419,13 +92504,7 @@ AUTHORIZATION SAFETY + ELIGIBILITY HANDOFF
         evidenceValidated: true,
 
         evidenceCount:
-          evidenceValidation8TW.count,
-
-        /*
-         * IMPORTANT:
-         * Receiving evidence is NOT the same as
-         * verifying a claim.
-         */
+          evidence8TW.length,
 
         verificationStarted: false,
 
@@ -92446,7 +92525,7 @@ AUTHORIZATION SAFETY + ELIGIBILITY HANDOFF
         userDataAssumption: false,
 
         evidencePayload:
-          backendRead8TW.evidence
+          evidence8TW
 
       };
 
@@ -92455,59 +92534,63 @@ AUTHORIZATION SAFETY + ELIGIBILITY HANDOFF
         output8TW;
 
 
-      if (
-        typeof OODebug !== "undefined" &&
-        OODebug.log
-      ) {
+      log8TW(
+        "READY",
+        output8TW
+      );
 
-        OODebug.log(
-          step8TW,
-          "Backend evidence received and safely handed to verification",
-          output8TW
-        );
 
-      }
+      return {
+        done: true,
+        reason: "EVIDENCE_HANDOFF_READY"
+      };
 
-      return true;
     };
 
 
     /* ==========================================
-       8TW — ASYNC BACKEND RESPONSE WAIT
+       8TW — ASYNC WATCHER
        ========================================== */
-
-    if (process8TW()) {
-      return;
-    }
-
 
     let attempts8TW = 0;
 
-    const maxAttempts8TW = 150;
+    const maxAttempts8TW = 300;
 
 
-    const wait8TW = setInterval(() => {
+    const timer8TW = setInterval(
+      () => {
 
-      attempts8TW++;
-
-      const completed8TW =
-        process8TW();
+        attempts8TW++;
 
 
-      if (
-        completed8TW ||
-        attempts8TW >= maxAttempts8TW
-      ) {
-
-        clearInterval(wait8TW);
+        const result8TW =
+          process8TW();
 
 
         if (
-          attempts8TW >= maxAttempts8TW &&
-          !window.__OO_8TW_EVIDENCE_VERIFICATION_INTEGRATION
+          result8TW.done
         ) {
 
-          window.__OO_8TW_EVIDENCE_VERIFICATION_INTEGRATION = {
+          clearInterval(timer8TW);
+
+          log8TW(
+            "COMPLETE",
+            result8TW.reason
+          );
+
+          return;
+
+        }
+
+
+        if (
+          attempts8TW >= maxAttempts8TW
+        ) {
+
+          clearInterval(timer8TW);
+
+
+          const timeout8TW = {
 
             step: step8TW,
 
@@ -92536,64 +92619,49 @@ AUTHORIZATION SAFETY + ELIGIBILITY HANDOFF
             userDataAssumption: false,
 
             reason:
-              "Backend evidence response was not available within the controlled wait window."
+              result8TW.reason ||
+              "Controlled integration wait expired."
 
           };
 
 
-          if (
-            typeof OODebug !== "undefined" &&
-            OODebug.log
-          ) {
+          window.__OO_8TW_EVIDENCE_VERIFICATION_INTEGRATION =
+            timeout8TW;
 
-            OODebug.log(
-              step8TW,
-              "Backend evidence wait expired",
-              window.__OO_8TW_EVIDENCE_VERIFICATION_INTEGRATION
-            );
 
-          }
+          log8TW(
+            "TIMEOUT",
+            timeout8TW
+          );
 
         }
 
-      }
-
-    }, 100);
+      },
+      100
+    );
 
 
   } catch (error8TW) {
 
-    window.__OO_8TW_ERROR =
+    const message8TW =
       error8TW &&
       error8TW.message
         ? error8TW.message
         : "Unknown 8TW error";
 
 
-    if (
-      typeof OODebug !== "undefined" &&
-      OODebug.log
-    ) {
+    window.__OO_8TW_ERROR =
+      message8TW;
 
-      OODebug.log(
-        step8TW,
-        "Backend evidence integration exception",
-        window.__OO_8TW_ERROR
-      );
 
-    } else {
-
-      console.error(
-        "OpportunityOS 8TW error:",
-        window.__OO_8TW_ERROR
-      );
-
-    }
+    log8TW(
+      "ERROR",
+      message8TW
+    );
 
   }
 
-})();  
-  
+})();
   
   /* ==========================================
        RESULT VALUES
